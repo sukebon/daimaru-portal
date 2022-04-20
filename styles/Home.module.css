@@ -1,5 +1,6 @@
 .container {
   padding: 0 2rem;
+  margin: auto;
 }
 
 .main {
@@ -19,6 +20,7 @@
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  background-color: #ffffff;
 }
 
 .footer a {
