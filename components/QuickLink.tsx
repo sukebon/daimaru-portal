@@ -1,10 +1,4 @@
-import {
-  Box,
-  ListItem,
-  Text,
-  UnorderedList,
-  VisuallyHiddenInput,
-} from '@chakra-ui/react';
+import { Box, ListItem, Text, UnorderedList } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import Link from 'next/link';
 

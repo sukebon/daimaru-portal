@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import Information from '../components/Information';
 import QuickLink from '../components/QuickLink';
 import Slogan from '../components/Slogan';

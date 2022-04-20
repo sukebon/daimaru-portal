@@ -14,8 +14,6 @@ import {
 const App = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleShowClick = () => setShowPassword(!showPassword);
-
   return (
     <Flex
       flexDirection='column'

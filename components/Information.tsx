@@ -1,6 +1,5 @@
 import { Box, Flex, List, Text } from '@chakra-ui/react';
 import { NextPage } from 'next';
-import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 
 const Information: NextPage<any> = (props) => {
   return (
@@ -18,12 +17,7 @@ const Information: NextPage<any> = (props) => {
                 borderBottom='1px'
                 borderColor='#eeeeee'
               >
-                <Flex alignItems={'center'}>
-                  {/* <BsFillArrowRightCircleFill
-                    style={{ marginRight: '0.5rem' }}
-                  /> */}
-                  {value.message}
-                </Flex>
+                <Flex alignItems={'center'}>{value.message}</Flex>
               </Text>
             </>
           ))}
