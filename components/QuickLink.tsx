@@ -7,7 +7,7 @@ const QuickLink: NextPage<any> = (props) => {
     <>
       <Box width='100%' boxShadow='xs' mt='6' p='6' rounded='md' bg='white'>
         <Text fontSize='2xl' mt='1' ml='1'>
-          [クイックアクセスリンク]
+          クイックアクセスリンク
         </Text>
         <UnorderedList spacing={3} my='3' mx='6'>
           {props.link.map((value: any) => (

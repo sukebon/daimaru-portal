@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { auth } from '../firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
 import {
   Flex,
   Heading,
@@ -10,9 +13,35 @@ import {
   Box,
   FormControl,
 } from '@chakra-ui/react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { NextPage } from 'next';
 
-const App = () => {
-  const [showPassword, setShowPassword] = useState(false);
+const Login: NextPage = () => {
+  const [user] = useAuthState(auth);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  console.log(email);
+
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+    }
+  }, [router, user]);
+
+  const sighup = (event: any) => {
+    event.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        router.push('/');
+      })
+      .catch((error) => {
+        alert('失敗しました');
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
 
   return (
     <Flex
@@ -42,16 +71,24 @@ const App = () => {
               <FormControl>
                 <InputGroup>
                   <InputLeftElement pointerEvents='none' />
-                  <Input type='email' placeholder='email address' p='3' />
+                  <Input
+                    type='email'
+                    placeholder='email address'
+                    p='3'
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
                 </InputGroup>
               </FormControl>
               <FormControl>
                 <InputGroup>
                   <InputLeftElement pointerEvents='none' color='gray.300' />
                   <Input
-                    type={showPassword ? 'text' : 'password'}
+                    type={'password'}
                     placeholder='Password'
                     p='3'
+                    value={password}
+                    onChange={(event: any) => setPassword(event.target.value)}
                   />
                 </InputGroup>
               </FormControl>
@@ -62,6 +99,7 @@ const App = () => {
                 colorScheme='teal'
                 width='full'
                 rounded='5'
+                onClick={sighup}
               >
                 Login
               </Button>
@@ -73,4 +111,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Login;
