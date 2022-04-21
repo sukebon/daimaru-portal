@@ -13,7 +13,7 @@ const Information: NextPage<any> = (props) => {
             <>
               <Text mx='3' pb='2' borderBottom='1px' borderColor='#eeeeee'>
                 <Flex alignItems={'center'}>
-                  <div key={value.id}>{value.message}</div>
+                  <Box key={value.id}>{value.message}</Box>
                 </Flex>
               </Text>
             </>

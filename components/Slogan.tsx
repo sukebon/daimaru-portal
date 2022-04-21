@@ -11,11 +11,10 @@ const Slogan: NextPage<Props> = ({ slogan }) => {
       <Text fontSize='2xl' mt='1' ml='1'>
         スローガン
       </Text>
-      <h1>
-        <Text fontSize='2xl' my='3'>
-          <div dangerouslySetInnerHTML={{ __html: slogan }}></div>
-        </Text>
-      </h1>
+
+      <Text fontSize='2xl' my='3'>
+        <Box dangerouslySetInnerHTML={{ __html: slogan }}></Box>
+      </Text>
     </Box>
   );
 };

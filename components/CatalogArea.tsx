@@ -1,7 +1,6 @@
 import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
 const CatalogArea = () => {
   return (
@@ -43,12 +42,12 @@ const CatalogArea = () => {
           <Box flex='1' p='3' min-height='100%'>
             <Grid
               h='100%'
-              templateRows='repeat(2, 1fr)'
+              templateRows='repeat(3, 1fr)'
               templateColumns='repeat(5, 1fr)'
               gap={3}
             >
               <GridItem rowSpan={1} colSpan={5} bg='#2d3748' rounded={5}>
-                <Link href='https://01project-3zvmmmf3f-sukebon.vercel.app/catalog'>
+                <Link href='https://myuni.vercel.app/'>
                   <a target={'_blank'}>
                     <Flex
                       alignItems={'center'}
@@ -58,6 +57,22 @@ const CatalogArea = () => {
                     >
                       <Text fontSize={{ base: 'xs', md: 'lg' }}>
                         マイユニポータル
+                      </Text>
+                    </Flex>
+                  </a>
+                </Link>
+              </GridItem>
+              <GridItem rowSpan={1} colSpan={5} bg='#314a97' rounded={5}>
+                <Link href='https://www.daimaru-hakui.co.jp/'>
+                  <a target={'_blank'}>
+                    <Flex
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      height='100%'
+                      p='1'
+                    >
+                      <Text fontSize={{ base: 'xs', md: 'lg' }}>
+                        ホームページ
                       </Text>
                     </Flex>
                   </a>
