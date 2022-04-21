@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
+
   useEffect(() => {
     if (user === null) {
       router.push('/login');

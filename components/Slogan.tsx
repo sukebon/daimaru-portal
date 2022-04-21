@@ -13,7 +13,7 @@ const Slogan: NextPage<Props> = ({ slogan }) => {
       </Text>
 
       <Text fontSize='2xl' my='3'>
-        <Box dangerouslySetInnerHTML={{ __html: slogan }}></Box>
+        <Box lineHeight={10} dangerouslySetInnerHTML={{ __html: slogan }}></Box>
       </Text>
     </Box>
   );

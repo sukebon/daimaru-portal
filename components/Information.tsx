@@ -13,7 +13,10 @@ const Information: NextPage<any> = (props) => {
             <>
               <Text mx='3' pb='2' borderBottom='1px' borderColor='#eeeeee'>
                 <Flex alignItems={'center'}>
-                  <Box key={value.id}>{value.message}</Box>
+                  <Box
+                    key={value.id}
+                    dangerouslySetInnerHTML={{ __html: value.message }}
+                  ></Box>
                 </Flex>
               </Text>
             </>
