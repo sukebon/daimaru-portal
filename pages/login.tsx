@@ -22,8 +22,6 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  console.log(email);
-
   useEffect(() => {
     if (user) {
       router.push('/');

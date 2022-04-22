@@ -39,8 +39,12 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
             <main>
               <Box w={{ base: '100%', md: '800px' }} mx='auto' py='6'>
                 <Flex justifyContent={'spaceBetween '} alignItems={'center'}>
-                  <Spacer flex='1'></Spacer>
-                  <Text flex='1' fontSize={'2xl'} fontWeight={800}>
+                  <Spacer flex={{ base: '0', md: '1' }}></Spacer>
+                  <Text
+                    flex={{ base: '2', md: '1' }}
+                    fontSize={'2xl'}
+                    fontWeight={800}
+                  >
                     社内用ポータルサイト
                   </Text>
                   <Flex flex='1' justifyContent={'end'}>
