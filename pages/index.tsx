@@ -28,44 +28,35 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   return (
     <>
-      <div style={{ backgroundColor: '#f7f7f7' }}>
-        <div className={styles.container}>
-          <Head>
-            <title>大丸白衣ポータル</title>
-            <meta name='description' content='大丸白衣ポータル' />
-            <link rel='icon' href='/favicon.ico' />
-          </Head>
-          <main>
-            <Box w={{ base: '100%', md: '800px' }} mx='auto' py='6'>
-              <Flex justifyContent={'spaceBetween '} alignItems={'center'}>
-                <Spacer flex='1'></Spacer>
-                <Text flex='1' fontSize={'2xl'} fontWeight={800}>
-                  社内用ポータルサイト
-                </Text>
-                <Flex flex='1' justifyContent={'end'}>
-                  <Button onClick={logout}>ログアウト</Button>
+      {user && (
+        <div style={{ backgroundColor: '#f7f7f7' }}>
+          <div className={styles.container}>
+            <Head>
+              <title>大丸白衣ポータル</title>
+              <meta name='description' content='大丸白衣ポータル' />
+              <link rel='icon' href='/favicon.ico' />
+            </Head>
+            <main>
+              <Box w={{ base: '100%', md: '800px' }} mx='auto' py='6'>
+                <Flex justifyContent={'spaceBetween '} alignItems={'center'}>
+                  <Spacer flex='1'></Spacer>
+                  <Text flex='1' fontSize={'2xl'} fontWeight={800}>
+                    社内用ポータルサイト
+                  </Text>
+                  <Flex flex='1' justifyContent={'end'}>
+                    <Button onClick={logout}>ログアウト</Button>
+                  </Flex>
                 </Flex>
-              </Flex>
-              <Slogan slogan={sloganData.slogan} />
-              <Information news={newsData.contents} />
-              <QuickLink link={linkData.contents} />
-              <CatalogArea />
-            </Box>
-          </main>
+                <Slogan slogan={sloganData.slogan} />
+                <Information news={newsData.contents} />
+                <QuickLink link={linkData.contents} />
+                <CatalogArea />
+              </Box>
+            </main>
+          </div>
+          <footer className={styles.footer}>&copy; daimaru-hakui</footer>
         </div>
-        <footer className={styles.footer}>
-          <a
-            href='https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            &copy; daimaru-hakui
-            <span className={styles.logo}>
-              {/* <Image src='/vercel.svg' alt='Vercel Logo' width={72} height={16} /> */}
-            </span>
-          </a>
-        </footer>
-      </div>
+      )}
     </>
   );
 };
