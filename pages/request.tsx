@@ -7,10 +7,19 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  onSnapshot,
+  serverTimestamp,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase/auth";
 
 const Request = () => {
@@ -23,6 +32,8 @@ const Request = () => {
       const docRef = await addDoc(collection(db, "requestList"), {
         title: title,
         content: content,
+        member: [],
+        sendAt: serverTimestamp(),
       });
       console.log("Document written with ID: ", docRef.id);
       setTitle("");
@@ -34,8 +45,8 @@ const Request = () => {
 
   useEffect(() => {
     const usersCollectionRef = collection(db, "requestList");
-
-    const unsub = onSnapshot(usersCollectionRef, (querySnapshot) => {
+    const q = query(usersCollectionRef, orderBy("sendAt", "desc"));
+    const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
         querySnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -44,27 +55,24 @@ const Request = () => {
       );
     });
     return unsub;
-    // getDocs(usersCollectionRef).then((querySnapshot) => {
-    //   setRequests(
-    //     querySnapshot.docs.map((doc) => ({
-    //       ...doc.data(),
-    //       id: doc.id,
-    //     }))
-    //   );
-    // });
   }, []);
-
+  console.log(requests);
   return (
-    <div>
+    <>
       <Flex
         flexDirection="column"
-        width="100wh"
-        height="100vh"
+        width="100vw"
+        height="100%"
+        minH={"100vh"}
         backgroundColor="#f7f7f7"
         justifyContent="flex-start"
         alignItems="center"
       >
-        <Box minW={{ base: "90%", md: "700px" }} marginTop={"100px"}>
+        <Box
+          minW={{ base: "90%", md: "700px" }}
+          marginTop={"50px"}
+          marginBottom={"50px"}
+        >
           <Heading color="teal.400" marginBottom={"20px"}>
             協力依頼
           </Heading>
@@ -97,19 +105,33 @@ const Request = () => {
             width="full"
             rounded="5"
             onClick={addRequest}
+            disabled={title && content ? false : true}
           >
             登録
           </Button>
         </Box>
-        <Box>
-          {requests.map((doc: any) => (
-            <div key={doc.id}>
-              {doc.title}　:　{doc.content}
-            </div>
-          ))}
-        </Box>
+        {requests.map((doc: any) => (
+          <div key={doc.id} style={{ width: "100%" }}>
+            <Box
+              maxW="sm"
+              borderWidth="1px"
+              borderRadius="lg"
+              overflow="hidden"
+              marginTop={"10px"}
+              margin={"10px auto 0"}
+              padding={"20px"}
+              minW={{ base: "90%", md: "700px" }}
+              backgroundColor={"white"}
+            >
+              <Heading fontSize={"2xl"} marginBottom={"10px"}>
+                {doc.title}
+              </Heading>
+              <Text>{doc.content}</Text>
+            </Box>
+          </div>
+        ))}
       </Flex>
-    </div>
+    </>
   );
 };
 
