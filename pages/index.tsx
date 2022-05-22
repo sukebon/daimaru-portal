@@ -1,19 +1,38 @@
 import type { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Head from 'next/head';
 import Information from '../components/Information';
 import QuickLink from '../components/QuickLink';
 import Slogan from '../components/Slogan';
 import CatalogArea from '../components/CatalogArea';
+import Post from '../components/Post';
 import styles from '../styles/Home.module.css';
 import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { auth } from '../firebase/auth';
+import { db } from '../firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useEffect } from 'react';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
+  const [requests, setRequests] = useState<any>([]);
+
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'requestList');
+    const q = query(usersCollectionRef, orderBy('sendAt', 'desc'));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      setRequests(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     if (user === null) {
@@ -42,12 +61,22 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   <Spacer flex={{ base: '0', md: '1' }}></Spacer>
                   <Text
                     flex={{ base: '2', md: '1' }}
-                    fontSize={'2xl'}
+                    fontSize={{ base: 'large', md: '2xl' }}
                     fontWeight={800}
                   >
                     社内用ポータルサイト
                   </Text>
                   <Flex flex='1' justifyContent={'end'}>
+                    {user.uid === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                    user.uid === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                      <Button marginRight={'10px'}>
+                        <Link href='./management'>
+                          <a>管理画面</a>
+                        </Link>
+                      </Button>
+                    ) : (
+                      ' '
+                    )}
                     <Button onClick={logout}>ログアウト</Button>
                   </Flex>
                 </Flex>
@@ -55,6 +84,25 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Information news={newsData.contents} />
                 <QuickLink link={linkData.contents} />
                 <CatalogArea />
+                {user.uid === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                user.uid === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                  <Box
+                    margin={'20px 0'}
+                    padding={'20px'}
+                    border='1px'
+                    borderColor={'gray.200'}
+                    borderRadius={'lg'}
+                    backgroundColor={'white'}
+                  >
+                    <Text fontSize='2xl' mt='1' ml='1'>
+                      協力依頼
+                    </Text>
+
+                    <Post requests={requests} />
+                  </Box>
+                ) : (
+                  ''
+                )}
               </Box>
             </main>
           </div>
