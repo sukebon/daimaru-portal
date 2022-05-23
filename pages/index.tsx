@@ -69,11 +69,9 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   <Flex flex='1' justifyContent={'end'}>
                     {user.uid === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
                     user.uid === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
-                      <Button marginRight={'10px'}>
                         <Link href='./management'>
-                          <a>管理画面</a>
+                          <a><Button marginRight={'10px'}>管理画面 </Button></a>
                         </Link>
-                      </Button>
                     ) : (
                       ' '
                     )}
