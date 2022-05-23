@@ -137,9 +137,9 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
     const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: title,
-      startDay: startDay || '2022-01-01',
+      startDay: startDay || '未定',
       startTime: startTime,
-      endDay: endDay || '2022-01-01',
+      endDay: endDay || '未定',
       endTime: endTime,
       applicant: applicant,
       person,
@@ -155,9 +155,9 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
     const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: cancelTitle,
-      startDay: cancelStartDay || '2022-01-01',
+      startDay: cancelStartDay || '未定',
       startTime: cancelStartTime,
-      endDay: cancelEndDay || '2022-01-01',
+      endDay: cancelEndDay || '未定',
       endTime: cancelEndTime,
       applicant: cancelApplicant,
       person: cancelPerson,
