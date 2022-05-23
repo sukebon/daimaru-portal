@@ -84,8 +84,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Information news={newsData.contents} />
                 <QuickLink link={linkData.contents} />
                 <CatalogArea />
-                {user.uid === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-                user.uid === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                {user.uid !== 'fIwZyubjTfgr0lbRb9VjIkOjKTB2' ? (
                   <Box
                     margin={'20px 0'}
                     padding={'20px'}
