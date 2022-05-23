@@ -4,11 +4,11 @@ export const users = [
     name: '仁美社長',
   },
   {
-    uid: '',
+    uid: 'w0hJOiYYAhZL7jsVmrF0n2GKiZj2',
     name: '川井専務',
   },
   {
-    uid: '',
+    uid: 'aL6VMNQObYaOzsWxriJqI4pBTjy1',
     name: '平野常務',
   },
   {
@@ -28,67 +28,67 @@ export const users = [
     name: '池田係長',
   },
   {
-    uid: '',
+    uid: 'rTaadOHJYSNrg6jBUMCe6LE6CWC3',
     name: '丸田部長',
   },
   {
-    uid: '',
+    uid: 'Gq2mclF2v1SxjYtdytgzMVsrVod2',
     name: '光延次長',
   },
   {
-    uid: '',
+    uid: '9GNw16bAMWcA6tXo9pN03EuMkZh2',
     name: '後藤主任',
   },
   {
-    uid: '',
+    uid: 'WtSJQRUeqJcsyhbOOcNuVV5LHwv2',
     name: '衣係長',
   },
   {
-    uid: '',
+    uid: '9T736Nz4zpesmCam60iIgrnMATk2',
     name: '野田',
   },
   {
-    uid: '',
+    uid: 's5aeG6GygmfR5J8GSmTBZgWT7Qi2',
     name: '中村部長',
   },
   {
-    uid: '',
+    uid: 'ey4IaQqA9WVcw40qvHuHKPhuvyS2',
     name: '経理',
   },
   {
-    uid: '',
+    uid: 'dlTXruFsmcSouFsBZdBKslU2OOu1',
     name: '本店',
   },
   {
-    uid: '',
+    uid: 'OGwbwQay9AYlw0yFfNY1Q9Qb9J72',
     name: '岩井店長',
   },
   {
-    uid: '',
+    uid: '8ILxCIFNttM4fJoo1DSL1lIvSkZ2',
     name: '鳥岡',
   },
   {
-    uid: '',
+    uid: 'bkiahjgZ3OamKB3TtvjWfXBVk7Z2',
     name: '神戸店',
   },
   {
-    uid: '',
+    uid: '8pHHV1Q2hsQS7ZioGIjAA9gfdDx1',
     name: '平島センター長',
   },
   {
-    uid: '',
+    uid: 'd84HfLroQIOq2qGfrpNDMnQ9vLG2',
     name: '上野主任',
   },
   {
-    uid: '',
+    uid: '05kJX9LULtatVfIEipD7L9odjWy1',
     name: '竹内主任',
   },
   {
-    uid: '',
+    uid: 'xLTK7bziWoVbKE0MWS6nljd18493',
     name: '藤森工場長代理',
   },
   {
-    uid: '',
+    uid: 'lnAOsBvzyQhsazCehfW6iVHiHWw1',
     name: '長瀬',
   },
 ];
