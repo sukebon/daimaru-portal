@@ -16,6 +16,14 @@ interface Props {
   requests: {
     id: string;
     title: string;
+    startDay: string;
+    startTime: string;
+    endEnd: string;
+    endTime: string;
+    applicant: string;
+    person: string;
+    moreless: string;
+    level: string;
     content: string;
     displayAt: boolean;
     deleteAt: boolean;
@@ -27,6 +35,7 @@ interface Props {
 const Post: NextPage<Props> = ({ requests }) => {
   const [user] = useAuthState(auth);
 
+  //参加する
   const setRequest = async (uid: any) => {
     const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
@@ -34,11 +43,18 @@ const Post: NextPage<Props> = ({ requests }) => {
     });
   };
 
+  //参加を取り消す
   const removeRequest = async (uid: any) => {
     const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
       member: arrayRemove(user && user.uid),
     });
+  };
+
+  const dayOfWeek = (d: string) => {
+    let date = new Date(d);
+    let number = date.getDay();
+    return ['日', '月', '火', '水', '木', '金', '土'][number];
   };
 
   return (
@@ -51,12 +67,30 @@ const Post: NextPage<Props> = ({ requests }) => {
               borderTop='none'
               overflow='hidden'
               margin={'0 auto 0'}
-              padding={'20px 20px 10px'}
+              padding={'20px 0 10px'}
               minW={{ base: '100%' }}
               backgroundColor={'white'}
             >
-              <Heading fontSize={'2xl'}>{request.title}</Heading>
-
+              <Text fontSize={'2xl'} paddingBottom={'5px'}>
+                {request.level}{' '}
+              </Text>
+              <Heading fontSize={'2xl'} paddingBottom={'10px'}>
+                {request.title}
+              </Heading>
+              <Flex flexDirection={{ base: 'column', md: 'row' }}>
+                <Text marginRight={'10px'}>
+                  【開始】{request.startDay}
+                  {dayOfWeek(request.startDay)}-{request.startTime}
+                </Text>
+                <Text marginRight={'10px'}>
+                  【終了】{request.endDay}
+                  {dayOfWeek(request.endDay)}-{request.endTime}
+                </Text>
+                <Text marginRight={'10px'}>
+                  【募集人数】{request.applicant}人{request.moreless}
+                </Text>
+                <Text>【責任者】{request.person}</Text>
+              </Flex>
               <Text padding={'10px 0'}>{request.content}</Text>
 
               <Flex

@@ -9,6 +9,12 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
   Text,
   Textarea,
 } from '@chakra-ui/react';
@@ -19,11 +25,20 @@ import { db, auth } from '../firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { users } from '../data.js';
+import { dateTime } from '../date.js';
 
 interface Props {
   requests: {
     id: string;
     title: string;
+    startDay: string;
+    startTime: string;
+    endEnd: string;
+    endTime: string;
+    applicant: string;
+    person: string;
+    moreless: string;
+    level: string;
     content: string;
     displayAt: boolean;
     deleteAt: boolean;
@@ -35,8 +50,24 @@ interface Props {
 const PostManagement: NextPage<Props> = ({ requests }) => {
   const [user] = useAuthState(auth);
   const [title, setTitle] = useState('');
+  const [startDay, setStartDay] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDay, setEndDay] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [applicant, setApplicant] = useState('1');
+  const [person, setPerson] = useState('');
+  const [moreless, setMoreless] = useState('');
+  const [level, setLevel] = useState('');
   const [content, setContent] = useState('');
   const [cancelTitle, setCancelTitle] = useState('');
+  const [cancelStartDay, setCancelStartDay] = useState('');
+  const [cancelStartTime, setCancelStartTime] = useState('');
+  const [cancelEndDay, setCancelEndDay] = useState('');
+  const [cancelEndTime, setCancelEndTime] = useState('');
+  const [cancelApplicant, setCancelApplicant] = useState('1');
+  const [cancelPerson, setCancelPerson] = useState('');
+  const [cancelMoreless, setCancelMoreless] = useState('');
+  const [cancelLevel, setCancelLevel] = useState('');
   const [cancelContent, setCancelContent] = useState('');
 
   //リクエストを非表示
@@ -60,6 +91,14 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
     const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
       title: title,
+      startDay: startDay,
+      startTime: startTime,
+      endDay: endDay,
+      endTime: endTime,
+      applicant: applicant,
+      person: person,
+      moreless: moreless,
+      level: level,
       content: content,
       editAt: true,
     });
@@ -68,12 +107,28 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
   //タイトルとコンテンツの値を保持する
   const oldTitleContent = (request: any) => {
     setTitle(request.title);
+    setStartDay(request.startDay);
+    setStartTime(request.startTime);
+    setEndDay(request.endDay);
+    setEndTime(request.endTime);
+    setApplicant(request.applicant);
+    setPerson(request.person);
+    setMoreless(request.moreless);
+    setLevel(request.level);
     setContent(request.content);
   };
 
   //「キャンセル用」タイトルとコンテンツの値を保持する
   const cancelTitleContent = (request: any) => {
     setCancelTitle(request.title);
+    setCancelStartDay(request.startDay);
+    setCancelStartTime(request.startTime);
+    setCancelEndDay(request.endDay);
+    setCancelEndTime(request.endTime);
+    setCancelApplicant(request.applicant);
+    setCancelPerson(request.person);
+    setCancelMoreless(request.moreless);
+    setCancelLevel(request.level);
     setCancelContent(request.content);
   };
 
@@ -82,6 +137,14 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
     const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: title,
+      startDay: startDay || '2022-01-01',
+      startTime: startTime,
+      endDay: endDay || '2022-01-01',
+      endTime: endTime,
+      applicant: applicant,
+      person,
+      moreless,
+      level: level,
       content: content,
       editAt: false,
     });
@@ -92,10 +155,26 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
     const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: cancelTitle,
+      startDay: cancelStartDay || '2022-01-01',
+      startTime: cancelStartTime,
+      endDay: cancelEndDay || '2022-01-01',
+      endTime: cancelEndTime,
+      applicant: cancelApplicant,
+      person: cancelPerson,
+      moreless: cancelMoreless,
+      level: cancelLevel,
       content: cancelContent,
       editAt: false,
     });
     setCancelTitle('');
+    setCancelStartDay('');
+    setCancelStartTime('');
+    setCancelEndDay('');
+    setCancelEndTime('');
+    setCancelApplicant('');
+    setCancelPerson('');
+    setCancelMoreless('');
+    setCancelLevel('');
     setCancelContent('');
   };
 
@@ -136,18 +215,131 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                 >
                   {!request.editAt ? (
                     <>
-                      <Heading fontSize={'2xl'}>{request.title}</Heading>
+                      <Text fontSize={'2xl'}>{request.level} </Text>
+                      <Heading fontSize={'2xl'} paddingBottom={'10px'}>
+                        {request.title}
+                      </Heading>
+                      <Flex flexDirection={{ base: 'column', md: 'row' }}>
+                        <Text marginRight={'10px'}>
+                          【開始】{request.startDay}-{request.startTime}
+                        </Text>
+                        <Text marginRight={'10px'}>
+                          【終了】{request.endDay}-{request.endTime}
+                        </Text>
+                        <Text marginRight={'10px'}>
+                          【募集人数】{request.applicant}人{request.moreless}
+                        </Text>
+                        <Text>【責任者】{request.person}</Text>
+                      </Flex>
                       <Text padding={'10px 0'}>{request.content}</Text>
                     </>
                   ) : (
                     <>
                       <Input
                         value={title}
+                        placeholder={'タイトル'}
                         onChange={(e) => setTitle(e.target.value)}
                         width={'100%'}
                         fontSize={'md'}
                         marginBottom={'10px'}
                       />
+                      <Flex>
+                        <Input
+                          id='startDay'
+                          type='date'
+                          value={startDay}
+                          placeholder='開始時刻'
+                          backgroundColor={'white'}
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setStartDay(e.target.value)}
+                        />
+                        <Select
+                          value={startTime}
+                          placeholder='---'
+                          backgroundColor={'white'}
+                          onChange={(e) => setStartTime(e.target.value)}
+                        >
+                          {dateTime.map((d, index) => (
+                            <option key={index} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </Select>
+                      </Flex>
+                      <Flex>
+                        <Input
+                          id='endDay'
+                          type='date'
+                          value={endDay}
+                          placeholder='終了時刻'
+                          backgroundColor={'white'}
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setEndDay(e.target.value)}
+                        />
+                        <Select
+                          value={endTime}
+                          placeholder='---'
+                          backgroundColor={'white'}
+                          onChange={(e) => setEndTime(e.target.value)}
+                        >
+                          {dateTime.map((d, index) => (
+                            <option key={index} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </Select>
+                      </Flex>
+                      <Flex>
+                        <Input
+                          id='person'
+                          type='string'
+                          value={person}
+                          placeholder='タスク責任者'
+                          backgroundColor={'white'}
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setPerson(e.target.value)}
+                        />
+                        <Select
+                          value={level}
+                          placeholder='---'
+                          backgroundColor={'white'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setLevel(e.target.value)}
+                        >
+                          <option value='★★★'>★★★</option>
+                          <option value='★★'>★★</option>
+                          <option value='★'>★</option>
+                        </Select>
+                      </Flex>
+                      <Flex marginBottom={'10px'}>
+                        <NumberInput
+                          flex={'1'}
+                          value={applicant}
+                          placeholder='募集人数'
+                          backgroundColor={'white'}
+                          marginRight={'10px'}
+                          onChange={(e) => setApplicant(e)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                        <Select
+                          flex={'1'}
+                          value={moreless}
+                          placeholder='---'
+                          backgroundColor={'white'}
+                          onChange={(e) => setMoreless(e.target.value)}
+                        >
+                          <option value='以上'>以上</option>
+                          <option value='まで'>まで</option>
+                        </Select>
+                      </Flex>
                       <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}

@@ -56,7 +56,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
               <link rel='icon' href='/favicon.ico' />
             </Head>
             <main>
-              <Box w={{ base: '100%', md: '800px' }} mx='auto' py='6'>
+              <Box w={{ base: '100%', md: '850px' }} mx='auto' py='6'>
                 <Flex justifyContent={'spaceBetween '} alignItems={'center'}>
                   <Spacer flex={{ base: '0', md: '1' }}></Spacer>
                   <Text
@@ -69,9 +69,11 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   <Flex flex='1' justifyContent={'end'}>
                     {user.uid === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
                     user.uid === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
-                        <Link href='./management'>
-                          <a><Button marginRight={'10px'}>管理画面 </Button></a>
-                        </Link>
+                      <Link href='./management'>
+                        <a>
+                          <Button marginRight={'10px'}>管理画面 </Button>
+                        </a>
+                      </Link>
                     ) : (
                       ' '
                     )}
@@ -92,7 +94,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     backgroundColor={'white'}
                   >
                     <Text fontSize='2xl' mt='1' ml='1'>
-                      協力依頼
+                      お手伝いお願い一覧
                     </Text>
 
                     <Post requests={requests} />

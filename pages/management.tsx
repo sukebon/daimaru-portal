@@ -38,7 +38,7 @@ const Management = () => {
           <Flex
             flexDirection={'column'}
             alignItems={'center'}
-            width={{ md: '700px' }}
+            width={{ md: '800px' }}
             margin={'0 auto'}
           >
             <Form />
