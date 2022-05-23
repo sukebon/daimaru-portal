@@ -59,11 +59,9 @@ const Form = () => {
               marginBottom={'20px'}
             >
               <Heading color='teal.400'>協力依頼</Heading>
-              <Button>
-                <Link href='./'>
-                  <a>トップへ戻る</a>
+                <Link href='./'>         
+                  <a><Button>トップへ戻る</Button></a>
                 </Link>
-              </Button>
             </Flex>
             <FormControl>
               <FormLabel htmlFor='email'>タイトル</FormLabel>
