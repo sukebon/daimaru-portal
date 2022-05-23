@@ -145,13 +145,13 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         width={'100%'}
-                        fontSize={'2xl'}
+                        fontSize={'md'}
                         marginBottom={'10px'}
                       />
                       <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        fontSize={'2xl'}
+                        fontSize={'md'}
                         marginBottom={'10px'}
                       >
                         {content}
