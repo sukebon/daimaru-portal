@@ -37,3 +37,10 @@ export const dateTime = [
   '23:30',
   '24:00',
 ];
+
+export const starLevel = (level) => {
+    if(level === '1') return '★';
+    if(level === '2') return '★★';
+    if(level === '3') return '★★★';
+    if(level) return d;
+}
