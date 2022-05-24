@@ -94,7 +94,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     backgroundColor={'white'}
                   >
                     <Text fontSize='2xl' mt='1' ml='1'>
-                      お手伝いお願い一覧
+                      お手伝い依頼一覧
                     </Text>
 
                     <Post requests={requests} />
