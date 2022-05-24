@@ -75,11 +75,11 @@ const Post: NextPage<Props> = ({ requests }) => {
               <Flex flexDirection={{ base: "column", md: "row" }}>
                 <Text marginRight={"10px"}>
                   【開始】{request.startDay}
-                  {dayOfWeek(request.startDay)}-{request.startTime}
+                  （{dayOfWeek(request.startDay)}）{request.startTime}
                 </Text>
                 <Text marginRight={"10px"}>
                   【終了】{request.endDay}
-                  {dayOfWeek(request.endDay)}-{request.endTime}
+                  （{dayOfWeek(request.endDay)}）{request.endTime}
                 </Text>
                 <Text marginRight={"10px"}>
                   【募集人数】{request.applicant}人{request.moreless}
