@@ -67,38 +67,24 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     社内用ポータルサイト
                   </Text>
                   <Flex flex="1" justifyContent={"end"}>
-                    {/* {user.uid === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
-                      (user.uid === "EVKsigM546MbnakzkDmG0QHlfmn2" && ( */}
-                    <Link href="./management">
-                      <a>
-                        <Button marginRight={"10px"}>依頼する </Button>
-                      </a>
-                    </Link>
-                    {/* ))} */}
+                    {user.uid !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
+                      <Link href="./management">
+                        <a>
+                          <Button marginRight={"10px"}>依頼する</Button>
+                        </a>
+                      </Link>
+                    )}
                     <Button onClick={logout}>ログアウト</Button>
                   </Flex>
                 </Flex>
+
                 <Slogan slogan={sloganData.slogan} />
                 <Information news={newsData.contents} />
                 <QuickLink link={linkData.contents} />
                 <CatalogArea />
-                {user.uid !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" ? (
-                  <Box
-                    margin={"20px 0"}
-                    padding={"20px"}
-                    border="1px"
-                    borderColor={"gray.200"}
-                    borderRadius={"lg"}
-                    backgroundColor={"white"}
-                  >
-                    <Text fontSize="2xl" mt="1" ml="1">
-                      お手伝い依頼一覧
-                    </Text>
 
-                    <Post requests={requests} />
-                  </Box>
-                ) : (
-                  ""
+                {user.uid !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
+                  <Post requests={requests} />
                 )}
               </Box>
             </main>

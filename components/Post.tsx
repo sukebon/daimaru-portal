@@ -53,7 +53,17 @@ const Post: NextPage<Props> = ({ requests }) => {
   };
 
   return (
-    <>
+    <Box
+      margin={"20px 0"}
+      padding={"20px"}
+      border="1px"
+      borderColor={"gray.200"}
+      borderRadius={"lg"}
+      backgroundColor={"white"}
+    >
+      <Text fontSize="2xl" mt="1" ml="1">
+        お手伝い依頼一覧
+      </Text>
       {requests.map((request: any) => (
         <Box key={request.id} style={{ width: "100%" }}>
           {request.displayAt === true && request.deleteAt === false ? (
@@ -74,12 +84,12 @@ const Post: NextPage<Props> = ({ requests }) => {
               </Heading>
               <Flex flexDirection={{ base: "column", md: "row" }}>
                 <Text marginRight={"10px"}>
-                  【開始】{request.startDay}
-                  （{dayOfWeek(request.startDay)}）{request.startTime}
+                  【開始】{request.startDay}（{dayOfWeek(request.startDay)}）
+                  {request.startTime}
                 </Text>
                 <Text marginRight={"10px"}>
-                  【終了】{request.endDay}
-                  （{dayOfWeek(request.endDay)}）{request.endTime}
+                  【終了】{request.endDay}（{dayOfWeek(request.endDay)}）
+                  {request.endTime}
                 </Text>
                 <Text marginRight={"10px"}>
                   【募集人数】{request.applicant}人{request.moreless}
@@ -143,7 +153,7 @@ const Post: NextPage<Props> = ({ requests }) => {
           )}
         </Box>
       ))}
-    </>
+    </Box>
   );
 };
 
