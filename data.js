@@ -12,16 +12,16 @@ export const users = [
     name: '平野常務',
   },
   {
-    uid: 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3',
-    name: '向井',
-  },
-  {
     uid: '6ren6lOJmMbX0mRWjdcpylmATTX2',
     name: '中元部長',
   },
   {
     uid: 'q1wpmLlQT8fUCbHyw1BkPuWkSoO2',
     name: '井上係長',
+  },
+  {
+    uid: 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3',
+    name: '向井',
   },
   {
     uid: 'BWtKX1VivYUvQJTbmpIiEzR8tSH2',
@@ -48,28 +48,32 @@ export const users = [
     name: '野田',
   },
   {
-    uid: 's5aeG6GygmfR5J8GSmTBZgWT7Qi2',
-    name: '中村部長',
-  },
-  {
-    uid: 'ey4IaQqA9WVcw40qvHuHKPhuvyS2',
-    name: '経理',
-  },
-  {
     uid: 'dlTXruFsmcSouFsBZdBKslU2OOu1',
-    name: '本店',
+    name: '堀チーフ',
   },
   {
     uid: 'OGwbwQay9AYlw0yFfNY1Q9Qb9J72',
     name: '岩井店長',
   },
+    {
+    uid: 'bkiahjgZ3OamKB3TtvjWfXBVk7Z2',
+    name: '志野チーフ',
+  },
   {
     uid: '8ILxCIFNttM4fJoo1DSL1lIvSkZ2',
     name: '鳥岡',
   },
+    {
+    uid: 's5aeG6GygmfR5J8GSmTBZgWT7Qi2',
+    name: '中村部長',
+  },
   {
-    uid: 'bkiahjgZ3OamKB3TtvjWfXBVk7Z2',
-    name: '神戸店',
+    uid: 'ey4IaQqA9WVcw40qvHuHKPhuvyS2',
+    name: '鈴木主任',
+  },
+  {
+    uid:'6syJfoqkcWPSy7cK6rfzrXGZ78F3',
+    name:'村尾主任',
   },
   {
     uid: '8pHHV1Q2hsQS7ZioGIjAA9gfdDx1',
