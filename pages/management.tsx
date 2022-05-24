@@ -42,9 +42,11 @@ const Management = () => {
           >
             <Form />
             {user?.uid === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
-              (user?.uid === "EVKsigM546MbnakzkDmG0QHlfmn2" && (
-                <PostManagement requests={requests} />
-              ))}
+            user?.uid === "EVKsigM546MbnakzkDmG0QHlfmn2" ? (
+              <PostManagement requests={requests} />
+            ) : (
+              ""
+            )}
           </Flex>
         </Box>
       )}
