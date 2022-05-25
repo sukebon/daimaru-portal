@@ -6,10 +6,13 @@ import { auth } from "../firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Form from "../components/Form";
 import PostManagement from "../components/PostManagement";
+import { useRecoilValue } from "recoil";
+import { authState } from "../store/authState.js";
 
 const Management = () => {
   const [user] = useAuthState(auth);
   const [requests, setRequests] = useState<any>([]);
+  const currentUser = useRecoilValue(authState);
 
   useEffect(() => {
     const usersCollectionRef = collection(db, "requestList");
@@ -27,7 +30,7 @@ const Management = () => {
 
   return (
     <>
-      {user && (
+      {currentUser && (
         <Box
           width={"100%"}
           backgroundColor={"#f7f7f7"}
@@ -41,8 +44,8 @@ const Management = () => {
             margin={"0 auto"}
           >
             <Form />
-            {user?.uid === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
-            user?.uid === "EVKsigM546MbnakzkDmG0QHlfmn2" ? (
+            {currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
+            currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2" ? (
               <PostManagement requests={requests} />
             ) : (
               ""
