@@ -14,10 +14,13 @@ import { auth } from "../firebase/auth";
 import { db } from "../firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
+import { authState } from "../store/authState.js";
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
-  const router = useRouter();
   const [user] = useAuthState(auth);
+  const currentUser = useRecoilValue(authState);
+  const router = useRouter();
   const [requests, setRequests] = useState<any>([]);
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     }
   }, [router, user]);
 
+  //ログアウト
   const logout = (event: any) => {
     event.preventDefault();
     auth.signOut();
@@ -47,7 +51,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   return (
     <>
-      {user && (
+      {currentUser && (
         <div style={{ backgroundColor: "#f7f7f7" }}>
           <div className={styles.container}>
             <Head>
@@ -67,7 +71,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     社内用ポータルサイト
                   </Text>
                   <Flex flex="1" justifyContent={"end"}>
-                    {user.uid !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
+                    {currentUser !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
                       <Link href="./management">
                         <a>
                           <Button marginRight={"10px"}>依頼する</Button>
@@ -83,7 +87,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <QuickLink link={linkData.contents} />
                 <CatalogArea />
 
-                {user.uid !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
+                {currentUser !== "fIwZyubjTfgr0lbRb9VjIkOjKTB2" && (
                   <Post requests={requests} />
                 )}
               </Box>

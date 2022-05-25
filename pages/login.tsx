@@ -1,7 +1,11 @@
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { authState } from "../store/authState.js";
+
 import {
   Flex,
   Heading,
@@ -14,25 +18,27 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { NextPage } from "next";
 
 const Login: NextPage = () => {
   const [user] = useAuthState(auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useRecoilState(authState);
 
   useEffect(() => {
     if (user) {
+      setCurrentUser(user.uid);
       router.push("/");
     }
-  }, [router, user]);
+  }, [router, user, setCurrentUser]);
 
   const sighup = (event: any) => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then((userCredential: any) => {
         router.push("/");
+        setCurrentUser(userCredential.uid);
       })
       .catch((error) => {
         alert("失敗しました");
