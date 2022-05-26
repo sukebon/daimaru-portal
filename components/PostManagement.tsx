@@ -17,16 +17,18 @@ import {
   Select,
   Text,
   Textarea,
-} from "@chakra-ui/react";
-import { DragHandleIcon } from "@chakra-ui/icons";
-import { NextPage } from "next";
-import React, { useState } from "react";
-import { db, auth } from "../firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { users } from "../data.js";
-import { dateTime } from "../date.js";
-import { starLevel } from "../functions.js";
+} from '@chakra-ui/react';
+import { DragHandleIcon } from '@chakra-ui/icons';
+import { NextPage } from 'next';
+import React, { useState } from 'react';
+import { db, auth } from '../firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { users } from '../data.js';
+import { dateTime } from '../date.js';
+import { starLevel } from '../functions.js';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../store/authState';
 
 interface Props {
   requests: {
@@ -50,31 +52,32 @@ interface Props {
 
 const PostManagement: NextPage<Props> = ({ requests }) => {
   const [user] = useAuthState(auth);
+  const currentUser = useRecoilValue(authState);
   const [editButton, setEditButton] = useState(true);
-  const [title, setTitle] = useState("");
-  const [startDay, setStartDay] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDay, setEndDay] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [applicant, setApplicant] = useState("1");
-  const [person, setPerson] = useState("");
-  const [moreless, setMoreless] = useState("");
-  const [level, setLevel] = useState("");
-  const [content, setContent] = useState("");
-  const [cancelTitle, setCancelTitle] = useState("");
-  const [cancelStartDay, setCancelStartDay] = useState("");
-  const [cancelStartTime, setCancelStartTime] = useState("");
-  const [cancelEndDay, setCancelEndDay] = useState("");
-  const [cancelEndTime, setCancelEndTime] = useState("");
-  const [cancelApplicant, setCancelApplicant] = useState("1");
-  const [cancelPerson, setCancelPerson] = useState("");
-  const [cancelMoreless, setCancelMoreless] = useState("");
-  const [cancelLevel, setCancelLevel] = useState("");
-  const [cancelContent, setCancelContent] = useState("");
+  const [title, setTitle] = useState('');
+  const [startDay, setStartDay] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDay, setEndDay] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [applicant, setApplicant] = useState('1');
+  const [person, setPerson] = useState('');
+  const [moreless, setMoreless] = useState('');
+  const [level, setLevel] = useState('');
+  const [content, setContent] = useState('');
+  const [cancelTitle, setCancelTitle] = useState('');
+  const [cancelStartDay, setCancelStartDay] = useState('');
+  const [cancelStartTime, setCancelStartTime] = useState('');
+  const [cancelEndDay, setCancelEndDay] = useState('');
+  const [cancelEndTime, setCancelEndTime] = useState('');
+  const [cancelApplicant, setCancelApplicant] = useState('1');
+  const [cancelPerson, setCancelPerson] = useState('');
+  const [cancelMoreless, setCancelMoreless] = useState('');
+  const [cancelLevel, setCancelLevel] = useState('');
+  const [cancelContent, setCancelContent] = useState('');
 
   //リクエストを非表示
   const hideRequest = async (uid: string) => {
-    const docRef = doc(db, "requestList", uid);
+    const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
       displayAt: false,
     });
@@ -82,7 +85,7 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
 
   //リクエストを表示
   const displayRequest = async (uid: string) => {
-    const docRef = doc(db, "requestList", uid);
+    const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
       displayAt: true,
     });
@@ -90,7 +93,7 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
 
   //リクエストを編集する
   const isEdit = async (uid: any) => {
-    const docRef = doc(db, "requestList", uid);
+    const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
       title: title,
       startDay: startDay,
@@ -137,12 +140,12 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
 
   //編集を確定する
   const confirm = async (request: any) => {
-    const docRef = doc(db, "requestList", request.id);
+    const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: title,
-      startDay: startDay || "未定",
+      startDay: startDay || '未定',
       startTime: startTime,
-      endDay: endDay || "未定",
+      endDay: endDay || '未定',
       endTime: endTime,
       applicant: applicant,
       person,
@@ -156,12 +159,12 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
 
   //編集をキャンセルする
   const cancel = async (request: any) => {
-    const docRef = doc(db, "requestList", request.id);
+    const docRef = doc(db, 'requestList', request.id);
     await updateDoc(docRef, {
       title: cancelTitle,
-      startDay: cancelStartDay || "未定",
+      startDay: cancelStartDay || '未定',
       startTime: cancelStartTime,
-      endDay: cancelEndDay || "未定",
+      endDay: cancelEndDay || '未定',
       endTime: cancelEndTime,
       applicant: cancelApplicant,
       person: cancelPerson,
@@ -170,28 +173,36 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
       content: cancelContent,
       editAt: false,
     });
-    setCancelTitle("");
-    setCancelStartDay("");
-    setCancelStartTime("");
-    setCancelEndDay("");
-    setCancelEndTime("");
-    setCancelApplicant("");
-    setCancelPerson("");
-    setCancelMoreless("");
-    setCancelLevel("");
-    setCancelContent("");
+    setCancelTitle('');
+    setCancelStartDay('');
+    setCancelStartTime('');
+    setCancelEndDay('');
+    setCancelEndTime('');
+    setCancelApplicant('');
+    setCancelPerson('');
+    setCancelMoreless('');
+    setCancelLevel('');
+    setCancelContent('');
     setEditButton(true);
   };
 
   //リクエストを削除
   const deleteAt = async (uid: string) => {
-    const res = window.confirm("削除してよろしいでしょうか？");
+    const res = window.confirm('削除してよろしいでしょうか？');
     if (res) {
-      const docRef = doc(db, "requestList", uid);
+      const docRef = doc(db, 'requestList', uid);
       await updateDoc(docRef, {
         deleteAt: true,
       });
     }
+  };
+
+  //作成者を表示
+  const authorDispay = (authorId: string) => {
+    const usersfilter = users.filter((user) => {
+      return user.uid === authorId;
+    });
+    return usersfilter[0].name;
   };
 
   return (
@@ -199,70 +210,71 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
       {requests.map((request: any) => (
         <Box
           key={request.id}
-          style={{ width: "100%" }}
-          display={request.deleteAt ? "none" : "block"}
+          style={{ width: '100%' }}
+          display={request.deleteAt ? 'none' : 'block'}
         >
           {!request.deleteAt && (
             <Box
-              maxW="sm"
-              borderTop="none"
-              overflow="hidden"
-              margin={"0 auto 0"}
-              padding={"20px 20px 0"}
-              minW={{ base: "100%" }}
-              backgroundColor={request.displayAt === false ? "#999" : "white"}
+              maxW='sm'
+              borderTop='none'
+              overflow='hidden'
+              margin={'0 auto 0'}
+              padding={'20px 20px 0'}
+              minW={{ base: '100%' }}
+              backgroundColor={request.displayAt === false ? '#999' : 'white'}
             >
-              <Flex justifyContent={"space-between"}>
+              <Flex justifyContent={'space-between'}>
                 <Flex
-                  flexDirection={"column"}
-                  marginRight={"10px"}
-                  width={"100%"}
+                  flexDirection={'column'}
+                  marginRight={'10px'}
+                  width={'100%'}
                 >
                   {!request.editAt ? (
                     <>
-                      <Text fontSize={"2xl"}>{starLevel(request.level)} </Text>
-                      <Heading fontSize={"2xl"} paddingBottom={"10px"}>
+                      <Text fontSize={'2xl'}>{starLevel(request.level)}</Text>
+                      <Heading fontSize={'2xl'} paddingBottom={'10px'}>
                         {request.title}
                       </Heading>
-                      <Flex flexDirection={{ base: "column", md: "row" }}>
-                        <Text marginRight={"10px"}>
+
+                      <Flex flexDirection={{ base: 'column', md: 'row' }}>
+                        <Text marginRight={'10px'}>
                           【開始】{request.startDay}-{request.startTime}
                         </Text>
-                        <Text marginRight={"10px"}>
+                        <Text marginRight={'10px'}>
                           【終了】{request.endDay}-{request.endTime}
                         </Text>
-                        <Text marginRight={"10px"}>
+                        <Text marginRight={'10px'}>
                           【募集人数】{request.applicant}人{request.moreless}
                         </Text>
                         <Text>【責任者】{request.person}</Text>
                       </Flex>
-                      <Text padding={"10px 0"}>{request.content}</Text>
+                      <Text>【作成者】{authorDispay(request.author)}</Text>
+                      <Text padding={'10px 0'}>{request.content}</Text>
                     </>
                   ) : (
+                    //編集画面↓
                     <>
                       <Input
                         value={title}
-                        placeholder={"タイトル"}
+                        placeholder={'タイトル'}
                         onChange={(e) => setTitle(e.target.value)}
-                        width={"100%"}
-                        fontSize={"md"}
-                        marginBottom={"10px"}
+                        width={'100%'}
+                        fontSize={'md'}
+                        marginBottom={'10px'}
                       />
                       <Flex>
                         <Input
-                          id="startDay"
-                          type="date"
+                          id='startDay'
+                          type='date'
                           value={startDay}
-                          placeholder="開始時刻"
-                          backgroundColor={"white"}
-                          marginRight={"10px"}
-                          marginBottom={"10px"}
+                          placeholder='開始時刻'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
                           onChange={(e) => setStartDay(e.target.value)}
                         />
                         <Select
                           value={startTime}
-                          placeholder="---"
-                          backgroundColor={"white"}
+                          placeholder='---'
                           onChange={(e) => setStartTime(e.target.value)}
                         >
                           {dateTime.map((d, index) => (
@@ -274,19 +286,17 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                       </Flex>
                       <Flex>
                         <Input
-                          id="endDay"
-                          type="date"
+                          id='endDay'
+                          type='date'
                           value={endDay}
-                          placeholder="終了時刻"
-                          backgroundColor={"white"}
-                          marginRight={"10px"}
-                          marginBottom={"10px"}
+                          placeholder='終了時刻'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
                           onChange={(e) => setEndDay(e.target.value)}
                         />
                         <Select
                           value={endTime}
-                          placeholder="---"
-                          backgroundColor={"white"}
+                          placeholder='---'
                           onChange={(e) => setEndTime(e.target.value)}
                         >
                           {dateTime.map((d, index) => (
@@ -298,34 +308,31 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                       </Flex>
                       <Flex>
                         <Input
-                          id="person"
-                          type="string"
+                          id='person'
+                          type='string'
                           value={person}
-                          placeholder="タスク責任者"
-                          backgroundColor={"white"}
-                          marginRight={"10px"}
-                          marginBottom={"10px"}
+                          placeholder='タスク責任者'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
                           onChange={(e) => setPerson(e.target.value)}
                         />
                         <Select
                           value={level}
-                          placeholder="---"
-                          backgroundColor={"white"}
-                          marginBottom={"10px"}
+                          placeholder='---'
+                          marginBottom={'10px'}
                           onChange={(e) => setLevel(e.target.value)}
                         >
-                          <option value="3">★★★</option>
-                          <option value="2">★★</option>
-                          <option value="1">★</option>
+                          <option value='3'>★★★</option>
+                          <option value='2'>★★</option>
+                          <option value='1'>★</option>
                         </Select>
                       </Flex>
-                      <Flex marginBottom={"10px"}>
+                      <Flex marginBottom={'10px'}>
                         <NumberInput
-                          flex={"1"}
+                          flex={'1'}
                           value={applicant}
-                          placeholder="募集人数"
-                          backgroundColor={"white"}
-                          marginRight={"10px"}
+                          placeholder='募集人数'
+                          marginRight={'10px'}
                           onChange={(e) => setApplicant(e)}
                         >
                           <NumberInputField />
@@ -335,37 +342,36 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                           </NumberInputStepper>
                         </NumberInput>
                         <Select
-                          flex={"1"}
+                          flex={'1'}
                           value={moreless}
-                          placeholder="---"
-                          backgroundColor={"white"}
+                          placeholder='---'
                           onChange={(e) => setMoreless(e.target.value)}
                         >
-                          <option value="以上">以上</option>
-                          <option value="まで">まで</option>
+                          <option value='以上'>以上</option>
+                          <option value='まで'>まで</option>
                         </Select>
                       </Flex>
                       <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        fontSize={"md"}
-                        marginBottom={"10px"}
+                        fontSize={'md'}
+                        marginBottom={'10px'}
                       >
                         {content}
                       </Textarea>
-                      <Flex marginBottom={"10px"}>
+                      <Flex marginBottom={'10px'}>
                         <Button
                           onClick={() => confirm(request)}
-                          flex={"1"}
-                          marginRight={"10px"}
-                          colorScheme="blue"
+                          flex={'1'}
+                          marginRight={'10px'}
+                          colorScheme='blue'
                         >
                           OK
                         </Button>
                         <Button
                           onClick={() => cancel(request)}
-                          flex={"1"}
-                          colorScheme="red"
+                          flex={'1'}
+                          colorScheme='red'
                         >
                           キャンセル
                         </Button>
@@ -379,32 +385,49 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                   <Menu>
                     <MenuButton
                       as={IconButton}
-                      aria-label="Options"
+                      aria-label='Options'
                       icon={<DragHandleIcon />}
-                      variant="outline"
+                      variant='outline'
                     />
                     <MenuList>
-                      {request.displayAt === true ? (
-                        <MenuItem onClick={() => hideRequest(request.id)}>
-                          非表示
-                        </MenuItem>
-                      ) : (
-                        <MenuItem onClick={() => displayRequest(request.id)}>
-                          表示
+                      {request.displayAt === true && (
+                        <MenuItem
+                          onClick={() => {
+                            isEdit(request.id);
+                            oldTitleContent(request);
+                            cancelTitleContent(request);
+                          }}
+                        >
+                          編集
                         </MenuItem>
                       )}
-                      <MenuItem
-                        onClick={() => {
-                          isEdit(request.id);
-                          oldTitleContent(request);
-                          cancelTitleContent(request);
-                        }}
-                      >
-                        編集
-                      </MenuItem>
-                      <MenuItem onClick={() => deleteAt(request.id)}>
-                        削除
-                      </MenuItem>
+                      {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                      currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                        <>
+                          {request.displayAt === true ? (
+                            <MenuItem onClick={() => hideRequest(request.id)}>
+                              非表示
+                            </MenuItem>
+                          ) : (
+                            <MenuItem
+                              onClick={() => displayRequest(request.id)}
+                            >
+                              表示
+                            </MenuItem>
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+
+                      {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                      currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                        <MenuItem onClick={() => deleteAt(request.id)}>
+                          削除
+                        </MenuItem>
+                      ) : (
+                        ''
+                      )}
                     </MenuList>
                   </Menu>
                 )}
@@ -413,22 +436,22 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
               {/* 参加メンバー羅列 */}
               {!request.editAt && (
                 <Flex
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  marginTop={"10px"}
-                  padding={"5px 0 10px"}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  marginTop={'10px'}
+                  padding={'5px 0 10px'}
                 >
-                  <Flex flexWrap={"wrap"}>
+                  <Flex flexWrap={'wrap'}>
                     {users.map((user: any) => (
                       <Box
                         key={user.uid}
-                        padding={"5px"}
-                        margin={"5px 10px 5px 0"}
-                        borderRadius={"lg"}
-                        backgroundColor={"gray.500"}
-                        color={"white"}
+                        padding={'5px'}
+                        margin={'5px 10px 5px 0'}
+                        borderRadius={'lg'}
+                        backgroundColor={'gray.500'}
+                        color={'white'}
                         display={
-                          !request.member.includes(user.uid) ? "none" : "block"
+                          !request.member.includes(user.uid) ? 'none' : 'block'
                         }
                       >
                         {request.member.includes(user.uid) && user.name}
