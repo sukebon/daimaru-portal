@@ -61,10 +61,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Information news={newsData.contents} />
                 <QuickLink link={linkData.contents} />
                 <CatalogArea />
-
-                {currentUser !== 'fIwZyubjTfgr0lbRb9VjIkOjKTB2' && (
-                  <Post requests={requests} />
-                )}
+                <Post requests={requests} />
               </Box>
             </main>
           </div>
