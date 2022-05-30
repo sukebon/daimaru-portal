@@ -15,6 +15,7 @@ import PostManagement from '../components/PostManagement';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../store/authState.js';
 import { useRouter } from 'next/router';
+import Header from '../components/Header';
 
 const Management = () => {
   const [user] = useAuthState(auth);
@@ -66,28 +67,31 @@ const Management = () => {
   return (
     <>
       {currentUser && (
-        <Box
-          width={'100%'}
-          backgroundColor={'#f7f7f7'}
-          paddingBottom={'50px'}
-          minH={'100vh'}
-        >
-          <Flex
-            flexDirection={'column'}
-            alignItems={'center'}
-            width={{ md: '800px' }}
-            margin={'0 auto'}
+        <>
+          <Header />
+          <Box
+            width={'100%'}
+            backgroundColor={'#f7f7f7'}
+            paddingBottom={'50px'}
+            minH={'100vh'}
           >
-            <Form />
+            <Flex
+              flexDirection={'column'}
+              alignItems={'center'}
+              width={{ md: '800px' }}
+              margin={'0 auto'}
+            >
+              <Form />
 
-            {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-            currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
-              <PostManagement requests={requests} />
-            ) : (
-              <PostManagement requests={currentRequests} />
-            )}
-          </Flex>
-        </Box>
+              {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+              currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                <PostManagement requests={requests} />
+              ) : (
+                <PostManagement requests={currentRequests} />
+              )}
+            </Flex>
+          </Box>
+        </>
       )}
     </>
   );
