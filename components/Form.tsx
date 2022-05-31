@@ -53,6 +53,7 @@ const Form = () => {
         editAt: false,
         sendAt: serverTimestamp(),
         author: user?.uid,
+        recruitment: true,
       });
       console.log("Document written with ID: ", docRef.id);
       setTitle("");

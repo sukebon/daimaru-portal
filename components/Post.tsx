@@ -31,13 +31,14 @@ interface Props {
     editAt: boolean;
     sendAt: string;
   }[];
+  currentUser: string;
 }
 
-const Post: NextPage<Props> = ({ requests }) => {
+const Post: NextPage<Props> = ({ requests, currentUser }) => {
   const [user] = useAuthState(auth);
 
   //参加する
-  const setRequest = async (uid: string) => {
+  const addRequest = async (uid: string) => {
     const docRef = doc(db, "requestList", uid);
     await updateDoc(docRef, {
       member: arrayUnion(user && user.uid),
@@ -76,9 +77,11 @@ const Post: NextPage<Props> = ({ requests }) => {
               minW={{ base: "100%" }}
               backgroundColor={"white"}
             >
-              <Text fontSize={"2xl"} paddingBottom={"5px"}>
-                {starLevel(request.level)}{" "}
-              </Text>
+              <Flex alignItems={"center"} justifyContent={"space-between"}>
+                <Text fontSize={"2xl"} paddingBottom={"5px"}>
+                  {starLevel(request.level)}{" "}
+                </Text>
+              </Flex>
               <Heading fontSize={"2xl"} paddingBottom={"10px"}>
                 {request.title}
               </Heading>
@@ -103,13 +106,14 @@ const Post: NextPage<Props> = ({ requests }) => {
                 alignItems={"center"}
                 marginTop={"10px"}
                 padding={"5px 0 10px"}
+                flexDirection={{ base: "column", md: "row" }}
               >
                 <Flex flexWrap={"wrap"}>
                   {users.map((user: any) => (
                     <Box
                       key={user.uid}
                       padding={"5px"}
-                      margin={"10px 10px 10px 0"}
+                      margin={"10px 10px 0 0"}
                       borderRadius={"lg"}
                       backgroundColor={"gray.500"}
                       color={"white"}
@@ -122,28 +126,34 @@ const Post: NextPage<Props> = ({ requests }) => {
                     </Box>
                   ))}
                 </Flex>
-                {request.member.includes(user?.uid) ? (
-                  <Button
-                    onClick={() => removeRequest(request.id)}
-                    color="white"
-                    bg="#17a6ca"
-                    _hover={{ bg: "#17a6ca" }}
-                    _focus={{ outline: "none" }}
-                    fontSize={{ base: "sm" }}
-                  >
-                    参加を取り消す
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => setRequest(request.id)}
-                    color="white"
-                    bg="orange"
-                    _hover={{ bg: "##orange" }}
-                    _focus={{ outline: "none" }}
-                    fontSize={{ base: "sm" }}
-                  >
-                    参加する
-                  </Button>
+                {request.recruitment && (
+                  <>
+                    {request.member.includes(user?.uid) ? (
+                      <Button
+                        onClick={() => removeRequest(request.id)}
+                        color="white"
+                        bg="#17a6ca"
+                        _hover={{ bg: "#17a6ca" }}
+                        _focus={{ outline: "none" }}
+                        fontSize={{ base: "sm" }}
+                        marginTop={{ base: "10px", md: "0" }}
+                      >
+                        参加を取り消す
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => addRequest(request.id)}
+                        color="white"
+                        bg="orange"
+                        _hover={{ bg: "##orange" }}
+                        _focus={{ outline: "none" }}
+                        fontSize={{ base: "sm" }}
+                        marginTop={{ base: "10px", md: "0" }}
+                      >
+                        参加する
+                      </Button>
+                    )}
+                  </>
                 )}
               </Flex>
               <hr />
