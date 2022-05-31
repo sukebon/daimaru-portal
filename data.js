@@ -1,4 +1,4 @@
-export const users = [
+export const Users = [
   {
     uid: 'EVKsigM546MbnakzkDmG0QHlfmn2',
     name: '仁美社長',
@@ -55,7 +55,7 @@ export const users = [
     uid: 'OGwbwQay9AYlw0yFfNY1Q9Qb9J72',
     name: '岩井店長',
   },
-    {
+  {
     uid: 'bkiahjgZ3OamKB3TtvjWfXBVk7Z2',
     name: '志野チーフ',
   },
@@ -63,7 +63,7 @@ export const users = [
     uid: '8ILxCIFNttM4fJoo1DSL1lIvSkZ2',
     name: '鳥岡',
   },
-    {
+  {
     uid: 's5aeG6GygmfR5J8GSmTBZgWT7Qi2',
     name: '中村部長',
   },
@@ -72,8 +72,8 @@ export const users = [
     name: '鈴木主任',
   },
   {
-    uid:'6syJfoqkcWPSy7cK6rfzrXGZ78F3',
-    name:'村尾主任',
+    uid: '6syJfoqkcWPSy7cK6rfzrXGZ78F3',
+    name: '村尾主任',
   },
   {
     uid: '8pHHV1Q2hsQS7ZioGIjAA9gfdDx1',
