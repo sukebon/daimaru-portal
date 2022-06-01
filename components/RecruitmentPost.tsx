@@ -27,7 +27,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Users } from '../data.js';
 import { dateTime } from '../date.js';
-import { starLevel } from '../functions.js';
+import { starLevel, dayOfWeek } from '../functions.js';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../store/authState';
 import RecruitmentButton from './RecruitmentButton';
@@ -242,20 +242,24 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
                         fontSize={'sm'}
                       >
                         <Text marginRight={'10px'}>
-                          【開始】{request.startDay}-{request.startTime}
+                          【開始】{request.startDay}
+                          {request.startTime && `-${request.startTime}`}
+                          {dayOfWeek(request.startDay)}
                         </Text>
                         <Text marginRight={'10px'}>
-                          【終了】{request.endDay}-{request.endTime}
+                          【終了】{request.endDay}
+                          {request.endTime && `-${request.endTime}`}
+                          {dayOfWeek(request.endDay)}
                         </Text>
                         <Text marginRight={'10px'}>
                           【募集人数】{request.applicant}人{request.moreless}
                         </Text>
-                        <Text>【責任者】{request.person}</Text>
                       </Flex>
                       <Flex
                         flexDirection={{ base: 'column', md: 'row' }}
                         fontSize={'sm'}
                       >
+                        <Text>【責任者】{request.person}</Text>
                         {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
                         currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
                           <Text>【作成者】{authorDispay(request.author)}</Text>
