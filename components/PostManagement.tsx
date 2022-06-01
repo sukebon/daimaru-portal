@@ -271,7 +271,9 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                         <Text>【責任者】{request.person}</Text>
                       </Flex>
                       <Text>【作成者】{authorDispay(request.author)}</Text>
-                      <Text padding={"10px 0"}>{request.content}</Text>
+                      <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>
+                        {request.content}
+                      </Text>
                     </>
                   ) : (
                     //編集画面↓
