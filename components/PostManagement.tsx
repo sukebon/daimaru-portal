@@ -254,11 +254,14 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                   {!request.editAt ? (
                     <>
                       <Text fontSize={"2xl"}>{starLevel(request.level)}</Text>
-                      <Heading fontSize={"2xl"} paddingBottom={"10px"}>
+                      <Heading fontSize={"xl"} paddingBottom={"10px"}>
                         {request.title}
                       </Heading>
 
-                      <Flex flexDirection={{ base: "column", md: "row" }}>
+                      <Flex
+                        flexDirection={{ base: "column", md: "row" }}
+                        fontSize={"sm"}
+                      >
                         <Text marginRight={"10px"}>
                           【開始】{request.startDay}-{request.startTime}
                         </Text>
@@ -268,12 +271,19 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                         <Text marginRight={"10px"}>
                           【募集人数】{request.applicant}人{request.moreless}
                         </Text>
-                      </Flex>
-                      <Flex flexDirection={{ base: "column", md: "row" }}>
                         <Text>【責任者】{request.person}</Text>
+                      </Flex>
+                      <Flex
+                        flexDirection={{ base: "column", md: "row" }}
+                        fontSize={"sm"}
+                      >
                         <Text>【作成者】{authorDispay(request.author)}</Text>
                       </Flex>
-                      <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>
+                      <Text
+                        padding={"10px 0"}
+                        whiteSpace={"pre-wrap"}
+                        fontSize={"sm"}
+                      >
                         {request.content}
                       </Text>
                     </>
@@ -380,7 +390,7 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                       <Textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        fontSize={"md"}
+                        fontSize={"sm"}
                         marginBottom={"10px"}
                         whiteSpace={"pre-wrap"}
                       >

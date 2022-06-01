@@ -58,10 +58,13 @@ const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
                   {starLevel(request.level)}{" "}
                 </Text>
               </Flex>
-              <Heading fontSize={"2xl"} paddingBottom={"10px"}>
+              <Heading fontSize={"xl"} paddingBottom={"10px"}>
                 {request.title}
               </Heading>
-              <Flex flexDirection={{ base: "column", md: "row" }}>
+              <Flex
+                flexDirection={{ base: "column", md: "row" }}
+                fontSize={"sm"}
+              >
                 <Text marginRight={"10px"}>
                   【開始】{request.startDay}（{dayOfWeek(request.startDay)}）
                   {request.startTime}
@@ -73,11 +76,9 @@ const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
                 <Text marginRight={"10px"}>
                   【募集人数】{request.applicant}人{request.moreless}
                 </Text>
-              </Flex>
-              <Flex flexDirection={{ base: "column", md: "row" }}>
                 <Text>【責任者】{request.person}</Text>
               </Flex>
-              <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>
+              <Text padding={"10px 0"} whiteSpace={"pre-wrap"} fontSize={"sm"}>
                 {request.content}
               </Text>
 

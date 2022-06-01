@@ -238,6 +238,7 @@ const Form = () => {
                 placeholder="内容を入力してください。"
                 backgroundColor={"white"}
                 marginBottom={"20px"}
+                height={"200px"}
                 onChange={(e) => setContent(e.target.value)}
               />
             </FormControl>
