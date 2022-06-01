@@ -268,9 +268,11 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                         <Text marginRight={"10px"}>
                           【募集人数】{request.applicant}人{request.moreless}
                         </Text>
-                        <Text>【責任者】{request.person}</Text>
                       </Flex>
-                      <Text>【作成者】{authorDispay(request.author)}</Text>
+                      <Flex flexDirection={{ base: "column", md: "row" }}>
+                        <Text>【責任者】{request.person}</Text>
+                        <Text>【作成者】{authorDispay(request.author)}</Text>
+                      </Flex>
                       <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>
                         {request.content}
                       </Text>
