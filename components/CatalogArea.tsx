@@ -7,7 +7,6 @@ const CatalogArea = () => {
     <>
       <Box
         width="100%"
-        height="100%"
         boxShadow="xs"
         mt="6"
         p="3"
