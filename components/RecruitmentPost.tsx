@@ -1,10 +1,38 @@
 /* eslint-disable react/display-name */
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { NextPage } from "next";
-import React, { memo, useState } from "react";
-import { starLevel, dayOfWeek } from "../functions.js";
-import RecruitmentButton from "./RecruitmentButton";
-import RecruitmentMemberList from "./RecruitmentMemberList";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  Text,
+  Textarea,
+} from '@chakra-ui/react';
+import { DragHandleIcon } from '@chakra-ui/icons';
+import { NextPage } from 'next';
+import React, { useState } from 'react';
+import { db, auth } from '../firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { Users } from '../data.js';
+import { dateTime } from '../date.js';
+import { starLevel } from '../functions.js';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../store/authState';
+import RecruitmentButton from './RecruitmentButton';
+import RecruitmentMemberList from './RecruitmentMemberList';
+import RecruitmentMenu from './RecruitmentMenu';
 
 interface Props {
   requests: {
@@ -17,6 +45,7 @@ interface Props {
     applicant: string;
     person: string;
     moreless: string;
+    member: string;
     level: string;
     content: string;
     displayAt: boolean;
@@ -25,86 +54,379 @@ interface Props {
     sendAt: string;
     recruitment: boolean;
   }[];
-  currentUser: string;
 }
 
-const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
-  return (
-    <Box
-      mt={{ base: "0", lg: "6" }}
-      padding={"20px"}
-      border="1px"
-      borderColor={"gray.200"}
-      borderRadius={"lg"}
-      backgroundColor={"white"}
-    >
-      <Text fontSize="2xl" mt="1" ml="1">
-        お手伝い依頼一覧
-      </Text>
-      {requests.map((request: any) => (
-        <Box key={request.id} style={{ width: "100%" }}>
-          {request.displayAt === true && request.deleteAt === false ? (
-            <Box
-              maxW="sm"
-              borderTop="none"
-              overflow="hidden"
-              margin={"0 auto 0"}
-              padding={"20px 0 10px"}
-              minW={{ base: "100%" }}
-              backgroundColor={"white"}
-            >
-              <Flex alignItems={"center"} justifyContent={"space-between"}>
-                <Text fontSize={"2xl"} paddingBottom={"5px"}>
-                  {starLevel(request.level)}{" "}
-                </Text>
-              </Flex>
-              <Heading fontSize={"xl"} paddingBottom={"10px"}>
-                {request.title}
-              </Heading>
-              <Flex
-                flexDirection={{ base: "column", md: "row" }}
-                fontSize={"sm"}
-              >
-                <Text marginRight={"10px"}>
-                  【開始】{request.startDay}（{dayOfWeek(request.startDay)}）
-                  {request.startTime}
-                </Text>
-                <Text marginRight={"10px"}>
-                  【終了】{request.endDay}（{dayOfWeek(request.endDay)}）
-                  {request.endTime}
-                </Text>
-                <Text marginRight={"10px"}>
-                  【募集人数】{request.applicant}人{request.moreless}
-                </Text>
-                <Text>【責任者】{request.person}</Text>
-              </Flex>
-              <Text padding={"10px 0"} whiteSpace={"pre-wrap"} fontSize={"sm"}>
-                {request.content}
-              </Text>
+const RecruitmentPost: NextPage<Props> = ({ requests }) => {
+  const [user] = useAuthState(auth);
+  const currentUser = useRecoilValue(authState);
+  const [editButton, setEditButton] = useState(true);
+  const [title, setTitle] = useState('');
+  const [startDay, setStartDay] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDay, setEndDay] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [applicant, setApplicant] = useState('1');
+  const [person, setPerson] = useState('');
+  const [moreless, setMoreless] = useState('');
+  const [level, setLevel] = useState('');
+  const [content, setContent] = useState('');
+  const [cancelTitle, setCancelTitle] = useState('');
+  const [cancelStartDay, setCancelStartDay] = useState('');
+  const [cancelStartTime, setCancelStartTime] = useState('');
+  const [cancelEndDay, setCancelEndDay] = useState('');
+  const [cancelEndTime, setCancelEndTime] = useState('');
+  const [cancelApplicant, setCancelApplicant] = useState('1');
+  const [cancelPerson, setCancelPerson] = useState('');
+  const [cancelMoreless, setCancelMoreless] = useState('');
+  const [cancelLevel, setCancelLevel] = useState('');
+  const [cancelContent, setCancelContent] = useState('');
 
-              <Flex
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                marginTop={"10px"}
-                padding={"5px 0 10px"}
-                flexDirection={{ base: "column", md: "row" }}
-              >
-                <Flex flexWrap={"wrap"}>
-                  {/* 参加メンバー一覧 */}
-                  <RecruitmentMemberList request={request} />
+  //リクエストを編集する
+  const isEdit = async (uid: any) => {
+    const docRef = doc(db, 'requestList', uid);
+    await updateDoc(docRef, {
+      title: title,
+      startDay: startDay,
+      startTime: startTime,
+      endDay: endDay,
+      endTime: endTime,
+      applicant: applicant,
+      person: person,
+      moreless: moreless,
+      level: level,
+      content: content,
+      editAt: true,
+    });
+    setEditButton(false);
+  };
+
+  //タイトルとコンテンツの値を保持する
+  const oldTitleContent = (request: any) => {
+    setTitle(request.title);
+    setStartDay(request.startDay);
+    setStartTime(request.startTime);
+    setEndDay(request.endDay);
+    setEndTime(request.endTime);
+    setApplicant(request.applicant);
+    setPerson(request.person);
+    setMoreless(request.moreless);
+    setLevel(request.level);
+    setContent(request.content);
+  };
+
+  //「キャンセル用」タイトルとコンテンツの値を保持する
+  const cancelTitleContent = (request: any) => {
+    setCancelTitle(request.title);
+    setCancelStartDay(request.startDay);
+    setCancelStartTime(request.startTime);
+    setCancelEndDay(request.endDay);
+    setCancelEndTime(request.endTime);
+    setCancelApplicant(request.applicant);
+    setCancelPerson(request.person);
+    setCancelMoreless(request.moreless);
+    setCancelLevel(request.level);
+    setCancelContent(request.content);
+  };
+
+  //編集を確定する
+  const confirm = async (request: any) => {
+    const docRef = doc(db, 'requestList', request.id);
+    await updateDoc(docRef, {
+      title: title,
+      startDay: startDay || '未定',
+      startTime: startTime,
+      endDay: endDay || '未定',
+      endTime: endTime,
+      applicant: applicant,
+      person,
+      moreless,
+      level: level,
+      content: content,
+      editAt: false,
+    });
+    setEditButton(true);
+  };
+
+  //編集をキャンセルする
+  const cancel = async (request: any) => {
+    const docRef = doc(db, 'requestList', request.id);
+    await updateDoc(docRef, {
+      title: cancelTitle,
+      startDay: cancelStartDay || '未定',
+      startTime: cancelStartTime,
+      endDay: cancelEndDay || '未定',
+      endTime: cancelEndTime,
+      applicant: cancelApplicant,
+      person: cancelPerson,
+      moreless: cancelMoreless,
+      level: cancelLevel,
+      content: cancelContent,
+      editAt: false,
+    });
+    setCancelTitle('');
+    setCancelStartDay('');
+    setCancelStartTime('');
+    setCancelEndDay('');
+    setCancelEndTime('');
+    setCancelApplicant('');
+    setCancelPerson('');
+    setCancelMoreless('');
+    setCancelLevel('');
+    setCancelContent('');
+    setEditButton(true);
+  };
+
+  //作成者を表示
+  const authorDispay = (authorId: string) => {
+    const usersfilter = Users.filter((user) => {
+      return user.uid === authorId;
+    });
+    return usersfilter[0].name;
+  };
+
+  return (
+    <>
+      {requests.map((request: any) => (
+        <Box
+          key={request.id}
+          style={{ width: '100%' }}
+          display={request.deleteAt ? 'none' : 'block'}
+        >
+          {!request.deleteAt && (
+            <Box
+              maxW='sm'
+              borderTop='none'
+              overflow='hidden'
+              margin={'0 auto 0'}
+              padding={'20px 20px 0'}
+              minW={{ base: '100%' }}
+              backgroundColor={request.displayAt === false ? '#999' : 'white'}
+            >
+              <Flex justifyContent={'space-between'}>
+                <Flex
+                  flexDirection={'column'}
+                  marginRight={'10px'}
+                  width={'100%'}
+                >
+                  {/* 編集画面を表示 */}
+                  {!request.editAt ? (
+                    <>
+                      <Flex
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                      >
+                        <Text fontSize={'2xl'}>{starLevel(request.level)}</Text>
+                        {/* メニューボタン */}
+                        {editButton && (
+                          <>
+                            {currentUser === request.author ||
+                            currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                            currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                              <RecruitmentMenu
+                                request={request}
+                                isEdit={isEdit}
+                                oldTitleContent={oldTitleContent}
+                                cancelTitleContent={cancelTitleContent}
+                              />
+                            ) : (
+                              ''
+                            )}
+                          </>
+                        )}
+                      </Flex>
+                      <Heading fontSize={'xl'} paddingBottom={'10px'} mt={'2'}>
+                        {request.title}
+                      </Heading>
+                      <Flex
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        fontSize={'sm'}
+                      >
+                        <Text marginRight={'10px'}>
+                          【開始】{request.startDay}-{request.startTime}
+                        </Text>
+                        <Text marginRight={'10px'}>
+                          【終了】{request.endDay}-{request.endTime}
+                        </Text>
+                        <Text marginRight={'10px'}>
+                          【募集人数】{request.applicant}人{request.moreless}
+                        </Text>
+                        <Text>【責任者】{request.person}</Text>
+                      </Flex>
+                      <Flex
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        fontSize={'sm'}
+                      >
+                        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
+                        currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                          <Text>【作成者】{authorDispay(request.author)}</Text>
+                        ) : (
+                          ''
+                        )}
+                      </Flex>
+                      <Text
+                        padding={'10px 0'}
+                        whiteSpace={'pre-wrap'}
+                        fontSize={'sm'}
+                      >
+                        {request.content}
+                      </Text>
+                    </>
+                  ) : (
+                    //編集画面↓
+                    <>
+                      <Input
+                        value={title}
+                        placeholder={'タイトル'}
+                        onChange={(e) => setTitle(e.target.value)}
+                        width={'100%'}
+                        fontSize={'md'}
+                        marginBottom={'10px'}
+                      />
+                      <Flex>
+                        <Input
+                          id='startDay'
+                          type='date'
+                          value={startDay}
+                          placeholder='開始時刻'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setStartDay(e.target.value)}
+                        />
+                        <Select
+                          value={startTime}
+                          placeholder='---'
+                          onChange={(e) => setStartTime(e.target.value)}
+                        >
+                          {dateTime.map((d, index) => (
+                            <option key={index} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </Select>
+                      </Flex>
+                      <Flex>
+                        <Input
+                          id='endDay'
+                          type='date'
+                          value={endDay}
+                          placeholder='終了時刻'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setEndDay(e.target.value)}
+                        />
+                        <Select
+                          value={endTime}
+                          placeholder='---'
+                          onChange={(e) => setEndTime(e.target.value)}
+                        >
+                          {dateTime.map((d, index) => (
+                            <option key={index} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </Select>
+                      </Flex>
+                      <Flex>
+                        <Input
+                          id='person'
+                          type='string'
+                          value={person}
+                          placeholder='タスク責任者'
+                          marginRight={'10px'}
+                          marginBottom={'10px'}
+                          onChange={(e) => setPerson(e.target.value)}
+                        />
+                        <Select
+                          value={level}
+                          placeholder='---'
+                          marginBottom={'10px'}
+                          onChange={(e) => setLevel(e.target.value)}
+                        >
+                          <option value='3'>★★★</option>
+                          <option value='2'>★★</option>
+                          <option value='1'>★</option>
+                        </Select>
+                      </Flex>
+                      <Flex marginBottom={'10px'}>
+                        <NumberInput
+                          flex={'1'}
+                          value={applicant}
+                          placeholder='募集人数'
+                          marginRight={'10px'}
+                          onChange={(e) => setApplicant(e)}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                        <Select
+                          flex={'1'}
+                          value={moreless}
+                          placeholder='---'
+                          onChange={(e) => setMoreless(e.target.value)}
+                        >
+                          <option value='以上'>以上</option>
+                          <option value='まで'>まで</option>
+                        </Select>
+                      </Flex>
+                      <Textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        fontSize={'sm'}
+                        marginBottom={'10px'}
+                        whiteSpace={'pre-wrap'}
+                      >
+                        {content}
+                      </Textarea>
+                      <Flex marginBottom={'10px'}>
+                        <Button
+                          onClick={() => confirm(request)}
+                          flex={'1'}
+                          marginRight={'10px'}
+                          colorScheme='blue'
+                        >
+                          OK
+                        </Button>
+                        <Button
+                          onClick={() => cancel(request)}
+                          flex={'1'}
+                          colorScheme='red'
+                        >
+                          キャンセル
+                        </Button>
+                      </Flex>
+                    </>
+                  )}
                 </Flex>
-                {/* 参加ボタン */}
-                <RecruitmentButton request={request} />
               </Flex>
+
+              {/* 参加メンバー羅列 */}
+              {!request.editAt && (
+                <Flex
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  marginTop={{ base: '10px' }}
+                  padding={'5px 0 10px'}
+                >
+                  <Flex flexWrap={'wrap'}>
+                    {/* 参加メンバー一覧 */}
+                    <RecruitmentMemberList request={request} />
+                  </Flex>
+
+                  {/* 参加ボタン */}
+                  <RecruitmentButton request={request} />
+                </Flex>
+              )}
               <hr />
             </Box>
-          ) : (
-            ""
           )}
         </Box>
       ))}
-    </Box>
+    </>
   );
-});
+};
 
 export default RecruitmentPost;

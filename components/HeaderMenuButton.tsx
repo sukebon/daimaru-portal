@@ -32,7 +32,7 @@ const HeaderMenuButton = () => {
             <MenuItem>トップページ</MenuItem>
           </a>
         </Link>
-        <Link href='./management'>
+        <Link href='./recruitment'>
           <a>
             <MenuItem>お手伝い依頼</MenuItem>
           </a>
