@@ -65,7 +65,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Box
                   w={{ base: "100%", lg: "800px" }}
                   mx="auto"
-                  p="6"
+                  padding={"3"}
                   flex={"1"}
                 >
                   <Slogan slogan={sloganData.slogan} />
@@ -76,7 +76,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Box
                   w={{ base: "100%", md: "800px" }}
                   mx="auto"
-                  p="6"
+                  padding={"3"}
                   flex={"1"}
                 >
                   <RecruitmentPost
@@ -118,4 +118,3 @@ export async function getStaticProps() {
     },
   };
 }
-

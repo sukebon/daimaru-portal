@@ -5,14 +5,7 @@ import Link from "next/link";
 const CatalogArea = () => {
   return (
     <>
-      <Box
-        width="100%"
-        boxShadow="xs"
-        mt="6"
-        p="3"
-        rounded="md"
-        bg="white"
-      >
+      <Box width="100%" boxShadow="xs" mt="6" p="3" rounded="md" bg="white">
         <Flex color="white">
           <Box flex="1" p="3">
             <Link href="https://my.ebook5.net/daimaru-hakui/my-uniform-club/">

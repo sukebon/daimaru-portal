@@ -31,7 +31,7 @@ interface Props {
 const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
   return (
     <Box
-      margin={"20px 0"}
+      mt={{ base: "0", lg: "6" }}
       padding={"20px"}
       border="1px"
       borderColor={"gray.200"}
