@@ -73,6 +73,8 @@ const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
                 <Text marginRight={"10px"}>
                   【募集人数】{request.applicant}人{request.moreless}
                 </Text>
+              </Flex>
+              <Flex flexDirection={{ base: "column", md: "row" }}>
                 <Text>【責任者】{request.person}</Text>
               </Flex>
               <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>

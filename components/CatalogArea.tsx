@@ -5,15 +5,7 @@ import Link from "next/link";
 const CatalogArea = () => {
   return (
     <>
-      <Box
-        width="100%"
-        height="100%"
-        boxShadow="xs"
-        mt="6"
-        p="3"
-        rounded="md"
-        bg="white"
-      >
+      <Box width="100%" boxShadow="xs" mt="6" p="3" rounded="md" bg="white">
         <Flex color="white">
           <Box flex="1" p="3">
             <Link href="https://my.ebook5.net/daimaru-hakui/my-uniform-club/">
@@ -39,7 +31,7 @@ const CatalogArea = () => {
               </a>
             </Link>
           </Box>
-          <Box flex="1" p="3" min-height="100%">
+          <Box flex="1" p="3">
             <Grid
               h="100%"
               templateRows="repeat(3, 1fr)"
