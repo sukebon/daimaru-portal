@@ -378,7 +378,7 @@ const PostManagement: NextPage<Props> = ({ requests }) => {
                         onChange={(e) => setContent(e.target.value)}
                         fontSize={"md"}
                         marginBottom={"10px"}
-                        whiteSpace={"nowrap"}
+                        whiteSpace={"pre-wrap"}
                       >
                         {content}
                       </Textarea>
