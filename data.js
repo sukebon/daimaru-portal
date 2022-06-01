@@ -12,6 +12,18 @@ export const Users = [
     name: "平野常務",
   },
   {
+    uid: "rTaadOHJYSNrg6jBUMCe6LE6CWC3",
+    name: "丸田部長",
+  },
+  {
+    uid: "Gq2mclF2v1SxjYtdytgzMVsrVod2",
+    name: "光延次長",
+  },
+  {
+    uid: "9GNw16bAMWcA6tXo9pN03EuMkZh2",
+    name: "後藤主任",
+  },
+  {
     uid: "6ren6lOJmMbX0mRWjdcpylmATTX2",
     name: "中元部長",
   },
@@ -26,18 +38,6 @@ export const Users = [
   {
     uid: "BWtKX1VivYUvQJTbmpIiEzR8tSH2",
     name: "池田係長",
-  },
-  {
-    uid: "rTaadOHJYSNrg6jBUMCe6LE6CWC3",
-    name: "丸田部長",
-  },
-  {
-    uid: "Gq2mclF2v1SxjYtdytgzMVsrVod2",
-    name: "光延次長",
-  },
-  {
-    uid: "9GNw16bAMWcA6tXo9pN03EuMkZh2",
-    name: "後藤主任",
   },
   {
     uid: "WtSJQRUeqJcsyhbOOcNuVV5LHwv2",
