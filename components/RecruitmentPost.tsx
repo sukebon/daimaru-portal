@@ -75,7 +75,7 @@ const RecruitmentPost: NextPage<Props> = memo(({ requests }) => {
                 </Text>
                 <Text>【責任者】{request.person}</Text>
               </Flex>
-              <Text padding={"10px 0"} whiteSpace={"nowrap"}>
+              <Text padding={"10px 0"} whiteSpace={"pre-wrap"}>
                 {request.content}
               </Text>
 
