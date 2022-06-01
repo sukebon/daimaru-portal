@@ -39,7 +39,7 @@ const CatalogArea = () => {
               </a>
             </Link>
           </Box>
-          <Box flex="1" p="3" min-height="100%">
+          <Box flex="1" p="3">
             <Grid
               h="100%"
               templateRows="repeat(3, 1fr)"
