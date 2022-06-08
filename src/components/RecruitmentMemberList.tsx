@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { Users } from '../data.js';
+import { Users } from '../../data.js';
 
 interface Props {
   request: {
@@ -17,7 +17,7 @@ interface Props {
     member: string;
     level: string;
     content: string;
-    displayAt: boolean;
+    display: boolean;
     deleteAt: boolean;
     editAt: boolean;
     sendAt: string;

@@ -4,8 +4,8 @@ import { NextPage } from 'next';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import { auth, db } from '../firebase/auth';
-import { authState } from '../store/authState';
+import { auth, db } from '../../firebase/auth';
+import { authState } from '../../store/authState';
 
 interface Props {
   request: {
@@ -21,7 +21,7 @@ interface Props {
     member: string;
     level: string;
     content: string;
-    displayAt: boolean;
+    display: boolean;
     deleteAt: boolean;
     editAt: boolean;
     sendAt: string;

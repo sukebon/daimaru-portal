@@ -4,12 +4,7 @@ import {
   Button,
   Flex,
   Heading,
-  IconButton,
   Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -19,17 +14,16 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
-import { DragHandleIcon } from '@chakra-ui/icons';
 import { NextPage } from 'next';
 import React, { useState } from 'react';
-import { db, auth } from '../firebase/auth';
+import { db, auth } from '../../firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Users } from '../data.js';
-import { dateTime } from '../date.js';
-import { starLevel, dayOfWeek } from '../functions.js';
+import { Users } from '../../data.js';
+import { dateTime } from '../../date.js';
+import { starLevel, dayOfWeek } from '../../functions.js';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../store/authState';
+import { authState } from '../../store/authState';
 import RecruitmentButton from './RecruitmentButton';
 import RecruitmentMemberList from './RecruitmentMemberList';
 import RecruitmentMenu from './RecruitmentMenu';
@@ -48,7 +42,7 @@ interface Props {
     member: string;
     level: string;
     content: string;
-    displayAt: boolean;
+    display: boolean;
     deleteAt: boolean;
     editAt: boolean;
     sendAt: string;
@@ -200,7 +194,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
               margin={'0 auto 0'}
               padding={'20px 20px 0'}
               minW={{ base: '100%' }}
-              backgroundColor={request.displayAt === false ? '#999' : 'white'}
+              backgroundColor={request.display === false ? '#999' : 'white'}
             >
               <Flex justifyContent={'space-between'}>
                 <Flex

@@ -17,11 +17,11 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import Header from '../../components/Header';
-import { auth } from '../../firebase/auth';
-import { authState } from '../../store/authState';
+import Header from '../../../components/Header';
+import { auth } from '../../../../firebase/auth';
+import { authState } from '../../../../store/authState';
 
-const Calim = () => {
+const CalimPrint = () => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
@@ -304,7 +304,7 @@ const Calim = () => {
                   p={2}
                   justifyContent='center'
                 >
-                  <RadioGroup defaultValue='0'>
+                  <RadioGroup defaultValue='1'>
                     <Stack direction='row'>
                       <Radio mr={8} value='0'>
                         有
@@ -322,4 +322,4 @@ const Calim = () => {
   );
 };
 
-export default Calim;
+export default CalimPrint;

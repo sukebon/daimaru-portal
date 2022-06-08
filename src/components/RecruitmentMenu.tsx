@@ -10,8 +10,8 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { db } from '../firebase/auth';
-import { authState } from '../store/authState';
+import { db } from '../../firebase/auth';
+import { authState } from '../../store/authState';
 
 interface Props {
   request: {
@@ -27,7 +27,7 @@ interface Props {
     member: string;
     level: string;
     content: string;
-    displayAt: boolean;
+    display: boolean;
     deleteAt: boolean;
     editAt: boolean;
     sendAt: string;
@@ -50,7 +50,7 @@ const RecruitmentMenu: NextPage<Props> = ({
   const hideRequest = async (uid: string) => {
     const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
-      displayAt: false,
+      display: false,
     });
   };
 
@@ -58,7 +58,7 @@ const RecruitmentMenu: NextPage<Props> = ({
   const displayRequest = async (uid: string) => {
     const docRef = doc(db, 'requestList', uid);
     await updateDoc(docRef, {
-      displayAt: true,
+      display: true,
     });
   };
 
@@ -98,7 +98,7 @@ const RecruitmentMenu: NextPage<Props> = ({
         variant='outline'
       />
       <MenuList>
-        {request.displayAt === true && (
+        {request.display === true && (
           <MenuItem
             onClick={() => {
               isEdit(request.id);
@@ -112,7 +112,7 @@ const RecruitmentMenu: NextPage<Props> = ({
         {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
         currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
           <>
-            {request.displayAt === true ? (
+            {request.display === true ? (
               <MenuItem onClick={() => hideRequest(request.id)}>
                 非表示
               </MenuItem>

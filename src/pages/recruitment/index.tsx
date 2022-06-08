@@ -7,13 +7,13 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db } from '../../firebase/auth';
-import { auth } from '../../firebase/auth';
+import { db } from '../../../firebase/auth';
+import { auth } from '../../../firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import RecruitmentForm from '../../components/RecruitmentForm';
 import RecruitmentPost from '../../components/RecruitmentPost';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../store/authState.js';
+import { authState } from '../../../store/authState.js';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 

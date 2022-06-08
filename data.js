@@ -96,3 +96,89 @@ export const Users = [
     name: '長瀬',
   },
 ];
+
+export const taskflow = [
+  { id: '0', status: '事務局に提出' },
+  { id: '1', status: '対策記入中' },
+];
+
+export const claimSelectList1 = [
+  {
+    id: '1',
+    Headline: '製品起因',
+    title: '製品不良',
+  },
+  {
+    id: '2',
+    Headline: '製品起因',
+    title: '納品書',
+  },
+  {
+    id: '3',
+    Headline: '製品起因',
+    title: '商品間違い',
+  },
+  {
+    id: '4',
+    Headline: '製品起因',
+    title: 'その他',
+  },
+  {
+    id: '5',
+    Headline: '受発注',
+    title: '住所等',
+  },
+  {
+    id: '6',
+    Headline: '受発注',
+    title: '未納品',
+  },
+  {
+    id: '7',
+    Headline: '受発注',
+    title: 'その他',
+  },
+  {
+    id: '8',
+    Headline: 'その他',
+    title: 'その他',
+  },
+];
+
+export const claimSelectList2 = [
+  {
+    id: '1',
+    title: '商品再手配',
+  },
+  {
+    id: '2',
+    title: '顧客への説明・交渉',
+  },
+  {
+    id: '3',
+    title: '伝票再発行',
+  },
+  {
+    id: '4',
+    title: 'その他',
+  },
+];
+
+export const claimSelectList3 = [
+  {
+    id: '1',
+    title: '修正処置のみ',
+  },
+  {
+    id: '2',
+    title: '書面提出',
+  },
+  {
+    id: '3',
+    title: '改善の機会',
+  },
+  {
+    id: '4',
+    title: '是正処置',
+  },
+];
