@@ -31,6 +31,7 @@ import {
   claimSelectList2,
   claimSelectList3,
 } from '../../../data';
+import Link from 'next/link';
 
 const Claim: NextPage = () => {
   const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
@@ -118,7 +119,11 @@ const Claim: NextPage = () => {
                     </Td>
                     <Td></Td>
                     <Td>
-                      <Button>詳細</Button>
+                      <Link href={`/claims/${claim.id}`}>
+                        <a>
+                          <Button>詳細</Button>
+                        </a>
+                      </Link>
                     </Td>
                   </Tr>
                 ))}

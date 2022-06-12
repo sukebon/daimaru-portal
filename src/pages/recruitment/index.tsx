@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil';
 import { authState } from '../../../store/authState.js';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
+import { Administrator } from '../../../data';
 
 const Recruitment = () => {
   const [user] = useAuthState(auth);
@@ -83,8 +84,7 @@ const Recruitment = () => {
             >
               <RecruitmentForm />
 
-              {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-              currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+              {Administrator.includes(currentUser) ? (
                 <RecruitmentPost requests={requests} />
               ) : (
                 <RecruitmentPost requests={currentRequests} />

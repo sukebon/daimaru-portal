@@ -19,7 +19,7 @@ import React, { useState } from 'react';
 import { db, auth } from '../../firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Users } from '../../data.js';
+import { Users, Administrator } from '../../data.js';
 import { dateTime } from '../../date.js';
 import { starLevel, dayOfWeek } from '../../functions.js';
 import { useRecoilValue } from 'recoil';
@@ -214,8 +214,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
                         {editButton && (
                           <>
                             {currentUser === request.author ||
-                            currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-                            currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                            Administrator.includes(currentUser) ? (
                               <RecruitmentMenu
                                 request={request}
                                 isEdit={isEdit}
@@ -254,8 +253,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
                         fontSize={'sm'}
                       >
                         <Text>【責任者】{request.person}</Text>
-                        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-                        currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+                        {Administrator.includes(currentUser) ? (
                           <Text>【作成者】{authorDispay(request.author)}</Text>
                         ) : (
                           ''

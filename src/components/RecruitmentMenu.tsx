@@ -12,6 +12,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { db } from '../../firebase/auth';
 import { authState } from '../../store/authState';
+import { Administrator } from '../../data';
 
 interface Props {
   request: {
@@ -109,8 +110,7 @@ const RecruitmentMenu: NextPage<Props> = ({
             編集
           </MenuItem>
         )}
-        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-        currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+        {Administrator.includes(currentUser) ? (
           <>
             {request.display === true ? (
               <MenuItem onClick={() => hideRequest(request.id)}>
@@ -126,8 +126,7 @@ const RecruitmentMenu: NextPage<Props> = ({
           ''
         )}
 
-        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-        currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+        {Administrator.includes(currentUser) ? (
           <>
             {request.recruitment ? (
               <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
@@ -143,8 +142,7 @@ const RecruitmentMenu: NextPage<Props> = ({
           ''
         )}
 
-        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-        currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2' ? (
+        {Administrator.includes(currentUser) ? (
           <MenuItem onClick={() => deleteAt(request.id)}>削除</MenuItem>
         ) : (
           ''

@@ -37,8 +37,8 @@ const Login: NextPage = () => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential: any) => {
+        setCurrentUser(userCredential.user.uid);
         router.push('/');
-        setCurrentUser(userCredential.uid);
       })
       .catch((error) => {
         alert('失敗しました');
