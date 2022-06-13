@@ -136,42 +136,42 @@ export const taskflow = [
 export const claimSelectList1 = [
   {
     id: '1',
-    Headline: '製品起因',
+    headline: '製品起因',
     title: '製品不良',
   },
   {
     id: '2',
-    Headline: '製品起因',
+    headline: '製品起因',
     title: '納品書',
   },
   {
     id: '3',
-    Headline: '製品起因',
+    headline: '製品起因',
     title: '商品間違い',
   },
   {
     id: '4',
-    Headline: '製品起因',
+    headline: '製品起因',
     title: 'その他',
   },
   {
     id: '5',
-    Headline: '受発注',
+    headline: '受発注',
     title: '住所等',
   },
   {
     id: '6',
-    Headline: '受発注',
+    headline: '受発注',
     title: '未納品',
   },
   {
     id: '7',
-    Headline: '受発注',
+    headline: '受発注',
     title: 'その他',
   },
   {
     id: '8',
-    Headline: 'その他',
+    headline: 'その他',
     title: 'その他',
   },
 ];

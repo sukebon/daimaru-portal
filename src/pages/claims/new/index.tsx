@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Radio,
-  RadioGroup,
-  Stack,
-  Textarea,
-} from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -17,6 +8,10 @@ import Footer from '../../../components/Footer';
 import Header from '../../../components/Header';
 import { auth, db } from '../../../../firebase/auth';
 import { authState } from '../../../../store/authState';
+import ClaimInputCustomer from '../../../components/claimsComp/ClaimInputCustomer';
+import ClaimInputOccurrence from '../../../components/claimsComp/ClaimInputOccurrence';
+import ClaimInputAmendment from '../../../components/claimsComp/ClaimInputAmendment';
+import ClaimInputCounteClaim from '../../../components/claimsComp/ClaimInputCounterplan';
 
 //クレーム報告書作成
 
@@ -54,26 +49,26 @@ const ClaimNew = () => {
   const AddClaim = async () => {
     try {
       const docRef = await addDoc(collection(db, 'claimList'), {
-        customer,
-        occurrenceDate,
-        occurrenceSelect,
-        occurrenceContent,
-        amendmentSelect,
-        amendmentContent,
-        counterplanSelect,
-        counterplanContent,
-        completionDate,
-        receptionDate,
-        receptionist,
-        receptionNum,
-        stampStaff: currentUser,
-        stampOffice,
-        stampBoss,
-        stampManager,
-        stampTm,
-        status: '0',
-        deletedAt: null,
-        createdAt: serverTimestamp(),
+        customer, //顧客名
+        occurrenceDate, //発生日
+        occurrenceSelect, //発生選択
+        occurrenceContent, //発生内容
+        amendmentSelect, //修正処置選択
+        amendmentContent, //修正処置内容
+        counterplanSelect, //対策選択
+        counterplanContent, //対策内容
+        completionDate, //完了日
+        receptionDate, //受付日
+        receptionist, //受付者
+        receptionNum, //受付NO.
+        stampStaff: currentUser, //担当者ハンコ
+        stampOffice, //事務局ハンコ
+        stampBoss, //上司ハンコ
+        stampManager, //管理者ハンコ
+        stampTm, //TMハンコ
+        status: '0', //ステータス
+        deletedAt: null, //論理削除
+        createdAt: serverTimestamp(), //作成日
       });
       console.log('Document written with ID: ', docRef.id);
       router.push('/claims');
@@ -81,175 +76,86 @@ const ClaimNew = () => {
       console.error('Error adding document: ', e);
     }
   };
+
   return (
     <>
       {currentUser && (
         <>
           <Header />
-          <Box w={{ base: '100%', md: '700px' }} mx='auto' my={6} p={6}>
+          <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
             <Box
-              as='h1'
-              w='100%'
-              mt={9}
-              p={3}
-              fontSize='28px'
-              fontWeight='semibold'
-              textAlign='center'
+              w={{ base: '100%', md: '700px' }}
+              mx='auto'
+              p={6}
+              backgroundColor='white'
+              borderRadius={6}
             >
-              クレーム報告書
-            </Box>
-
-            <Box>
-              <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                顧客名
-              </Box>
-              <Input
-                type='text'
+              <Box
+                as='h1'
                 w='100%'
-                p={2}
-                mt={3}
-                placeholder='顧客名を入力'
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
+                mt={9}
+                p={3}
+                fontSize='28px'
+                fontWeight='semibold'
+                textAlign='center'
+              >
+                クレーム報告書
+              </Box>
+
+              {/* 顧客名 */}
+              <ClaimInputCustomer
+                customer={customer}
+                setCustomer={setCustomer}
+                occurrenceDate={occurrenceDate}
+                setOccurrenceDate={setOccurrenceDate}
               />
-            </Box>
-            <Box>
-              <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                発生日
-              </Box>
-              <Input
-                type='date'
-                w='100%'
-                p={2}
-                mt={3}
-                value={occurrenceDate}
-                onChange={(e) => setOccurrenceDate(e.target.value)}
+
+              {/* 発生内容 */}
+              <ClaimInputOccurrence
+                occurrenceSelect={occurrenceSelect}
+                setOccurrenceSelect={setOccurrenceSelect}
+                occurrenceContent={occurrenceContent}
+                setOccurrenceContent={setOccurrenceContent}
               />
-            </Box>
 
-            {/* 1段目　発生内容 */}
-            <Box mt={10}>
-              <Box as='h2' fontSize='lg' fontWeight='semibold'>
-                発生内容
-              </Box>
-
-              <Box w='100%' mt={6}>
-                <RadioGroup
-                  colorScheme='green'
-                  value={occurrenceSelect}
-                  onChange={(e) => setOccurrenceSelect(e)}
-                >
-                  <Box mt={3}>①製品起因</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='1'>製品不良</Radio>
-                    <Radio value='2'>納品書</Radio>
-                    <Radio value='3'>商品間違い</Radio>
-                    <Radio value='4'>その他</Radio>
-                  </Stack>
-                  <Box mt={3}>②受発注</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='5'>住所等</Radio>
-                    <Radio value='6'>未納品</Radio>
-                    <Radio value='7'>その他</Radio>
-                  </Stack>
-                  <Box mt={3}>③その他</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='8'>その他</Radio>
-                  </Stack>
-                </RadioGroup>
-              </Box>
-
-              <Textarea
-                mt={3}
-                p={2}
-                w='100%'
-                placeholder='内容を入力'
-                value={occurrenceContent}
-                onChange={(e) => setOccurrenceContent(e.target.value)}
+              {/* 修正処置 */}
+              <ClaimInputAmendment
+                amendmentSelect={amendmentSelect}
+                setAmendmentSelect={setAmendmentSelect}
+                amendmentContent={amendmentContent}
+                setAmendmentContent={setAmendmentContent}
               />
-            </Box>
 
-            {/* 2段目　修正処置 */}
-            <Box mt={10}>
-              <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                修正処置
-              </Flex>
-              <Box w='100%' mt={3}>
-                <RadioGroup
-                  colorScheme='green'
-                  defaultValue='1'
-                  value={amendmentSelect}
-                  onChange={(e) => setAmendmentSelect(e)}
-                >
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='1'>商品再手配</Radio>
-                    <Radio value='2'>顧客の説明・交渉</Radio>
-                    <Radio value='3'>伝票再発行</Radio>
-                    <Radio value='4'>その他</Radio>
-                  </Stack>
-                </RadioGroup>
-                <Textarea
-                  mt={3}
-                  p={2}
-                  w='100%'
-                  placeholder='内容を入力'
-                  value={amendmentContent}
-                  onChange={(e) => setAmendmentContent(e.target.value)}
-                />
-              </Box>
-            </Box>
+              {/*対策 */}
+              <ClaimInputCounteClaim
+                counterplanSelect={counterplanSelect}
+                setCounterplanSelect={setCounterplanSelect}
+                counterplanContent={counterplanContent}
+                setCounterplanContent={setCounterplanContent}
+              />
 
-            {/* 3段目　対策 */}
-            <Box mt={9}>
-              <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                対策
-              </Flex>
-              <Box w='100%' mt={3}>
-                <RadioGroup
-                  colorScheme='green'
-                  defaultValue='1'
-                  value={counterplanSelect}
-                  onChange={(e) => setCounterplanSelect(e)}
-                >
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='1'>修正処置のみ</Radio>
-                    <Radio value='2'>書面提出</Radio>
-                    <Radio value='3'>改善の機会</Radio>
-                    <Radio value='4'>是正処置</Radio>
-                  </Stack>
-                </RadioGroup>
-                <Textarea
-                  mt={3}
-                  p={2}
-                  w='100%'
-                  placeholder='内容を入力'
-                  value={counterplanContent}
-                  onChange={(e) => setCounterplanContent(e.target.value)}
-                />
-              </Box>
-            </Box>
-
-            {/* 添付書類 */}
-            <Box w='100%' mt={9}>
-              <Box w='100%' mt={6}>
-                <Box mr={3} fontSize='lg' fontWeight='semibold'>
-                  添付書類
-                </Box>
-                <Box mt={3}>
-                  ①<input type='file' accept='image/png, image/jpeg' />
-                </Box>
-                <Box mt={3}>
-                  ②<input type='file' accept='image/png, image/jpeg' />
-                </Box>
-                <Box mt={3}>
-                  ③<input type='file' accept='image/png, image/jpeg' />
+              {/* 添付書類 */}
+              <Box w='100%' mt={9}>
+                <Box w='100%' mt={6}>
+                  <Box mr={3} fontSize='lg' fontWeight='semibold'>
+                    添付書類
+                  </Box>
+                  <Box mt={3}>
+                    ①<input type='file' accept='image/png, image/jpeg' />
+                  </Box>
+                  <Box mt={3}>
+                    ②<input type='file' accept='image/png, image/jpeg' />
+                  </Box>
+                  <Box mt={3}>
+                    ③<input type='file' accept='image/png, image/jpeg' />
+                  </Box>
                 </Box>
               </Box>
-            </Box>
 
-            {/*送信ボタン*/}
-            <Box mt={12} textAlign='center'>
-              <Button onClick={AddClaim}>提出する</Button>
+              {/*送信ボタン*/}
+              <Box mt={12} textAlign='center'>
+                <Button onClick={AddClaim}>提出する</Button>
+              </Box>
             </Box>
           </Box>
         </>

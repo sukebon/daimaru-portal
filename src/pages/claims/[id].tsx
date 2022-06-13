@@ -84,207 +84,122 @@ const ClaimId = () => {
       {currentUser && (
         <>
           <Header />
-          {claims.map(
-            (claim: any) =>
-              claim.id === query.id && (
-                <Box
-                  key={claim.id}
-                  w={{ base: '100%', md: '700px' }}
-                  mx='auto'
-                  my={6}
-                  p={6}
-                >
+          <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
+            {claims.map(
+              (claim: any) =>
+                claim.id === query.id && (
                   <Box
-                    as='h1'
-                    w='100%'
-                    mt={9}
-                    p={3}
-                    fontSize='28px'
-                    fontWeight='semibold'
-                    textAlign='center'
+                    key={claim.id}
+                    w={{ base: '100%', md: '700px' }}
+                    mx='auto'
+                    p={6}
+                    backgroundColor='white'
+                    borderRadius={6}
                   >
-                    クレーム報告書
-                  </Box>
-
-                  <Box>
-                    <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                      顧客名
-                    </Box>
-                    <Box w='100%' p={2} mt={3}>
-                      <Box>{claim.id === query.id && claim.customer}</Box>
-                    </Box>
-                    {/* <Input
-                type='text'
-                w='100%'
-                p={2}
-                mt={3}
-                placeholder='顧客名を入力'
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-              /> */}
-                  </Box>
-                  <Box>
-                    <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                      発生日
-                    </Box>
-                    <Box w='100%' p={2} mt={3}>
-                      <Box>{claim.id === query.id && claim.occurrenceDate}</Box>
-                    </Box>
-                    {/* <Input
-                type='date'
-                w='100%'
-                p={2}
-                mt={3}
-                value={occurrenceDate}
-                onChange={(e) => setOccurrenceDate(e.target.value)}
-              /> */}
-                  </Box>
-
-                  {/* 1段目　発生内容 */}
-                  <Box mt={10}>
-                    <Box as='h2' fontSize='lg' fontWeight='semibold'>
-                      発生内容
-                    </Box>
-
-                    <Box w='100%' mt={6}>
-                      {claimSelectList1.map((c) => (
-                        <Box key={c.id}>
-                          {c.id === claim.occurrenceSelect &&
-                            `${c.Headline}  ${c.title}`}
-                        </Box>
-                      ))}
-
-                      {/* <RadioGroup
-                  colorScheme='green'
-                  value={occurrenceSelect}
-                  onChange={(e) => setOccurrenceSelect(e)}
-                >
-                  <Box mt={3}>①製品起因</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='1'>製品不良</Radio>
-                    <Radio value='2'>納品書</Radio>
-                    <Radio value='3'>商品間違い</Radio>
-                    <Radio value='4'>その他</Radio>
-                  </Stack>
-                  <Box mt={3}>②受発注</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='5'>住所等</Radio>
-                    <Radio value='6'>未納品</Radio>
-                    <Radio value='7'>その他</Radio>
-                  </Stack>
-                  <Box mt={3}>③その他</Box>
-                  <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-                    <Radio value='8'>その他</Radio>
-                  </Stack>
-                </RadioGroup> */}
-                    </Box>
-                    <Box>{claim.occurrenceContent}</Box>
-                    {/* <Textarea
-                      mt={3}
-                      p={2}
+                    <Box
+                      as='h1'
                       w='100%'
-                      placeholder='内容を入力'
-                      value={occurrenceContent}
-                      onChange={(e) => setOccurrenceContent(e.target.value)}
-                    /> */}
-                  </Box>
-
-                  {/* 2段目　修正処置 */}
-                  <Box mt={10}>
-                    <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                      修正処置
-                    </Flex>
-                    <Box w='100%' mt={3}>
-                      <RadioGroup
-                        colorScheme='green'
-                        defaultValue='1'
-                        value={amendmentSelect}
-                        onChange={(e) => setAmendmentSelect(e)}
-                      >
-                        <Stack
-                          spacing={[1, 5]}
-                          direction={['column', 'row']}
-                          p={2}
-                        >
-                          <Radio value='1'>商品再手配</Radio>
-                          <Radio value='2'>顧客の説明・交渉</Radio>
-                          <Radio value='3'>伝票再発行</Radio>
-                          <Radio value='4'>その他</Radio>
-                        </Stack>
-                      </RadioGroup>
-                      <Textarea
-                        mt={3}
-                        p={2}
-                        w='100%'
-                        placeholder='内容を入力'
-                        value={amendmentContent}
-                        onChange={(e) => setAmendmentContent(e.target.value)}
-                      />
+                      p={3}
+                      fontSize='28px'
+                      fontWeight='semibold'
+                      textAlign='center'
+                    >
+                      クレーム報告書
                     </Box>
-                  </Box>
 
-                  {/* 3段目　対策 */}
-                  <Box mt={9}>
-                    <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                      対策
-                    </Flex>
-                    <Box w='100%' mt={3}>
-                      <RadioGroup
-                        colorScheme='green'
-                        defaultValue='1'
-                        value={counterplanSelect}
-                        onChange={(e) => setCounterplanSelect(e)}
-                      >
-                        <Stack
-                          spacing={[1, 5]}
-                          direction={['column', 'row']}
-                          p={2}
-                        >
-                          <Radio value='1'>修正処置のみ</Radio>
-                          <Radio value='2'>書面提出</Radio>
-                          <Radio value='3'>改善の機会</Radio>
-                          <Radio value='4'>是正処置</Radio>
-                        </Stack>
-                      </RadioGroup>
-                      <Textarea
-                        mt={3}
-                        p={2}
-                        w='100%'
-                        placeholder='内容を入力'
-                        value={counterplanContent}
-                        onChange={(e) => setCounterplanContent(e.target.value)}
-                      />
-                    </Box>
-                  </Box>
-
-                  {/* 添付書類 */}
-                  <Box w='100%' mt={9}>
-                    <Box w='100%' mt={6}>
-                      <Box mr={3} fontSize='lg' fontWeight='semibold'>
-                        添付書類
+                    {/* 顧客名 */}
+                    <Box>
+                      <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                        顧客名
                       </Box>
-                      <Box mt={3}>
-                        ①<input type='file' accept='image/png, image/jpeg' />
-                      </Box>
-                      <Box mt={3}>
-                        ②<input type='file' accept='image/png, image/jpeg' />
-                      </Box>
-                      <Box mt={3}>
-                        ③<input type='file' accept='image/png, image/jpeg' />
+                      <Box w='100%' p={2} mt={3}>
+                        <Box>{claim.customer}</Box>
                       </Box>
                     </Box>
-                  </Box>
+                    <Box>
+                      <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                        発生日
+                      </Box>
+                      <Box w='100%' p={2} mt={3}>
+                        <Box>{claim.occurrenceDate}</Box>
+                      </Box>
+                    </Box>
 
-                  {/*送信ボタン*/}
-                  <Box mt={12} textAlign='center'>
-                    <Button>提出する</Button>
+                    {/* 発生内容 */}
+                    <Box mt={10}>
+                      <Box as='h2' fontSize='lg' fontWeight='semibold'>
+                        発生内容
+                      </Box>
+                      <Box w='100%' mt={6}>
+                        {claimSelectList1.map((list) => (
+                          <Box key={list.id}>
+                            {list.id === claim.occurrenceSelect &&
+                              `${list.headline}  ${list.title}`}
+                          </Box>
+                        ))}
+                      </Box>
+                      <Box>{claim.occurrenceContent}</Box>
+                    </Box>
+
+                    {/*修正処置 */}
+                    <Box mt={10}>
+                      <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+                        修正処置
+                      </Flex>
+                      <Box w='100%' mt={3}>
+                        {claimSelectList2.map((list) => (
+                          <Box key={list.id}>
+                            {list.id === claim.amendmentSelect && list.title}
+                          </Box>
+                        ))}
+                        <Box>{claim.amendmentContent}</Box>
+                      </Box>
+                    </Box>
+
+                    {/* 対策 */}
+                    <Box mt={9}>
+                      <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+                        対策
+                      </Flex>
+                      <Box w='100%' mt={3}>
+                        {claimSelectList3.map((list) => (
+                          <Box key={list.id}>
+                            {list.id === claim.counterplanSelect && list.title}
+                          </Box>
+                        ))}
+                        <Box>{claim.counterplanContent}</Box>
+                      </Box>
+                    </Box>
+
+                    {/* 添付書類 */}
+                    <Box w='100%' mt={9}>
+                      <Box w='100%' mt={6}>
+                        <Box mr={3} fontSize='lg' fontWeight='semibold'>
+                          添付書類
+                        </Box>
+                        <Box mt={3}>
+                          ①<input type='file' accept='image/png, image/jpeg' />
+                        </Box>
+                        <Box mt={3}>
+                          ②<input type='file' accept='image/png, image/jpeg' />
+                        </Box>
+                        <Box mt={3}>
+                          ③<input type='file' accept='image/png, image/jpeg' />
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/*送信ボタン*/}
+                    <Box mt={12} textAlign='center'>
+                      <Button>提出する</Button>
+                    </Box>
                   </Box>
-                </Box>
-              )
-          )}
+                )
+            )}
+          </Box>
+          <Footer />
         </>
       )}
-      <Footer />
     </>
   );
 };

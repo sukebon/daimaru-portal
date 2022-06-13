@@ -32,8 +32,11 @@ import {
   claimSelectList3,
 } from '../../../data';
 import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../../store/authState';
 
 const Claim: NextPage = () => {
+  const currentUser = useRecoilValue(authState);
   const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
 
   useEffect(() => {
@@ -55,91 +58,91 @@ const Claim: NextPage = () => {
   }, []);
   return (
     <>
-      <Header />
-      <Box
-        width={'100%'}
-        backgroundColor={'#f7f7f7'}
-        paddingBottom={'50px'}
-        minH={'100vh'}
-      >
-        <Flex
-          flexDirection={'column'}
-          alignItems={'center'}
-          width={{ md: '1500px' }}
-          pt={24}
-          mx='auto'
-        >
-          <TableContainer>
-            <Table size='md'>
-              <Thead>
-                <Tr>
-                  <Th>ステータス</Th>
-                  <Th>受付日</Th>
-                  <Th>担当</Th>
-                  <Th>顧客名</Th>
-                  <Th>発生日</Th>
-                  <Th>発生内容</Th>
-                  <Th>修正処置</Th>
-                  <Th>対策</Th>
-                  <Th>完了日</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {claims.map((claim: any) => (
-                  <Tr key={claim.id}>
-                    <Td>
-                      {taskflow.map(
-                        (task) => task.id == claim.status && task.status
-                      )}
-                    </Td>
-                    <Td></Td>
-                    <Td>
-                      {Users.map(
-                        (user) => user.uid == claim.stampStaff && user.name
-                      )}
-                    </Td>
-                    <Td>{claim.customer}</Td>
-                    <Td>{claim.occurrenceDate}</Td>
-                    <Td>
-                      {claimSelectList1.map(
-                        (c) =>
-                          c.id == claim.occurrenceSelect &&
-                          `${c.Headline} ${c.title}`
-                      )}
-                    </Td>
-                    <Td>
-                      {claimSelectList2.map(
-                        (c) => c.id == claim.amendmentSelect && c.title
-                      )}
-                    </Td>
-                    <Td>
-                      {claimSelectList3.map(
-                        (c) => c.id == claim.counterplanSelect && c.title
-                      )}
-                    </Td>
-                    <Td></Td>
-                    <Td>
-                      <Link href={`/claims/${claim.id}`}>
-                        <a>
-                          <Button>詳細</Button>
-                        </a>
-                      </Link>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-              {/* <Tfoot>
-                <Tr>
-                  <Th>To convert</Th>
-                  <Th>into</Th>
-                  <Th isNumeric>multiply by</Th>
-                </Tr>
-              </Tfoot> */}
-            </Table>
-          </TableContainer>
-          <div></div>
-        </Flex>
-      </Box>
+      {currentUser && (
+        <>
+          <Header />
+          <Box
+            width={'100%'}
+            p={6}
+            backgroundColor={'#f7f7f7'}
+            paddingBottom={'50px'}
+            minH={'100vh'}
+          >
+            <Flex
+              flexDirection={'column'}
+              alignItems={'center'}
+              width={{ md: '1200px' }}
+              p={6}
+              mx='auto'
+              backgroundColor='white'
+              borderRadius={6}
+            >
+              <TableContainer>
+                <Table size='sm'>
+                  <Thead>
+                    <Tr>
+                      <Th>ステータス</Th>
+                      <Th>受付日</Th>
+                      <Th>担当</Th>
+                      <Th>顧客名</Th>
+                      <Th>発生日</Th>
+                      <Th>発生内容</Th>
+                      <Th>修正処置</Th>
+                      <Th>対策</Th>
+                      <Th>完了日</Th>
+                      <Th></Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {claims.map((claim: any) => (
+                      <Tr key={claim.id}>
+                        <Td>
+                          {taskflow.map(
+                            (task) => task.id == claim.status && task.status
+                          )}
+                        </Td>
+                        <Td>{claim.receptionDate}</Td>
+                        <Td>
+                          {Users.map(
+                            (user) => user.uid == claim.stampStaff && user.name
+                          )}
+                        </Td>
+                        <Td>{claim.customer}</Td>
+                        <Td>{claim.occurrenceDate}</Td>
+                        <Td>
+                          {claimSelectList1.map(
+                            (c) =>
+                              c.id == claim.occurrenceSelect &&
+                              `${c.headline} ${c.title}`
+                          )}
+                        </Td>
+                        <Td>
+                          {claimSelectList2.map(
+                            (c) => c.id == claim.amendmentSelect && c.title
+                          )}
+                        </Td>
+                        <Td>
+                          {claimSelectList3.map(
+                            (c) => c.id == claim.counterplanSelect && c.title
+                          )}
+                        </Td>
+                        <Td>{claim.completionDate}</Td>
+                        <Td>
+                          <Link href={`/claims/${claim.id}`}>
+                            <a>
+                              <Button>詳細</Button>
+                            </a>
+                          </Link>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Flex>
+          </Box>
+        </>
+      )}
     </>
   );
 };
