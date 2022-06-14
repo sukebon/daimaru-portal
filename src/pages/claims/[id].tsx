@@ -79,8 +79,11 @@ const ClaimId = () => {
   const updateClaim = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
-      status: status,
+      status: '1',
       operator: selectUser,
+      receptionist: receptionist,
+      receptionNum,
+      receptionDate,
     });
   };
 

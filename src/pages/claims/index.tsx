@@ -71,7 +71,7 @@ const Claim: NextPage = () => {
             <Flex
               flexDirection={'column'}
               alignItems={'center'}
-              width={{ md: '1200px' }}
+              width={{ md: '1300px' }}
               p={6}
               mx='auto'
               backgroundColor='white'
@@ -83,6 +83,7 @@ const Claim: NextPage = () => {
                     <Tr>
                       <Th>ステータス</Th>
                       <Th>受付日</Th>
+                      <Th>受付NO.</Th>
                       <Th>担当</Th>
                       <Th>顧客名</Th>
                       <Th>発生日</Th>
@@ -102,6 +103,7 @@ const Claim: NextPage = () => {
                           )}
                         </Td>
                         <Td>{claim.receptionDate}</Td>
+                        <Td>{claim.receptionNum}</Td>
                         <Td>
                           {Users.map(
                             (user) => user.uid == claim.stampStaff && user.name
