@@ -10,8 +10,8 @@ import {
 import { db } from '../../../firebase/auth';
 import { auth } from '../../../firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import RecruitmentForm from '../../components/RecruitmentForm';
-import RecruitmentPost from '../../components/RecruitmentPost';
+import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
+import RecruitmentPost from '../../components/recruitmentComp/RecruitmentPost';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../store/authState.js';
 import { useRouter } from 'next/router';

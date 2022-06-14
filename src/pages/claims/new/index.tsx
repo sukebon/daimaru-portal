@@ -1,5 +1,12 @@
 import { Box, Button } from '@chakra-ui/react';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  where,
+} from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -39,6 +46,8 @@ const ClaimNew = () => {
   const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
+  const [users, setUsers] = useState<any>([]);
+  const [selectUser, setSelectUser] = useState<any>([]);
 
   useEffect(() => {
     if (user === null) {
@@ -69,6 +78,7 @@ const ClaimNew = () => {
         status: '0', //ステータス
         deletedAt: null, //論理削除
         createdAt: serverTimestamp(), //作成日
+        operator: '', //作業者
       });
       console.log('Document written with ID: ', docRef.id);
       router.push('/claims');
@@ -76,6 +86,22 @@ const ClaimNew = () => {
       console.error('Error adding document: ', e);
     }
   };
+
+  //ISO事務局一覧を取得
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, where('isoOffice', '==', true));
+    const unsub = onSnapshot(q, (querySnapshot: any) => {
+      setUsers(
+        querySnapshot.docs.map((doc: any) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+    return unsub;
+  }, []);
+  console.log(users);
 
   return (
     <>
@@ -127,12 +153,12 @@ const ClaimNew = () => {
               />
 
               {/*対策 */}
-              <ClaimInputCounteClaim
+              {/* <ClaimInputCounteClaim
                 counterplanSelect={counterplanSelect}
                 setCounterplanSelect={setCounterplanSelect}
                 counterplanContent={counterplanContent}
                 setCounterplanContent={setCounterplanContent}
-              />
+              /> */}
 
               {/* 添付書類 */}
               <Box w='100%' mt={9}>

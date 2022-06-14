@@ -40,6 +40,7 @@ const HeaderMenuButton = () => {
         </Link>
         {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ? (
           <>
+            <MenuDivider />
             <Link href='/claims/new'>
               <a>
                 <MenuItem>クレーム報告書作成</MenuItem>
@@ -55,6 +56,7 @@ const HeaderMenuButton = () => {
                 <MenuItem>管理者ページ</MenuItem>
               </a>
             </Link>
+            <MenuDivider />
           </>
         ) : (
           ''

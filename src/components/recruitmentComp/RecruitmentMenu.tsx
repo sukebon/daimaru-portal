@@ -10,9 +10,9 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { db } from '../../firebase/auth';
-import { authState } from '../../store/authState';
-import { Administrator } from '../../data';
+import { db } from '../../../firebase/auth';
+import { authState } from '../../../store/authState';
+import { Administrator } from '../../../data';
 
 interface Props {
   request: {

@@ -5,16 +5,20 @@ import {
   Input,
   Radio,
   RadioGroup,
+  Select,
   Stack,
+  Text,
   Textarea,
 } from '@chakra-ui/react';
 import {
-  addDoc,
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
-  serverTimestamp,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -30,12 +34,14 @@ import {
   claimSelectList2,
   claimSelectList3,
 } from '../../../data';
+import Link from 'next/link';
+import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
 
 //クレーム報告書作成
 
 const ClaimId = () => {
   const router = useRouter();
-  const query = router.query;
+  const queryId = router.query.id;
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const [customer, setCustomer] = useState(''); //顧客名
@@ -58,7 +64,10 @@ const ClaimId = () => {
   const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
-  const [claims, setClaims] = useState<any>([]);
+  const [claim, setClaim] = useState<any>([]);
+  const [users, setUsers] = useState<any>([]);
+  const [selectUser, setSelectUser] = useState('');
+  const [isoOfficeUsers, setIsoOfficetUsers] = useState<any>([]);
 
   useEffect(() => {
     if (user === null) {
@@ -66,11 +75,37 @@ const ClaimId = () => {
     }
   }, [router, user]);
 
+  //クレーム報告書を更新
+  const updateClaim = async (id: any) => {
+    const docRef = doc(db, 'claimList', id);
+    await updateDoc(docRef, {
+      status: status,
+      operator: selectUser,
+    });
+  };
+
+  //クレーム報告書を取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, 'claimList');
-    const unsub = onSnapshot(claimsCollectionRef, (querySnapshot) => {
-      setClaims(
-        querySnapshot.docs.map((doc) => ({
+    const getClaim = async () => {
+      const claimsDoc = doc(db, 'claimList', `${queryId}`);
+      const docSnap = await getDoc(claimsDoc);
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        setClaim(docSnap.data());
+      } else {
+        console.log('ドキュメントがありません。');
+      }
+    };
+    getClaim();
+  }, [queryId]);
+
+  //ユーザー一覧を取得
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const unsub = onSnapshot(q, (querySnapshot: any) => {
+      setUsers(
+        querySnapshot.docs.map((doc: any) => ({
           ...doc.data(),
           id: doc.id,
         }))
@@ -79,123 +114,199 @@ const ClaimId = () => {
     return unsub;
   }, []);
 
+  console.log(isoOfficeUsers);
+
+  //ISO事務局一覧を取得
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, where('isoOffice', '==', true));
+    const unsub = onSnapshot(q, (querySnapshot: any) => {
+      setIsoOfficetUsers(
+        querySnapshot.docs.map((doc: any) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+    return unsub;
+  }, []);
+  console.log(users);
+
   return (
     <>
       {currentUser && (
         <>
           <Header />
           <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
-            {claims.map(
-              (claim: any) =>
-                claim.id === query.id && (
-                  <Box
-                    key={claim.id}
-                    w={{ base: '100%', md: '700px' }}
-                    mx='auto'
-                    p={6}
-                    backgroundColor='white'
-                    borderRadius={6}
-                  >
-                    <Box
-                      as='h1'
+            <Link href={'/claims'}>
+              <a>
+                <Button>一覧へ戻る</Button>
+              </a>
+            </Link>
+            <Box
+              w={{ base: '100%', md: '700px' }}
+              mx='auto'
+              p={6}
+              backgroundColor='white'
+              borderRadius={6}
+            >
+              <Box
+                as='h1'
+                w='100%'
+                p={3}
+                fontSize='28px'
+                fontWeight='semibold'
+                textAlign='center'
+              >
+                クレーム報告書
+              </Box>
+
+              {/* 顧客名 */}
+              <Box>
+                <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                  顧客名
+                </Box>
+                <Box w='100%' p={2} mt={3}>
+                  <Box>{claim.customer}</Box>
+                </Box>
+              </Box>
+              <Box>
+                <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                  発生日
+                </Box>
+                <Box w='100%' p={2} mt={3}>
+                  <Box>{claim.occurrenceDate}</Box>
+                </Box>
+              </Box>
+
+              {/* 発生内容 */}
+              <Box mt={10}>
+                <Box as='h2' fontSize='lg' fontWeight='semibold'>
+                  発生内容
+                </Box>
+                <Box w='100%' mt={6}>
+                  {claimSelectList1.map((list) => (
+                    <Box key={list.id}>
+                      {list.id === claim.occurrenceSelect &&
+                        `${list.headline}  ${list.title}`}
+                    </Box>
+                  ))}
+                </Box>
+                <Box>{claim.occurrenceContent}</Box>
+              </Box>
+
+              {/*修正処置 */}
+              <Box mt={10}>
+                <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+                  修正処置
+                </Flex>
+                <Box w='100%' mt={3}>
+                  {claimSelectList2.map((list) => (
+                    <Box key={list.id}>
+                      {list.id === claim.amendmentSelect && list.title}
+                    </Box>
+                  ))}
+                  <Box>{claim.amendmentContent}</Box>
+                </Box>
+              </Box>
+
+              {/* 対策 */}
+              <Box mt={9}>
+                <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+                  対策
+                </Flex>
+                <Box w='100%' mt={3}>
+                  {claimSelectList3.map((list) => (
+                    <Box key={list.id}>
+                      {list.id === claim.counterplanSelect && list.title}
+                    </Box>
+                  ))}
+                  <Box>{claim.counterplanContent}</Box>
+                </Box>
+              </Box>
+
+              {/* 添付書類 */}
+              <Box w='100%' mt={9}>
+                <Box w='100%' mt={6}>
+                  <Box mr={3} fontSize='lg' fontWeight='semibold'>
+                    添付書類
+                  </Box>
+                  <Box mt={3}>
+                    ①
+                    <input type='file' accept='image/png, image/jpeg' />
+                  </Box>
+                  <Box mt={3}>
+                    ②
+                    <input type='file' accept='image/png, image/jpeg' />
+                  </Box>
+                  <Box mt={3}>
+                    ③
+                    <input type='file' accept='image/png, image/jpeg' />
+                  </Box>
+                </Box>
+              </Box>
+
+              {/*'受付日*/}
+              {claim.status === '0' ? (
+                <>
+                  <Box>
+                    <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                      受付NO
+                    </Box>
+                    <Input
+                      type='text'
                       w='100%'
-                      p={3}
-                      fontSize='28px'
-                      fontWeight='semibold'
-                      textAlign='center'
-                    >
-                      クレーム報告書
+                      p={2}
+                      mt={3}
+                      placeholder='受付ナンバー 例 R0-001'
+                      value={receptionNum}
+                      onChange={(e) => setReceptionNum(e.target.value)}
+                    />
+                  </Box>
+                  <Box>
+                    <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                      受付日
                     </Box>
-
-                    {/* 顧客名 */}
-                    <Box>
-                      <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                        顧客名
-                      </Box>
-                      <Box w='100%' p={2} mt={3}>
-                        <Box>{claim.customer}</Box>
-                      </Box>
+                    <Input
+                      type='date'
+                      w='100%'
+                      p={2}
+                      mt={3}
+                      value={receptionDate}
+                      onChange={(e) => setReceptionDate(e.target.value)}
+                    />
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box>
+                    <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                      受付NO
                     </Box>
-                    <Box>
-                      <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                        発生日
-                      </Box>
-                      <Box w='100%' p={2} mt={3}>
-                        <Box>{claim.occurrenceDate}</Box>
-                      </Box>
-                    </Box>
-
-                    {/* 発生内容 */}
-                    <Box mt={10}>
-                      <Box as='h2' fontSize='lg' fontWeight='semibold'>
-                        発生内容
-                      </Box>
-                      <Box w='100%' mt={6}>
-                        {claimSelectList1.map((list) => (
-                          <Box key={list.id}>
-                            {list.id === claim.occurrenceSelect &&
-                              `${list.headline}  ${list.title}`}
-                          </Box>
-                        ))}
-                      </Box>
-                      <Box>{claim.occurrenceContent}</Box>
-                    </Box>
-
-                    {/*修正処置 */}
-                    <Box mt={10}>
-                      <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                        修正処置
-                      </Flex>
-                      <Box w='100%' mt={3}>
-                        {claimSelectList2.map((list) => (
-                          <Box key={list.id}>
-                            {list.id === claim.amendmentSelect && list.title}
-                          </Box>
-                        ))}
-                        <Box>{claim.amendmentContent}</Box>
-                      </Box>
-                    </Box>
-
-                    {/* 対策 */}
-                    <Box mt={9}>
-                      <Flex as='h2' fontSize='lg' fontWeight='semibold'>
-                        対策
-                      </Flex>
-                      <Box w='100%' mt={3}>
-                        {claimSelectList3.map((list) => (
-                          <Box key={list.id}>
-                            {list.id === claim.counterplanSelect && list.title}
-                          </Box>
-                        ))}
-                        <Box>{claim.counterplanContent}</Box>
-                      </Box>
-                    </Box>
-
-                    {/* 添付書類 */}
-                    <Box w='100%' mt={9}>
-                      <Box w='100%' mt={6}>
-                        <Box mr={3} fontSize='lg' fontWeight='semibold'>
-                          添付書類
-                        </Box>
-                        <Box mt={3}>
-                          ①<input type='file' accept='image/png, image/jpeg' />
-                        </Box>
-                        <Box mt={3}>
-                          ②<input type='file' accept='image/png, image/jpeg' />
-                        </Box>
-                        <Box mt={3}>
-                          ③<input type='file' accept='image/png, image/jpeg' />
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    {/*送信ボタン*/}
-                    <Box mt={12} textAlign='center'>
-                      <Button>提出する</Button>
+                    <Box w='100%' p={2} mt={3}>
+                      {claim.receptionNum}
                     </Box>
                   </Box>
-                )
-            )}
+                  <Box>
+                    <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                      受付日
+                    </Box>
+                    <Box w='100%' p={2} mt={3}>
+                      {claim.receptionDate}
+                    </Box>
+                  </Box>
+                </>
+              )}
+
+              {/*送信ボタン*/}
+              <ClaimSelectSendButton
+                selectUser={selectUser}
+                setSelectUser={setSelectUser}
+                users={users}
+                updateClaim={updateClaim}
+                queryId={queryId}
+              />
+            </Box>
           </Box>
           <Footer />
         </>

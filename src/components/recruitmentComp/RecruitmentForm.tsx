@@ -16,10 +16,10 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { db, auth } from '../../firebase/auth';
+import { db, auth } from '../../../firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Link from 'next/link';
-import { dateTime } from '../../date';
+import { dateTime } from '../../../date';
 
 const Form = () => {
   const [user] = useAuthState(auth);
