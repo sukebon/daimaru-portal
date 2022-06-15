@@ -128,8 +128,13 @@ export const Administrator = [
 ];
 
 export const taskflow = [
-  { id: '0', status: '事務局に提出' },
-  { id: '1', status: '対策記入中' },
+  { id: '0', status: '受付' },
+  { id: '1', status: '修正処置' },
+  { id: '2', status: '対策' },
+  { id: '3', status: '上長承認' },
+  { id: '4', status: '管理者承認' },
+  { id: '5', status: 'TM承認' },
+  { id: '6', status: '完了' },
 ];
 
 //クレーム報告書
