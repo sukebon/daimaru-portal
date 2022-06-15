@@ -133,7 +133,7 @@ export const taskflow = [
   { id: '2', status: '対策' },
   { id: '3', status: '上長承認' },
   { id: '4', status: '管理者承認' },
-  { id: '5', status: 'TM承認' },
+  { id: '5', status: 'ＴＭ承認' },
   { id: '6', status: '完了' },
 ];
 
