@@ -7,6 +7,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import React from 'react';
+import { claimSelectList2 } from '../../../data';
 
 const ClaimInputAmendment = ({
   amendmentSelect,
@@ -28,10 +29,11 @@ const ClaimInputAmendment = ({
             onChange={(e) => setAmendmentSelect(e)}
           >
             <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-              <Radio value='1'>商品再手配</Radio>
-              <Radio value='2'>顧客の説明・交渉</Radio>
-              <Radio value='3'>伝票再発行</Radio>
-              <Radio value='4'>その他</Radio>
+              {claimSelectList2.map((list) => (
+                <Radio key={list.id} value={list.id}>
+                  {list.title}
+                </Radio>
+              ))}
             </Stack>
           </RadioGroup>
           <Textarea

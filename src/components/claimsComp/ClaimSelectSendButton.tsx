@@ -1,21 +1,23 @@
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
+import { claimSelectList3 } from '../../../data';
 
 const ClaimSelectSendButton: NextPage<any> = ({
+  claim,
   selectUser,
   setSelectUser,
   users,
   selectTask,
   setSelectTask,
   taskflow,
-  updateClaim,
+  switchClaim,
   queryId,
 }) => {
   const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
-  const [isoOfficetUsers, setIsoOfficeUsers] = useState<any>([]);
+  const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
 
   useEffect(() => {
     setIsoManagereUsers(
@@ -41,73 +43,78 @@ const ClaimSelectSendButton: NextPage<any> = ({
   }, [users]);
 
   return (
-    <Box mt={12}>
-      <Text w='100%' mx='auto' textAlign='center'>
-        上記、必要な項目を記入してから宛先を指定して送信してください。
-      </Text>
-      <Flex justifyContent={'center'} mt={6}>
-        <Select
-          value={selectTask}
-          onChange={(e) => setSelectTask(e.target.value)}
-          placeholder='タスクを選択'
-          w={48}
-          mr={2}
-        >
-          {taskflow.map(
-            (task: { id: string; status: string; index: number }) =>
-              task.id !== '0' && (
-                <option key={task.id} value={task.id}>
-                  {task.status}
+    <>
+      <Box mt={12}>
+        <Text w='100%' mx='auto' textAlign='center'>
+          タスクと送信先を選択して送信してください。
+        </Text>
+        <Flex justifyContent={'center'} mt={6}>
+          <Select
+            value={selectTask}
+            onChange={(e) => setSelectTask(e.target.value)}
+            placeholder='タスクを選択'
+            w={48}
+            mr={2}
+          >
+            {taskflow.map(
+              (task: { id: number; status: string; index: number }) =>
+                1 < task.id && (
+                  <option key={task.id} value={task.id}>
+                    {task.status}
+                  </option>
+                )
+            )}
+          </Select>
+
+          <Select
+            value={selectUser}
+            onChange={(e) => setSelectUser(e.target.value)}
+            placeholder='送信先を選択'
+            w={48}
+            mr={2}
+          >
+            {selectTask == 1 &&
+              users.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
                 </option>
-              )
-          )}
-        </Select>
-        <Select
-          value={selectUser}
-          onChange={(e) => setSelectUser(e.target.value)}
-          placeholder='送信先を選択'
-          w={48}
-          mr={2}
-        >
-          {(selectTask == 0 || selectTask == 1 || selectTask == 2) &&
-            users.map((user: { uid: string; name: string }) => (
-              <option key={user.uid} value={user.uid}>
-                {user.name}
-              </option>
-            ))}
-          {selectTask == 3 &&
-            isoBossUsers.map((user: { uid: string; name: string }) => (
-              <option key={user.uid} value={user.uid}>
-                {user.name}
-              </option>
-            ))}
-          {selectTask == 4 &&
-            isoManagerUsers.map((user: { uid: string; name: string }) => (
-              <option key={user.uid} value={user.uid}>
-                {user.name}
-              </option>
-            ))}
-          {selectTask == 5 &&
-            isoTopManegmentUsers.map((user: { uid: string; name: string }) => (
-              <option key={user.uid} value={user.uid}>
-                {user.name}
-              </option>
-            ))}
-          {selectTask == 6 &&
-            isoOfficetUsers.map((user: { uid: string; name: string }) => (
-              <option key={user.uid} value={user.uid}>
-                {user.name}
-              </option>
-            ))}
-        </Select>
-        <Button
-          onClick={() => updateClaim(queryId)}
-          disabled={selectTask && selectUser ? false : true}
-        >
-          送信する
-        </Button>
-      </Flex>
-    </Box>
+              ))}
+            {selectTask == 2 &&
+              isoBossUsers.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
+                </option>
+              ))}
+            {selectTask == 3 &&
+              isoManagerUsers.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
+                </option>
+              ))}
+            {selectTask == 4 &&
+              isoTopManegmentUsers.map(
+                (user: { uid: string; name: string }) => (
+                  <option key={user.uid} value={user.uid}>
+                    {user.name}
+                  </option>
+                )
+              )}
+            {selectTask == 5 &&
+              isoOfficeUsers.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
+                </option>
+              ))}
+          </Select>
+          <Button
+            onClick={() => switchClaim(queryId)}
+            disabled={selectTask && selectUser ? false : true}
+          >
+            送信する
+          </Button>
+        </Flex>
+      </Box>
+    </>
   );
 };
 

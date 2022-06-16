@@ -7,6 +7,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import React from 'react';
+import { claimSelectList3 } from '../../../data';
 
 const ClaimInputCounterplan = ({
   counterplanSelect,
@@ -28,10 +29,11 @@ const ClaimInputCounterplan = ({
             onChange={(e) => setCounterplanSelect(e)}
           >
             <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
-              <Radio value='1'>修正処置のみ</Radio>
-              <Radio value='2'>書面提出</Radio>
-              <Radio value='3'>改善の機会</Radio>
-              <Radio value='4'>是正処置</Radio>
+              {claimSelectList3.map((list) => (
+                <Radio key={list.id} value={list.id}>
+                  {list.title}
+                </Radio>
+              ))}
             </Stack>
           </RadioGroup>
           <Textarea
