@@ -80,18 +80,24 @@ const ClaimSelectSendButton: NextPage<any> = ({
                 </option>
               ))}
             {selectTask == 2 &&
-              isoBossUsers.map((user: { uid: string; name: string }) => (
+              users.map((user: { uid: string; name: string }) => (
                 <option key={user.uid} value={user.uid}>
                   {user.name}
                 </option>
               ))}
             {selectTask == 3 &&
-              isoManagerUsers.map((user: { uid: string; name: string }) => (
+              isoBossUsers.map((user: { uid: string; name: string }) => (
                 <option key={user.uid} value={user.uid}>
                   {user.name}
                 </option>
               ))}
             {selectTask == 4 &&
+              isoManagerUsers.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
+                </option>
+              ))}
+            {selectTask == 5 &&
               isoTopManegmentUsers.map(
                 (user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
@@ -99,12 +105,6 @@ const ClaimSelectSendButton: NextPage<any> = ({
                   </option>
                 )
               )}
-            {selectTask == 5 &&
-              isoOfficeUsers.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
           </Select>
           <Button
             onClick={() => switchClaim(queryId)}

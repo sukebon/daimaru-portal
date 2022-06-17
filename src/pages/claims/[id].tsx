@@ -106,6 +106,8 @@ const ClaimId = () => {
       amendmentContent: amendmentContent,
       counterplanSelect: counterplanSelect,
       counterplanContent: counterplanContent,
+      receptionNum: receptionNum,
+      receptionDate: receptionDate,
     });
   };
 
@@ -163,6 +165,8 @@ const ClaimId = () => {
     setAmendmentContent(claim.amendmentContent);
     setCounterplanSelect(claim.counterplanSelect);
     setCounterplanContent(claim.counterplanContent);
+    setReceptionNum(claim.receptionNum);
+    setReceptionDate(claim.receptionDate);
   };
 
   const editCancel = () => {
@@ -174,6 +178,8 @@ const ClaimId = () => {
     setAmendmentContent('');
     setCounterplanSelect('');
     setCounterplanContent('');
+    setReceptionNum('');
+    setReceptionDate('');
   };
 
   return (
@@ -198,7 +204,8 @@ const ClaimId = () => {
                   key={task.id}
                   justifyContent='center'
                   alignItems='center'
-                  p={2}
+                  py={3}
+                  px={1}
                   w={'100%'}
                   borderLeft='1px'
                   borderLeftRadius={index === 0 ? 6 : 0}
@@ -207,7 +214,7 @@ const ClaimId = () => {
                     task.id === Number(claim.status) ? '#ffc107' : 'gray'
                   }
                   color='white'
-                  fontSize='sm'
+                  fontSize='xs'
                 >
                   {task.status}
                 </Flex>
@@ -243,6 +250,58 @@ const ClaimId = () => {
                     編集
                   </Button>
                   <ClaimReport claim={claim} />
+
+                  {/*'受付日*/}
+                  {Number(claim.status) === 0 ? (
+                    <>
+                      <Box>
+                        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                          受付NO
+                        </Box>
+                        <Input
+                          type='text'
+                          w='100%'
+                          p={2}
+                          mt={3}
+                          placeholder='受付ナンバー 例 4-001'
+                          value={receptionNum}
+                          onChange={(e) => setReceptionNum(e.target.value)}
+                        />
+                      </Box>
+                      <Box>
+                        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                          受付日
+                        </Box>
+                        <Input
+                          type='date'
+                          w='100%'
+                          p={2}
+                          mt={3}
+                          value={receptionDate}
+                          onChange={(e) => setReceptionDate(e.target.value)}
+                        />
+                      </Box>
+                    </>
+                  ) : (
+                    <>
+                      <Box>
+                        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                          受付NO
+                        </Box>
+                        <Box w='100%' p={2} mt={3}>
+                          {claim.receptionNum}
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                          受付日
+                        </Box>
+                        <Box w='100%' p={2} mt={3}>
+                          {claim.receptionDate}
+                        </Box>
+                      </Box>
+                    </>
+                  )}
                 </>
               ) : (
                 <>
@@ -263,7 +322,9 @@ const ClaimId = () => {
                     キャンセル
                   </Button>
                   <ClaimEdit
+                    currentUser={currentUser}
                     claim={claim}
+                    isoOfficeUsers={isoOfficeUsers}
                     customer={customer}
                     setCustomer={setCustomer}
                     occurrenceDate={occurrenceDate}
@@ -280,59 +341,11 @@ const ClaimId = () => {
                     setCounterplanSelect={setCounterplanSelect}
                     counterplanContent={counterplanContent}
                     setCounterplanContent={setCounterplanContent}
+                    receptionNum={receptionNum}
+                    setReceptionNum={setReceptionNum}
+                    receptionDate={receptionDate}
+                    setReceptionDate={setReceptionDate}
                   />
-                </>
-              )}
-
-              {/*'受付日*/}
-              {Number(claim.status) === 0 ? (
-                <>
-                  <Box>
-                    <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                      受付NO
-                    </Box>
-                    <Input
-                      type='text'
-                      w='100%'
-                      p={2}
-                      mt={3}
-                      placeholder='受付ナンバー 例 4-001'
-                      value={receptionNum}
-                      onChange={(e) => setReceptionNum(e.target.value)}
-                    />
-                  </Box>
-                  <Box>
-                    <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                      受付日
-                    </Box>
-                    <Input
-                      type='date'
-                      w='100%'
-                      p={2}
-                      mt={3}
-                      value={receptionDate}
-                      onChange={(e) => setReceptionDate(e.target.value)}
-                    />
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Box>
-                    <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                      受付NO
-                    </Box>
-                    <Box w='100%' p={2} mt={3}>
-                      {claim.receptionNum}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                      受付日
-                    </Box>
-                    <Box w='100%' p={2} mt={3}>
-                      {claim.receptionDate}
-                    </Box>
-                  </Box>
                 </>
               )}
 

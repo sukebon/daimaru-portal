@@ -16,6 +16,10 @@ import {
 } from '../../../data';
 
 type Props = {
+  currentUser: string;
+  isoOfficeUsers: {
+    uid: string;
+  }[];
   claim: {
     customer: string;
     occurrenceDate: string;
@@ -25,6 +29,11 @@ type Props = {
     amendmentContent: string;
     counterplanSelect: string;
     counterplanContent: string;
+    stampStaff: string;
+    status: string | number;
+    operator: string;
+    receptionNum: string;
+    receptionDate: string;
   };
   customer: string;
   setCustomer: any;
@@ -42,9 +51,15 @@ type Props = {
   setCounterplanSelect: any;
   counterplanContent: string;
   setCounterplanContent: any;
+  receptionNum: string;
+  setReceptionNum: any;
+  receptionDate: string;
+  setReceptionDate: any;
 };
 
 const ClaimEdit: NextPage<Props> = ({
+  currentUser,
+  isoOfficeUsers,
   claim,
   customer,
   setCustomer,
@@ -62,7 +77,42 @@ const ClaimEdit: NextPage<Props> = ({
   setCounterplanSelect,
   counterplanContent,
   setCounterplanContent,
+  receptionNum,
+  setReceptionNum,
+  receptionDate,
+  setReceptionDate,
 }) => {
+  //事務局のみ編集可
+  const enabledOffice = () => {
+    const users = isoOfficeUsers.map((user) => {
+      return user.uid;
+    });
+    if (users.includes(currentUser)) return false;
+    return true;
+  };
+
+  //担当者と事務局のみ編集可
+  const enabledStaffAndOffice = () => {
+    const users = isoOfficeUsers.map((user) => {
+      return user.uid;
+    });
+    if (claim.stampStaff === currentUser || users.includes(currentUser))
+      return false;
+    return true;
+  };
+
+  //対策記入者と事務局のみ編集許可
+  const enabledCounterplanAndOffice = () => {
+    const users = isoOfficeUsers.map((user) => {
+      return user.uid;
+    });
+    if (
+      (claim.operator === currentUser && Number(claim.status) === 2) ||
+      users.includes(currentUser)
+    )
+      return false;
+    return true;
+  };
   return (
     <>
       {/* 顧客名 */}
@@ -78,6 +128,7 @@ const ClaimEdit: NextPage<Props> = ({
             mt={3}
             placeholder='顧客名を入力'
             value={customer}
+            disabled={enabledOffice()}
             onChange={(e) => setCustomer(e.target.value)}
           />
         </Box>
@@ -93,6 +144,7 @@ const ClaimEdit: NextPage<Props> = ({
             p={2}
             mt={3}
             value={occurrenceDate}
+            disabled={enabledOffice()}
             onChange={(e) => setOccurrenceDate(e.target.value)}
           />
         </Box>
@@ -151,6 +203,7 @@ const ClaimEdit: NextPage<Props> = ({
           w='100%'
           placeholder='内容を入力'
           value={occurrenceContent}
+          disabled={enabledStaffAndOffice()}
           onChange={(e) => setOccurrenceContent(e.target.value)}
         />
       </Box>
@@ -169,7 +222,11 @@ const ClaimEdit: NextPage<Props> = ({
           >
             <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
               {claimSelectList2.map((list) => (
-                <Radio key={list.id} value={list.id}>
+                <Radio
+                  key={list.id}
+                  value={list.id}
+                  disabled={enabledStaffAndOffice()}
+                >
                   {list.title}
                 </Radio>
               ))}
@@ -182,6 +239,7 @@ const ClaimEdit: NextPage<Props> = ({
           w='100%'
           placeholder='内容を入力'
           value={amendmentContent}
+          disabled={enabledStaffAndOffice()}
           onChange={(e) => setAmendmentContent(e.target.value)}
         />
       </Box>
@@ -200,7 +258,11 @@ const ClaimEdit: NextPage<Props> = ({
           >
             <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
               {claimSelectList3.map((list) => (
-                <Radio key={list.id} value={list.id}>
+                <Radio
+                  key={list.id}
+                  value={list.id}
+                  disabled={enabledCounterplanAndOffice()}
+                >
                   {list.title}
                 </Radio>
               ))}
@@ -213,6 +275,7 @@ const ClaimEdit: NextPage<Props> = ({
               w='100%'
               placeholder='内容を入力'
               value={counterplanContent}
+              disabled={enabledCounterplanAndOffice()}
               onChange={(e) => setCounterplanContent(e.target.value)}
             />
           </Box>
@@ -239,6 +302,37 @@ const ClaimEdit: NextPage<Props> = ({
         </Box>
       </Box>
     </Box> */}
+
+      {/* 受付NO. 受付日 */}
+      <Box>
+        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+          受付NO
+        </Box>
+        <Input
+          type='text'
+          w='100%'
+          p={2}
+          mt={3}
+          placeholder='受付ナンバー 例 4-001'
+          value={receptionNum}
+          disabled={enabledOffice()}
+          onChange={(e) => setReceptionNum(e.target.value)}
+        />
+      </Box>
+      <Box>
+        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+          受付日
+        </Box>
+        <Input
+          type='date'
+          w='100%'
+          p={2}
+          mt={3}
+          value={receptionDate}
+          disabled={enabledOffice()}
+          onChange={(e) => setReceptionDate(e.target.value)}
+        />
+      </Box>
     </>
   );
 };

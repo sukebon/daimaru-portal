@@ -38,7 +38,7 @@ const HeaderMenuButton = () => {
             <MenuItem>お手伝い依頼作成</MenuItem>
           </a>
         </Link>
-        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ? (
+        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && (
           <>
             <MenuDivider />
             <Link href='/claims/new'>
@@ -58,8 +58,6 @@ const HeaderMenuButton = () => {
             </Link>
             <MenuDivider />
           </>
-        ) : (
-          ''
         )}
         <MenuItem onClick={logout}>ログアウト</MenuItem>
       </MenuList>
