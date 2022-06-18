@@ -36,17 +36,15 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     router.push(`/claims`);
   };
 
-  //クレーム報告書を受付
+  //対策完了 事務局へ渡す
   const counterplanClaim = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 3,
-      receptionist: currentUser,
-      receptionNum,
-      receptionDate,
     });
     router.push(`/claims`);
   };
+
   return (
     <>
       {/* 事務局が受け付ける */}

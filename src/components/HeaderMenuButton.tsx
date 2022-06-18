@@ -38,27 +38,27 @@ const HeaderMenuButton = () => {
             <MenuItem>お手伝い依頼作成</MenuItem>
           </a>
         </Link>
-        {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && (
-          <>
-            <MenuDivider />
-            <Link href='/claims/new'>
-              <a>
-                <MenuItem>クレーム報告書作成</MenuItem>
-              </a>
-            </Link>
-            <Link href='/claims/'>
-              <a>
-                <MenuItem>クレーム報告書一覧</MenuItem>
-              </a>
-            </Link>
-            <Link href='/admin/'>
-              <a>
-                <MenuItem>管理者ページ</MenuItem>
-              </a>
-            </Link>
-            <MenuDivider />
-          </>
-        )}
+        {/* {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && ( */}
+        <>
+          <MenuDivider />
+          <Link href='/claims/new'>
+            <a>
+              <MenuItem>クレーム報告書作成</MenuItem>
+            </a>
+          </Link>
+          <Link href='/claims/'>
+            <a>
+              <MenuItem>クレーム報告書一覧</MenuItem>
+            </a>
+          </Link>
+          <Link href='/admin/'>
+            <a>
+              <MenuItem>管理者ページ</MenuItem>
+            </a>
+          </Link>
+          <MenuDivider />
+        </>
+        {/* )} */}
         <MenuItem onClick={logout}>ログアウト</MenuItem>
       </MenuList>
     </Menu>

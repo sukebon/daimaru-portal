@@ -20,21 +20,25 @@ const ClaimSelectSendButton: NextPage<any> = ({
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
 
   useEffect(() => {
+    //ISOマネージャーのリスト
     setIsoManagereUsers(
       users.filter((user: any) => {
         return user.isoManager === true;
       })
     );
+    //ISO 上司のリスト
     setIsoBossUsers(
       users.filter((user: any) => {
         return user.isoBoss === true;
       })
     );
+    //ISO トップマネジメントのリスト
     setIsoTopManegmentUsers(
       users.filter((user: any) => {
         return user.isoTopManegment === true;
       })
     );
+    //ISO 事務局のリスト
     setIsoOfficeUsers(
       users.filter((user: any) => {
         return user.isoOffice === true;

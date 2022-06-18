@@ -23,12 +23,24 @@ type Props = {
 const ClaimReport: NextPage<Props> = ({ claim }) => {
   return (
     <>
+      {/* クレーム報告書タイトル */}
+      <Box
+        as='h1'
+        w='100%'
+        p={3}
+        fontSize='28px'
+        fontWeight='semibold'
+        textAlign='center'
+      >
+        クレーム報告書
+      </Box>
+
       {/* 顧客名 */}
       <Box>
         <Box mt={10} fontSize='lg' fontWeight='semibold'>
           顧客名
         </Box>
-        <Box w='100%' p={2} mt={3}>
+        <Box w='100%' px={2} mt={2}>
           <Box>{claim.customer}</Box>
         </Box>
       </Box>
@@ -36,7 +48,7 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
           発生日
         </Box>
-        <Box w='100%' p={2} mt={3}>
+        <Box w='100%' px={2} mt={2}>
           <Box>{claim.occurrenceDate}</Box>
         </Box>
       </Box>
@@ -46,7 +58,7 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         <Box as='h2' fontSize='lg' fontWeight='semibold'>
           発生内容
         </Box>
-        <Box w='100%' mt={6}>
+        <Box w='100%' px={2} mt={2}>
           {claimSelectList1.map((list) => (
             <Box key={list.id}>
               {list.id === claim.occurrenceSelect &&
@@ -56,7 +68,9 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
             </Box>
           ))}
         </Box>
-        <Box mt={3}>{claim.occurrenceContent}</Box>
+        <Box px={2} mt={2}>
+          {claim.occurrenceContent}
+        </Box>
       </Box>
 
       {/*修正処置 */}
@@ -64,23 +78,23 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         <Flex as='h2' fontSize='lg' fontWeight='semibold'>
           修正処置
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w='100%' px={2} mt={2}>
           {claimSelectList2.map((list) => (
             <Box key={list.id}>
               {list.id === claim.amendmentSelect &&
                 `${claim.amendmentSelect && '■'}${list.title}`}
             </Box>
           ))}
-          <Box mt={3}>{claim.amendmentContent}</Box>
+          <Box mt={2}>{claim.amendmentContent}</Box>
         </Box>
       </Box>
 
       {/* 対策 */}
-      <Box mt={9}>
+      <Box mt={10}>
         <Flex as='h2' fontSize='lg' fontWeight='semibold'>
           対策
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w='100%' px={2} mt={2}>
           {claimSelectList3.map((list) => (
             <Box key={list.id}>
               {list.id === claim.counterplanSelect &&

@@ -115,6 +115,37 @@ const ClaimEdit: NextPage<Props> = ({
   };
   return (
     <>
+      {/* 受付NO. 受付日 */}
+      <Box>
+        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+          受付NO
+        </Box>
+        <Input
+          type='text'
+          w='100%'
+          p={2}
+          mt={3}
+          placeholder='受付ナンバー 例 4-001'
+          value={receptionNum}
+          disabled={enabledOffice()}
+          onChange={(e) => setReceptionNum(e.target.value)}
+        />
+      </Box>
+      <Box>
+        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+          受付日
+        </Box>
+        <Input
+          type='date'
+          w='100%'
+          p={2}
+          mt={3}
+          value={receptionDate}
+          disabled={enabledOffice()}
+          onChange={(e) => setReceptionDate(e.target.value)}
+        />
+      </Box>
+
       {/* 顧客名 */}
       <Box>
         <Box mt={10} fontSize='lg' fontWeight='semibold'>
@@ -302,37 +333,6 @@ const ClaimEdit: NextPage<Props> = ({
         </Box>
       </Box>
     </Box> */}
-
-      {/* 受付NO. 受付日 */}
-      <Box>
-        <Box mt={10} fontSize='lg' fontWeight='semibold'>
-          受付NO
-        </Box>
-        <Input
-          type='text'
-          w='100%'
-          p={2}
-          mt={3}
-          placeholder='受付ナンバー 例 4-001'
-          value={receptionNum}
-          disabled={enabledOffice()}
-          onChange={(e) => setReceptionNum(e.target.value)}
-        />
-      </Box>
-      <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
-          受付日
-        </Box>
-        <Input
-          type='date'
-          w='100%'
-          p={2}
-          mt={3}
-          value={receptionDate}
-          disabled={enabledOffice()}
-          onChange={(e) => setReceptionDate(e.target.value)}
-        />
-      </Box>
     </>
   );
 };

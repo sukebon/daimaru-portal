@@ -28,8 +28,9 @@ import { todayDate } from '../../../functions';
 
 import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
 import ClaimReport from '../../components/claimsComp/ClaimReport';
-import ClaimEdit from '../../components/claimsComp/ClaimEdit';
+import ClaimEdit from '../../components/claimsComp/ClaimEditReport';
 import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSendButton';
+import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
 
 //クレーム報告書作成
 
@@ -42,7 +43,7 @@ const ClaimId = () => {
   const [users, setUsers] = useState<any>([]);
   const [selectUser, setSelectUser] = useState(''); //送信先選択
   const [selectTask, setSelectTask] = useState(); //タスクの選択
-  const [edit, setEdit] = useState(true); //編集画面切替
+  const [edit, setEdit] = useState(false); //編集画面切替
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
 
   const [customer, setCustomer] = useState(''); //顧客名
@@ -73,7 +74,7 @@ const ClaimId = () => {
     }
   }, [router, user]);
 
-  //クレーム報告書をステータスを変更
+  //クレーム報告書のステータスを変更
   const switchClaim = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
@@ -145,6 +146,15 @@ const ClaimId = () => {
     return unsub;
   }, []);
 
+  const enabledOffice = () => {
+    const users = isoOfficeUsers.map((user: any) => {
+      return user.uid;
+    });
+    if (users.includes(currentUser)) return false;
+    return true;
+  };
+  console.log(enabledOffice());
+
   const isEdit = () => {
     setCustomer(claim.customer);
     setOccurrenceDate(claim.occurrenceDate);
@@ -212,118 +222,62 @@ const ClaimId = () => {
 
             <Box
               w={{ base: '100%', md: '700px' }}
+              py={2}
+              mx='auto'
+              textAlign='right'
+            >
+              {/* 編集ボタン */}
+              {Number(claim.status) > 0 && (
+                <ClaimEditButton
+                  queryId={queryId}
+                  edit={edit}
+                  isEdit={isEdit}
+                  setEdit={setEdit}
+                  updateClaim={updateClaim}
+                  editCancel={editCancel}
+                />
+              )}
+            </Box>
+
+            {/* レポート部分 */}
+            <Box
+              w={{ base: '100%', md: '700px' }}
               mx='auto'
               p={6}
               backgroundColor='white'
               borderRadius={6}
             >
-              {/* 編集ボタン */}
-              <Flex justifyContent='flex-end'>
-                {edit ? (
-                  <Button
-                    onClick={() => {
-                      isEdit();
-                      setEdit(false);
-                    }}
-                  >
-                    編集
-                  </Button>
-                ) : (
-                  <Flex justifyContent='space-between' w='100%'>
-                    <Button
-                      w='95%'
-                      mx={1}
-                      colorScheme='telegram'
-                      onClick={() => {
-                        updateClaim(queryId);
-                        setEdit(true);
-                      }}
-                    >
-                      OK
-                    </Button>
-                    <Button
-                      w='95%'
-                      mx={1}
-                      colorScheme='gray'
-                      onClick={() => {
-                        setEdit(true);
-                        editCancel();
-                      }}
-                    >
-                      キャンセル
-                    </Button>
-                  </Flex>
-                )}
-              </Flex>
-
-              {/* クレーム報告書タイトル */}
-              <Box
-                as='h1'
-                w='100%'
-                p={3}
-                fontSize='28px'
-                fontWeight='semibold'
-                textAlign='center'
-              >
-                クレーム報告書
-              </Box>
-              {edit ? (
+              {/* 受付ナンバー　受付日 */}
+              {Number(claim.status) > 0 && (
                 <>
-                  <ClaimReport claim={claim} />
-
-                  {/*'受付日*/}
-                  {Number(claim.status) === 0 ? (
-                    <>
-                      <Box>
-                        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                  {!edit && (
+                    <Flex
+                      alignItems='center'
+                      justifyContent='space-between'
+                      w='100%'
+                    >
+                      <Flex mr={1} alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付NO
                         </Box>
-                        <Input
-                          type='text'
-                          w='100%'
-                          p={2}
-                          mt={3}
-                          placeholder='受付ナンバー 例 4-001'
-                          value={receptionNum}
-                          onChange={(e) => setReceptionNum(e.target.value)}
-                        />
-                      </Box>
-                      <Box>
-                        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+                        <Box>{claim.receptionNum}</Box>
+                      </Flex>
+                      <Flex alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付日
                         </Box>
-                        <Input
-                          type='date'
-                          w='100%'
-                          p={2}
-                          mt={3}
-                          value={receptionDate}
-                          onChange={(e) => setReceptionDate(e.target.value)}
-                        />
-                      </Box>
-                    </>
-                  ) : (
-                    <>
-                      <Box>
-                        <Box mt={10} fontSize='lg' fontWeight='semibold'>
-                          受付NO
-                        </Box>
-                        <Box w='100%' p={2} mt={3}>
-                          {claim.receptionNum}
-                        </Box>
-                      </Box>
-                      <Box>
-                        <Box mt={9} fontSize='lg' fontWeight='semibold'>
-                          受付日
-                        </Box>
-                        <Box w='100%' p={2} mt={3}>
-                          {claim.receptionDate}
-                        </Box>
-                      </Box>
-                    </>
+                        <Box>{claim.receptionDate}</Box>
+                      </Flex>
+                    </Flex>
                   )}
                 </>
-              ) : (
+              )}
+
+              {/* 通常画面 */}
+              {!edit && <ClaimReport claim={claim} />}
+
+              {/* 編集画面 */}
+              {edit && (
                 <>
                   <ClaimEdit
                     currentUser={currentUser}
@@ -354,7 +308,7 @@ const ClaimId = () => {
               )}
 
               {/* OK キャンセルボタン */}
-              {!edit && (
+              {edit && (
                 <Flex justifyContent='space-between' w='100%' mt={6}>
                   <Button
                     w='95%'
@@ -381,27 +335,41 @@ const ClaimId = () => {
                 </Flex>
               )}
 
-              {/*受付ボタン OR クレームセレクトボタン*/}
+              {/*'受付日*/}
+              {Number(claim.status) === 0 && (
+                <Flex alignItems='center' w='100%' mt={10}>
+                  <Flex mr={5} alignItems='center'>
+                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
+                      受付NO
+                    </Box>
+                    <Input
+                      type='text'
+                      placeholder='例 4-001'
+                      value={receptionNum}
+                      onChange={(e) => setReceptionNum(e.target.value)}
+                    />
+                  </Flex>
+                  <Flex mr={1} alignItems='center'>
+                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
+                      受付日
+                    </Box>
+                    <Input
+                      type='date'
+                      value={receptionDate}
+                      onChange={(e) => setReceptionDate(e.target.value)}
+                    />
+                  </Flex>
+                </Flex>
+              )}
+
+              {/*決定ボタン OR クレームセレクトボタン*/}
               <ClaimConfirmSendButton
                 claim={claim}
                 currentUser={currentUser}
                 receptionDate={receptionDate}
                 receptionNum={receptionNum}
               />
-              {/* {Number(claim.status) === 0 && (
-                <Flex justifyContent='center'>
-                  <Button
-                    mt={12}
-                    onClick={() => {
-                      acceptClaim(queryId);
-                    }}
-                    disabled={receptionNum && receptionDate ? false : true}
-                  >
-                    受け付ける
-                  </Button>
-                </Flex>
-              )} */}
-              {Number(claim.status) !== 0 && (
+              {Number(claim.status) !== 0 && !enabledOffice() && (
                 <ClaimSelectSendButton
                   claim={claim}
                   selectUser={selectUser}
