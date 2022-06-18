@@ -29,6 +29,7 @@ import { todayDate } from '../../../functions';
 import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
 import ClaimReport from '../../components/claimsComp/ClaimReport';
 import ClaimEdit from '../../components/claimsComp/ClaimEdit';
+import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSendButton';
 
 //クレーム報告書作成
 
@@ -72,18 +73,6 @@ const ClaimId = () => {
     }
   }, [router, user]);
 
-  //クレーム報告書を受付
-  const acceptClaim = async (id: any) => {
-    const docRef = doc(db, 'claimList', id);
-    await updateDoc(docRef, {
-      status: 1,
-      operator: selectUser,
-      receptionist: currentUser,
-      receptionNum,
-      receptionDate,
-    });
-    router.push('/claims');
-  };
   //クレーム報告書をステータスを変更
   const switchClaim = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
@@ -228,6 +217,46 @@ const ClaimId = () => {
               backgroundColor='white'
               borderRadius={6}
             >
+              {/* 編集ボタン */}
+              <Flex justifyContent='flex-end'>
+                {edit ? (
+                  <Button
+                    onClick={() => {
+                      isEdit();
+                      setEdit(false);
+                    }}
+                  >
+                    編集
+                  </Button>
+                ) : (
+                  <Flex justifyContent='space-between' w='100%'>
+                    <Button
+                      w='95%'
+                      mx={1}
+                      colorScheme='telegram'
+                      onClick={() => {
+                        updateClaim(queryId);
+                        setEdit(true);
+                      }}
+                    >
+                      OK
+                    </Button>
+                    <Button
+                      w='95%'
+                      mx={1}
+                      colorScheme='gray'
+                      onClick={() => {
+                        setEdit(true);
+                        editCancel();
+                      }}
+                    >
+                      キャンセル
+                    </Button>
+                  </Flex>
+                )}
+              </Flex>
+
+              {/* クレーム報告書タイトル */}
               <Box
                 as='h1'
                 w='100%'
@@ -238,17 +267,8 @@ const ClaimId = () => {
               >
                 クレーム報告書
               </Box>
-
               {edit ? (
                 <>
-                  <Button
-                    onClick={() => {
-                      isEdit();
-                      setEdit(false);
-                    }}
-                  >
-                    編集
-                  </Button>
                   <ClaimReport claim={claim} />
 
                   {/*'受付日*/}
@@ -305,22 +325,6 @@ const ClaimId = () => {
                 </>
               ) : (
                 <>
-                  <Button
-                    onClick={() => {
-                      updateClaim(queryId);
-                      setEdit(true);
-                    }}
-                  >
-                    OK
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setEdit(true);
-                      editCancel();
-                    }}
-                  >
-                    キャンセル
-                  </Button>
                   <ClaimEdit
                     currentUser={currentUser}
                     claim={claim}
@@ -349,8 +353,42 @@ const ClaimId = () => {
                 </>
               )}
 
+              {/* OK キャンセルボタン */}
+              {!edit && (
+                <Flex justifyContent='space-between' w='100%' mt={6}>
+                  <Button
+                    w='95%'
+                    mx={1}
+                    colorScheme='telegram'
+                    onClick={() => {
+                      updateClaim(queryId);
+                      setEdit(true);
+                    }}
+                  >
+                    OK
+                  </Button>
+                  <Button
+                    w='95%'
+                    mx={1}
+                    colorScheme='gray'
+                    onClick={() => {
+                      setEdit(true);
+                      editCancel();
+                    }}
+                  >
+                    キャンセル
+                  </Button>
+                </Flex>
+              )}
+
               {/*受付ボタン OR クレームセレクトボタン*/}
-              {Number(claim.status) === 0 ? (
+              <ClaimConfirmSendButton
+                claim={claim}
+                currentUser={currentUser}
+                receptionDate={receptionDate}
+                receptionNum={receptionNum}
+              />
+              {/* {Number(claim.status) === 0 && (
                 <Flex justifyContent='center'>
                   <Button
                     mt={12}
@@ -362,7 +400,8 @@ const ClaimId = () => {
                     受け付ける
                   </Button>
                 </Flex>
-              ) : (
+              )} */}
+              {Number(claim.status) !== 0 && (
                 <ClaimSelectSendButton
                   claim={claim}
                   selectUser={selectUser}

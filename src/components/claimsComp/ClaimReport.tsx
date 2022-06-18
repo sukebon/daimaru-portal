@@ -50,11 +50,13 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
           {claimSelectList1.map((list) => (
             <Box key={list.id}>
               {list.id === claim.occurrenceSelect &&
-                `${list.headline}  ${list.title}`}
+                `${claim.occurrenceSelect && '■'}${list.headline}  ${
+                  list.title
+                }`}
             </Box>
           ))}
         </Box>
-        <Box>{claim.occurrenceContent}</Box>
+        <Box mt={3}>{claim.occurrenceContent}</Box>
       </Box>
 
       {/*修正処置 */}
@@ -65,10 +67,11 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         <Box w='100%' mt={3}>
           {claimSelectList2.map((list) => (
             <Box key={list.id}>
-              {list.id === claim.amendmentSelect && list.title}
+              {list.id === claim.amendmentSelect &&
+                `${claim.amendmentSelect && '■'}${list.title}`}
             </Box>
           ))}
-          <Box>{claim.amendmentContent}</Box>
+          <Box mt={3}>{claim.amendmentContent}</Box>
         </Box>
       </Box>
 
@@ -80,7 +83,8 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         <Box w='100%' mt={3}>
           {claimSelectList3.map((list) => (
             <Box key={list.id}>
-              {list.id === claim.counterplanSelect && list.title}
+              {list.id === claim.counterplanSelect &&
+                `${claim.counterplanSelect && '■'}${list.title}`}
             </Box>
           ))}
           <Box>{claim.counterplanContent}</Box>

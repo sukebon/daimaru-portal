@@ -69,7 +69,7 @@ const ClaimNew = () => {
         completionDate, //完了日
         receptionDate, //受付日
         receptionist, //受付者
-        receptionNum, //受付NO.
+        receptionNum: '未設定', //受付NO.
         stampStaff: currentUser, //担当者ハンコ
         stampOffice, //事務局ハンコ
         stampBoss, //上司ハンコ

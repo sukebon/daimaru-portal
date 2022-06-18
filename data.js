@@ -132,10 +132,11 @@ export const taskflow = [
   { id: 0, status: '未処理' },
   { id: 1, status: '受付' },
   { id: 2, status: '対策' },
-  { id: 3, status: '上司承認待ち' },
-  { id: 4, status: '管理者承認待ち' },
-  { id: 5, status: 'ＴＭ承認待ち' },
-  { id: 6, status: '完了' },
+  { id: 3, status: '内容確認中' },
+  { id: 4, status: '上司承認中' },
+  { id: 5, status: '管理者承認中' },
+  { id: 6, status: 'ＴＭ承認中' },
+  { id: 7, status: '完了' },
 ];
 
 //クレーム報告書

@@ -58,7 +58,8 @@ const ClaimSelectSendButton: NextPage<any> = ({
           >
             {taskflow.map(
               (task: { id: number; status: string; index: number }) =>
-                1 < task.id && (
+                1 < task.id &&
+                task.id < 7 && (
                   <option key={task.id} value={task.id}>
                     {task.status}
                   </option>
@@ -73,31 +74,25 @@ const ClaimSelectSendButton: NextPage<any> = ({
             w={48}
             mr={2}
           >
-            {selectTask == 1 &&
+            {Number(selectTask) <= 3 &&
               users.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
-            {selectTask == 2 &&
-              users.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
-            {selectTask == 3 &&
-              isoBossUsers.map((user: { uid: string; name: string }) => (
                 <option key={user.uid} value={user.uid}>
                   {user.name}
                 </option>
               ))}
             {selectTask == 4 &&
-              isoManagerUsers.map((user: { uid: string; name: string }) => (
+              isoBossUsers.map((user: { uid: string; name: string }) => (
                 <option key={user.uid} value={user.uid}>
                   {user.name}
                 </option>
               ))}
             {selectTask == 5 &&
+              isoManagerUsers.map((user: { uid: string; name: string }) => (
+                <option key={user.uid} value={user.uid}>
+                  {user.name}
+                </option>
+              ))}
+            {selectTask == 6 &&
               isoTopManegmentUsers.map(
                 (user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
