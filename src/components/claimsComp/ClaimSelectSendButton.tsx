@@ -11,7 +11,7 @@ const ClaimSelectSendButton: NextPage<any> = ({
   selectTask,
   setSelectTask,
   taskflow,
-  switchClaim,
+  switchStatus,
   queryId,
 }) => {
   const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
@@ -106,7 +106,7 @@ const ClaimSelectSendButton: NextPage<any> = ({
               )}
           </Select>
           <Button
-            onClick={() => switchClaim(queryId)}
+            onClick={() => switchStatus(queryId)}
             disabled={selectTask && selectUser ? false : true}
           >
             送信する

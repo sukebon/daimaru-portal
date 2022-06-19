@@ -17,6 +17,7 @@ type Props = {
     amendmentContent: string;
     counterplanSelect: string;
     counterplanContent: string;
+    completionDate: string;
   };
 };
 
@@ -28,6 +29,7 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
         as='h1'
         w='100%'
         p={3}
+        mt={6}
         fontSize='28px'
         fontWeight='semibold'
         textAlign='center'
@@ -101,7 +103,7 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
                 `${claim.counterplanSelect && '■'}${list.title}`}
             </Box>
           ))}
-          <Box>{claim.counterplanContent}</Box>
+          <Box mt={2}>{claim.counterplanContent}</Box>
         </Box>
       </Box>
 
@@ -125,6 +127,14 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
           </Box>
         </Box>
       </Box> */}
+      <Box>
+        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+          完了日
+        </Box>
+        <Box w='100%' px={2} mt={2}>
+          <Box>{claim.completionDate}</Box>
+        </Box>
+      </Box>
     </>
   );
 };

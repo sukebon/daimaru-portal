@@ -34,6 +34,7 @@ type Props = {
     operator: string;
     receptionNum: string;
     receptionDate: string;
+    completionDate: string;
   };
   customer: string;
   setCustomer: any;
@@ -55,6 +56,8 @@ type Props = {
   setReceptionNum: any;
   receptionDate: string;
   setReceptionDate: any;
+  completionDate: string;
+  setCompletionDate: any;
 };
 
 const ClaimEdit: NextPage<Props> = ({
@@ -81,14 +84,16 @@ const ClaimEdit: NextPage<Props> = ({
   setReceptionNum,
   receptionDate,
   setReceptionDate,
+  completionDate,
+  setCompletionDate,
 }) => {
   //事務局のみ編集可
   const enabledOffice = () => {
     const users = isoOfficeUsers.map((user) => {
       return user.uid;
     });
-    if (users.includes(currentUser)) return false;
-    return true;
+    if (users.includes(currentUser)) return true;
+    return false;
   };
 
   //担当者と事務局のみ編集可
@@ -97,8 +102,8 @@ const ClaimEdit: NextPage<Props> = ({
       return user.uid;
     });
     if (claim.stampStaff === currentUser || users.includes(currentUser))
-      return false;
-    return true;
+      return true;
+    return false;
   };
 
   //対策記入者と事務局のみ編集許可
@@ -110,8 +115,20 @@ const ClaimEdit: NextPage<Props> = ({
       (claim.operator === currentUser && Number(claim.status) === 2) ||
       users.includes(currentUser)
     )
-      return false;
-    return true;
+      return true;
+    return false;
+  };
+  //上司と事務局のみ編集許可
+  const enabledBossAndOffice = () => {
+    const users = isoOfficeUsers.map((user) => {
+      return user.uid;
+    });
+    if (
+      (claim.operator === currentUser && Number(claim.status) === 4) ||
+      users.includes(currentUser)
+    )
+      return true;
+    return false;
   };
   return (
     <>
@@ -127,7 +144,7 @@ const ClaimEdit: NextPage<Props> = ({
           mt={3}
           placeholder='受付ナンバー 例 4-001'
           value={receptionNum}
-          disabled={enabledOffice()}
+          disabled={!enabledOffice()}
           onChange={(e) => setReceptionNum(e.target.value)}
         />
       </Box>
@@ -141,7 +158,7 @@ const ClaimEdit: NextPage<Props> = ({
           p={2}
           mt={3}
           value={receptionDate}
-          disabled={enabledOffice()}
+          disabled={!enabledOffice()}
           onChange={(e) => setReceptionDate(e.target.value)}
         />
       </Box>
@@ -151,34 +168,32 @@ const ClaimEdit: NextPage<Props> = ({
         <Box mt={10} fontSize='lg' fontWeight='semibold'>
           顧客名
         </Box>
-        <Box w='100%' p={2} mt={3}>
-          <Input
-            type='text'
-            w='100%'
-            p={2}
-            mt={3}
-            placeholder='顧客名を入力'
-            value={customer}
-            disabled={enabledOffice()}
-            onChange={(e) => setCustomer(e.target.value)}
-          />
-        </Box>
+        <Input
+          type='text'
+          w='100%'
+          p={2}
+          mt={3}
+          placeholder='顧客名を入力'
+          value={customer}
+          disabled={!enabledOffice()}
+          onChange={(e) => setCustomer(e.target.value)}
+        />
       </Box>
+
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
           発生日
         </Box>
-        <Box w='100%' p={2} mt={3}>
-          <Input
-            type='date'
-            w='100%'
-            p={2}
-            mt={3}
-            value={occurrenceDate}
-            disabled={enabledOffice()}
-            onChange={(e) => setOccurrenceDate(e.target.value)}
-          />
-        </Box>
+
+        <Input
+          type='date'
+          w='100%'
+          p={2}
+          mt={3}
+          value={occurrenceDate}
+          disabled={!enabledOffice()}
+          onChange={(e) => setOccurrenceDate(e.target.value)}
+        />
       </Box>
 
       {/* 発生内容 */}
@@ -234,7 +249,7 @@ const ClaimEdit: NextPage<Props> = ({
           w='100%'
           placeholder='内容を入力'
           value={occurrenceContent}
-          disabled={enabledStaffAndOffice()}
+          disabled={!enabledStaffAndOffice()}
           onChange={(e) => setOccurrenceContent(e.target.value)}
         />
       </Box>
@@ -256,7 +271,7 @@ const ClaimEdit: NextPage<Props> = ({
                 <Radio
                   key={list.id}
                   value={list.id}
-                  disabled={enabledStaffAndOffice()}
+                  disabled={!enabledStaffAndOffice()}
                 >
                   {list.title}
                 </Radio>
@@ -270,7 +285,7 @@ const ClaimEdit: NextPage<Props> = ({
           w='100%'
           placeholder='内容を入力'
           value={amendmentContent}
-          disabled={enabledStaffAndOffice()}
+          disabled={!enabledStaffAndOffice()}
           onChange={(e) => setAmendmentContent(e.target.value)}
         />
       </Box>
@@ -292,7 +307,7 @@ const ClaimEdit: NextPage<Props> = ({
                 <Radio
                   key={list.id}
                   value={list.id}
-                  disabled={enabledCounterplanAndOffice()}
+                  disabled={!enabledCounterplanAndOffice()}
                 >
                   {list.title}
                 </Radio>
@@ -306,7 +321,7 @@ const ClaimEdit: NextPage<Props> = ({
               w='100%'
               placeholder='内容を入力'
               value={counterplanContent}
-              disabled={enabledCounterplanAndOffice()}
+              disabled={!enabledCounterplanAndOffice()}
               onChange={(e) => setCounterplanContent(e.target.value)}
             />
           </Box>
@@ -333,6 +348,21 @@ const ClaimEdit: NextPage<Props> = ({
         </Box>
       </Box>
     </Box> */}
+      {/* 完了日 */}
+      <Box>
+        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+          完了日
+        </Box>
+        <Input
+          type='date'
+          w='100%'
+          p={2}
+          mt={3}
+          value={completionDate}
+          disabled={!enabledBossAndOffice()}
+          onChange={(e) => setCompletionDate(e.target.value)}
+        />
+      </Box>
     </>
   );
 };

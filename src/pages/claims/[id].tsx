@@ -1,6 +1,7 @@
+//クレーム報告書　個別ページ
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Flex, Input } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   doc,
@@ -31,6 +32,8 @@ import ClaimReport from '../../components/claimsComp/ClaimReport';
 import ClaimEdit from '../../components/claimsComp/ClaimEditReport';
 import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSendButton';
 import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
+import ClaimProgress from '../../components/claimsComp/ClaimProgress';
+import ClaimMessage from '../../components/claimsComp/ClaimMessage';
 
 //クレーム報告書作成
 
@@ -75,7 +78,7 @@ const ClaimId = () => {
   }, [router, user]);
 
   //クレーム報告書のステータスを変更
-  const switchClaim = async (id: any) => {
+  const switchStatus = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: selectTask,
@@ -98,6 +101,7 @@ const ClaimId = () => {
       counterplanContent: counterplanContent,
       receptionNum: receptionNum,
       receptionDate: receptionDate,
+      completionDate: completionDate,
     });
   };
 
@@ -146,14 +150,15 @@ const ClaimId = () => {
     return unsub;
   }, []);
 
+  //事務局
   const enabledOffice = () => {
     const users = isoOfficeUsers.map((user: any) => {
       return user.uid;
     });
-    if (users.includes(currentUser)) return false;
-    return true;
+    if (users.includes(currentUser)) return true;
+    return false;
   };
-  console.log(enabledOffice());
+  console.log(isoOfficeUsers);
 
   const isEdit = () => {
     setCustomer(claim.customer);
@@ -166,6 +171,7 @@ const ClaimId = () => {
     setCounterplanContent(claim.counterplanContent);
     setReceptionNum(claim.receptionNum);
     setReceptionDate(claim.receptionDate);
+    setCompletionDate(claim.completionDate);
   };
 
   const editCancel = () => {
@@ -179,6 +185,7 @@ const ClaimId = () => {
     setCounterplanContent('');
     setReceptionNum('');
     setReceptionDate('');
+    setCompletionDate('');
   };
 
   return (
@@ -186,58 +193,28 @@ const ClaimId = () => {
       {currentUser && (
         <>
           <Header />
-          <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
-            <Link href={'/claims'}>
-              <a>
-                <Button>一覧へ戻る</Button>
-              </a>
-            </Link>
-            <Flex
-              w={{ base: '100%', md: '700px' }}
-              mx='auto'
-              py={6}
-              justifyContent='space-between'
-            >
-              {taskflow.map((task, index) => (
-                <Flex
-                  key={task.id}
-                  justifyContent='center'
-                  alignItems='center'
-                  py={3}
-                  px={1}
-                  w={'100%'}
-                  borderLeft='1px'
-                  borderLeftRadius={index === 0 ? 6 : 0}
-                  borderRightRadius={index === taskflow.length - 1 ? 6 : 0}
-                  backgroundColor={
-                    task.id === Number(claim.status) ? '#ffc107' : 'gray'
-                  }
-                  color='white'
-                  fontSize='xs'
-                >
-                  {task.status}
-                </Flex>
-              ))}
-            </Flex>
+          <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
+            {/* クレームメッセージ */}
+            <ClaimMessage
+              claim={claim}
+              currentUser={currentUser}
+              users={users}
+            />
+            {/* ステータスの進捗 */}
+            <ClaimProgress claim={claim} />
 
-            <Box
-              w={{ base: '100%', md: '700px' }}
-              py={2}
-              mx='auto'
-              textAlign='right'
-            >
-              {/* 編集ボタン */}
-              {Number(claim.status) > 0 && (
-                <ClaimEditButton
-                  queryId={queryId}
-                  edit={edit}
-                  isEdit={isEdit}
-                  setEdit={setEdit}
-                  updateClaim={updateClaim}
-                  editCancel={editCancel}
-                />
-              )}
-            </Box>
+            {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
+            <ClaimEditButton
+              claim={claim}
+              currentUser={currentUser}
+              queryId={queryId}
+              edit={edit}
+              isEdit={isEdit}
+              setEdit={setEdit}
+              updateClaim={updateClaim}
+              editCancel={editCancel}
+              enabledOffice={enabledOffice}
+            />
 
             {/* レポート部分 */}
             <Box
@@ -303,40 +280,14 @@ const ClaimId = () => {
                     setReceptionNum={setReceptionNum}
                     receptionDate={receptionDate}
                     setReceptionDate={setReceptionDate}
+                    completionDate={completionDate}
+                    setCompletionDate={setCompletionDate}
                   />
                 </>
               )}
 
-              {/* OK キャンセルボタン */}
-              {edit && (
-                <Flex justifyContent='space-between' w='100%' mt={6}>
-                  <Button
-                    w='95%'
-                    mx={1}
-                    colorScheme='telegram'
-                    onClick={() => {
-                      updateClaim(queryId);
-                      setEdit(true);
-                    }}
-                  >
-                    OK
-                  </Button>
-                  <Button
-                    w='95%'
-                    mx={1}
-                    colorScheme='gray'
-                    onClick={() => {
-                      setEdit(true);
-                      editCancel();
-                    }}
-                  >
-                    キャンセル
-                  </Button>
-                </Flex>
-              )}
-
-              {/*'受付日*/}
-              {Number(claim.status) === 0 && (
+              {/*'未処理 受付NO. 受付日 入力欄*/}
+              {Number(claim.status) === 0 && enabledOffice() && (
                 <Flex alignItems='center' w='100%' mt={10}>
                   <Flex mr={5} alignItems='center'>
                     <Box fontSize='lg' fontWeight='semibold' minW='70px'>
@@ -362,27 +313,49 @@ const ClaimId = () => {
                 </Flex>
               )}
 
-              {/*決定ボタン OR クレームセレクトボタン*/}
-              <ClaimConfirmSendButton
-                claim={claim}
-                currentUser={currentUser}
-                receptionDate={receptionDate}
-                receptionNum={receptionNum}
-              />
-              {Number(claim.status) !== 0 && !enabledOffice() && (
-                <ClaimSelectSendButton
-                  claim={claim}
-                  selectUser={selectUser}
-                  setSelectUser={setSelectUser}
-                  users={users}
-                  selectTask={selectTask}
-                  setSelectTask={setSelectTask}
-                  taskflow={taskflow}
-                  switchClaim={switchClaim}
-                  queryId={queryId}
-                />
+              {!edit && (
+                <>
+                  {/*決定ボタン*/}
+                  <ClaimConfirmSendButton
+                    claim={claim}
+                    currentUser={currentUser}
+                    receptionDate={receptionDate}
+                    receptionNum={receptionNum}
+                    counterplanSelect={counterplanSelect}
+                    counterplanContent={counterplanContent}
+                    completionDate={completionDate}
+                  />
+
+                  {/* 担当者セレクトボタン　未処理以外　事務局のみ */}
+                  {Number(claim.status) !== 0 && enabledOffice() && (
+                    <ClaimSelectSendButton
+                      claim={claim}
+                      selectUser={selectUser}
+                      setSelectUser={setSelectUser}
+                      users={users}
+                      selectTask={selectTask}
+                      setSelectTask={setSelectTask}
+                      taskflow={taskflow}
+                      switchStatus={switchStatus}
+                      queryId={queryId}
+                    />
+                  )}
+                </>
               )}
             </Box>
+
+            {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
+            <ClaimEditButton
+              claim={claim}
+              currentUser={currentUser}
+              queryId={queryId}
+              edit={edit}
+              isEdit={isEdit}
+              setEdit={setEdit}
+              updateClaim={updateClaim}
+              editCancel={editCancel}
+              enabledOffice={enabledOffice}
+            />
           </Box>
           <Footer />
         </>
