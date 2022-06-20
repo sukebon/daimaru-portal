@@ -58,6 +58,10 @@ type Props = {
   setReceptionDate: any;
   completionDate: string;
   setCompletionDate: any;
+  enabledOffice: any;
+  enabledStaffAndOffice: any;
+  enabledCounterplanAndOffice: any;
+  enabledBossAndOffice: any;
 };
 
 const ClaimEdit: NextPage<Props> = ({
@@ -86,50 +90,11 @@ const ClaimEdit: NextPage<Props> = ({
   setReceptionDate,
   completionDate,
   setCompletionDate,
+  enabledOffice,
+  enabledStaffAndOffice,
+  enabledCounterplanAndOffice,
+  enabledBossAndOffice,
 }) => {
-  //事務局のみ編集可
-  const enabledOffice = () => {
-    const users = isoOfficeUsers.map((user) => {
-      return user.uid;
-    });
-    if (users.includes(currentUser)) return true;
-    return false;
-  };
-
-  //担当者と事務局のみ編集可
-  const enabledStaffAndOffice = () => {
-    const users = isoOfficeUsers.map((user) => {
-      return user.uid;
-    });
-    if (claim.stampStaff === currentUser || users.includes(currentUser))
-      return true;
-    return false;
-  };
-
-  //対策記入者と事務局のみ編集許可
-  const enabledCounterplanAndOffice = () => {
-    const users = isoOfficeUsers.map((user) => {
-      return user.uid;
-    });
-    if (
-      (claim.operator === currentUser && Number(claim.status) === 2) ||
-      users.includes(currentUser)
-    )
-      return true;
-    return false;
-  };
-  //上司と事務局のみ編集許可
-  const enabledBossAndOffice = () => {
-    const users = isoOfficeUsers.map((user) => {
-      return user.uid;
-    });
-    if (
-      (claim.operator === currentUser && Number(claim.status) === 4) ||
-      users.includes(currentUser)
-    )
-      return true;
-    return false;
-  };
   return (
     <>
       {/* 受付NO. 受付日 */}

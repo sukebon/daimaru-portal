@@ -48,6 +48,9 @@ const ClaimId = () => {
   const [selectTask, setSelectTask] = useState(); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
+  const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
+  const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
+  const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
   const [customer, setCustomer] = useState(''); //顧客名
   const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
@@ -83,6 +86,7 @@ const ClaimId = () => {
     await updateDoc(docRef, {
       status: selectTask,
       operator: selectUser,
+      message: '',
     });
     router.push('/claims');
   };
@@ -135,30 +139,109 @@ const ClaimId = () => {
     return unsub;
   }, []);
 
-  //ISO事務局一覧を取得
+  //各リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, where('isoOffice', '==', true));
-    const unsub = onSnapshot(q, (querySnapshot: any) => {
-      setIsoOfficeUsers(
-        querySnapshot.docs.map((doc: any) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, []);
+    //ISOマネージャーのリスト
+    setIsoManagereUsers(
+      users.filter((user: any) => {
+        return user.isoManager === true;
+      })
+    );
+    //ISO 上司のリスト
+    setIsoBossUsers(
+      users.filter((user: any) => {
+        return user.isoBoss === true;
+      })
+    );
+    //ISO トップマネジメントのリスト
+    setIsoTopManegmentUsers(
+      users.filter((user: any) => {
+        return user.isoTopManegment === true;
+      })
+    );
+    //ISO 事務局のリスト
+    setIsoOfficeUsers(
+      users.filter((user: any) => {
+        return user.isoOffice === true;
+      })
+    );
+  }, [users]);
 
-  //事務局
+  //事務局のみ編集可
   const enabledOffice = () => {
-    const users = isoOfficeUsers.map((user: any) => {
+    const office = isoOfficeUsers.map((user: { uid: string }) => {
       return user.uid;
     });
-    if (users.includes(currentUser)) return true;
+    if (office.includes(currentUser)) return true;
     return false;
   };
-  console.log(isoOfficeUsers);
+
+  //担当者と事務局のみ編集可
+  const enabledStaffAndOffice = () => {
+    const office = isoOfficeUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    if (claim.stampStaff === currentUser || office.includes(currentUser))
+      return true;
+    return false;
+  };
+
+  //対策記入者と事務局のみ編集可
+  const enabledCounterplanAndOffice = () => {
+    const office = isoOfficeUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    if (
+      (claim.operator === currentUser && Number(claim.status) === 2) ||
+      office.includes(currentUser)
+    )
+      return true;
+    return false;
+  };
+
+  //上司と事務局のみ編集可
+  const enabledBossAndOffice = () => {
+    const office = isoOfficeUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    const boss = isoBossUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+
+    if (
+      ((claim.operator === currentUser || boss.includes(currentUser)) &&
+        Number(claim.status) === 4) ||
+      office.includes(currentUser)
+    )
+      return true;
+    return false;
+  };
+
+  //管理者と事務局のみ編集可
+  const enabledManager = () => {
+    const manager = isoManagerUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    if (
+      (claim.operator === currentUser || manager.includes(currentUser)) &&
+      Number(claim.status) === 5
+    )
+      return true;
+    return false;
+  };
+
+  //Top Managementと事務局のみ編集可
+  const enabledTopManegment = () => {
+    const tm = isoTopManegmentUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    if (
+      (claim.operator === currentUser || tm.includes(currentUser)) &&
+      Number(claim.status) === 6
+    )
+      return true;
+    return false;
+  };
 
   const isEdit = () => {
     setCustomer(claim.customer);
@@ -199,6 +282,9 @@ const ClaimId = () => {
               claim={claim}
               currentUser={currentUser}
               users={users}
+              enabledOffice={enabledOffice}
+              enabledManager={enabledManager}
+              enabledTopManegment={enabledTopManegment}
             />
             {/* ステータスの進捗 */}
             <ClaimProgress claim={claim} />
@@ -282,6 +368,10 @@ const ClaimId = () => {
                     setReceptionDate={setReceptionDate}
                     completionDate={completionDate}
                     setCompletionDate={setCompletionDate}
+                    enabledOffice={enabledOffice}
+                    enabledStaffAndOffice={enabledStaffAndOffice}
+                    enabledCounterplanAndOffice={enabledCounterplanAndOffice}
+                    enabledBossAndOffice={enabledBossAndOffice}
                   />
                 </>
               )}
@@ -319,11 +409,16 @@ const ClaimId = () => {
                   <ClaimConfirmSendButton
                     claim={claim}
                     currentUser={currentUser}
+                    users={users}
                     receptionDate={receptionDate}
                     receptionNum={receptionNum}
                     counterplanSelect={counterplanSelect}
                     counterplanContent={counterplanContent}
                     completionDate={completionDate}
+                    stampOffice={stampOffice}
+                    enabledBossAndOffice={enabledBossAndOffice}
+                    enabledManager={enabledManager}
+                    enabledTopManegment={enabledTopManegment}
                   />
 
                   {/* 担当者セレクトボタン　未処理以外　事務局のみ */}
