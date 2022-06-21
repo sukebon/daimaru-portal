@@ -23,6 +23,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../store/authState.js';
 import Footer from '../components/Footer';
+import AlcoholChecker from '../components/popup/AlcoholChecker';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -153,6 +154,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
               </Flex>
             </main>
           </div>
+          {/* <AlcoholChecker /> */}
           <Footer />
         </div>
       )}

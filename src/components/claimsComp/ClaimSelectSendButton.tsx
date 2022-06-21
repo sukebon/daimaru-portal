@@ -52,60 +52,67 @@ const ClaimSelectSendButton: NextPage<any> = ({
         <Text w='100%' mx='auto' textAlign='center'>
           タスクと送信先を選択して送信してください。
         </Text>
-        <Flex justifyContent={'center'} mt={6}>
-          <Select
-            value={selectTask}
-            onChange={(e) => setSelectTask(e.target.value)}
-            placeholder='タスクを選択'
-            w={48}
-            mr={2}
-          >
-            {taskflow.map(
-              (task: { id: number; status: string; index: number }) =>
-                1 < task.id &&
-                task.id < 7 && (
-                  <option key={task.id} value={task.id}>
-                    {task.status}
-                  </option>
-                )
-            )}
-          </Select>
+        <Flex
+          flexDirection={{ base: 'column', md: 'row' }}
+          justifyContent={'center'}
+          mt={2}
+        >
+          <Flex mt={2}>
+            <Select
+              value={selectTask}
+              onChange={(e) => setSelectTask(e.target.value)}
+              placeholder='タスクを選択'
+              w={48}
+              mr={2}
+            >
+              {taskflow.map(
+                (task: { id: number; status: string; index: number }) =>
+                  1 < task.id &&
+                  task.id < 7 && (
+                    <option key={task.id} value={task.id}>
+                      {task.status}
+                    </option>
+                  )
+              )}
+            </Select>
 
-          <Select
-            value={selectUser}
-            onChange={(e) => setSelectUser(e.target.value)}
-            placeholder='送信先を選択'
-            w={48}
-            mr={2}
-          >
-            {Number(selectTask) <= 3 &&
-              users.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
-            {selectTask == 4 &&
-              isoBossUsers.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
-            {selectTask == 5 &&
-              isoManagerUsers.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
-                </option>
-              ))}
-            {selectTask == 6 &&
-              isoTopManegmentUsers.map(
-                (user: { uid: string; name: string }) => (
+            <Select
+              value={selectUser}
+              onChange={(e) => setSelectUser(e.target.value)}
+              placeholder='送信先を選択'
+              w={48}
+              mr={2}
+            >
+              {Number(selectTask) <= 3 &&
+                users.map((user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
                     {user.name}
                   </option>
-                )
-              )}
-          </Select>
+                ))}
+              {selectTask == 4 &&
+                isoBossUsers.map((user: { uid: string; name: string }) => (
+                  <option key={user.uid} value={user.uid}>
+                    {user.name}
+                  </option>
+                ))}
+              {selectTask == 5 &&
+                isoManagerUsers.map((user: { uid: string; name: string }) => (
+                  <option key={user.uid} value={user.uid}>
+                    {user.name}
+                  </option>
+                ))}
+              {selectTask == 6 &&
+                isoTopManegmentUsers.map(
+                  (user: { uid: string; name: string }) => (
+                    <option key={user.uid} value={user.uid}>
+                      {user.name}
+                    </option>
+                  )
+                )}
+            </Select>
+          </Flex>
           <Button
+            mt={2}
             onClick={() => switchStatus(queryId)}
             disabled={selectTask && selectUser ? false : true}
           >

@@ -170,7 +170,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
     setEditButton(true);
   };
 
-  //作成者を表示
+  // 作成者を表示;
   const authorDispay = (authorId: string) => {
     const usersfilter = Users.filter((user) => {
       return user.uid === authorId;
