@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -21,7 +21,7 @@ import {
   Tr,
   Wrap,
   WrapItem,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   addDoc,
   arrayRemove,
@@ -33,15 +33,15 @@ import {
   query,
   setDoc,
   updateDoc,
-} from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilValue } from 'recoil';
-import { Users, Administrator } from '../../../data';
-import { auth, db } from '../../../firebase/auth';
-import { authState } from '../../../store/authState';
-import Header from '../../components/Header';
+} from "firebase/firestore";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilValue } from "recoil";
+import { Users, Administrator } from "../../../data";
+import { auth, db } from "../../../firebase/auth";
+import { authState } from "../../../store/authState";
+import Header from "../../components/Header";
 
 const Admin = () => {
   const [user] = useAuthState(auth);
@@ -53,7 +53,7 @@ const Admin = () => {
   //ログインしていなかったらログイン画面へ
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
@@ -64,7 +64,7 @@ const Admin = () => {
     rank: number;
   }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await setDoc(docRef, {
         uid: user.uid,
         name: user.name,
@@ -81,7 +81,7 @@ const Admin = () => {
   //トップマネジメントに追加
   const addTopManegment = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await updateDoc(docRef, {
         isoTopManegment: true,
       });
@@ -93,7 +93,7 @@ const Admin = () => {
   //ISO管理者に追加
   const addManager = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await updateDoc(docRef, {
         isoManager: true,
       });
@@ -105,7 +105,7 @@ const Admin = () => {
   //ISO 上司に追加
   const addBoss = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid); //topManegmentGroupはfirestoreで直接登録
+      const docRef = doc(db, "authority", user.uid); //topManegmentGroupはfirestoreで直接登録
       await updateDoc(docRef, {
         isoBoss: true,
       });
@@ -117,7 +117,7 @@ const Admin = () => {
   //ISO 事務局に追加
   const addOffice = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid); //topManegmentGroupはfirestoreで直接登録
+      const docRef = doc(db, "authority", user.uid); //topManegmentGroupはfirestoreで直接登録
       await updateDoc(docRef, {
         isoOffice: true,
       });
@@ -129,7 +129,7 @@ const Admin = () => {
   //トップマネジメントから削除
   const removeTopManegment = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid); //topManegmentGroupはfirestoreで直接登録
+      const docRef = doc(db, "authority", user.uid); //topManegmentGroupはfirestoreで直接登録
       await updateDoc(docRef, {
         isoTopManegment: false,
       });
@@ -140,7 +140,7 @@ const Admin = () => {
   //管理者から削除
   const removeManager = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await updateDoc(docRef, {
         isoManager: false,
       });
@@ -151,7 +151,7 @@ const Admin = () => {
   //上司から削除
   const removeBoss = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await updateDoc(docRef, {
         isoBoss: false,
       });
@@ -162,7 +162,7 @@ const Admin = () => {
   //事務局から削除
   const removeOffice = async (user: { uid: string; name: string }) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       await updateDoc(docRef, {
         isoOffice: false,
       });
@@ -173,8 +173,8 @@ const Admin = () => {
 
   //firestore authority 情報の取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setUsersRegisterList(
         querySnapshot.docs.map((doc) => ({
@@ -191,29 +191,29 @@ const Admin = () => {
       <Header />
       {Administrator.includes(currentUser) && (
         <Box
-          w={'100%'}
-          backgroundColor={'#f7f7f7'}
-          paddingBottom={'50px'}
-          minH={'100vh'}
+          w={"100%"}
+          backgroundColor={"#f7f7f7"}
+          paddingBottom={"50px"}
+          minH={"100vh"}
           p={6}
         >
           <Box
             p={6}
-            mx={'auto'}
-            w={{ base: '100%', md: '700px' }}
-            bg='white'
-            borderRadius={'5px'}
+            mx={"auto"}
+            w={{ base: "100%", md: "700px" }}
+            bg="white"
+            borderRadius={"5px"}
           >
-            <Box as='h1' fontSize='4xl'>
+            <Box as="h1" fontSize="4xl">
               管理者設定画面
             </Box>
             <Box mt={12}>
-              <Text as='h2' fontSize='2xl'>
+              <Text as="h2" fontSize="2xl">
                 ISO 権限設定
               </Text>
               <Box p={6}>
                 <TableContainer>
-                  <Table size='sm' width={'100%'}>
+                  <Table size="sm" width={"100%"}>
                     <Thead>
                       <Tr>
                         <Th>名前</Th>
@@ -239,7 +239,7 @@ const Admin = () => {
                               {user.isoTopManegment ? (
                                 <Button
                                   onClick={() => removeTopManegment(user)}
-                                  colorScheme='blue'
+                                  colorScheme="blue"
                                 >
                                   有効
                                 </Button>
@@ -253,7 +253,7 @@ const Admin = () => {
                               {user.isoManager ? (
                                 <Button
                                   onClick={() => removeManager(user)}
-                                  colorScheme='blue'
+                                  colorScheme="blue"
                                 >
                                   有効
                                 </Button>
@@ -267,7 +267,7 @@ const Admin = () => {
                               {user.isoBoss ? (
                                 <Button
                                   onClick={() => removeBoss(user)}
-                                  colorScheme='blue'
+                                  colorScheme="blue"
                                 >
                                   有効
                                 </Button>
@@ -281,7 +281,7 @@ const Admin = () => {
                               {user.isoOffice ? (
                                 <Button
                                   onClick={() => removeOffice(user)}
-                                  colorScheme='blue'
+                                  colorScheme="blue"
                                 >
                                   有効
                                 </Button>
@@ -297,10 +297,11 @@ const Admin = () => {
                     </Tbody>
                   </Table>
                 </TableContainer>
-                {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && (
+                {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
+                  currentUser === "Glkhk9WERWcEQWwdlfjD5a2jT6m1") && (
                   <Box mt={12}>
                     <Text>初期設定（アプリに登録する）</Text>
-                    <Wrap spacing='5px' p={3}>
+                    <Wrap spacing="5px" p={3}>
                       {Users.map(
                         (user: { uid: string; name: string; rank: number }) => (
                           <WrapItem key={user.uid}>

@@ -1,7 +1,7 @@
-import { Box, Button, Flex } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import Link from 'next/link';
-import React from 'react';
+import { Box, Button, Flex } from "@chakra-ui/react";
+import { NextPage } from "next";
+import Link from "next/link";
+import React from "react";
 
 type Props = {
   claim: {
@@ -32,23 +32,24 @@ const ClaimEditButton: NextPage<Props> = ({
 }) => {
   return (
     <>
-      <Box w={{ base: '100%', md: '700px' }} py={2} mx='auto'>
+      <Box w={{ base: "100%", md: "700px" }} py={2} mx="auto">
         {!edit && (
-          <Flex justifyContent='space-between' w='100%'>
-            <Box w='100%' mr={1}>
-              <Link href={'/claims'}>
+          <Flex justifyContent="space-between" w="100%">
+            <Box w="100%" mr={1}>
+              <Link href={"/claims"}>
                 <a>
-                  <Button w='100%'>一覧へ戻る</Button>
+                  <Button w="100%">一覧へ戻る</Button>
                 </a>
               </Link>
             </Box>
             {Number(claim.status) > 0 &&
+              Number(claim.status) < 5 &&
               (claim.stampStaff === currentUser ||
                 claim.operator === currentUser ||
                 enabledOffice()) && (
-                <Box w='100%' ml={1}>
+                <Box w="100%" ml={1}>
                   <Button
-                    w='100%'
+                    w="100%"
                     onClick={() => {
                       isEdit();
                       setEdit(true);
@@ -61,11 +62,11 @@ const ClaimEditButton: NextPage<Props> = ({
           </Flex>
         )}
         {edit && (
-          <Flex justifyContent='space-between' w='100%'>
+          <Flex justifyContent="space-between" w="100%">
             <Button
-              w='95%'
+              w="95%"
               mx={1}
-              colorScheme='telegram'
+              colorScheme="telegram"
               onClick={() => {
                 updateClaim(queryId);
                 setEdit(false);
@@ -74,9 +75,9 @@ const ClaimEditButton: NextPage<Props> = ({
               OK
             </Button>
             <Button
-              w='95%'
+              w="95%"
               mx={1}
-              colorScheme='gray'
+              colorScheme="gray"
               onClick={() => {
                 editCancel();
                 setEdit(false);
