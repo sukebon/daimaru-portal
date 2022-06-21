@@ -416,6 +416,8 @@ const ClaimId = () => {
                     counterplanContent={counterplanContent}
                     completionDate={completionDate}
                     stampOffice={stampOffice}
+                    operator={claim.operator}
+                    enabledOffice={enabledOffice}
                     enabledBossAndOffice={enabledBossAndOffice}
                     enabledManager={enabledManager}
                     enabledTopManegment={enabledTopManegment}
