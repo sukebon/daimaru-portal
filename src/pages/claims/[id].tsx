@@ -217,7 +217,7 @@ const ClaimId = () => {
     return false;
   };
 
-  //管理者と事務局のみ編集可
+  //管理者のみ編集可
   const enabledManager = () => {
     const manager = isoManagerUsers.map((user: { uid: string }) => {
       return user.uid;
@@ -230,7 +230,7 @@ const ClaimId = () => {
     return false;
   };
 
-  //Top Managementと事務局のみ編集可
+  //Top Managementのみ編集可
   const enabledTopManegment = () => {
     const tm = isoTopManegmentUsers.map((user: { uid: string }) => {
       return user.uid;
