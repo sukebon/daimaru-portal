@@ -19,7 +19,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { db, auth } from '../../../firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Link from 'next/link';
-import { dateTime } from '../../../date';
+import { dateTime } from '../../../functions';
+// import { dateTime } from '../../../date';
 
 const Form = () => {
   const [user] = useAuthState(auth);

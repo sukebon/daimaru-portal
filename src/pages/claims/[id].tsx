@@ -301,6 +301,8 @@ const ClaimId = () => {
     setCompletionDate('');
   };
 
+  console.log(users);
+
   return (
     <>
       {currentUser && (

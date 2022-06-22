@@ -42,7 +42,7 @@ export const Users = [
   {
     uid: 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3',
     name: '向井課長',
-    isoPosition: 'office',
+    // isoPosition: 'office',
     rank: 8,
   },
   {
