@@ -17,7 +17,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import { auth, db } from '../../../firebase/auth';
+import { auth, db, storage } from '../../../firebase';
 import { authState } from '../../../store/authState';
 import {
   taskflow,
@@ -34,6 +34,8 @@ import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSend
 import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
 import ClaimProgress from '../../components/claimsComp/ClaimProgress';
 import ClaimMessage from '../../components/claimsComp/ClaimMessage';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import Image from 'next/image';
 
 //クレーム報告書作成
 
@@ -73,6 +75,8 @@ const ClaimId = () => {
   const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
+
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     if (user === null) {
@@ -300,8 +304,18 @@ const ClaimId = () => {
     setReceptionDate('');
     setCompletionDate('');
   };
-
-  console.log(users);
+  // useEffect(() => {
+  //   const gsReference = ref(
+  //     storage,
+  //     'gs://daimaru-portal.appspot.com/images/claims/zD6Fwt8rZalp5jZP4v4B/amazonImg.png'
+  //   );
+  //   getDownloadURL(gsReference)
+  //     .then((url) => {
+  //       setImageUrl(url);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+  // console.log(imageUrl);
 
   return (
     <>

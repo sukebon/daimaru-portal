@@ -13,12 +13,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import Footer from '../../../components/Footer';
 import Header from '../../../components/Header';
-import { auth, db } from '../../../../firebase/auth';
+import { auth, db, storage } from '../../../../firebase';
 import { authState } from '../../../../store/authState';
 import ClaimInputCustomer from '../../../components/claimsComp/ClaimInputCustomer';
 import ClaimInputOccurrence from '../../../components/claimsComp/ClaimInputOccurrence';
 import ClaimInputAmendment from '../../../components/claimsComp/ClaimInputAmendment';
 import ClaimInputCounteClaim from '../../../components/claimsComp/ClaimInputCounterplan';
+import { ref, uploadBytes } from 'firebase/storage';
 
 //クレーム報告書作成
 
@@ -48,6 +49,7 @@ const ClaimNew = () => {
   const [createdAt, setCreatedAt] = useState(null); //作成日
   const [users, setUsers] = useState<any>([]);
   const [selectUser, setSelectUser] = useState<any>([]);
+  const [fileUpload, setFileUpload] = useState<any>();
 
   useEffect(() => {
     if (user === null) {
@@ -55,7 +57,9 @@ const ClaimNew = () => {
     }
   }, [router, user]);
 
-  const AddClaim = async () => {
+  const AddClaim = async (e: any) => {
+    const result = window.confirm('提出して宜しいでしょうか？');
+    if (!result) return;
     try {
       const docRef = await addDoc(collection(db, 'claimList'), {
         customer, //顧客名
@@ -79,8 +83,10 @@ const ClaimNew = () => {
         deletedAt: null, //論理削除
         createdAt: serverTimestamp(), //作成日
         operator: '', //作業者
+        images: fileUpload ? fileUpload[0].name : '',
       });
-      console.log('Document written with ID: ', docRef.id);
+
+      fileUpload && onFileUpLoad(e, docRef.id);
       router.push('/claims');
     } catch (e) {
       console.error('Error adding document: ', e);
@@ -101,6 +107,17 @@ const ClaimNew = () => {
     });
     return unsub;
   }, []);
+
+  const onFileUpLoad = (e: any, id: string) => {
+    const file = fileUpload[0];
+    const storageRef = ref(
+      storage,
+      `images/claims/${id}/${fileUpload[0].name}`
+    );
+    uploadBytes(storageRef, file).then((snapshot: any) => {
+      console.log('uploaded a blob or file', snapshot);
+    });
+  };
 
   return (
     <>
@@ -166,8 +183,14 @@ const ClaimNew = () => {
                     添付書類
                   </Box>
                   <Box mt={3}>
-                    ①<input type='file' accept='image/png, image/jpeg' />
+                    ①
+                    <input
+                      type='file'
+                      accept='.png, .jpeg, .jpg'
+                      onChange={(e) => setFileUpload(e.target.files)}
+                    />
                   </Box>
+
                   <Box mt={3}>
                     ②<input type='file' accept='image/png, image/jpeg' />
                   </Box>
@@ -179,7 +202,13 @@ const ClaimNew = () => {
 
               {/*送信ボタン*/}
               <Box mt={12} textAlign='center'>
-                <Button onClick={AddClaim}>提出する</Button>
+                <Button
+                  onClick={(e) => {
+                    AddClaim(e);
+                  }}
+                >
+                  提出する
+                </Button>
               </Box>
             </Box>
           </Box>

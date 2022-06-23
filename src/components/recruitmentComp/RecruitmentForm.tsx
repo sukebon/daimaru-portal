@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { db, auth } from '../../../firebase/auth';
+import { db, auth } from '../../../firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import Link from 'next/link';
 import { dateTime } from '../../../functions';

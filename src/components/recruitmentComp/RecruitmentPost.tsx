@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import React, { useState } from 'react';
-import { db, auth } from '../../../firebase/auth';
+import { db, auth } from '../../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { Users, Administrator } from '../../../data.js';

@@ -7,8 +7,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db } from '../../../firebase/auth';
-import { auth } from '../../../firebase/auth';
+import { db } from '../../../firebase';
+import { auth } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
 import RecruitmentPost from '../../components/recruitmentComp/RecruitmentPost';

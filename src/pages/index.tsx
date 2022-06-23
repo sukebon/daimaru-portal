@@ -10,8 +10,8 @@ import Header from '../components/Header';
 import styles from '../styles/Home.module.css';
 import { Box, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { auth } from '../../firebase/auth';
-import { db } from '../../firebase/auth';
+import { auth } from '../../firebase';
+import { db } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {
   collection,

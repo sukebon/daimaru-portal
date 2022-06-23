@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import Header from '../../../components/Header';
-import { auth } from '../../../../firebase/auth';
+import { auth } from '../../../../firebase';
 import { authState } from '../../../../store/authState';
 
 const CalimPrint = () => {

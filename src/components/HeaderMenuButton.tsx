@@ -10,7 +10,7 @@ import {
 import Link from 'next/link';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { auth } from '../../firebase/auth';
+import { auth } from '../../firebase';
 import { authState } from '../../store/authState';
 import { Administrator } from '../../data';
 

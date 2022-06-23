@@ -21,7 +21,7 @@ import {
 } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../../../firebase/auth';
+import { auth, db } from '../../../firebase';
 import Header from '../../components/Header';
 import { Users } from '../../../data';
 import {

@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import { auth, db } from '../../../firebase/auth';
+import { auth, db } from '../../../firebase';
 import { authState } from '../../../store/authState';
 
 interface Props {
