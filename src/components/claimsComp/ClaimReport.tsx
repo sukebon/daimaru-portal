@@ -1,11 +1,12 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import React from 'react';
+/* eslint-disable @next/next/no-img-element */
+import { Box, Flex } from "@chakra-ui/react";
+import { NextPage } from "next";
+import React from "react";
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from '../../../data';
+} from "../../../data";
 
 type Props = {
   claim: {
@@ -18,6 +19,7 @@ type Props = {
     counterplanSelect: string;
     counterplanContent: string;
     completionDate: string;
+    images: string;
   };
 };
 
@@ -26,45 +28,45 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
     <>
       {/* クレーム報告書タイトル */}
       <Box
-        as='h1'
-        w='100%'
+        as="h1"
+        w="100%"
         p={3}
         mt={6}
-        fontSize='28px'
-        fontWeight='semibold'
-        textAlign='center'
+        fontSize="28px"
+        fontWeight="semibold"
+        textAlign="center"
       >
         クレーム報告書
       </Box>
 
       {/* 顧客名 */}
       <Box>
-        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+        <Box mt={10} fontSize="lg" fontWeight="semibold">
           顧客名
         </Box>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           <Box>{claim.customer}</Box>
         </Box>
       </Box>
       <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+        <Box mt={9} fontSize="lg" fontWeight="semibold">
           発生日
         </Box>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           <Box>{claim.occurrenceDate}</Box>
         </Box>
       </Box>
 
       {/* 発生内容 */}
       <Box mt={10}>
-        <Box as='h2' fontSize='lg' fontWeight='semibold'>
+        <Box as="h2" fontSize="lg" fontWeight="semibold">
           発生内容
         </Box>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           {claimSelectList1.map((list) => (
             <Box key={list.id}>
               {list.id === claim.occurrenceSelect &&
-                `${claim.occurrenceSelect && '■'}${list.headline}  ${
+                `${claim.occurrenceSelect && "■"}${list.headline}  ${
                   list.title
                 }`}
             </Box>
@@ -77,14 +79,14 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
 
       {/*修正処置 */}
       <Box mt={10}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           修正処置
         </Flex>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           {claimSelectList2.map((list) => (
             <Box key={list.id}>
               {list.id === claim.amendmentSelect &&
-                `${claim.amendmentSelect && '■'}${list.title}`}
+                `${claim.amendmentSelect && "■"}${list.title}`}
             </Box>
           ))}
           <Box mt={2}>{claim.amendmentContent}</Box>
@@ -93,14 +95,14 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
 
       {/* 対策 */}
       <Box mt={10}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           対策
         </Flex>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           {claimSelectList3.map((list) => (
             <Box key={list.id}>
               {list.id === claim.counterplanSelect &&
-                `${claim.counterplanSelect && '■'}${list.title}`}
+                `${claim.counterplanSelect && "■"}${list.title}`}
             </Box>
           ))}
           <Box mt={2}>{claim.counterplanContent}</Box>
@@ -108,30 +110,39 @@ const ClaimReport: NextPage<Props> = ({ claim }) => {
       </Box>
 
       {/* 添付書類 */}
-      {/* <Box w='100%' mt={9}>
-        <Box w='100%' mt={6}>
-          <Box mr={3} fontSize='lg' fontWeight='semibold'>
+      <Box w="100%" mt={9}>
+        {/* 画像1 */}
+        {claim.images && (
+          <Box mt={9} p={6} boxShadow="xs">
+            <a href={claim.images} target="_blank" rel="noreferrer">
+              <img src={claim.images} alt="画像" width="100%" height="100%" />
+            </a>
+          </Box>
+        )}
+
+        {/* <Box w="100%" mt={6}>
+          <Box mr={3} fontSize="lg" fontWeight="semibold">
             添付書類
           </Box>
           <Box mt={3}>
             ①
-            <input type='file' accept='image/png, image/jpeg' />
+            <input type="file" accept="image/png, image/jpeg" />
           </Box>
           <Box mt={3}>
             ②
-            <input type='file' accept='image/png, image/jpeg' />
+            <input type="file" accept="image/png, image/jpeg" />
           </Box>
           <Box mt={3}>
             ③
-            <input type='file' accept='image/png, image/jpeg' />
+            <input type="file" accept="image/png, image/jpeg" />
           </Box>
-        </Box>
-      </Box> */}
+        </Box> */}
+      </Box>
       <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+        <Box mt={9} fontSize="lg" fontWeight="semibold">
           完了日
         </Box>
-        <Box w='100%' px={2} mt={2}>
+        <Box w="100%" px={2} mt={2}>
           <Box>{claim.completionDate}</Box>
         </Box>
       </Box>
