@@ -2,14 +2,9 @@ import { Flex } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import React from 'react';
 import { taskflow } from '../../../data';
+import { ClaimProps } from '../../../lib/ClaimProps';
 
-type Props = {
-  claim: {
-    status: string;
-  };
-};
-
-const ClaimProgress: NextPage<Props> = ({ claim }) => {
+const ClaimProgress: NextPage<ClaimProps> = ({ claim }) => {
   return (
     <Flex
       w={{ base: '100%', md: '700px' }}

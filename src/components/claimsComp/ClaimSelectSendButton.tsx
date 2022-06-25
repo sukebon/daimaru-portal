@@ -1,18 +1,28 @@
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { claimSelectList3 } from '../../../data';
+import { ClaimStateProps } from '../../../lib/ClaimStateProps';
 
-const ClaimSelectSendButton: NextPage<any> = ({
-  claim,
+type Props = {
+  queryId: string | string[] | undefined;
+  users: [];
+  selectUser: string;
+  setSelectUser: any;
+  selectTask: number;
+  setSelectTask: any;
+  taskflow: { id: number; status: string }[];
+  switchStatus: any;
+};
+
+const ClaimSelectSendButton: NextPage<Props> = ({
+  queryId,
+  users,
   selectUser,
   setSelectUser,
-  users,
   selectTask,
   setSelectTask,
   taskflow,
   switchStatus,
-  queryId,
 }) => {
   const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
@@ -66,7 +76,7 @@ const ClaimSelectSendButton: NextPage<any> = ({
               mr={2}
             >
               {taskflow.map(
-                (task: { id: number; status: string; index: number }) =>
+                (task: { id: number; status: string }) =>
                   1 < task.id &&
                   task.id < 7 && (
                     <option key={task.id} value={task.id}>

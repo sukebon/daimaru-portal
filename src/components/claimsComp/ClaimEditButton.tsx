@@ -19,6 +19,9 @@ type Props = {
   updateCounterplanClaim: any;
   editCancel: any;
   enabledOffice: any;
+  imageUrl: string;
+  setImageUrl: any;
+  fileUpload: any;
 };
 
 const ClaimEditButton: NextPage<Props> = ({
@@ -88,12 +91,15 @@ const ClaimEditButton: NextPage<Props> = ({
               mx={1}
               colorScheme='telegram'
               onClick={() => {
+                enabledOffice() && updateClaim(queryId); //事務局用アップデート（すべて）
                 claim.stampStaff === currentUser && updateStaffClaim(queryId); //担当者用アップデート（発生内容・修正処置）
+
                 (Number(claim.status) === 2 || Number(claim.status) === 4) &&
                   claim.operator === currentUser &&
                   updateCounterplanClaim(queryId); //対策者用・上司用アップデート（対策）
-                enabledOffice() && updateClaim(queryId); //事務局用アップデート（すべて）
-                setEdit(false);
+
+                // imageUrl && onFileUpload(); //画像のアップロード 関数
+                setEdit(false); //編集画面から通常画面に戻す
               }}
             >
               OK

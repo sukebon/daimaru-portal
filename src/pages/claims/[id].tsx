@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 //クレーム報告書　個別ページ
-import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Flex, Input } from "@chakra-ui/react";
+import Link from 'next/link';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, AlertIcon, Box, Button, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   doc,
@@ -12,30 +12,37 @@ import {
   query,
   updateDoc,
   where,
-} from "firebase/firestore";
-import { useRouter } from "next/router";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilValue } from "recoil";
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
-import { auth, db, storage } from "../../../firebase";
-import { authState } from "../../../store/authState";
+} from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRecoilValue } from 'recoil';
+import Footer from '../../components/Footer';
+import Header from '../../components/Header';
+import { auth, db, storage } from '../../../firebase';
+import { authState } from '../../../store/authState';
 import {
   taskflow,
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from "../../../data";
-import { todayDate } from "../../../functions";
+} from '../../../data';
+import { todayDate } from '../../../functions';
 
-import ClaimSelectSendButton from "../../components/claimsComp/ClaimSelectSendButton";
-import ClaimReport from "../../components/claimsComp/ClaimReport";
-import ClaimEdit from "../../components/claimsComp/ClaimEditReport";
-import ClaimConfirmSendButton from "../../components/claimsComp/ClaimConfirmSendButton";
-import ClaimEditButton from "../../components/claimsComp/ClaimEditButton";
-import ClaimProgress from "../../components/claimsComp/ClaimProgress";
-import ClaimMessage from "../../components/claimsComp/ClaimMessage";
-import Image from "next/image";
+import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
+import ClaimReport from '../../components/claimsComp/ClaimReport';
+import ClaimEdit from '../../components/claimsComp/ClaimEditReport';
+import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSendButton';
+import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
+import ClaimProgress from '../../components/claimsComp/ClaimProgress';
+import ClaimMessage from '../../components/claimsComp/ClaimMessage';
+import Image from 'next/image';
+import ClaimEditReport from '../../components/claimsComp/ClaimEditReport';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 
 //クレーム報告書作成
 
@@ -46,60 +53,60 @@ const ClaimId = () => {
   const currentUser = useRecoilValue(authState);
   const [claim, setClaim] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
-  const [selectUser, setSelectUser] = useState(""); //送信先選択
-  const [selectTask, setSelectTask] = useState(); //タスクの選択
+  const [selectUser, setSelectUser] = useState(''); //送信先選択
+  const [selectTask, setSelectTask] = useState<any>(); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
   const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
-  const [customer, setCustomer] = useState(""); //顧客名
-  const [occurrenceDate, setOccurrenceDate] = useState(""); //発生日
-  const [occurrenceSelect, setOccurrenceSelect] = useState(""); //発生選択
-  const [occurrenceContent, setOccurrenceContent] = useState(""); //発生内容
-  const [amendmentSelect, setAmendmentSelect] = useState(""); //修正処置選択
-  const [amendmentContent, setAmendmentContent] = useState(""); //修正処置内容
-  const [counterplanSelect, setCounterplanSelect] = useState(""); //対策選択
-  const [counterplanContent, setCounterplanContent] = useState(""); //対策内容
-  const [completionDate, setCompletionDate] = useState(""); //完了日
+  const [customer, setCustomer] = useState(''); //顧客名
+  const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
+  const [occurrenceSelect, setOccurrenceSelect] = useState(''); //発生選択
+  const [occurrenceContent, setOccurrenceContent] = useState(''); //発生内容
+  const [amendmentSelect, setAmendmentSelect] = useState(''); //修正処置選択
+  const [amendmentContent, setAmendmentContent] = useState(''); //修正処置内容
+  const [counterplanSelect, setCounterplanSelect] = useState(''); //対策選択
+  const [counterplanContent, setCounterplanContent] = useState(''); //対策内容
+  const [completionDate, setCompletionDate] = useState(''); //完了日
 
   const [receptionDate, setReceptionDate] = useState<any>(`${todayDate()}`); //受付日
-  const [receptionist, setReceptionist] = useState(""); //受付者
-  const [receptionNum, setReceptionNum] = useState(""); //受付NO.
-  const [stampStaff, setStampStaff] = useState(""); //担当者ハンコ
-  const [stampOffice, setStampOffice] = useState(""); //事務局ハンコ
-  const [stampBoss, setStampBoss] = useState(""); //上司ハンコ
-  const [stampManager, setStampManager] = useState(""); //管理者ハンコ
-  const [stampTm, setStampTm] = useState(""); //TMハンコ
-  const [status, setStatus] = useState(""); //ステータス
+  const [receptionist, setReceptionist] = useState(''); //受付者
+  const [receptionNum, setReceptionNum] = useState(''); //受付NO.
+  const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
+  const [stampOffice, setStampOffice] = useState(''); //事務局ハンコ
+  const [stampBoss, setStampBoss] = useState(''); //上司ハンコ
+  const [stampManager, setStampManager] = useState(''); //管理者ハンコ
+  const [stampTm, setStampTm] = useState(''); //TMハンコ
+  const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
 
-  const [imageUrl, setImageUrl] = useState("");
+  const [fileUpload, setFileUpload] = useState<any>({});
+  const [imageUrl, setImageUrl] = useState('');
+  const [imagePath, setImagePath] = useState('');
 
   useEffect(() => {
     if (user === null) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router, user]);
 
-  console.log("err");
-
   //クレーム報告書のステータスを変更
   const switchStatus = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: selectTask,
       operator: selectUser,
-      message: "",
+      message: '',
     });
-    router.push("/claims");
+    router.push('/claims');
   };
 
   //クレーム報告書を更新
   const updateClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       customer,
       receptionNum,
@@ -117,7 +124,7 @@ const ClaimId = () => {
 
   //クレーム報告書を担当者入力欄の更新
   const updateStaffClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       occurrenceSelect,
       occurrenceContent,
@@ -128,7 +135,7 @@ const ClaimId = () => {
 
   //クレーム報告書を対策者・上司入力欄の更新
   const updateCounterplanClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       counterplanSelect,
       counterplanContent,
@@ -138,30 +145,16 @@ const ClaimId = () => {
 
   // クレーム報告書を取得;
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "claimList", `${queryId}`), (doc) => {
-      console.log("Current data: ", doc.data());
+    const unsub = onSnapshot(doc(db, 'claimList', `${queryId}`), (doc) => {
+      console.log('Current data: ', doc.data());
       setClaim(doc.data());
     });
   }, [queryId, edit]);
 
-  //クレーム報告書を取得
-  // useEffect(() => {
-  //   const getClaim = async () => {
-  //     const claimsDoc = doc(db, 'claimList', `${queryId}`);
-  //     const docSnap = await getDoc(claimsDoc);
-  //     if (docSnap.exists()) {
-  //       setClaim(docSnap.data());
-  //     } else {
-  //       console.log('ドキュメントがありません。');
-  //     }
-  //   };
-  //   getClaim();
-  // }, [queryId, edit]);
-
   //ユーザー一覧を取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, "authority");
-    const q = query(usersCollectionRef, orderBy("rank", "asc"));
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
     const unsub = onSnapshot(q, (querySnapshot: any) => {
       setUsers(
         querySnapshot.docs.map((doc: any) => ({
@@ -289,40 +282,32 @@ const ClaimId = () => {
     setReceptionNum(claim.receptionNum);
     setReceptionDate(claim.receptionDate);
     setCompletionDate(claim.completionDate);
+    setImageUrl(claim.imageUrl);
+    setImagePath(claim.imagePath);
   };
 
   const editCancel = () => {
-    setCustomer("");
-    setOccurrenceDate("");
-    setOccurrenceSelect("");
-    setOccurrenceContent("");
-    setAmendmentSelect("");
-    setAmendmentContent("");
-    setCounterplanSelect("");
-    setCounterplanContent("");
-    setReceptionNum("");
-    setReceptionDate("");
-    setCompletionDate("");
+    setCustomer('');
+    setOccurrenceDate('');
+    setOccurrenceSelect('');
+    setOccurrenceContent('');
+    setAmendmentSelect('');
+    setAmendmentContent('');
+    setCounterplanSelect('');
+    setCounterplanContent('');
+    setReceptionNum('');
+    setReceptionDate('');
+    setCompletionDate('');
+    setImageUrl('');
+    setImagePath('');
   };
-  // useEffect(() => {
-  //   const gsReference = ref(
-  //     storage,
-  //     'gs://daimaru-portal.appspot.com/images/claims/zD6Fwt8rZalp5jZP4v4B/amazonImg.png'
-  //   );
-  //   getDownloadURL(gsReference)
-  //     .then((url) => {
-  //       setImageUrl(url);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-  // console.log(imageUrl);
 
   return (
     <>
       {currentUser && (
         <>
           <Header />
-          <Box w="100%" p={6} backgroundColor={"#f7f7f7"} position="relative">
+          <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
             {/* クレームメッセージ */}
             <ClaimMessage
               claim={claim}
@@ -348,14 +333,17 @@ const ClaimId = () => {
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
+              fileUpload={fileUpload}
             />
 
             {/* レポート部分 */}
             <Box
-              w={{ base: "100%", md: "700px" }}
-              mx="auto"
+              w={{ base: '100%', md: '700px' }}
+              mx='auto'
               p={6}
-              backgroundColor="white"
+              backgroundColor='white'
               borderRadius={6}
             >
               {/* 受付ナンバー　受付日 */}
@@ -363,18 +351,18 @@ const ClaimId = () => {
                 <>
                   {!edit && (
                     <Flex
-                      alignItems="center"
-                      justifyContent="space-between"
-                      w="100%"
+                      alignItems='center'
+                      justifyContent='space-between'
+                      w='100%'
                     >
-                      <Flex mr={1} alignItems="center">
-                        <Box fontSize="lg" fontWeight="semibold" mr={1}>
+                      <Flex mr={1} alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付NO
                         </Box>
                         <Box>{claim.receptionNum}</Box>
                       </Flex>
-                      <Flex alignItems="center">
-                        <Box fontSize="lg" fontWeight="semibold" mr={1}>
+                      <Flex alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付日
                         </Box>
                         <Box>{claim.receptionDate}</Box>
@@ -390,10 +378,9 @@ const ClaimId = () => {
               {/* 編集画面 */}
               {edit && (
                 <>
-                  <ClaimEdit
+                  <ClaimEditReport
+                    queryId={queryId}
                     currentUser={currentUser}
-                    claim={claim}
-                    isoOfficeUsers={isoOfficeUsers}
                     customer={customer}
                     setCustomer={setCustomer}
                     occurrenceDate={occurrenceDate}
@@ -420,30 +407,36 @@ const ClaimId = () => {
                     enabledStaffAndOffice={enabledStaffAndOffice}
                     enabledCounterplanAndOffice={enabledCounterplanAndOffice}
                     enabledBossAndOffice={enabledBossAndOffice}
+                    imageUrl={imageUrl}
+                    setImageUrl={setImageUrl}
+                    fileUpload={fileUpload}
+                    setFileUpload={setFileUpload}
+                    imagePath={imagePath}
+                    setImagePath={setImagePath}
                   />
                 </>
               )}
 
               {/*'未処理 受付NO. 受付日 入力欄*/}
               {Number(claim.status) === 0 && enabledOffice() && (
-                <Flex alignItems="center" w="100%" mt={10}>
-                  <Flex mr={5} alignItems="center">
-                    <Box fontSize="lg" fontWeight="semibold" minW="70px">
+                <Flex alignItems='center' w='100%' mt={10}>
+                  <Flex mr={5} alignItems='center'>
+                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
                       受付NO
                     </Box>
                     <Input
-                      type="text"
-                      placeholder="例 4-001"
+                      type='text'
+                      placeholder='例 4-001'
                       value={receptionNum}
                       onChange={(e) => setReceptionNum(e.target.value)}
                     />
                   </Flex>
-                  <Flex mr={1} alignItems="center">
-                    <Box fontSize="lg" fontWeight="semibold" minW="70px">
+                  <Flex mr={1} alignItems='center'>
+                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
                       受付日
                     </Box>
                     <Input
-                      type="date"
+                      type='date'
                       value={receptionDate}
                       onChange={(e) => setReceptionDate(e.target.value)}
                     />
@@ -457,7 +450,6 @@ const ClaimId = () => {
                   <ClaimConfirmSendButton
                     claim={claim}
                     currentUser={currentUser}
-                    users={users}
                     receptionDate={receptionDate}
                     receptionNum={receptionNum}
                     counterplanSelect={counterplanSelect}
@@ -474,21 +466,19 @@ const ClaimId = () => {
                   {/* 担当者セレクトボタン　未処理以外　事務局のみ */}
                   {Number(claim.status) !== 0 && enabledOffice() && (
                     <ClaimSelectSendButton
-                      claim={claim}
+                      queryId={queryId}
+                      users={users}
                       selectUser={selectUser}
                       setSelectUser={setSelectUser}
-                      users={users}
                       selectTask={selectTask}
                       setSelectTask={setSelectTask}
                       taskflow={taskflow}
                       switchStatus={switchStatus}
-                      queryId={queryId}
                     />
                   )}
                 </>
               )}
             </Box>
-
             {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
             <ClaimEditButton
               claim={claim}
@@ -502,6 +492,9 @@ const ClaimId = () => {
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}
+              imageUrl={imageUrl}
+              setImageUrl={setImageUrl}
+              fileUpload={fileUpload}
             />
           </Box>
 

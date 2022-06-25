@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   Box,
+  Button,
   Flex,
   Input,
   Radio,
@@ -7,67 +9,25 @@ import {
   Stack,
   Textarea,
 } from '@chakra-ui/react';
+import { doc, updateDoc } from 'firebase/firestore';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import { NextPage } from 'next';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
 } from '../../../data';
+import { db, storage } from '../../../firebase';
+import { ClaimStateProps } from '../../../lib/ClaimStateProps';
 
-type Props = {
-  currentUser: string;
-  isoOfficeUsers: {
-    uid: string;
-  }[];
-  claim: {
-    customer: string;
-    occurrenceDate: string;
-    occurrenceSelect: string;
-    occurrenceContent: string;
-    amendmentSelect: string;
-    amendmentContent: string;
-    counterplanSelect: string;
-    counterplanContent: string;
-    stampStaff: string;
-    status: string | number;
-    operator: string;
-    receptionNum: string;
-    receptionDate: string;
-    completionDate: string;
-  };
-  customer: string;
-  setCustomer: any;
-  occurrenceDate: string;
-  setOccurrenceDate: any;
-  occurrenceSelect: string;
-  setOccurrenceSelect: any;
-  occurrenceContent: string;
-  setOccurrenceContent: any;
-  amendmentSelect: string;
-  setAmendmentSelect: any;
-  amendmentContent: string;
-  setAmendmentContent: any;
-  counterplanSelect: string;
-  setCounterplanSelect: any;
-  counterplanContent: string;
-  setCounterplanContent: any;
-  receptionNum: string;
-  setReceptionNum: any;
-  receptionDate: string;
-  setReceptionDate: any;
-  completionDate: string;
-  setCompletionDate: any;
-  enabledOffice: any;
-  enabledStaffAndOffice: any;
-  enabledCounterplanAndOffice: any;
-  enabledBossAndOffice: any;
-};
-
-const ClaimEdit: NextPage<Props> = ({
-  currentUser,
-  isoOfficeUsers,
-  claim,
+const ClaimEditReport: NextPage<ClaimStateProps> = ({
+  queryId,
   customer,
   setCustomer,
   occurrenceDate,
@@ -94,7 +54,62 @@ const ClaimEdit: NextPage<Props> = ({
   enabledStaffAndOffice,
   enabledCounterplanAndOffice,
   enabledBossAndOffice,
+  fileUpload,
+  setFileUpload,
+  imageUrl,
+  setImageUrl,
+  imagePath,
+  setImagePath,
 }) => {
+  console.log('fileUpload', fileUpload);
+  //添付ファイルをアップロード
+  const onFileUpload = () => {
+    const result = window.confirm('アップロードして宜しいでしょうか？');
+    if (!result) return;
+
+    const file = fileUpload[0];
+    setImageUrl(window.URL.createObjectURL(file));
+
+    const storageRef = ref(
+      storage,
+      `images/claims/${queryId}/${fileUpload[0].name}`
+    );
+    uploadBytes(storageRef, file).then((snapshot: any) => {
+      getDownloadURL(
+        ref(storage, `images/claims/${queryId}/${fileUpload[0].name}`)
+      ).then((url) => {
+        const docRef = doc(db, 'claimList', `${queryId}`);
+        updateDoc(docRef, {
+          imageUrl: url,
+          imagePath: storageRef.fullPath,
+        });
+        setFileUpload(null);
+        setImagePath(storageRef.fullPath);
+        console.log('アップロード成功');
+      });
+    });
+  };
+
+  const onFileDelete = () => {
+    const result = window.confirm('削除して宜しいでしょうか？');
+    if (!result) return;
+    setFileUpload('');
+    setImageUrl('');
+    const docRef = doc(db, 'claimList', `${queryId}`);
+    updateDoc(docRef, {
+      imageUrl: '',
+      imagePath: '',
+    }).then(() => {
+      const desertRef = ref(storage, imagePath);
+      deleteObject(desertRef)
+        .then(() => {
+          console.log('削除成功');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+  };
   return (
     <>
       {/* 受付NO. 受付日 */}
@@ -294,25 +309,57 @@ const ClaimEdit: NextPage<Props> = ({
       </Box>
 
       {/* 添付書類 */}
-      {/* <Box w='100%' mt={9}>
-      <Box w='100%' mt={6}>
-        <Box mr={3} fontSize='lg' fontWeight='semibold'>
-          添付書類
-        </Box>
-        <Box mt={3}>
-          ①
-          <input type='file' accept='image/png, image/jpeg' />
-        </Box>
-        <Box mt={3}>
-          ②
-          <input type='file' accept='image/png, image/jpeg' />
-        </Box>
-        <Box mt={3}>
-          ③
-          <input type='file' accept='image/png, image/jpeg' />
-        </Box>
+      <Box w='100%' mt={9}>
+        {imageUrl && (
+          <Box mt={9} p={6} boxShadow='xs'>
+            <a href={imageUrl} target='_blank' rel='noreferrer'>
+              <img src={imageUrl} alt='画像' width='100%' height='100%' />
+            </a>
+          </Box>
+        )}
       </Box>
-    </Box> */}
+
+      {imageUrl ? (
+        <Flex w={'100%'} justifyContent='center'>
+          <Button
+            mt={3}
+            mx='auto'
+            colorScheme='red'
+            onClick={() => {
+              onFileDelete();
+            }}
+          >
+            削除
+          </Button>
+        </Flex>
+      ) : (
+        <Flex
+          flexDirection={{ base: 'column', md: 'row' }}
+          alignItems='center'
+          justifyContent='center'
+        >
+          <Box w={'100%'} p={3}>
+            <input
+              type='file'
+              accept='.png, .jpeg, .jpg'
+              onChange={(e) => {
+                setFileUpload(e.target.files);
+              }}
+            />
+          </Box>
+          {fileUpload && fileUpload.length == 1 && (
+            <Flex w={'100%'} p={3}>
+              <Button
+                mr={3}
+                colorScheme='telegram'
+                onClick={() => onFileUpload()}
+              >
+                アップロード
+              </Button>
+            </Flex>
+          )}
+        </Flex>
+      )}
       {/* 完了日 */}
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
@@ -332,4 +379,4 @@ const ClaimEdit: NextPage<Props> = ({
   );
 };
 
-export default ClaimEdit;
+export default ClaimEditReport;

@@ -4,7 +4,6 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useInsertionEffect, useState } from 'react';
 import { db } from '../../../firebase';
-import { todayDate } from '../../../functions';
 
 type Props = {
   claim: {
@@ -15,10 +14,6 @@ type Props = {
     stampOffice: string;
     operator: string;
   };
-  users: {
-    id: string;
-    name: string;
-  }[];
   currentUser: string;
   receptionDate: string;
   receptionNum: string;
@@ -35,16 +30,10 @@ type Props = {
 
 const ClaimConfirmSendButton: NextPage<Props> = ({
   claim,
-  users,
   currentUser,
   receptionNum,
   receptionDate,
-  completionDate,
-  counterplanSelect,
-  counterplanContent,
-  stampOffice,
   enabledOffice,
-  enabledBossAndOffice,
   enabledManager,
   enabledTopManegment,
 }) => {
