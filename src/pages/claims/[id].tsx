@@ -2,7 +2,7 @@
 //クレーム報告書　個別ページ
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, AlertIcon, Box, Button, Flex, Input } from '@chakra-ui/react';
+import { Box, Button, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   doc,
@@ -11,21 +11,15 @@ import {
   orderBy,
   query,
   updateDoc,
-  where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
-import { auth, db, storage } from '../../../firebase';
+import { auth, db } from '../../../firebase';
 import { authState } from '../../../store/authState';
-import {
-  taskflow,
-  claimSelectList1,
-  claimSelectList2,
-  claimSelectList3,
-} from '../../../data';
+import { taskflow } from '../../../data';
 import { todayDate } from '../../../functions';
 
 import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
@@ -35,14 +29,7 @@ import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSend
 import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
 import ClaimProgress from '../../components/claimsComp/ClaimProgress';
 import ClaimMessage from '../../components/claimsComp/ClaimMessage';
-import Image from 'next/image';
 import ClaimEditReport from '../../components/claimsComp/ClaimEditReport';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
 
 //クレーム報告書作成
 
@@ -88,10 +75,10 @@ const ClaimId = () => {
   const [imagePath, setImagePath] = useState('');
 
   useEffect(() => {
-    if (user === null) {
+    if (currentUser === null) {
       router.push('/login');
     }
-  }, [router, user]);
+  }, [router, currentUser]);
 
   //クレーム報告書のステータスを変更
   const switchStatus = async (id: any) => {
@@ -304,7 +291,7 @@ const ClaimId = () => {
 
   return (
     <>
-      {currentUser && (
+      {claim && currentUser && (
         <>
           <Header />
           <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
@@ -450,6 +437,7 @@ const ClaimId = () => {
                   <ClaimConfirmSendButton
                     claim={claim}
                     currentUser={currentUser}
+                    queryId={queryId}
                     receptionDate={receptionDate}
                     receptionNum={receptionNum}
                     counterplanSelect={counterplanSelect}

@@ -1,9 +1,10 @@
 import { Button, Flex } from '@chakra-ui/react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useInsertionEffect, useState } from 'react';
-import { db } from '../../../firebase';
+import React from 'react';
+import { db, storage } from '../../../firebase';
 
 type Props = {
   claim: {
@@ -13,8 +14,10 @@ type Props = {
     completionDate: string;
     stampOffice: string;
     operator: string;
+    imagePath: string;
   };
   currentUser: string;
+  queryId: any;
   receptionDate: string;
   receptionNum: string;
   completionDate: string;
@@ -31,6 +34,7 @@ type Props = {
 const ClaimConfirmSendButton: NextPage<Props> = ({
   claim,
   currentUser,
+  queryId,
   receptionNum,
   receptionDate,
   enabledOffice,
@@ -38,7 +42,6 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
   enabledTopManegment,
 }) => {
   const router = useRouter();
-  const queryId = router.query.id;
 
   //クレーム報告書を受付
   const acceptClaim = async (id: any) => {
@@ -50,7 +53,28 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
       receptionDate,
       stampOffice: currentUser,
     });
-    router.push(`/claims`);
+  };
+
+  //クレーム報告書を削除
+  const deleteClaim = async (id: any) => {
+    const result = window.confirm('削除して宜しいでしょうか？');
+    if (!result) return;
+
+    await deleteDoc(doc(db, 'claimList', id));
+
+    if (claim.imagePath === '') {
+      router.push('/claims');
+      return;
+    }
+    const imageRef = ref(storage, claim.imagePath);
+    await deleteObject(imageRef)
+      .then(() => {
+        router.push(`/claims`);
+        console.log('削除成功');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   //対策完了 事務局へ渡す
@@ -136,12 +160,21 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
         <Flex justifyContent='center'>
           <Button
             mt={12}
+            mr={3}
+            colorScheme='blue'
             onClick={() => {
               acceptClaim(queryId);
             }}
             disabled={receptionNum && receptionDate ? false : true}
           >
             受け付ける
+          </Button>
+          <Button
+            mt={12}
+            colorScheme='red'
+            onClick={() => deleteClaim(queryId)}
+          >
+            削除する
           </Button>
         </Flex>
       )}

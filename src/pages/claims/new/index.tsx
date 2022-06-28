@@ -52,9 +52,6 @@ const ClaimNew = () => {
   // const [users, setUsers] = useState<any>([]);
   const [selectUser, setSelectUser] = useState<any>([]);
   const [fileUpload, setFileUpload] = useState<any>();
-  const [preview, setPreview] = useState<any>();
-
-  console.log(preview);
 
   useEffect(() => {
     if (user === null) {
@@ -92,7 +89,7 @@ const ClaimNew = () => {
         imagePath: '',
       });
 
-      fileUpload && onFileUpLoad(e, docRef.id);
+      fileUpload && onFileUpload(docRef.id);
       router.push('/claims');
     } catch (e) {
       console.error('Error adding document: ', e);
@@ -100,9 +97,8 @@ const ClaimNew = () => {
   };
 
   //画像をアップロード
-  const onFileUpLoad = (e: any, id: string) => {
+  const onFileUpload = (id: string) => {
     const file = fileUpload[0];
-    // setPreview(window.URL.createObjectURL(file));
     const storageRef = ref(
       storage,
       `images/claims/${id}/${fileUpload[0].name}`
@@ -183,19 +179,17 @@ const ClaimNew = () => {
                   <Box mr={3} fontSize='lg' fontWeight='semibold'>
                     添付書類
                   </Box>
+                  {fileUpload && fileUpload.length === 1 && (
+                    <Box>
+                      <img src={window.URL.createObjectURL(fileUpload[0])} />
+                    </Box>
+                  )}
                   <Box mt={3}>
                     <input
                       type='file'
                       accept='.png, .jpeg, .jpg'
                       onChange={(e) => setFileUpload(e.target.files)}
                     />
-                  </Box>
-
-                  <Box mt={3}>
-                    <input type='file' accept='image/png, image/jpeg' />
-                  </Box>
-                  <Box mt={3}>
-                    <input type='file' accept='image/png, image/jpeg' />
                   </Box>
                 </Box>
               </Box>

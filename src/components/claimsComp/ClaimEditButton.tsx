@@ -98,7 +98,6 @@ const ClaimEditButton: NextPage<Props> = ({
                   claim.operator === currentUser &&
                   updateCounterplanClaim(queryId); //対策者用・上司用アップデート（対策）
 
-                // imageUrl && onFileUpload(); //画像のアップロード 関数
                 setEdit(false); //編集画面から通常画面に戻す
               }}
             >
