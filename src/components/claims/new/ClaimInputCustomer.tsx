@@ -12,6 +12,9 @@ const ClaimsInputCustomer = ({
       <Box>
         <Box mt={10} fontSize='lg' fontWeight='semibold'>
           顧客名
+          <Box as='span' color='red'>
+            （必須）
+          </Box>
         </Box>
         <Input
           type='text'
@@ -26,6 +29,9 @@ const ClaimsInputCustomer = ({
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
           発生日
+          <Box as='span' color='red'>
+            （必須）
+          </Box>
         </Box>
         <Input
           type='date'

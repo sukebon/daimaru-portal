@@ -24,6 +24,7 @@ export type ClaimStateProps = {
   completionDate: string;
   setCompletionDate: any;
   enabledOffice: any;
+  enabledAuthorAndOffice: any;
   enabledStaffAndOffice: any;
   enabledCounterplanAndOffice: any;
   enabledBossAndOffice: any;

@@ -12,6 +12,9 @@ const ClaimInputOccurrence = ({
       <Box mt={10}>
         <Box as='h2' fontSize='lg' fontWeight='semibold'>
           発生内容
+          <Box as='span' color='red'>
+            （必須）
+          </Box>
         </Box>
 
         <Box w='100%' mt={6}>

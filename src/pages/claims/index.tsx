@@ -16,8 +16,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  QuerySnapshot,
-  where,
 } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -69,30 +67,21 @@ const Claim: NextPage = () => {
     <>
       {currentUser && (
         <>
-          <Header />
           <Box
-            width={'100%'}
             p={6}
             backgroundColor={'#f7f7f7'}
             paddingBottom={'50px'}
             minH={'100vh'}
           >
-            <Flex
-              flexDirection={'column'}
-              alignItems={'center'}
-              width={{ md: '1300px' }}
-              p={6}
-              mx='auto'
-              backgroundColor='white'
-              borderRadius={6}
-            >
-              <TableContainer>
+            <Flex flexDirection={'column'} alignItems={'center'}>
+              <TableContainer backgroundColor='white' borderRadius={6} p={6}>
                 <Table size='sm'>
                   <Thead>
                     <Tr>
                       <Th>ステータス</Th>
                       <Th>受付日</Th>
                       <Th>受付NO.</Th>
+                      <Th>記入者</Th>
                       <Th>担当</Th>
                       <Th>顧客名</Th>
                       <Th>発生日</Th>
@@ -113,6 +102,11 @@ const Claim: NextPage = () => {
                         </Td>
                         <Td>{claim.receptionDate}</Td>
                         <Td>{claim.receptionNum}</Td>
+                        <Td>
+                          {Users.map(
+                            (user) => user.uid == claim.author && user.name
+                          )}
+                        </Td>
                         <Td>
                           {Users.map(
                             (user) => user.uid == claim.stampStaff && user.name

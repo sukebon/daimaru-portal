@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Select, Text } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { ClaimStateProps } from '../../../lib/ClaimStateProps';
 
 type Props = {
   queryId: string | string[] | undefined;
@@ -77,8 +76,8 @@ const ClaimSelectSendButton: NextPage<Props> = ({
             >
               {taskflow.map(
                 (task: { id: number; status: string }) =>
-                  1 < task.id &&
-                  task.id < 7 && (
+                  0 < task.id &&
+                  task.id < 8 && (
                     <option key={task.id} value={task.id}>
                       {task.status}
                     </option>
@@ -93,25 +92,25 @@ const ClaimSelectSendButton: NextPage<Props> = ({
               w={48}
               mr={2}
             >
-              {Number(selectTask) <= 3 &&
+              {Number(selectTask) <= 4 &&
                 users.map((user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
                     {user.name}
                   </option>
                 ))}
-              {selectTask == 4 &&
+              {selectTask == 5 &&
                 isoBossUsers.map((user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
                     {user.name}
                   </option>
                 ))}
-              {selectTask == 5 &&
+              {selectTask == 6 &&
                 isoManagerUsers.map((user: { uid: string; name: string }) => (
                   <option key={user.uid} value={user.uid}>
                     {user.name}
                   </option>
                 ))}
-              {selectTask == 6 &&
+              {selectTask == 7 &&
                 isoTopManegmentUsers.map(
                   (user: { uid: string; name: string }) => (
                     <option key={user.uid} value={user.uid}>

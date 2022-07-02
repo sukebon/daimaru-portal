@@ -1,13 +1,13 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Button, Select } from '@chakra-ui/react';
 import {
   addDoc,
   collection,
   doc,
   onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
   updateDoc,
-  where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -17,11 +17,10 @@ import Footer from '../../../components/Footer';
 import Header from '../../../components/Header';
 import { auth, db, storage } from '../../../../firebase';
 import { authState } from '../../../../store/authState';
-import ClaimInputCustomer from '../../../components/claimsComp/ClaimInputCustomer';
-import ClaimInputOccurrence from '../../../components/claimsComp/ClaimInputOccurrence';
-import ClaimInputAmendment from '../../../components/claimsComp/ClaimInputAmendment';
-import ClaimInputCounteClaim from '../../../components/claimsComp/ClaimInputCounterplan';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import ClaimInputCustomer from '../../../components/claims/new/ClaimInputCustomer';
+import ClaimInputOccurrence from '../../../components/claims/new/ClaimInputOccurrence';
+import ClaimInputAmendment from '../../../components/claims/new/ClaimInputAmendment';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 //クレーム報告書作成
 
@@ -29,6 +28,7 @@ const ClaimNew = () => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
+  const [users, setUsers] = useState([]);
   const [customer, setCustomer] = useState(''); //顧客名
   const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
   const [occurrenceSelect, setOccurrenceSelect] = useState(''); //発生選択
@@ -41,6 +41,7 @@ const ClaimNew = () => {
   const [receptionDate, setReceptionDate] = useState(''); //受付日
   const [receptionist, setReceptionist] = useState(''); //受付者
   const [receptionNum, setReceptionNum] = useState(''); //受付NO.
+  const [author, setAuthor] = useState(''); //記入者ハンコ
   const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
   const [stampOffice, setStampOffice] = useState(''); //事務局ハンコ
   const [stampBoss, setStampBoss] = useState(''); //上司ハンコ
@@ -76,7 +77,8 @@ const ClaimNew = () => {
         receptionDate, //受付日
         receptionist, //受付者
         receptionNum: '未設定', //受付NO.
-        stampStaff: currentUser, //担当者ハンコ
+        author: currentUser, //記入者
+        stampStaff: stampStaff, //担当者ハンコ
         stampOffice, //事務局ハンコ
         stampBoss, //上司ハンコ
         stampManager, //管理者ハンコ
@@ -116,11 +118,24 @@ const ClaimNew = () => {
     });
   };
 
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const unsub = onSnapshot(q, (querySnapshot: any) => {
+      setUsers(
+        querySnapshot.docs.map((doc: any) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+    return unsub;
+  }, []);
+
   return (
     <>
       {currentUser && (
         <>
-          <Header />
           <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
             <Box
               w={{ base: '100%', md: '700px' }}
@@ -129,6 +144,13 @@ const ClaimNew = () => {
               backgroundColor='white'
               borderRadius={6}
             >
+              <Box w='100%' textAlign='right'>
+                記入者：
+                {users.map(
+                  (user: { uid: string; name: string }) =>
+                    user.uid === currentUser && user.name
+                )}
+              </Box>
               <Box
                 as='h1'
                 w='100%'
@@ -139,6 +161,26 @@ const ClaimNew = () => {
                 textAlign='center'
               >
                 クレーム報告書
+              </Box>
+              <Box>
+                <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                  担当者名
+                  <Box as='span' color='red'>
+                    （必須）
+                  </Box>
+                </Box>
+                <Box mt={2}>
+                  <Select
+                    onChange={(e) => setStampStaff(e.target.value)}
+                    placeholder='担当者を選択'
+                  >
+                    {users.map((user: { uid: string; name: string }) => (
+                      <option key={user.uid} value={user.uid}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
               </Box>
 
               {/* 顧客名 */}
@@ -157,21 +199,21 @@ const ClaimNew = () => {
                 setOccurrenceContent={setOccurrenceContent}
               />
 
-              {/* 修正処置 */}
+              {/* 修正処置
               <ClaimInputAmendment
                 amendmentSelect={amendmentSelect}
                 setAmendmentSelect={setAmendmentSelect}
                 amendmentContent={amendmentContent}
                 setAmendmentContent={setAmendmentContent}
-              />
+              /> */}
 
               {/*対策 */}
-              <ClaimInputCounteClaim
+              {/* <ClaimInputCounteClaim
                 counterplanSelect={counterplanSelect}
                 setCounterplanSelect={setCounterplanSelect}
                 counterplanContent={counterplanContent}
                 setCounterplanContent={setCounterplanContent}
-              />
+              /> */}
 
               {/* 添付書類 */}
               <Box w='100%' mt={9}>
@@ -201,7 +243,8 @@ const ClaimNew = () => {
                     customer &&
                     occurrenceDate &&
                     occurrenceSelect &&
-                    occurrenceContent
+                    occurrenceContent &&
+                    stampStaff
                       ? false
                       : true
                   }

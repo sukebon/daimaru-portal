@@ -51,6 +51,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
   completionDate,
   setCompletionDate,
   enabledOffice,
+  enabledAuthorAndOffice,
   enabledStaffAndOffice,
   enabledCounterplanAndOffice,
   enabledBossAndOffice,
@@ -229,7 +230,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
           w='100%'
           placeholder='内容を入力'
           value={occurrenceContent}
-          disabled={!enabledStaffAndOffice()}
+          disabled={!enabledAuthorAndOffice()}
           onChange={(e) => setOccurrenceContent(e.target.value)}
         />
       </Box>

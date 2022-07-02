@@ -7,6 +7,8 @@ type Props = {
     status: string;
     operator: string;
     message: string;
+    stampStaff: string;
+    amendmentContent: string;
   };
   currentUser: string;
   users: [];
@@ -26,12 +28,32 @@ const ClaimMessage: NextPage<Props> = ({
   return (
     <>
       <Flex
-        w={{ base: '100%', md: '700px' }}
+        w={{ base: '100%', md: '750px' }}
         mx='auto'
         justifyContent='space-between'
       >
+        {/* 担当者に表示するメッセージ　 */}
+        {Number(claim.status) === 1 && claim.stampStaff === currentUser && (
+          <Alert status='info'>
+            <AlertIcon />
+            {users.map(
+              (user: { uid: string; name: string }) =>
+                claim.stampStaff === user.uid && (
+                  <Box key={user.uid}>
+                    <Box>作業者：{user.name}</Box>
+                    <Box>
+                      編集ボタンをクリックして、【修正処置】を記入してください。
+                      <br />
+                      記入が完了次第、下のブルーのボタンをクリックしてください。
+                    </Box>
+                  </Box>
+                )
+            )}
+          </Alert>
+        )}
+
         {/* 対策者に表示するメッセージ */}
-        {Number(claim.status) === 2 && claim.operator === currentUser && (
+        {Number(claim.status) === 3 && claim.operator === currentUser && (
           <Alert status='info'>
             <AlertIcon />
             {users.map(
@@ -40,7 +62,9 @@ const ClaimMessage: NextPage<Props> = ({
                   <Box key={user.uid}>
                     <Box>作業者：{user.name}</Box>
                     <Box>
-                      対策を記入してください。終わり次第、下のブルーのボタンをクリックしてください。
+                      編集ボタンをクリックして、【対策】を記入してください。
+                      <br />
+                      記入が完了次第、下のブルーのボタンをクリックしてください。
                     </Box>
                   </Box>
                 )
@@ -49,7 +73,7 @@ const ClaimMessage: NextPage<Props> = ({
         )}
 
         {/* 上司に表示するメッセージ */}
-        {Number(claim.status) === 4 && claim.operator === currentUser && (
+        {Number(claim.status) === 5 && claim.operator === currentUser && (
           <Alert status='info'>
             <AlertIcon />
             {users.map(
@@ -58,7 +82,11 @@ const ClaimMessage: NextPage<Props> = ({
                   <Box key={user.uid}>
                     <Box>作業者：{user.name}</Box>
                     <Box>
-                      完了日と対策の確認してから承認ボタンをクリックしてください。
+                      編集ボタンをクリックして、【完了日】の記入と対策の確認をしてください。
+                      <br />
+                      記入と確認が完了次第、下のブルーのボタンをクリックしてください。
+                      <br />
+                      やり直しの場合は却下してください。
                     </Box>
                   </Box>
                 )
@@ -67,7 +95,7 @@ const ClaimMessage: NextPage<Props> = ({
         )}
 
         {/* 管理者に表示するメッセージ */}
-        {Number(claim.status) === 5 && enabledManager() && (
+        {Number(claim.status) === 6 && enabledManager() && (
           <Alert status='info'>
             <AlertIcon />
             <Box>
@@ -77,7 +105,7 @@ const ClaimMessage: NextPage<Props> = ({
         )}
 
         {/* topManagmentに表示するメッセージ */}
-        {Number(claim.status) === 6 && enabledTopManegment() && (
+        {Number(claim.status) === 7 && enabledTopManegment() && (
           <Alert status='info'>
             <AlertIcon />
             <Box>内容を確認してから承認ボタンをクリックしてください。</Box>
@@ -85,7 +113,7 @@ const ClaimMessage: NextPage<Props> = ({
         )}
 
         {/* 事務局に表示するメッセージ */}
-        {claim.message && Number(claim.status) === 3 && enabledOffice() && (
+        {claim.message && Number(claim.status) === 4 && enabledOffice() && (
           <Alert status='error'>
             <AlertIcon />
             <Box>{claim.message}</Box>

@@ -1,13 +1,12 @@
 import { Text, Flex } from '@chakra-ui/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import HeaderMenuButton from './HeaderMenuButton';
-import { Users } from '../../data';
 import { authState } from '../../store/authState';
 import { useRecoilValue } from 'recoil';
+import { NextPage } from 'next';
 
-const Header = () => {
-  const currentUser = useRecoilValue(authState);
+const Header: NextPage = () => {
   return (
     <>
       <Flex
@@ -30,10 +29,6 @@ const Header = () => {
               </Text>
             </a>
           </Link>
-          {/* <Text>
-            ログイン：
-            {Users.map((user) => user.uid === currentUser && user.name)}
-          </Text> */}
         </Flex>
         <HeaderMenuButton />
       </Flex>

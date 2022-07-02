@@ -188,7 +188,6 @@ const Admin = () => {
 
   return (
     <>
-      <Header />
       {Administrator.includes(currentUser) && (
         <Box
           w={'100%'}

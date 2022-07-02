@@ -7,7 +7,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import React from 'react';
-import { claimSelectList2 } from '../../../data';
+import { claimSelectList2 } from '../../../../data';
 
 const ClaimInputAmendment = ({
   amendmentSelect,

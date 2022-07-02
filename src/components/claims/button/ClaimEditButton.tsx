@@ -6,6 +6,7 @@ import React from 'react';
 type Props = {
   claim: {
     status: string;
+    author: string;
     stampStaff: string;
     operator: string;
   };
@@ -15,6 +16,8 @@ type Props = {
   isEdit: any;
   setEdit: any;
   updateClaim: any;
+  updateOccurrenceClaim: any;
+  updateAmendmentClaim: any;
   updateStaffClaim: any;
   updateCounterplanClaim: any;
   editCancel: any;
@@ -32,6 +35,8 @@ const ClaimEditButton: NextPage<Props> = ({
   isEdit,
   setEdit,
   updateClaim,
+  updateOccurrenceClaim,
+  updateAmendmentClaim,
   updateStaffClaim,
   updateCounterplanClaim,
   editCancel,
@@ -39,7 +44,7 @@ const ClaimEditButton: NextPage<Props> = ({
 }) => {
   return (
     <>
-      <Box w={{ base: '100%', md: '700px' }} py={2} mx='auto'>
+      <Box w={{ base: '100%', md: '750px' }} py={2} mx='auto'>
         {!edit && (
           <Flex justifyContent='space-between' w='100%'>
             <Box w='100%' mr={1}>
@@ -49,10 +54,11 @@ const ClaimEditButton: NextPage<Props> = ({
                 </a>
               </Link>
             </Box>
-            {/* 受付から内容確認 担当者と作業者と事務局のみ編集可 */}
-            {Number(claim.status) > 0 &&
-              Number(claim.status) <= 3 &&
+            {/* 受付から内容確認 担当者・記入者・作業者・事務局のみ編集可 */}
+            {Number(claim.status) >= 1 &&
+              Number(claim.status) <= 4 &&
               (claim.stampStaff === currentUser ||
+                claim.author === currentUser ||
                 claim.operator === currentUser ||
                 enabledOffice()) && (
                 <Box w='100%' ml={1}>
@@ -68,7 +74,7 @@ const ClaimEditButton: NextPage<Props> = ({
                 </Box>
               )}
             {/* 上司承認中 上司と事務局のみ編集可 */}
-            {Number(claim.status) === 4 &&
+            {Number(claim.status) === 5 &&
               (claim.operator === currentUser || enabledOffice()) && (
                 <Box w='100%' ml={1}>
                   <Button
@@ -92,9 +98,15 @@ const ClaimEditButton: NextPage<Props> = ({
               colorScheme='telegram'
               onClick={() => {
                 enabledOffice() && updateClaim(queryId); //事務局用アップデート（すべて）
-                claim.stampStaff === currentUser && updateStaffClaim(queryId); //担当者用アップデート（発生内容・修正処置）
 
-                (Number(claim.status) === 2 || Number(claim.status) === 4) &&
+                // claim.stampStaff === currentUser && updateStaffClaim(queryId); //担当者用アップデート（発生内容・修正処置）
+
+                claim.author === currentUser && updateOccurrenceClaim(queryId);
+
+                claim.stampStaff === currentUser &&
+                  updateAmendmentClaim(queryId);
+
+                (Number(claim.status) === 3 || Number(claim.status) === 5) &&
                   claim.operator === currentUser &&
                   updateCounterplanClaim(queryId); //対策者用・上司用アップデート（対策）
 

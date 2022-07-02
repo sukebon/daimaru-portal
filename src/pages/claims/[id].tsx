@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 //クレーム報告書　個別ページ
-import Link from 'next/link';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Flex, Input } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   doc,
-  getDoc,
   onSnapshot,
   orderBy,
   query,
@@ -22,14 +20,13 @@ import { authState } from '../../../store/authState';
 import { taskflow } from '../../../data';
 import { todayDate } from '../../../functions';
 
-import ClaimSelectSendButton from '../../components/claimsComp/ClaimSelectSendButton';
-import ClaimReport from '../../components/claimsComp/ClaimReport';
-import ClaimEdit from '../../components/claimsComp/ClaimEditReport';
-import ClaimConfirmSendButton from '../../components/claimsComp/ClaimConfirmSendButton';
-import ClaimEditButton from '../../components/claimsComp/ClaimEditButton';
-import ClaimProgress from '../../components/claimsComp/ClaimProgress';
-import ClaimMessage from '../../components/claimsComp/ClaimMessage';
-import ClaimEditReport from '../../components/claimsComp/ClaimEditReport';
+import ClaimSelectSendButton from '../../components/claims/button/ClaimSelectSendButton';
+import ClaimReport from '../../components/claims/ClaimReport';
+import ClaimConfirmSendButton from '../../components/claims/button/ClaimConfirmSendButton';
+import ClaimEditButton from '../../components/claims/button/ClaimEditButton';
+import ClaimProgress from '../../components/claims/ClaimProgress';
+import ClaimMessage from '../../components/claims/ClaimMessage';
+import ClaimEditReport from '../../components/claims/ClaimEditReport';
 
 //クレーム報告書作成
 
@@ -75,10 +72,10 @@ const ClaimId = () => {
   const [imagePath, setImagePath] = useState('');
 
   useEffect(() => {
-    if (currentUser === null) {
+    if (user === null) {
       router.push('/login');
     }
-  }, [router, currentUser]);
+  }, [router, user]);
 
   //クレーム報告書のステータスを変更
   const switchStatus = async (id: any) => {
@@ -106,6 +103,24 @@ const ClaimId = () => {
       counterplanSelect,
       counterplanContent,
       completionDate,
+    });
+  };
+
+  //クレーム報告書の発生内容を更新
+  const updateOccurrenceClaim = async (id: any) => {
+    const docRef = doc(db, 'claimList', id);
+    await updateDoc(docRef, {
+      occurrenceSelect,
+      occurrenceContent,
+    });
+  };
+
+  //クレーム報告書の修正処置を更新
+  const updateAmendmentClaim = async (id: any) => {
+    const docRef = doc(db, 'claimList', id);
+    await updateDoc(docRef, {
+      amendmentSelect,
+      amendmentContent,
     });
   };
 
@@ -190,6 +205,16 @@ const ClaimId = () => {
     return false;
   };
 
+  //記入者と事務局のみ編集可
+  const enabledAuthorAndOffice = () => {
+    const office = isoOfficeUsers.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    if (claim.author === currentUser || office.includes(currentUser))
+      return true;
+    return false;
+  };
+
   //担当者と事務局のみ編集可
   const enabledStaffAndOffice = () => {
     const office = isoOfficeUsers.map((user: { uid: string }) => {
@@ -206,7 +231,7 @@ const ClaimId = () => {
       return user.uid;
     });
     if (
-      (claim.operator === currentUser && Number(claim.status) === 2) ||
+      (claim.operator === currentUser && Number(claim.status) === 3) ||
       office.includes(currentUser)
     )
       return true;
@@ -224,7 +249,7 @@ const ClaimId = () => {
 
     if (
       ((claim.operator === currentUser || boss.includes(currentUser)) &&
-        Number(claim.status) === 4) ||
+        Number(claim.status) === 5) ||
       office.includes(currentUser)
     )
       return true;
@@ -238,7 +263,7 @@ const ClaimId = () => {
     });
     if (
       (claim.operator === currentUser || manager.includes(currentUser)) &&
-      Number(claim.status) === 5
+      Number(claim.status) === 6
     )
       return true;
     return false;
@@ -251,7 +276,7 @@ const ClaimId = () => {
     });
     if (
       (claim.operator === currentUser || tm.includes(currentUser)) &&
-      Number(claim.status) === 6
+      Number(claim.status) === 7
     )
       return true;
     return false;
@@ -293,7 +318,6 @@ const ClaimId = () => {
     <>
       {claim && currentUser && (
         <>
-          <Header />
           <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
             {/* クレームメッセージ */}
             <ClaimMessage
@@ -316,6 +340,8 @@ const ClaimId = () => {
               isEdit={isEdit}
               setEdit={setEdit}
               updateClaim={updateClaim}
+              updateOccurrenceClaim={updateOccurrenceClaim}
+              updateAmendmentClaim={updateAmendmentClaim}
               updateStaffClaim={updateStaffClaim}
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
@@ -327,7 +353,7 @@ const ClaimId = () => {
 
             {/* レポート部分 */}
             <Box
-              w={{ base: '100%', md: '700px' }}
+              w={{ base: '100%', md: '750px' }}
               mx='auto'
               p={6}
               backgroundColor='white'
@@ -391,6 +417,7 @@ const ClaimId = () => {
                     completionDate={completionDate}
                     setCompletionDate={setCompletionDate}
                     enabledOffice={enabledOffice}
+                    enabledAuthorAndOffice={enabledAuthorAndOffice}
                     enabledStaffAndOffice={enabledStaffAndOffice}
                     enabledCounterplanAndOffice={enabledCounterplanAndOffice}
                     enabledBossAndOffice={enabledBossAndOffice}
@@ -476,6 +503,8 @@ const ClaimId = () => {
               isEdit={isEdit}
               setEdit={setEdit}
               updateClaim={updateClaim}
+              updateOccurrenceClaim={updateOccurrenceClaim}
+              updateAmendmentClaim={updateAmendmentClaim}
               updateStaffClaim={updateStaffClaim}
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}

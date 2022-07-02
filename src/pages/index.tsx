@@ -31,6 +31,7 @@ import { Administrator, Users } from '../../data';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
+  const [users, setUsers] = useState<any>([]);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
   const [requests, setRequests] = useState<any>([]);
@@ -47,9 +48,9 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   //掲載中（表示）案件
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'requestList');
+    const requestsCollectionRef = collection(db, 'requestList');
     const q = query(
-      usersCollectionRef,
+      requestsCollectionRef,
       where('display', '==', true),
       orderBy('sendAt', 'desc')
     );
@@ -83,6 +84,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     return unsub;
   }, [currentUser]);
 
+  //アルコールチェック
   useEffect(() => {
     const unsub = onSnapshot(
       doc(db, 'alcoholCheckList', `${todayDate()}`),
@@ -115,7 +117,6 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
       {currentUser && (
         <div style={{ backgroundColor: '#f7f7f7' }}>
           <div className={styles.container}>
-            <Header />
             <main>
               <Flex
                 w={{ base: '100%' }}

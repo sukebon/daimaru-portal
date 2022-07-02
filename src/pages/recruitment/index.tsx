@@ -69,7 +69,6 @@ const Recruitment = () => {
     <>
       {currentUser && (
         <>
-          <Header />
           <Box
             width={'100%'}
             backgroundColor={'#f7f7f7'}

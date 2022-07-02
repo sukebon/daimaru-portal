@@ -7,7 +7,7 @@ import { ClaimProps } from '../../../lib/ClaimProps';
 const ClaimProgress: NextPage<ClaimProps> = ({ claim }) => {
   return (
     <Flex
-      w={{ base: '100%', md: '700px' }}
+      w={{ base: '100%', md: '750px' }}
       mx='auto'
       py={6}
       justifyContent='space-between'
