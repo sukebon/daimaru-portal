@@ -259,7 +259,6 @@ const ClaimNew = () => {
           </Box>
         </>
       )}
-      <Footer />
     </>
   );
 };

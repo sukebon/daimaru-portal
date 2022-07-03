@@ -21,8 +21,8 @@ type Props = {
   };
   currentUser: string;
   queryId: any;
-  receptionDate: string;
   receptionNum: string;
+  receptionDate: string;
   completionDate: string;
   counterplanSelect: string;
   counterplanContent: string;
@@ -86,7 +86,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 2,
-      operator: claim.stampOffice,
+      operator: '',
     });
     router.push(`/claims`);
   };
@@ -96,7 +96,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
-      operator: claim.stampOffice,
+      operator: '',
     });
     router.push(`/claims`);
   };

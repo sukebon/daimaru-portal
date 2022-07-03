@@ -6,7 +6,6 @@ import QuickLink from '../components/QuickLink';
 import Slogan from '../components/Slogan';
 import CatalogArea from '../components/CatalogArea';
 import RecruitmentPost from '../components/recruitmentComp/RecruitmentPost';
-import Header from '../components/Header';
 import styles from '../styles/Home.module.css';
 import { Box, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -24,7 +23,6 @@ import {
 } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../store/authState.js';
-import Footer from '../components/Footer';
 import AlcoholChecker from '../components/popup/AlcoholChecker';
 import { todayDate } from '../../functions';
 import { Administrator, Users } from '../../data';
@@ -180,8 +178,6 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
               </Flex>
             </main>
           </div>
-
-          <Footer />
         </div>
       )}
     </>

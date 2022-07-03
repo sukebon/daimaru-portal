@@ -20,7 +20,8 @@ import { NextPage } from 'next';
 const HeaderMenuButton: NextPage = () => {
   const currentUser = useRecoilValue(authState);
   const [users, setUsers] = useState<any>([]);
-  //users情報
+
+  //users情報を取得
   useEffect(() => {
     const usersCollectionRef = collection(db, 'authority');
     const q = query(usersCollectionRef, orderBy('rank', 'asc'));
@@ -80,6 +81,7 @@ const HeaderMenuButton: NextPage = () => {
             <MenuItem>クレーム報告書一覧</MenuItem>
           </a>
         </Link>
+        <MenuDivider />
         {(currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
           currentUser === 'Glkhk9WERWcEQWwdlfjD5a2jT6m1') && (
           <>
@@ -88,9 +90,9 @@ const HeaderMenuButton: NextPage = () => {
                 <MenuItem>管理者ページ</MenuItem>
               </a>
             </Link>
+            <MenuDivider />
           </>
         )}
-        <MenuDivider />
         <MenuItem onClick={logout}>ログアウト</MenuItem>
       </MenuList>
     </Menu>

@@ -55,7 +55,7 @@ const ClaimId = () => {
   const [counterplanContent, setCounterplanContent] = useState(''); //対策内容
   const [completionDate, setCompletionDate] = useState(''); //完了日
 
-  const [receptionDate, setReceptionDate] = useState<any>(`${todayDate()}`); //受付日
+  const [receptionDate, setReceptionDate] = useState(''); //受付日
   const [receptionist, setReceptionist] = useState(''); //受付者
   const [receptionNum, setReceptionNum] = useState(''); //受付NO.
   const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
@@ -351,7 +351,7 @@ const ClaimId = () => {
               fileUpload={fileUpload}
             />
 
-            {/* レポート部分 */}
+            {/* レポート部分メイン */}
             <Box
               w={{ base: '100%', md: '750px' }}
               mx='auto'
@@ -514,8 +514,6 @@ const ClaimId = () => {
               fileUpload={fileUpload}
             />
           </Box>
-
-          <Footer />
         </>
       )}
     </>
