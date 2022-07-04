@@ -5,9 +5,9 @@ import {
   RadioGroup,
   Stack,
   Textarea,
-} from '@chakra-ui/react';
-import React from 'react';
-import { claimSelectList3 } from '../../../data';
+} from "@chakra-ui/react";
+import React from "react";
+import { claimSelectList3 } from "../../../../data";
 
 const ClaimInputCounterplan = ({
   counterplanSelect,
@@ -18,17 +18,17 @@ const ClaimInputCounterplan = ({
   return (
     <>
       <Box mt={9}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           対策
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w="100%" mt={3}>
           <RadioGroup
-            colorScheme='green'
-            defaultValue='1'
+            colorScheme="green"
+            defaultValue="1"
             value={counterplanSelect}
             onChange={(e) => setCounterplanSelect(e)}
           >
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList3.map((list) => (
                 <Radio key={list.id} value={list.id}>
                   {list.title}
@@ -39,8 +39,8 @@ const ClaimInputCounterplan = ({
           <Textarea
             mt={3}
             p={2}
-            w='100%'
-            placeholder='内容を入力'
+            w="100%"
+            placeholder="内容を入力"
             value={counterplanContent}
             onChange={(e) => setCounterplanContent(e.target.value)}
           />
