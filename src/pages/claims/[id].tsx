@@ -148,7 +148,6 @@ const ClaimId = () => {
   // クレーム報告書を取得;
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'claimList', `${queryId}`), (doc) => {
-      console.log('Current data: ', doc.data());
       setClaim(doc.data());
     });
   }, [queryId, edit]);
@@ -360,7 +359,7 @@ const ClaimId = () => {
               borderRadius={6}
             >
               {/* 受付ナンバー　受付日 */}
-              {Number(claim.status) > 0 && (
+              {Number(claim.status) >= 1 && (
                 <>
                   {!edit && (
                     <Flex

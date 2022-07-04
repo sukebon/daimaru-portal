@@ -19,7 +19,8 @@ export const todayDate = () => {
   const year = newDate.getFullYear();
   let month = newDate.getMonth() + 1;
   month = ('0' + month).slice(-2);
-  const date = newDate.getDate();
+  let date = newDate.getDate();
+  date = ('0' + date).slice(-2);
   return `${year}-${month}-${date}`;
 };
 

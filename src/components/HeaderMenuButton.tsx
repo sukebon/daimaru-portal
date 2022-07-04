@@ -13,7 +13,6 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { auth, db } from '../../firebase';
 import { authState } from '../../store/authState';
-import { Administrator, Users } from '../../data';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { NextPage } from 'next';
 
@@ -65,22 +64,31 @@ const HeaderMenuButton: NextPage = () => {
           </a>
         </Link>
         <MenuDivider />
+        <MenuGroup title='お手伝い依頼'></MenuGroup>
         <Link href='/recruitment'>
           <a>
-            <MenuItem>お手伝い依頼作成</MenuItem>
+            <MenuItem pl={6}>作成</MenuItem>
           </a>
         </Link>
         <MenuDivider />
+        <MenuGroup title='クレーム報告書'></MenuGroup>
+
         <Link href='/claims/new'>
           <a>
-            <MenuItem>クレーム報告書作成</MenuItem>
+            <MenuItem pl={6}>作成</MenuItem>
           </a>
         </Link>
         <Link href='/claims/'>
           <a>
-            <MenuItem>クレーム報告書一覧</MenuItem>
+            <MenuItem pl={6}>一覧</MenuItem>
           </a>
         </Link>
+        <Link href='/claims/graph'>
+          <a>
+            <MenuItem pl={6}>集計（グラフ）</MenuItem>
+          </a>
+        </Link>
+
         <MenuDivider />
         {(currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
           currentUser === 'Glkhk9WERWcEQWwdlfjD5a2jT6m1') && (

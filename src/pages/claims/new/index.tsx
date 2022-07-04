@@ -13,8 +13,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import Footer from '../../../components/Footer';
-import Header from '../../../components/Header';
 import { auth, db, storage } from '../../../../firebase';
 import { authState } from '../../../../store/authState';
 import ClaimInputCustomer from '../../../components/claims/new/ClaimInputCustomer';

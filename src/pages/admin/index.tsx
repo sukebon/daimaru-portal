@@ -58,7 +58,7 @@ const Admin = () => {
   }, [router, user]);
 
   //初期設定に追加
-  const setopManegment = async (user: {
+  const setTopManegment = async (user: {
     uid: string;
     name: string;
     rank: number;
@@ -304,7 +304,7 @@ const Admin = () => {
                       {Users.map(
                         (user: { uid: string; name: string; rank: number }) => (
                           <WrapItem key={user.uid}>
-                            <Button onClick={() => setopManegment(user)}>
+                            <Button onClick={() => setTopManegment(user)}>
                               {user.name}
                             </Button>
                           </WrapItem>

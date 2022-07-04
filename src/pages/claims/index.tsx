@@ -13,9 +13,11 @@ import {
 import {
   collection,
   doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
+  QuerySnapshot,
 } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -54,7 +56,7 @@ const Claim: NextPage = () => {
   useEffect(() => {
     const usersCollectionRef = collection(db, 'authority');
     const q = query(usersCollectionRef, orderBy('rank', 'asc'));
-    const unsub = onSnapshot(q, (querySnapshot) => {
+    getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -62,27 +64,56 @@ const Claim: NextPage = () => {
         }))
       );
     });
-    return unsub;
-  }, [currentUser]);
+  }, []);
 
   //クレーム一覧を取得
   useEffect(() => {
     const claimsCollectionRef = collection(db, 'claimList');
-    const q = query(
-      claimsCollectionRef,
-      // where('deletedAt', '==', null),
-      orderBy('receptionNum', 'desc')
-    );
-    const unsub: any = onSnapshot(q, (querySnapshot) => {
+    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
+    getDocs(q).then((querySnapshot) => {
       setClaims(
         querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }))
       );
-      return unsub;
     });
   }, []);
+
+  //users情報
+  // useEffect(() => {
+  //   const usersCollectionRef = collection(db, 'authority');
+  //   const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+  //   const unsub = onSnapshot(q, (querySnapshot) => {
+  //     setUsers(
+  //       querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       }))
+  //     );
+  //   });
+  //   return unsub;
+  // }, [currentUser]);
+
+  //クレーム一覧を取得
+  // useEffect(() => {
+  //   const claimsCollectionRef = collection(db, 'claimList');
+  //   const q = query(
+  //     claimsCollectionRef,
+  //     // where('deletedAt', '==', null),
+  //     orderBy('receptionNum', 'desc')
+  //   );
+  //   const unsub: any = onSnapshot(q, (querySnapshot) => {
+  //     setClaims(
+  //       querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       }))
+  //     );
+  //     return unsub;
+  //   });
+  // }, []);
+  // console.log(claims);
 
   //作業者を表示する関数
   const currentOperator = (claim: any) => {
