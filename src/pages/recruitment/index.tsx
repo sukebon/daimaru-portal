@@ -84,6 +84,7 @@ const Recruitment = () => {
               <Box
                 w={{ base: '100%', md: '800px' }}
                 mx='auto'
+                p={6}
                 backgroundColor='white'
                 borderRadius={6}
               >

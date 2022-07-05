@@ -77,16 +77,11 @@ const Form = () => {
       {user && (
         <Flex
           flexDirection='column'
-          backgroundColor='#f7f7f7'
           alignItems='center'
           padding={'0'}
           width={'100%'}
         >
-          <Box
-            minW={{ base: '90%', md: '800px' }}
-            marginTop={'50px'}
-            marginBottom={'50px'}
-          >
+          <Box minW='100%' marginTop={'50px'} marginBottom={'50px'}>
             <Flex
               alignItems={'center'}
               justifyContent={'space-between'}
