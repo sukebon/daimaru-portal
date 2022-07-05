@@ -52,6 +52,29 @@ const ClaimMessage: NextPage<Props> = ({
           </Alert>
         )}
 
+        {/* 事務局に表示するメッセージ　 */}
+        {Number(claim.status) === 2 && enabledOffice() && (
+          <Alert status='info'>
+            <AlertIcon />
+            <Box>
+              <Box>
+                作業者：
+                {(claim.operator &&
+                  users.map(
+                    (user: { uid: string; name: string }) =>
+                      user.uid === claim.operator && user.name
+                  )) ||
+                  '事務局'}
+              </Box>
+              <Box>
+                編集ボタンをクリックして、【起因部署】を選択してください。
+                <br />
+                選択が完了次第、対策記入する方へ送信してください。
+              </Box>
+            </Box>
+          </Alert>
+        )}
+
         {/* 対策者に表示するメッセージ */}
         {Number(claim.status) === 3 && claim.operator === currentUser && (
           <Alert status='info'>

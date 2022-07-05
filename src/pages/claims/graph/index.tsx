@@ -60,19 +60,24 @@ const GraphClaim = () => {
   return (
     <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
       <Box
-        w={{ base: '100%', md: '380px' }}
+        w={{ base: '100%', md: '700px' }}
         mx='auto'
         p={6}
         backgroundColor='white'
         borderRadius={6}
       >
         <Flex flexDirection='column' alignItems='center'>
-          <Flex w='full' justifyContent='space-between'>
-            <Box>集計期間</Box>
-            <Box>クレーム件数：{claims.length}</Box>
+          <Flex w='full' fontSize='xl'>
+            <Box mr='2'>集計期間：</Box>
+            <Box>クレーム数 {claims.length} 件</Box>
           </Flex>
-          <Flex mt={3} w='full' justifyContent='space-between'>
-            <Box mr={3}>
+          <Flex
+            flexDirection={{ base: 'column', md: 'row' }}
+            mt={3}
+            w='full'
+            justifyContent='space-between'
+          >
+            <Box mt='2' mr={3} w={{ base: '100%', md: '50%' }}>
               <Box>開始日</Box>
               <Input
                 type='date'
@@ -80,7 +85,7 @@ const GraphClaim = () => {
                 onChange={(e) => setStartAtDate(e.target.value)}
               />
             </Box>
-            <Box>
+            <Box mt='2' mr={3} w={{ base: '100%', md: '50%' }}>
               <Box>終了日</Box>
               <Input
                 type='date'
@@ -91,13 +96,208 @@ const GraphClaim = () => {
           </Flex>
         </Flex>
       </Box>
-      <Box
-        w={{ base: '100%', md: '380px' }}
+
+      {/* 起因部署 */}
+      <Flex
+        w={{ base: '100%', md: '700px' }}
+        mt='6'
+        mx='auto'
+        p={6}
+        backgroundColor='white'
+        borderRadius={6}
+        justifyContent='space-between'
+        flexDirection={{ base: 'column', md: 'row' }}
+      >
+        <TableContainer>
+          <Table size='sm'>
+            <Thead>
+              <Tr>
+                <Th fontSize='sm'>■起因部署</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>R&D事業部</Td>
+                <Td>{countClaims('causeDepartmentSelect', 1)}</Td>
+              </Tr>
+              <Tr>
+                <Td>他社・メーカー</Td>
+                <Td>{countClaims('causeDepartmentSelect', 2)}</Td>
+              </Tr>
+              <Tr>
+                <Td>徳島工場</Td>
+                <Td>{countClaims('causeDepartmentSelect', 3)}</Td>
+              </Tr>
+              <Tr>
+                <Td>営業部</Td>
+                <Td>{countClaims('causeDepartmentSelect', 4)}</Td>
+              </Tr>
+              <Tr>
+                <Td>配送センター</Td>
+                <Td>{countClaims('causeDepartmentSelect', 5)}</Td>
+              </Tr>
+              <Tr>
+                <Td>経理部</Td>
+                <Td>{countClaims('causeDepartmentSelect', 6)}</Td>
+              </Tr>
+              <Tr>
+                <Td>顧客</Td>
+                <Td>{countClaims('causeDepartmentSelect', 7)}</Td>
+              </Tr>
+              <Tr>
+                <Td>不明</Td>
+                <Td>{countClaims('causeDepartmentSelect', 8)}</Td>
+              </Tr>
+            </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th fontSize='sm' py='2'>
+                  合計
+                </Th>
+                <Th fontSize='sm'>
+                  {countClaims('causeDepartmentSelect', 1) +
+                    countClaims('causeDepartmentSelect', 2) +
+                    countClaims('causeDepartmentSelect', 3) +
+                    countClaims('causeDepartmentSelect', 4) +
+                    countClaims('causeDepartmentSelect', 5) +
+                    countClaims('causeDepartmentSelect', 6) +
+                    countClaims('causeDepartmentSelect', 7) +
+                    countClaims('causeDepartmentSelect', 8)}
+                </Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+        <Box mt={{ base: 6, md: '0' }}>
+          <PieChart
+            values={[
+              countClaims('causeDepartmentSelect', 1),
+              countClaims('causeDepartmentSelect', 2),
+              countClaims('causeDepartmentSelect', 3),
+              countClaims('causeDepartmentSelect', 4),
+              countClaims('causeDepartmentSelect', 5),
+              countClaims('causeDepartmentSelect', 6),
+              countClaims('causeDepartmentSelect', 7),
+              countClaims('causeDepartmentSelect', 8),
+            ]}
+            labels={[
+              'R&D事業部',
+              '他社・メーカー',
+              '徳島工場',
+              '営業部',
+              '配送センター',
+              '経理部',
+              '顧客',
+              '不明',
+            ]}
+          />
+        </Box>
+      </Flex>
+
+      {/* 発生内容 */}
+      <Flex
+        w={{ base: '100%', md: '700px' }}
         mx='auto'
         mt='6'
         p={6}
         backgroundColor='white'
         borderRadius={6}
+        justifyContent='space-between'
+        flexDirection={{ base: 'column', md: 'row' }}
+      >
+        <TableContainer>
+          <Table size='sm'>
+            <Thead>
+              <Tr>
+                <Th fontSize='sm'>■発生内容</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>製品不良</Td>
+                <Td>{countClaims('occurrenceSelect', 1)}</Td>
+              </Tr>
+              <Tr>
+                <Td>納品書</Td>
+                <Td>{countClaims('occurrenceSelect', 2)}</Td>
+              </Tr>
+              <Tr>
+                <Td>商品間違い</Td>
+                <Td>{countClaims('occurrenceSelect', 3)}</Td>
+              </Tr>
+              <Tr>
+                <Td>住所等</Td>
+                <Td>{countClaims('occurrenceSelect', 5)}</Td>
+              </Tr>
+              <Tr>
+                <Td>未納品</Td>
+                <Td>{countClaims('occurrenceSelect', 6)}</Td>
+              </Tr>
+              <Tr>
+                <Td>その他</Td>
+                <Td>
+                  {countClaims('occurrenceSelect', 4) +
+                    countClaims('occurrenceSelect', 7) +
+                    countClaims('occurrenceSelect', 8)}
+                </Td>
+              </Tr>
+            </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th fontSize='sm' py='2'>
+                  合計
+                </Th>
+                <Th fontSize='sm'>
+                  {countClaims('occurrenceSelect', 1) +
+                    countClaims('occurrenceSelect', 2) +
+                    countClaims('occurrenceSelect', 3) +
+                    countClaims('occurrenceSelect', 4) +
+                    countClaims('occurrenceSelect', 5) +
+                    countClaims('occurrenceSelect', 6) +
+                    countClaims('occurrenceSelect', 7) +
+                    countClaims('occurrenceSelect', 8)}
+                </Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+        <Box mt={{ base: 6, md: '0' }}>
+          <PieChart
+            values={[
+              countClaims('occurrenceSelect', 1),
+              countClaims('occurrenceSelect', 2),
+              countClaims('occurrenceSelect', 3),
+              countClaims('occurrenceSelect', 5),
+              countClaims('occurrenceSelect', 6),
+
+              countClaims('occurrenceSelect', 4) +
+                countClaims('occurrenceSelect', 7) +
+                countClaims('occurrenceSelect', 8),
+            ]}
+            labels={[
+              '製品不良',
+              '納品書',
+              '商品間違い',
+              '住所等',
+              '未納品',
+              'その他',
+            ]}
+          />
+        </Box>
+      </Flex>
+
+      {/* 対策 */}
+      <Flex
+        w={{ base: '100%', md: '700px' }}
+        mx='auto'
+        mt='6'
+        p={6}
+        backgroundColor='white'
+        borderRadius={6}
+        justifyContent='space-between'
+        flexDirection={{ base: 'column', md: 'row' }}
       >
         <TableContainer>
           <Table size='sm'>
@@ -127,7 +327,9 @@ const GraphClaim = () => {
             </Tbody>
             <Tfoot>
               <Tr>
-                <Th fontSize='sm'>合計</Th>
+                <Th fontSize='sm' py='2'>
+                  合計
+                </Th>
                 <Th fontSize='sm'>
                   {countClaims('counterplanSelect', 1) +
                     countClaims('counterplanSelect', 2) +
@@ -138,13 +340,18 @@ const GraphClaim = () => {
             </Tfoot>
           </Table>
         </TableContainer>
-        <PieChart
-          value1={countClaims('counterplanSelect', 1)}
-          value2={countClaims('counterplanSelect', 2)}
-          value3={countClaims('counterplanSelect', 3)}
-          value4={countClaims('counterplanSelect', 4)}
-        />
-      </Box>
+        <Box mt={{ base: 6, md: '0' }}>
+          <PieChart
+            values={[
+              countClaims('counterplanSelect', 1),
+              countClaims('counterplanSelect', 2),
+              countClaims('counterplanSelect', 3),
+              countClaims('counterplanSelect', 4),
+            ]}
+            labels={['修正処置', '書面提出', '改善の機会', '是正処置']}
+          />
+        </Box>
+      </Flex>
     </Box>
   );
 };

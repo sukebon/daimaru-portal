@@ -22,6 +22,7 @@ import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
+  claimSelectList4,
 } from '../../../data';
 import { db, storage } from '../../../firebase';
 import { ClaimStateProps } from '../../../lib/ClaimStateProps';
@@ -49,6 +50,8 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
   receptionDate,
   setReceptionDate,
   completionDate,
+  causeDepartmentSelect,
+  setCauseDepartmentSelect,
   setCompletionDate,
   enabledOffice,
   enabledAuthorAndOffice,
@@ -193,7 +196,11 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
               {claimSelectList1.map(
                 (list, index) =>
                   index <= 3 && (
-                    <Radio key={list.id} value={list.id}>
+                    <Radio
+                      key={list.id}
+                      value={list.id}
+                      isDisabled={!enabledAuthorAndOffice()}
+                    >
                       {list.title}
                     </Radio>
                   )
@@ -205,7 +212,11 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
                 (list, index) =>
                   index >= 4 &&
                   index <= 6 && (
-                    <Radio key={list.id} value={list.id}>
+                    <Radio
+                      key={list.id}
+                      value={list.id}
+                      isDisabled={!enabledAuthorAndOffice()}
+                    >
                       {list.title}
                     </Radio>
                   )
@@ -216,7 +227,11 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
               {claimSelectList1.map(
                 (list, index) =>
                   index === 7 && (
-                    <Radio key={list.id} value={list.id}>
+                    <Radio
+                      key={list.id}
+                      value={list.id}
+                      isDisabled={!enabledAuthorAndOffice()}
+                    >
                       {list.title}
                     </Radio>
                   )
@@ -252,7 +267,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
                 <Radio
                   key={list.id}
                   value={list.id}
-                  disabled={!enabledStaffAndOffice()}
+                  isDisabled={!enabledStaffAndOffice()}
                 >
                   {list.title}
                 </Radio>
@@ -269,6 +284,60 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
           disabled={!enabledStaffAndOffice()}
           onChange={(e) => setAmendmentContent(e.target.value)}
         />
+      </Box>
+
+      {/* 起因部署 */}
+      <Box mt={9}>
+        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+          起因部署
+        </Flex>
+        <Box w='100%' mt={3}>
+          <RadioGroup
+            colorScheme='green'
+            defaultValue='1'
+            value={causeDepartmentSelect}
+            onChange={(e) => setCauseDepartmentSelect(e)}
+          >
+            <Stack
+              spacing={[1, 5]}
+              direction={['column', 'row']}
+              px={2}
+              py={{ md: '2' }}
+            >
+              {claimSelectList4.map(
+                (list, index) =>
+                  index < 4 && (
+                    <Radio
+                      key={list.id}
+                      value={list.id}
+                      isDisabled={!enabledStaffAndOffice()}
+                    >
+                      {list.title}
+                    </Radio>
+                  )
+              )}
+            </Stack>
+            <Stack
+              spacing={[1, 5]}
+              direction={['column', 'row']}
+              px={2}
+              py={{ md: '2' }}
+            >
+              {claimSelectList4.map(
+                (list, index) =>
+                  index >= 4 && (
+                    <Radio
+                      key={list.id}
+                      value={list.id}
+                      isDisabled={!enabledStaffAndOffice()}
+                    >
+                      {list.title}
+                    </Radio>
+                  )
+              )}
+            </Stack>
+          </RadioGroup>
+        </Box>
       </Box>
 
       {/* 対策 */}
@@ -288,7 +357,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
                 <Radio
                   key={list.id}
                   value={list.id}
-                  disabled={!enabledCounterplanAndOffice()}
+                  isDisabled={!enabledCounterplanAndOffice()}
                 >
                   {list.title}
                 </Radio>

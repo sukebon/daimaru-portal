@@ -35,8 +35,8 @@ const ClaimId = () => {
   const queryId = router.query.id;
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
-  const [claim, setClaim] = useState<any>([]);
-  const [users, setUsers] = useState<any>([]);
+  const [claim, setClaim] = useState<any>([]); //クレーム一覧
+  const [users, setUsers] = useState<any>([]); //ユーザー一覧
   const [selectUser, setSelectUser] = useState(''); //送信先選択
   const [selectTask, setSelectTask] = useState<any>(); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
@@ -54,8 +54,9 @@ const ClaimId = () => {
   const [counterplanSelect, setCounterplanSelect] = useState(''); //対策選択
   const [counterplanContent, setCounterplanContent] = useState(''); //対策内容
   const [completionDate, setCompletionDate] = useState(''); //完了日
+  const [causeDepartmentSelect, setCauseDepartmentSelect] = useState(''); //起因部署
 
-  const [receptionDate, setReceptionDate] = useState(''); //受付日
+  const [receptionDate, setReceptionDate] = useState(todayDate); //受付日
   const [receptionist, setReceptionist] = useState(''); //受付者
   const [receptionNum, setReceptionNum] = useState(''); //受付NO.
   const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
@@ -103,6 +104,7 @@ const ClaimId = () => {
       counterplanSelect,
       counterplanContent,
       completionDate,
+      causeDepartmentSelect,
     });
   };
 
@@ -121,6 +123,7 @@ const ClaimId = () => {
     await updateDoc(docRef, {
       amendmentSelect,
       amendmentContent,
+      causeDepartmentSelect,
     });
   };
 
@@ -415,6 +418,8 @@ const ClaimId = () => {
                     setReceptionDate={setReceptionDate}
                     completionDate={completionDate}
                     setCompletionDate={setCompletionDate}
+                    causeDepartmentSelect={causeDepartmentSelect}
+                    setCauseDepartmentSelect={setCauseDepartmentSelect}
                     enabledOffice={enabledOffice}
                     enabledAuthorAndOffice={enabledAuthorAndOffice}
                     enabledStaffAndOffice={enabledStaffAndOffice}

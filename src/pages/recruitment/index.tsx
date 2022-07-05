@@ -74,20 +74,34 @@ const Recruitment = () => {
             backgroundColor={'#f7f7f7'}
             paddingBottom={'50px'}
             minH={'100vh'}
+            p={6}
           >
             <Flex
               flexDirection={'column'}
               alignItems={'center'}
-              width={{ md: '800px' }}
               margin={'0 auto'}
             >
-              <RecruitmentForm />
-
-              {Administrator.includes(currentUser) ? (
-                <RecruitmentPost requests={requests} />
-              ) : (
-                <RecruitmentPost requests={currentRequests} />
-              )}
+              <Box
+                w={{ base: '100%', md: '800px' }}
+                mx='auto'
+                backgroundColor='white'
+                borderRadius={6}
+              >
+                <RecruitmentForm />
+              </Box>
+              <Box
+                w={{ base: '100%', md: '800px' }}
+                mt='6'
+                mx='auto'
+                backgroundColor='white'
+                borderRadius={6}
+              >
+                {Administrator.includes(currentUser) ? (
+                  <RecruitmentPost requests={requests} />
+                ) : (
+                  <RecruitmentPost requests={currentRequests} />
+                )}
+              </Box>
             </Flex>
           </Box>
         </>

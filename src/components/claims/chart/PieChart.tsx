@@ -3,40 +3,68 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 type Props = {
-  value1: number;
-  value2: number;
-  value3: number;
-  value4: number;
+  values: any;
+  labels: string[];
 };
 
-const PieChart: NextPage<Props> = ({ value1, value2, value3, value4 }) => {
-  // const labels = ['修正処置', '書面提出', '改善の機会', '是正処置'];
+const PieChart: NextPage<Props> = ({ values, labels }) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
+
+  const options: {} = {
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 10,
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+  };
+
   const data = {
-    labels: ['修正処置', '書面提出', '改善の機会', '是正処置'],
+    labels: [...labels],
     datasets: [
       {
         label: '# of Votes',
-        data: [value1, value2, value3, value4],
+        data: [...values],
         backgroundColor: [
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(255, 99, 132, 0.2)',
+          'rgba(235, 83, 83, 0.8)',
+          'rgba(249, 217, 35, 0.8)',
+          'rgba(54, 174, 124, 0.8)',
+          'rgba(24, 116, 152, 0.8)',
+          'rgba(189 ,66, 145, 0.8)',
+          'rgba(10, 161, 221, 0.8)',
+          'rgba(228, 220, 207, 0.8)',
+          'rgba(76, 58, 81, 0.8)',
         ],
         borderColor: [
-          'rgba(54, 162, 235, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(255, 99, 132, 1)',
+          'rgba(235, 83, 83, 1)',
+          'rgba(249, 217, 35, 1)',
+          'rgba(54, 174, 124, 1)',
+          'rgba(24, 116, 152,1)',
+          'rgba(189 ,66, 145, 1)',
+          'rgba(10, 161, 221, 1)',
+          'rgba(228, 220, 207, 1)',
+          'rgba(76, 58, 81, 1)',
         ],
         borderWidth: 1,
       },
     ],
   };
+
+  const divStyle: React.CSSProperties = {
+    marginTop: '0',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 'auto',
+    width: '400px',
+  };
   return (
-    <div className='App'>
-      <Pie data={data} />
+    <div className='App' style={divStyle}>
+      <Pie data={data} options={options} width={300} height={300} />
     </div>
   );
 };

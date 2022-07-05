@@ -6,6 +6,7 @@ import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
+  claimSelectList4,
 } from '../../../data';
 import { ClaimProps } from '../../../lib/ClaimProps';
 
@@ -79,6 +80,20 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
         </Box>
       </Box>
 
+      {/*起因部署 */}
+      <Box mt={10}>
+        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+          起因部署
+        </Flex>
+        <Box w='100%' px={2} mt={2}>
+          {claimSelectList4.map((list) => (
+            <Box key={list.id}>
+              {list.id === claim.causeDepartmentSelect && list.title}
+            </Box>
+          ))}
+        </Box>
+      </Box>
+
       {/* 対策 */}
       <Box mt={10}>
         <Flex as='h2' fontSize='lg' fontWeight='semibold'>
@@ -105,24 +120,6 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
             </a>
           </Box>
         )}
-
-        {/* <Box w="100%" mt={6}>
-          <Box mr={3} fontSize="lg" fontWeight="semibold">
-            添付書類
-          </Box>
-          <Box mt={3}>
-            ①
-            <input type="file" accept="image/png, image/jpeg" />
-          </Box>
-          <Box mt={3}>
-            ②
-            <input type="file" accept="image/png, image/jpeg" />
-          </Box>
-          <Box mt={3}>
-            ③
-            <input type="file" accept="image/png, image/jpeg" />
-          </Box>
-        </Box> */}
       </Box>
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>

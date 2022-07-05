@@ -14,6 +14,7 @@ export type ClaimProps = {
     receptionNum: string;
     receptionDate: string;
     completionDate: string;
+    causeDepartmentSelect: string;
     imageUrl: string;
     imagePath: string;
   };

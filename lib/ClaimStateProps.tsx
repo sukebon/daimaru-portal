@@ -23,6 +23,8 @@ export type ClaimStateProps = {
   setReceptionDate: any;
   completionDate: string;
   setCompletionDate: any;
+  causeDepartmentSelect: string;
+  setCauseDepartmentSelect: any;
   enabledOffice: any;
   enabledAuthorAndOffice: any;
   enabledStaffAndOffice: any;
