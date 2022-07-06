@@ -294,7 +294,6 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
         <Box w='100%' mt={3}>
           <RadioGroup
             colorScheme='green'
-            defaultValue='1'
             value={causeDepartmentSelect}
             onChange={(e) => setCauseDepartmentSelect(e)}
           >

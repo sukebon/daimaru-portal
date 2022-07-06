@@ -284,6 +284,7 @@ const ClaimId = () => {
     return false;
   };
 
+  //編集ボタンを押したときに、データベースの値をsetに入れる
   const isEdit = () => {
     setCustomer(claim.customer);
     setOccurrenceDate(claim.occurrenceDate);
@@ -295,11 +296,13 @@ const ClaimId = () => {
     setCounterplanContent(claim.counterplanContent);
     setReceptionNum(claim.receptionNum);
     setReceptionDate(claim.receptionDate);
+    setCauseDepartmentSelect(claim.causeDepartmentSelect);
     setCompletionDate(claim.completionDate);
     setImageUrl(claim.imageUrl);
     setImagePath(claim.imagePath);
   };
 
+  //編集をキャンセルしたときに、setを空にする
   const editCancel = () => {
     setCustomer('');
     setOccurrenceDate('');
