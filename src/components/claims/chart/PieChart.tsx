@@ -11,11 +11,13 @@ const PieChart: NextPage<Props> = ({ values, labels }) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const options: {} = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: 'right',
         labels: {
-          padding: 10,
+          padding: 12,
           font: {
             size: 10,
           },
@@ -55,16 +57,9 @@ const PieChart: NextPage<Props> = ({ values, labels }) => {
     ],
   };
 
-  const divStyle: React.CSSProperties = {
-    marginTop: '0',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginBottom: 'auto',
-    width: '400px',
-  };
   return (
-    <div className='App' style={divStyle}>
-      <Pie data={data} options={options} width={300} height={300} />
+    <div className='App'>
+      <Pie data={data} options={options} width={250} height={250} />
     </div>
   );
 };
