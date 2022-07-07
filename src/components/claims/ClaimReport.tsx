@@ -59,7 +59,7 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
             </Box>
           ))}
         </Box>
-        <Box px={2} mt={2}>
+        <Box px={2} mt={2} whiteSpace='pre-wrap'>
           {claim.occurrenceContent}
         </Box>
       </Box>
@@ -76,7 +76,9 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
                 `${claim.amendmentSelect && '■'}${list.title}`}
             </Box>
           ))}
-          <Box mt={2}>{claim.amendmentContent}</Box>
+          <Box mt={2} whiteSpace='pre-wrap'>
+            {claim.amendmentContent}
+          </Box>
         </Box>
       </Box>
 
@@ -106,7 +108,9 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
                 `${claim.counterplanSelect && '■'}${list.title}`}
             </Box>
           ))}
-          <Box mt={2}>{claim.counterplanContent}</Box>
+          <Box mt={2} whiteSpace='pre-wrap'>
+            {claim.counterplanContent}
+          </Box>
         </Box>
       </Box>
 

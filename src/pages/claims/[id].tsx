@@ -5,6 +5,7 @@ import { Box, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -13,8 +14,6 @@ import {
 import { useRouter } from 'next/router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
 import { auth, db } from '../../../firebase';
 import { authState } from '../../../store/authState';
 import { taskflow } from '../../../data';
@@ -27,6 +26,8 @@ import ClaimEditButton from '../../components/claims/button/ClaimEditButton';
 import ClaimProgress from '../../components/claims/ClaimProgress';
 import ClaimMessage from '../../components/claims/ClaimMessage';
 import ClaimEditReport from '../../components/claims/ClaimEditReport';
+import Link from 'next/link';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 
 //クレーム報告書作成
 
@@ -35,7 +36,8 @@ const ClaimId = () => {
   const queryId = router.query.id;
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
-  const [claim, setClaim] = useState<any>([]); //クレーム一覧
+  const [claim, setClaim] = useState<any>([]); //クレームの個別記事を取得
+  const [claims, setClaims] = useState<any>([]); //クレーム一覧を取得
   const [users, setUsers] = useState<any>([]); //ユーザー一覧
   const [selectUser, setSelectUser] = useState(''); //送信先選択
   const [selectTask, setSelectTask] = useState<any>(); //タスクの選択
@@ -87,6 +89,38 @@ const ClaimId = () => {
       message: '',
     });
     router.push('/claims');
+  };
+
+  //クレーム一覧を取得
+  useEffect(() => {
+    const claimsCollectionRef = collection(db, 'claimList');
+    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
+    getDocs(q).then((querySnapshot) => {
+      setClaims(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+
+  //ページのインデックスを取得
+  const nextPrevPage = (id: any, page: number) => {
+    let currentIndex = 0;
+    claims.forEach((c: any, index: number) => {
+      if (c.id == queryId) {
+        currentIndex = index;
+      }
+    });
+    const array = claims.filter((c: any, index: number) => {
+      if (currentIndex + page === index) return c.id;
+    });
+    let nextId;
+    if (array && array[0]) {
+      nextId = array[0].id;
+    }
+    return nextId;
   };
 
   //クレーム報告書を更新
@@ -324,6 +358,33 @@ const ClaimId = () => {
       {claim && currentUser && (
         <>
           <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
+            <Flex justifyContent='space-between' color='gray.600'>
+              {nextPrevPage(queryId, 1) !== undefined ? (
+                <Link href={`/claims/${nextPrevPage(queryId, 1)}`}>
+                  <a>
+                    <Flex alignItems='center'>
+                      <ArrowBackIcon />
+                      前のクレーム
+                    </Flex>
+                  </a>
+                </Link>
+              ) : (
+                <Box></Box>
+              )}
+
+              {nextPrevPage(queryId, -1) !== undefined ? (
+                <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
+                  <a>
+                    <Flex alignItems='center'>
+                      次のクレーム
+                      <ArrowForwardIcon />
+                    </Flex>
+                  </a>
+                </Link>
+              ) : (
+                <Box></Box>
+              )}
+            </Flex>
             {/* クレームメッセージ */}
             <ClaimMessage
               claim={claim}
