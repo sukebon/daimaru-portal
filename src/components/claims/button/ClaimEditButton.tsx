@@ -88,6 +88,21 @@ const ClaimEditButton: NextPage<Props> = ({
                   </Button>
                 </Box>
               )}
+
+            {/* 上司承認中 上司と事務局のみ編集可 */}
+            {Number(claim.status) >= 6 && enabledOffice() && (
+              <Box w='100%' ml={1}>
+                <Button
+                  w='100%'
+                  onClick={() => {
+                    isEdit();
+                    setEdit(true);
+                  }}
+                >
+                  編集
+                </Button>
+              </Box>
+            )}
           </Flex>
         )}
         {edit && (
