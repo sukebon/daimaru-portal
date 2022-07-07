@@ -9,7 +9,7 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   collection,
   doc,
@@ -18,22 +18,22 @@ import {
   orderBy,
   query,
   QuerySnapshot,
-} from 'firebase/firestore';
-import { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
-import { auth, db } from '../../../firebase';
-import { Users } from '../../../data';
+} from "firebase/firestore";
+import { NextPage } from "next";
+import React, { useEffect, useState } from "react";
+import { auth, db } from "../../../firebase";
+import { Users } from "../../../data";
 import {
   taskflow,
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from '../../../data';
-import Link from 'next/link';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store/authState';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRouter } from 'next/router';
+} from "../../../data";
+import Link from "next/link";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../store/authState";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
 
 const Claim: NextPage = () => {
   const currentUser = useRecoilValue(authState);
@@ -48,14 +48,14 @@ const Claim: NextPage = () => {
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
   //users情報
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -68,8 +68,8 @@ const Claim: NextPage = () => {
 
   //クレーム一覧を取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, 'claimList');
-    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
+    const claimsCollectionRef = collection(db, "claimList");
+    const q = query(claimsCollectionRef, orderBy("receptionNum", "desc"));
     getDocs(q).then((querySnapshot) => {
       setClaims(
         querySnapshot.docs.map((doc) => ({
@@ -121,24 +121,24 @@ const Claim: NextPage = () => {
       case claim.operator:
         switch (claim.status) {
           case 0:
-            return '事務局';
+            return "事務局";
           case 2:
-            return '事務局';
+            return "事務局";
           case 4:
-            return '事務局';
+            return "事務局";
           case 6:
-            return '管理者';
+            return "管理者";
           case 7:
-            return 'TM';
+            return "TM";
           case 8:
-            return '-';
+            return "-";
           default:
             return users.map((user: { uid: string; name: string }) => {
               if (user.uid == claim.operator) return user.name;
             });
         }
       default:
-        return '事務局';
+        return "事務局";
     }
   };
 
@@ -184,20 +184,20 @@ const Claim: NextPage = () => {
         <>
           <Box
             p={6}
-            backgroundColor={'#f7f7f7'}
-            paddingBottom={'50px'}
-            minH={'100vh'}
+            backgroundColor={"#f7f7f7"}
+            paddingBottom={"50px"}
+            minH={"100vh"}
           >
-            <Flex flexDirection={'column'} alignItems={'center'}>
-              <TableContainer backgroundColor='white' borderRadius={6} p={6}>
-                <Table size='sm'>
+            <Flex flexDirection={"column"} alignItems={"center"}>
+              <TableContainer backgroundColor="white" borderRadius={6} p={6}>
+                <Table size="sm">
                   <Thead>
                     <Tr>
                       <Th>作業者</Th>
                       <Th>ステータス</Th>
                       <Th>受付日</Th>
                       <Th>受付NO.</Th>
-                      <Th>記入者</Th>
+                      <Th>作成者</Th>
                       <Th>担当</Th>
                       <Th>顧客名</Th>
                       <Th>発生日</Th>
@@ -224,8 +224,8 @@ const Claim: NextPage = () => {
                             currentUser
                           ) &&
                             claim.status === 7)
-                            ? 'yellow.100'
-                            : 'white'
+                            ? "yellow.100"
+                            : "white"
                         }
                       >
                         <Td>{currentOperator(claim)}</Td>
