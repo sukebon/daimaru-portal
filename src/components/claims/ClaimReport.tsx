@@ -9,6 +9,7 @@ import {
   claimSelectList4,
 } from '../../../data';
 import { ClaimProps } from '../../../lib/ClaimProps';
+import ClaimAttached from './ClaimAttached';
 
 const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
   return (
@@ -116,15 +117,12 @@ const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
 
       {/* 添付書類 */}
       <Box w='100%' mt={9}>
-        {/* 画像1 */}
-        {claim.imageUrl && (
-          <Box mt={9} p={6} boxShadow='xs'>
-            <a href={claim.imageUrl} target='_blank' rel='noreferrer'>
-              <img src={claim.imageUrl} alt='画像' width='100%' height='100%' />
-            </a>
-          </Box>
-        )}
+        <ClaimAttached imageUrl={claim.imageUrl1} />
+        <ClaimAttached imageUrl={claim.imageUrl2} />
+        <ClaimAttached imageUrl={claim.imageUrl3} />
       </Box>
+
+      {/* 完了日 */}
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
           完了日

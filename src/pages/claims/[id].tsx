@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 //クレーム報告書　個別ページ
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Input } from '@chakra-ui/react';
+import { Box, Button, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   onSnapshot,
@@ -11,10 +12,11 @@ import {
   query,
   updateDoc,
 } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import { deleteObject, ref } from 'firebase/storage';
+import { auth, db, storage } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { auth, db } from '../../../firebase';
 import { authState } from '../../../store/authState';
 import { taskflow } from '../../../data';
 import { todayDate } from '../../../functions';
@@ -70,15 +72,69 @@ const ClaimId = () => {
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
 
-  const [fileUpload, setFileUpload] = useState<any>({});
-  const [imageUrl, setImageUrl] = useState('');
-  const [imagePath, setImagePath] = useState('');
+  const [fileUpload1, setFileUpload1] = useState<any>();
+  const [fileUpload2, setFileUpload2] = useState<any>();
+  const [fileUpload3, setFileUpload3] = useState<any>();
+  const [imageUrl1, setImageUrl1] = useState('');
+  const [imageUrl2, setImageUrl2] = useState('');
+  const [imageUrl3, setImageUrl3] = useState('');
+  const [imagePath1, setImagePath1] = useState('');
+  const [imagePath2, setImagePath2] = useState('');
+  const [imagePath3, setImagePath3] = useState('');
 
   useEffect(() => {
     if (user === null) {
       router.push('/login');
     }
   }, [router, user]);
+
+  //クレーム報告書を削除
+  const deleteClaim = async (
+    id: any,
+    imagePath1: string,
+    imagePath2: string,
+    imagePath3: string
+  ) => {
+    const result = window.confirm('削除して宜しいでしょうか？');
+    if (!result) return;
+
+    await deleteDoc(doc(db, 'claimList', id));
+
+    fileDelete(imagePath1);
+    fileDelete(imagePath2);
+    fileDelete(imagePath3);
+
+    router.push(`/claims`);
+  };
+
+  //画像を削除
+  const fileDelete = async (path: string) => {
+    if (path === '') {
+      return;
+    }
+    const imageRef = ref(storage, path);
+    await deleteObject(imageRef)
+      .then(() => {
+        console.log(path);
+        console.log('削除成功');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  //クレーム報告書を受付、担当者に修正処置を依頼
+  const acceptClaim = async (id: any) => {
+    const docRef = doc(db, 'claimList', id);
+    await updateDoc(docRef, {
+      status: 1,
+      receptionist: currentUser,
+      receptionNum,
+      receptionDate,
+      stampOffice: currentUser,
+      operator: claim.stampStaff, //作業者
+    });
+  };
 
   //クレーム報告書のステータスを変更
   const switchStatus = async (id: any) => {
@@ -105,7 +161,7 @@ const ClaimId = () => {
     });
   }, []);
 
-  //ページのインデックスを取得
+  //nextページ prevページを取得
   const nextPrevPage = (id: any, page: number) => {
     let currentIndex = 0;
     claims.forEach((c: any, index: number) => {
@@ -332,8 +388,12 @@ const ClaimId = () => {
     setReceptionDate(claim.receptionDate);
     setCauseDepartmentSelect(claim.causeDepartmentSelect);
     setCompletionDate(claim.completionDate);
-    setImageUrl(claim.imageUrl);
-    setImagePath(claim.imagePath);
+    setImageUrl1(claim.imageUrl1);
+    setImageUrl2(claim.imageUrl2);
+    setImageUrl3(claim.imageUrl3);
+    setImagePath1(claim.imagePath1);
+    setImagePath2(claim.imagePath2);
+    setImagePath3(claim.imagePath3);
   };
 
   //編集をキャンセルしたときに、setを空にする
@@ -349,8 +409,12 @@ const ClaimId = () => {
     setReceptionNum('');
     setReceptionDate('');
     setCompletionDate('');
-    setImageUrl('');
-    setImagePath('');
+    setImageUrl1('');
+    setImageUrl2('');
+    setImageUrl3('');
+    setImagePath1('');
+    setImagePath2('');
+    setImagePath3('');
   };
 
   return (
@@ -412,9 +476,6 @@ const ClaimId = () => {
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}
-              imageUrl={imageUrl}
-              setImageUrl={setImageUrl}
-              fileUpload={fileUpload}
             />
 
             {/* レポート部分メイン */}
@@ -489,41 +550,83 @@ const ClaimId = () => {
                     enabledStaffAndOffice={enabledStaffAndOffice}
                     enabledCounterplanAndOffice={enabledCounterplanAndOffice}
                     enabledBossAndOffice={enabledBossAndOffice}
-                    imageUrl={imageUrl}
-                    setImageUrl={setImageUrl}
-                    fileUpload={fileUpload}
-                    setFileUpload={setFileUpload}
-                    imagePath={imagePath}
-                    setImagePath={setImagePath}
+                    imageUrl1={imageUrl1}
+                    imageUrl2={imageUrl2}
+                    imageUrl3={imageUrl3}
+                    setImageUrl1={setImageUrl1}
+                    setImageUrl2={setImageUrl2}
+                    setImageUrl3={setImageUrl3}
+                    fileUpload1={fileUpload1}
+                    fileUpload2={fileUpload2}
+                    fileUpload3={fileUpload3}
+                    setFileUpload1={setFileUpload1}
+                    setFileUpload2={setFileUpload2}
+                    setFileUpload3={setFileUpload3}
+                    imagePath1={imagePath1}
+                    imagePath2={imagePath2}
+                    imagePath3={imagePath3}
+                    setImagePath1={setImagePath1}
+                    setImagePath2={setImagePath2}
+                    setImagePath3={setImagePath3}
+                    deleteClaim={deleteClaim}
                   />
                 </>
               )}
 
               {/*'未処理 受付NO. 受付日 入力欄*/}
               {Number(claim.status) === 0 && enabledOffice() && (
-                <Flex alignItems='center' w='100%' mt={10}>
-                  <Flex mr={5} alignItems='center'>
-                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
-                      受付NO
-                    </Box>
-                    <Input
-                      type='text'
-                      placeholder='例 4-001'
-                      value={receptionNum}
-                      onChange={(e) => setReceptionNum(e.target.value)}
-                    />
+                <>
+                  <Flex alignItems='center' w='100%' mt={10}>
+                    <Flex mr={5} alignItems='center'>
+                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
+                        受付NO
+                      </Box>
+                      <Input
+                        type='text'
+                        placeholder='例 4-001'
+                        value={receptionNum}
+                        onChange={(e) => setReceptionNum(e.target.value)}
+                      />
+                    </Flex>
+                    <Flex mr={1} alignItems='center'>
+                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
+                        受付日
+                      </Box>
+                      <Input
+                        type='date'
+                        value={receptionDate}
+                        onChange={(e) => setReceptionDate(e.target.value)}
+                      />
+                    </Flex>
                   </Flex>
-                  <Flex mr={1} alignItems='center'>
-                    <Box fontSize='lg' fontWeight='semibold' minW='70px'>
-                      受付日
-                    </Box>
-                    <Input
-                      type='date'
-                      value={receptionDate}
-                      onChange={(e) => setReceptionDate(e.target.value)}
-                    />
+                  <Flex justifyContent='center'>
+                    <Button
+                      mt={6}
+                      mr={3}
+                      colorScheme='blue'
+                      onClick={() => {
+                        acceptClaim(queryId);
+                      }}
+                      disabled={receptionNum && receptionDate ? false : true}
+                    >
+                      受け付ける
+                    </Button>
+                    <Button
+                      mt={6}
+                      colorScheme='red'
+                      onClick={() =>
+                        deleteClaim(
+                          queryId,
+                          claim.imagePath1,
+                          claim.imagePath2,
+                          claim.imagePath3
+                        )
+                      }
+                    >
+                      削除する
+                    </Button>
                   </Flex>
-                </Flex>
+                </>
               )}
 
               {!edit && (
@@ -577,9 +680,6 @@ const ClaimId = () => {
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}
-              imageUrl={imageUrl}
-              setImageUrl={setImageUrl}
-              fileUpload={fileUpload}
             />
           </Box>
         </>

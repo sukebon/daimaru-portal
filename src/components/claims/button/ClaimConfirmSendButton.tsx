@@ -17,7 +17,7 @@ type Props = {
     stampStaff: string;
     stampOffice: string;
     operator: string;
-    imagePath: string;
+    imagePath1: string;
   };
   currentUser: string;
   queryId: any;
@@ -46,19 +46,6 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 }) => {
   const router = useRouter();
 
-  //クレーム報告書を受付、担当者に修正処置を依頼
-  const acceptClaim = async (id: string) => {
-    const docRef = doc(db, 'claimList', id);
-    await updateDoc(docRef, {
-      status: 1,
-      receptionist: currentUser,
-      receptionNum,
-      receptionDate,
-      stampOffice: currentUser,
-      operator: claim.stampStaff, //作業者
-    });
-  };
-
   //クレーム報告書を削除
   const deleteClaim = async (id: string) => {
     const result = window.confirm('削除して宜しいでしょうか？');
@@ -66,11 +53,11 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
     await deleteDoc(doc(db, 'claimList', id));
 
-    if (claim.imagePath === '') {
+    if (claim.imagePath1 === '') {
       router.push('/claims');
       return;
     }
-    const imageRef = ref(storage, claim.imagePath);
+    const imageRef = ref(storage, claim.imagePath1);
     await deleteObject(imageRef)
       .then(() => {
         router.push(`/claims`);
@@ -169,30 +156,6 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   return (
     <>
-      {/* 事務局が受け付ける */}
-      {Number(claim.status) === 0 && enabledOffice() && (
-        <Flex justifyContent='center'>
-          <Button
-            mt={12}
-            mr={3}
-            colorScheme='blue'
-            onClick={() => {
-              acceptClaim(queryId);
-            }}
-            disabled={receptionNum && receptionDate ? false : true}
-          >
-            受け付ける
-          </Button>
-          <Button
-            mt={12}
-            colorScheme='red'
-            onClick={() => deleteClaim(queryId)}
-          >
-            削除する
-          </Button>
-        </Flex>
-      )}
-
       {/* 修正処置を記入して事務局へ送信 */}
       {Number(claim.status) === 1 &&
         (claim.operator === currentUser ||

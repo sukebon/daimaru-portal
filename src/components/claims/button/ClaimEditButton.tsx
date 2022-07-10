@@ -22,9 +22,6 @@ type Props = {
   updateCounterplanClaim: any;
   editCancel: any;
   enabledOffice: any;
-  imageUrl: string;
-  setImageUrl: any;
-  fileUpload: any;
 };
 
 const ClaimEditButton: NextPage<Props> = ({

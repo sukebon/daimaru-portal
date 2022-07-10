@@ -17,7 +17,7 @@ import {
   uploadBytes,
 } from 'firebase/storage';
 import { NextPage } from 'next';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   claimSelectList1,
   claimSelectList2,
@@ -26,6 +26,7 @@ import {
 } from '../../../data';
 import { db, storage } from '../../../firebase';
 import { ClaimStateProps } from '../../../lib/ClaimStateProps';
+import ClaimEditAttached from './ClaimEditAttached';
 
 const ClaimEditReport: NextPage<ClaimStateProps> = ({
   queryId,
@@ -58,21 +59,41 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
   enabledStaffAndOffice,
   enabledCounterplanAndOffice,
   enabledBossAndOffice,
-  fileUpload,
-  setFileUpload,
-  imageUrl,
-  setImageUrl,
-  imagePath,
-  setImagePath,
+  fileUpload1,
+  fileUpload2,
+  fileUpload3,
+  setFileUpload1,
+  setFileUpload2,
+  setFileUpload3,
+  imageUrl1,
+  imageUrl2,
+  imageUrl3,
+  setImageUrl1,
+  setImageUrl2,
+  setImageUrl3,
+  imagePath1,
+  imagePath2,
+  imagePath3,
+  setImagePath1,
+  setImagePath2,
+  setImagePath3,
+  deleteClaim,
 }) => {
-  console.log('fileUpload', fileUpload);
   //添付ファイルをアップロード
-  const onFileUpload = () => {
+  const onFileUpload = (fileUpload: any, num: number) => {
     const result = window.confirm('アップロードして宜しいでしょうか？');
     if (!result) return;
 
     const file = fileUpload[0];
-    setImageUrl(window.URL.createObjectURL(file));
+    if (num === 1) {
+      setImageUrl1(window.URL.createObjectURL(file));
+    }
+    if (num === 2) {
+      setImageUrl2(window.URL.createObjectURL(file));
+    }
+    if (num === 3) {
+      setImageUrl3(window.URL.createObjectURL(file));
+    }
 
     const storageRef = ref(
       storage,
@@ -84,25 +105,48 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
       ).then((url) => {
         const docRef = doc(db, 'claimList', `${queryId}`);
         updateDoc(docRef, {
-          imageUrl: url,
-          imagePath: storageRef.fullPath,
+          ['imageUrl' + num]: url,
+          ['imagePath' + num]: storageRef.fullPath,
         });
-        setFileUpload(null);
-        setImagePath(storageRef.fullPath);
+
+        if (num === 1) {
+          setFileUpload1(null);
+          setImagePath1(storageRef.fullPath);
+        }
+        if (num === 2) {
+          setFileUpload2(null);
+          setImagePath2(storageRef.fullPath);
+        }
+        if (num === 3) {
+          setFileUpload3(null);
+          setImagePath3(storageRef.fullPath);
+        }
+
         console.log('アップロード成功');
       });
     });
   };
 
-  const onFileDelete = () => {
+  //添付ファイルを削除
+  const onFileDelete = (imagePath: string, num: number) => {
     const result = window.confirm('削除して宜しいでしょうか？');
     if (!result) return;
-    setFileUpload('');
-    setImageUrl('');
+    if (num === 1) {
+      setFileUpload1('');
+      setImageUrl1('');
+    }
+    if (num === 2) {
+      setFileUpload2('');
+      setImageUrl2('');
+    }
+    if (num === 3) {
+      setFileUpload3('');
+      setImageUrl3('');
+    }
     const docRef = doc(db, 'claimList', `${queryId}`);
     updateDoc(docRef, {
-      imageUrl: '',
-      imagePath: '',
+      ['imageUrl' + num]: '',
+      ['imagePath' + num]: '',
     }).then(() => {
       const desertRef = ref(storage, imagePath);
       deleteObject(desertRef)
@@ -114,6 +158,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
         });
     });
   };
+
   return (
     <>
       {/* 受付NO. 受付日 */}
@@ -378,57 +423,34 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
       </Box>
 
       {/* 添付書類 */}
-      <Box w='100%' mt={9}>
-        {imageUrl && (
-          <Box mt={9} p={6} boxShadow='xs'>
-            <a href={imageUrl} target='_blank' rel='noreferrer'>
-              <img src={imageUrl} alt='画像' width='100%' height='100%' />
-            </a>
-          </Box>
-        )}
-      </Box>
+      <ClaimEditAttached
+        imageUrl={imageUrl1}
+        imagePath={imagePath1}
+        fileUpload={fileUpload1}
+        setFileUpload={setFileUpload1}
+        onFileUpload={onFileUpload}
+        onFileDelete={onFileDelete}
+        num={1}
+      />
+      <ClaimEditAttached
+        imageUrl={imageUrl2}
+        imagePath={imagePath2}
+        fileUpload={fileUpload2}
+        setFileUpload={setFileUpload2}
+        onFileUpload={onFileUpload}
+        onFileDelete={onFileDelete}
+        num={2}
+      />
+      <ClaimEditAttached
+        imageUrl={imageUrl3}
+        imagePath={imagePath3}
+        fileUpload={fileUpload3}
+        setFileUpload={setFileUpload3}
+        onFileUpload={onFileUpload}
+        onFileDelete={onFileDelete}
+        num={3}
+      />
 
-      {imageUrl ? (
-        <Flex w={'100%'} justifyContent='center'>
-          <Button
-            mt={3}
-            mx='auto'
-            colorScheme='red'
-            onClick={() => {
-              onFileDelete();
-            }}
-          >
-            削除
-          </Button>
-        </Flex>
-      ) : (
-        <Flex
-          flexDirection={{ base: 'column', md: 'row' }}
-          alignItems='center'
-          justifyContent='center'
-        >
-          <Box w={'100%'} p={3}>
-            <input
-              type='file'
-              accept='.png, .jpeg, .jpg'
-              onChange={(e) => {
-                setFileUpload(e.target.files);
-              }}
-            />
-          </Box>
-          {fileUpload && fileUpload.length == 1 && (
-            <Flex w={'100%'} p={3}>
-              <Button
-                mr={3}
-                colorScheme='telegram'
-                onClick={() => onFileUpload()}
-              >
-                アップロード
-              </Button>
-            </Flex>
-          )}
-        </Flex>
-      )}
       {/* 完了日 */}
       <Box>
         <Box mt={9} fontSize='lg' fontWeight='semibold'>
@@ -444,6 +466,19 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
           onChange={(e) => setCompletionDate(e.target.value)}
         />
       </Box>
+      {enabledOffice() && (
+        <Flex justifyContent='center'>
+          <Button
+            mt={12}
+            colorScheme='red'
+            onClick={() =>
+              deleteClaim(queryId, imagePath1, imagePath2, imagePath3)
+            }
+          >
+            クレーム報告書を削除する
+          </Button>
+        </Flex>
+      )}
     </>
   );
 };

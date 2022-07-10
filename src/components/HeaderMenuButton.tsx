@@ -50,11 +50,7 @@ const HeaderMenuButton: NextPage = () => {
           <Box fontSize='xs'>ユーザー名</Box>
           {users.map(
             (user: { uid: string; name: string; email: string }) =>
-              currentUser === user.uid && (
-                <>
-                  <Box>{user.name}</Box>
-                </>
-              )
+              currentUser === user.uid && <Box key={user.uid}>{user.name}</Box>
           )}
         </Box>
         <MenuDivider />
