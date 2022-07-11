@@ -112,7 +112,7 @@ const ClaimId = () => {
     if (path === '') {
       return;
     }
-    const imageRef = ref(storage, path);
+    const imageRef = ref(storage, `${path}`);
     await deleteObject(imageRef)
       .then(() => {
         console.log(path);
