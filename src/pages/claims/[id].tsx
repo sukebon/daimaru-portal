@@ -30,6 +30,7 @@ import ClaimMessage from '../../components/claims/ClaimMessage';
 import ClaimEditReport from '../../components/claims/ClaimEditReport';
 import Link from 'next/link';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import ClaimStampArea from '../../components/claims/ClaimStampArea';
 
 //クレーム報告書作成
 
@@ -665,6 +666,7 @@ const ClaimId = () => {
                 </>
               )}
             </Box>
+            <ClaimStampArea claim={claim} />
             {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
             <ClaimEditButton
               claim={claim}

@@ -8,7 +8,12 @@ export type ClaimProps = {
     amendmentContent: string;
     counterplanSelect: string;
     counterplanContent: string;
+    author: string;
     stampStaff: string;
+    stampOffice: string;
+    stampBoss: string;
+    stampManager: string;
+    stampTm: string;
     status: string | number;
     operator: string;
     receptionNum: string;
