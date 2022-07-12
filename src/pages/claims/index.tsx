@@ -42,7 +42,7 @@ const Claim: NextPage = () => {
   const router = useRouter();
   const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
-  const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
+  const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
@@ -151,7 +151,7 @@ const Claim: NextPage = () => {
       })
     );
     //ISOマネージャーのリスト(オブジェクト）
-    setIsoManagereUsers(
+    setIsoManagerUsers(
       users.filter((user: any) => {
         return user.isoManager === true;
       })

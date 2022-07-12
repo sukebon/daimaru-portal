@@ -1,27 +1,9 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { NextPage } from 'next';
-import { relative } from 'path';
-import React, { useEffect, useState } from 'react';
-import { db } from '../../../firebase';
+import React from 'react';
 import { ClaimProps } from '../../../lib/ClaimProps';
 
-const ClaimStampArea: NextPage<ClaimProps> = ({ claim }) => {
-  const [users, setUsers] = useState<any>([]); //ユーザー一覧
-  //ユーザー一覧を取得
-  useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
-    const unsub = onSnapshot(q, (querySnapshot: any) => {
-      setUsers(
-        querySnapshot.docs.map((doc: any) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, []);
+const ClaimStampArea: NextPage<ClaimProps> = ({ claim, users }) => {
   return (
     <>
       <Box

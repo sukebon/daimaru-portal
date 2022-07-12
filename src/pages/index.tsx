@@ -16,6 +16,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -29,10 +30,16 @@ import { Administrator, Users } from '../../data';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
-  const [users, setUsers] = useState<any>([]);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
   const [requests, setRequests] = useState<any>([]);
+
+  const [users, setUsers] = useState<any>([]);
+  const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
+  const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
+  const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
+  const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
+
   const [hideRequests, setHideRequests] = useState<any>([]);
   const [display, setDisplay] = useState<boolean>(true);
   const [alcoholObject, setAlcoholObject] = useState<any>({});
@@ -82,6 +89,88 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     return unsub;
   }, [currentUser]);
 
+  //users情報
+  useEffect(() => {
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    getDocs(q).then((querySnapshot) => {
+      setUsers(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+
+  //【クレーム】クレーム一覧リスト取得
+  useEffect(() => {
+    const claimsCollectionRef = collection(db, 'claimList');
+    getDocs(claimsCollectionRef).then((querySnapshot) => {
+      setClaims(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, []);
+
+  //各リストを取得
+  useEffect(() => {
+    //ISO 事務局のリスト(オブジェクト）
+    setIsoOfficeUsers(
+      users.filter((user: any) => {
+        return user.isoOffice === true;
+      })
+    );
+    //ISOマネージャーのリスト(オブジェクト）
+    setIsoManagerUsers(
+      users.filter((user: any) => {
+        return user.isoManager === true;
+      })
+    );
+    //ISO トップマネジメントのリスト(オブジェクト）
+    setIsoTopManegmentUsers(
+      users.filter((user: any) => {
+        return user.isoTopManegment === true;
+      })
+    );
+    //ISO 上司のリスト(オブジェクト）
+  }, [users]);
+
+  //【クレーム】iso（事務局・管理者・TM）のオブジェクトからuidのみ取り出して配列にする
+  const searchUsers = (array: { uid: string }[]) => {
+    const newUsers = array.map((user: { uid: string }) => {
+      return user.uid;
+    });
+    return newUsers;
+  };
+
+  //【クレーム】各自クレーム処理件数
+  const claimCount = () => {
+    let result = 0;
+    claims.forEach((claim: any) => {
+      if (
+        claim.operator == currentUser ||
+        (searchUsers(isoOfficeUsers).includes(currentUser) &&
+          claim.status === Number(0)) ||
+        (searchUsers(isoOfficeUsers).includes(currentUser) &&
+          claim.status === Number(2)) ||
+        (searchUsers(isoOfficeUsers).includes(currentUser) &&
+          claim.status === Number(4)) ||
+        (searchUsers(isoManagerUsers).includes(currentUser) &&
+          claim.status === Number(6)) ||
+        (searchUsers(isoTopManegmentUsers).includes(currentUser) &&
+          claim.status === Number(7))
+      ) {
+        result++;
+      }
+    });
+    if (result === 0) return;
+    return result;
+  };
+
   //アルコールチェック
   useEffect(() => {
     const unsub = onSnapshot(
@@ -122,7 +211,29 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 p={'6'}
                 flexDirection={{ base: 'column', lg: 'row' }}
               >
+                {/* クレーム件数エリア */}
                 <Box w={{ base: '100%', lg: '800px' }} mx='auto' flex={'1'}>
+                  {claimCount() && (
+                    <Box
+                      width='100%'
+                      boxShadow='xs'
+                      mt='6'
+                      p='6'
+                      rounded='md'
+                      bg='white'
+                    >
+                      <Text fontSize='md' mt='1' ml='1'>
+                        クレーム報告書 未処理件数：
+                        <Box as='span' color='red' fontWeight='bold'>
+                          {claimCount()}
+                        </Box>{' '}
+                        件
+                        <Box>
+                          ※「Menu」にあるクレーム報告書一覧をcheckしてください。
+                        </Box>
+                      </Text>
+                    </Box>
+                  )}
                   <Slogan slogan={sloganData.slogan} />
                   <Information news={newsData.contents} />
                   <QuickLink link={linkData.contents} />

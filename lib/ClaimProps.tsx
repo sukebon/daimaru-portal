@@ -27,4 +27,8 @@ export type ClaimProps = {
     imagePath2: string;
     imagePath3: string;
   };
+  users: {
+    uid: string;
+    name: string;
+  }[];
 };

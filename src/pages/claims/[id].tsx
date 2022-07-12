@@ -460,7 +460,7 @@ const ClaimId = () => {
               enabledTopManegment={enabledTopManegment}
             />
             {/* ステータスの進捗 */}
-            <ClaimProgress claim={claim} />
+            <ClaimProgress claim={claim} users={users} />
 
             {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
             <ClaimEditButton
@@ -514,7 +514,7 @@ const ClaimId = () => {
               )}
 
               {/* 通常画面 */}
-              {!edit && <ClaimReport claim={claim} />}
+              {!edit && <ClaimReport claim={claim} users={users} />}
 
               {/* 編集画面 */}
               {edit && (
@@ -666,7 +666,10 @@ const ClaimId = () => {
                 </>
               )}
             </Box>
-            <ClaimStampArea claim={claim} />
+
+            {/* スタンプエリア */}
+            <ClaimStampArea claim={claim} users={users} />
+
             {/* 編集ボタン 未処理以外「担当者」と「事務局」と「作業者」のみ*/}
             <ClaimEditButton
               claim={claim}
