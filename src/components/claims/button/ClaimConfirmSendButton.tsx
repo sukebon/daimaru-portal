@@ -73,7 +73,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 2,
-      operator: '',
+      operator: '事務局',
     });
     router.push(`/claims`);
   };
@@ -83,7 +83,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '',
+      operator: '事務局',
     });
     router.push(`/claims`);
   };
@@ -93,7 +93,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 6,
-      operator: '',
+      operator: '管理者',
       stampBoss: currentUser,
     });
     router.push(`/claims`);
@@ -104,7 +104,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '',
+      operator: '事務局',
       message: 'クレーム報告書が戻されました。',
     });
     router.push(`/claims`);
@@ -115,7 +115,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 7,
-      operator: '',
+      operator: 'TM',
       stampManager: currentUser,
     });
     router.push(`/claims`);
@@ -126,7 +126,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '',
+      operator: '事務局',
       message: '管理者に却下されました',
     });
     router.push(`/claims`);
@@ -137,7 +137,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 8,
-      operator: '',
+      operator: '-',
       stampTm: currentUser,
     });
     router.push(`/claims`);
@@ -148,7 +148,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '',
+      operator: '事務局',
       message: 'トップマネジメントに却下されました',
     });
     router.push(`/claims`);

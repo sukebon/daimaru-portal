@@ -43,7 +43,7 @@ const ClaimId = () => {
   const [claims, setClaims] = useState<any>([]); //クレーム一覧を取得
   const [users, setUsers] = useState<any>([]); //ユーザー一覧
   const [selectUser, setSelectUser] = useState(''); //送信先選択
-  const [selectTask, setSelectTask] = useState<any>(); //タスクの選択
+  const [selectTask, setSelectTask] = useState<number>(0); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
   const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
@@ -141,7 +141,7 @@ const ClaimId = () => {
   const switchStatus = async (id: any) => {
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
-      status: selectTask,
+      status: Number(selectTask),
       operator: selectUser,
       message: '',
     });
