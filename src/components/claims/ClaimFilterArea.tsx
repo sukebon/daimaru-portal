@@ -7,16 +7,17 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
   FormLabel,
   Select,
   useDisclosure,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from '../../../data';
+} from "../../../data";
 
 const ClaimFilterArea = ({
   claims,
@@ -32,24 +33,36 @@ const ClaimFilterArea = ({
 }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef<any>();
-  const [staffStampList, setStaffStampList] = useState([]);
+  const [stampStaffList, setStampStaffList] = useState<any>([]);
 
-  // useEffect(() => {
-  //   const newUsers = claims.map((claim: { stampStaff: string }) => {
-  //     return { uid: claim.stampStaff };
-  //   });
-  //   setStaffStampList(newUsers);
-  //   console.log('newUsesa');
-  // }, [claims]);
+  const onFilterReset = () => {
+    setStampStaffFilter("");
+    setOccurrenceFilter("");
+    setAmendmentFilter("");
+    setCounterplanFilter("");
+  };
+
+  //担当フィルターのリストを作成
+  useEffect(() => {
+    const newUsers = claims.map((claim: { stampStaff: string }) => {
+      return claim.stampStaff;
+    });
+    const setUsers = new Set(newUsers);
+    const arrayUsers = Array.from(setUsers).map((user) => {
+      return user;
+    });
+
+    setStampStaffList(arrayUsers);
+  }, [claims]);
 
   return (
     <>
-      <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
+      <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
         絞り込み
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement='right'
+        placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
       >
@@ -61,20 +74,23 @@ const ClaimFilterArea = ({
           <DrawerBody>
             <FormLabel mt={6}>担当</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={stampStaffFilter}
               onChange={(e) => setStampStaffFilter(e.target.value)}
             >
-              {users.map((user: { uid: string; name: string }) => (
-                <option key={user.uid} value={user.uid}>
-                  {user.name}
+              {stampStaffList.map((stampStaffUser: string, index: number) => (
+                <option key={index} value={stampStaffUser}>
+                  {users.map(
+                    (user: { uid: string; name: string }) =>
+                      user.uid === stampStaffUser && user.name
+                  )}
                 </option>
               ))}
             </Select>
 
             <FormLabel mt={6}>発生内容</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={occurrenceFilter}
               onChange={(e) => setOccurrenceFilter(e.target.value)}
             >
@@ -87,7 +103,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>修正処置</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={amendmentFilter}
               onChange={(e) => setAmendmentFilter(e.target.value)}
             >
@@ -100,7 +116,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>対策</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={counterplanFilter}
               onChange={(e) => setCounterplanFilter(e.target.value)}
             >
@@ -110,10 +126,14 @@ const ClaimFilterArea = ({
                 </option>
               ))}
             </Select>
+
+            <Flex mt={6} justifyContent="center">
+              <Button onClick={onFilterReset}>リセット</Button>
+            </Flex>
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={onClose}>
+            <Button variant="outline" mr={3} onClick={onClose}>
               閉じる
             </Button>
           </DrawerFooter>
