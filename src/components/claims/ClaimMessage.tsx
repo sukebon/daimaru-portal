@@ -33,6 +33,25 @@ const ClaimMessage: NextPage<Props> = ({
         justifyContent='space-between'
       >
         {/* 担当者に表示するメッセージ　 */}
+        {Number(claim.status) === 0 && enabledOffice() && (
+          <Alert status='info'>
+            <AlertIcon />
+            {users.map(
+              (user: { uid: string; name: string }) =>
+                claim.stampStaff === user.uid && (
+                  <Box key={user.uid}>
+                    <Box>
+                      受付NO.と受付日を記入してください。
+                      <br />
+                      記入が完了次第、下の「受け付ける」のボタンをクリックしてください。
+                    </Box>
+                  </Box>
+                )
+            )}
+          </Alert>
+        )}
+
+        {/* 担当者に表示するメッセージ　 */}
         {Number(claim.status) === 1 && claim.stampStaff === currentUser && (
           <Alert status='info'>
             <AlertIcon />
@@ -57,15 +76,6 @@ const ClaimMessage: NextPage<Props> = ({
           <Alert status='info'>
             <AlertIcon />
             <Box>
-              <Box>
-                作業者：
-                {(claim.operator &&
-                  users.map(
-                    (user: { uid: string; name: string }) =>
-                      user.uid === claim.operator && user.name
-                  )) ||
-                  '事務局'}
-              </Box>
               <Box>
                 編集ボタンをクリックして、【起因部署】を選択してください。
                 <br />
@@ -92,6 +102,18 @@ const ClaimMessage: NextPage<Props> = ({
                   </Box>
                 )
             )}
+          </Alert>
+        )}
+
+        {/* 事務局に表示するメッセージ */}
+        {Number(claim.status) === 4 && enabledOffice() && (
+          <Alert status='info'>
+            <AlertIcon />
+            <Box>
+              発生内容・修正処置・対策が記入されているか確認してください。
+              <br />
+              記入漏れがなければ、タスクの「上司承認」を選択して送信してください。
+            </Box>
           </Alert>
         )}
 

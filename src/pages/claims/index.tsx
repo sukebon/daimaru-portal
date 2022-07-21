@@ -9,24 +9,24 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
-import { auth, db } from "../../../firebase";
-import { Users } from "../../../data";
+} from '@chakra-ui/react';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { NextPage } from 'next';
+import React, { useEffect, useState } from 'react';
+import { auth, db } from '../../../firebase';
+import { Users } from '../../../data';
 import {
   taskflow,
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from "../../../data";
-import Link from "next/link";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../../store/authState";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import ClaimFilterArea from "../../components/claims/ClaimFilterArea";
+} from '../../../data';
+import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../../store/authState';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
+import ClaimFilterArea from '../../components/claims/ClaimFilterArea';
 
 const Claim: NextPage = () => {
   const currentUser = useRecoilValue(authState);
@@ -40,21 +40,23 @@ const Claim: NextPage = () => {
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
   const [filterClaims, setFilterClaims] = useState<any>(claims);
-  const [stampStaffFilter, setStampStaffFilter] = useState("");
-  const [occurrenceFilter, setOccurrenceFilter] = useState("");
-  const [amendmentFilter, setAmendmentFilter] = useState("");
-  const [counterplanFilter, setCounterplanFilter] = useState("");
+  const [receptionDateStart, setReceptionDateStart] = useState();
+  const [receptionDateEnd, setReceptionDateEnd] = useState();
+  const [stampStaffFilter, setStampStaffFilter] = useState('');
+  const [occurrenceFilter, setOccurrenceFilter] = useState('');
+  const [amendmentFilter, setAmendmentFilter] = useState('');
+  const [counterplanFilter, setCounterplanFilter] = useState('');
 
   useEffect(() => {
     if (user === null) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router, user]);
 
   //users情報
   useEffect(() => {
-    const usersCollectionRef = collection(db, "authority");
-    const q = query(usersCollectionRef, orderBy("rank", "asc"));
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -67,8 +69,8 @@ const Claim: NextPage = () => {
 
   //クレーム一覧を取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, "claimList");
-    const q = query(claimsCollectionRef, orderBy("receptionNum", "desc"));
+    const claimsCollectionRef = collection(db, 'claimList');
+    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
     getDocs(q).then((querySnapshot) => {
       setClaims(
         querySnapshot.docs.map((doc) => ({
@@ -77,22 +79,36 @@ const Claim: NextPage = () => {
         }))
       );
     });
-    console.log("クレーム一覧取得");
+    console.log('クレーム一覧取得');
   }, []);
 
   //フィルターでクレーム一覧を絞り込み
   useEffect(() => {
+    //受付日の開始日で絞り込み
     let newClaims = claims.filter((claim: any) => {
+      if (!receptionDateStart) return claim;
+      const date1 = new Date(receptionDateStart);
+      const date2 = new Date(claim.receptionDate);
+      if (date1.getTime() <= date2.getTime()) return claim;
+    });
+    //受付日の終了日で絞り込み
+    newClaims = newClaims.filter((claim: any) => {
+      if (!receptionDateEnd) return claim;
+      const date1 = new Date(claim.receptionDate);
+      const date2 = new Date(receptionDateEnd);
+      if (date1.getTime() <= date2.getTime()) return claim;
+    });
+    newClaims = newClaims.filter((claim: { stampStaff: string }) => {
       if (!stampStaffFilter) return claim;
       if (claim.stampStaff == stampStaffFilter) return claim;
     });
     //発生内容を絞り込み
-    newClaims = newClaims.filter((claim: any) => {
+    newClaims = newClaims.filter((claim: { occurrenceSelect: string }) => {
       if (!occurrenceFilter) return claim;
       if (claim.occurrenceSelect == occurrenceFilter) return claim;
     });
     //修正処置を絞り込み
-    newClaims = newClaims.filter((claim: any) => {
+    newClaims = newClaims.filter((claim: { amendmentSelect: string }) => {
       if (!amendmentFilter) return claim;
       if (claim.amendmentSelect == amendmentFilter) return claim;
     });
@@ -103,6 +119,8 @@ const Claim: NextPage = () => {
     });
     setFilterClaims(newClaims);
   }, [
+    receptionDateStart,
+    receptionDateEnd,
     stampStaffFilter,
     occurrenceFilter,
     amendmentFilter,
@@ -116,24 +134,24 @@ const Claim: NextPage = () => {
       case claim.operator:
         switch (claim.status) {
           case 0:
-            return "事務局";
+            return '事務局';
           case 2:
-            return "事務局";
+            return '事務局';
           case 4:
-            return "事務局";
+            return '事務局';
           case 6:
-            return "管理者";
+            return '管理者';
           case 7:
-            return "TM";
+            return 'TM';
           case 8:
-            return "-";
+            return '-';
           default:
             return users.map((user: { uid: string; name: string }) => {
               if (user.uid == claim.operator) return user.name;
             });
         }
       default:
-        return "事務局";
+        return '事務局';
     }
   };
 
@@ -174,7 +192,7 @@ const Claim: NextPage = () => {
   };
 
   function onFilterClick() {
-    console.log("OK");
+    console.log('OK');
   }
 
   return (
@@ -183,16 +201,20 @@ const Claim: NextPage = () => {
         <>
           <Box
             p={6}
-            backgroundColor={"#f7f7f7"}
-            paddingBottom={"50px"}
-            minH={"100vh"}
+            backgroundColor={'#f7f7f7'}
+            paddingBottom={'50px'}
+            minH={'100vh'}
           >
-            <Flex flexDirection={"column"} alignItems={"center"}>
-              <TableContainer backgroundColor="white" borderRadius={6} p={6}>
-                <Flex mb={6} justifyContent="right">
+            <Flex flexDirection={'column'} alignItems={'center'}>
+              <TableContainer backgroundColor='white' borderRadius={6} p={6}>
+                <Flex mb={6} justifyContent='right'>
                   <ClaimFilterArea
                     claims={claims}
                     users={users}
+                    receptionDateStart={receptionDateStart}
+                    setReceptionDateStart={setReceptionDateStart}
+                    receptionDateEnd={receptionDateEnd}
+                    setReceptionDateEnd={setReceptionDateEnd}
                     stampStaffFilter={stampStaffFilter}
                     setStampStaffFilter={setStampStaffFilter}
                     occurrenceFilter={occurrenceFilter}
@@ -203,7 +225,7 @@ const Claim: NextPage = () => {
                     setCounterplanFilter={setCounterplanFilter}
                   />
                 </Flex>
-                <Table size="sm">
+                <Table size='sm'>
                   <Thead>
                     <Tr>
                       <Th>作業者</Th>
@@ -236,8 +258,8 @@ const Claim: NextPage = () => {
                             currentUser
                           ) &&
                             claim.status === 7)
-                            ? "yellow.100"
-                            : "white"
+                            ? 'yellow.100'
+                            : 'white'
                         }
                       >
                         <Td>{currentOperator(claim)}</Td>
@@ -259,7 +281,7 @@ const Claim: NextPage = () => {
                           {claimSelectList1.map(
                             (c) =>
                               c.id == claim.occurrenceSelect &&
-                              c.headline + " " + c.title
+                              c.headline + ' ' + c.title
                           )}
                         </Td>
                         <Td>

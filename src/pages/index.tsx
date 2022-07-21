@@ -27,6 +27,7 @@ import { authState } from '../../store/authState.js';
 import AlcoholChecker from '../components/popup/AlcoholChecker';
 import { todayDate } from '../../functions';
 import { Administrator, Users } from '../../data';
+import Link from 'next/link';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -229,7 +230,21 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                         </Box>{' '}
                         件
                         <Box>
-                          ※「Menu」にあるクレーム報告書一覧をcheckしてください。
+                          ※「Menu」にある
+                          <Link href='/claims'>
+                            <a>
+                              <Text
+                                as='span'
+                                textDecoration='underline'
+                                _hover={{
+                                  textDecoration: 'none',
+                                }}
+                              >
+                                クレーム報告書一覧
+                              </Text>
+                            </a>
+                          </Link>
+                          をcheckしてください。
                         </Box>
                       </Text>
                     </Box>

@@ -9,19 +9,25 @@ import {
   DrawerOverlay,
   Flex,
   FormLabel,
+  Input,
   Select,
   useDisclosure,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from "../../../data";
+} from '../../../data';
+import { beginningDate, todayDate } from '../../../functions';
 
 const ClaimFilterArea = ({
   claims,
   users,
+  receptionDateStart,
+  setReceptionDateStart,
+  receptionDateEnd,
+  setReceptionDateEnd,
   stampStaffFilter,
   setStampStaffFilter,
   occurrenceFilter,
@@ -36,10 +42,12 @@ const ClaimFilterArea = ({
   const [stampStaffList, setStampStaffList] = useState<any>([]);
 
   const onFilterReset = () => {
-    setStampStaffFilter("");
-    setOccurrenceFilter("");
-    setAmendmentFilter("");
-    setCounterplanFilter("");
+    setReceptionDateStart('');
+    setReceptionDateEnd('');
+    setStampStaffFilter('');
+    setOccurrenceFilter('');
+    setAmendmentFilter('');
+    setCounterplanFilter('');
   };
 
   //担当フィルターのリストを作成
@@ -57,12 +65,12 @@ const ClaimFilterArea = ({
 
   return (
     <>
-      <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
+      <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
         絞り込み
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement='right'
         onClose={onClose}
         finalFocusRef={btnRef}
       >
@@ -72,9 +80,27 @@ const ClaimFilterArea = ({
           <DrawerHeader>絞り込み検索</DrawerHeader>
 
           <DrawerBody>
+            <FormLabel mt={6}>受付日</FormLabel>
+            <Input
+              type='date'
+              w='100%'
+              p={2}
+              mt={3}
+              value={receptionDateStart ? receptionDateStart : beginningDate()}
+              onChange={(e) => setReceptionDateStart(e.target.value)}
+            />
+            <Input
+              type='date'
+              w='100%'
+              p={2}
+              mt={3}
+              value={receptionDateEnd ? receptionDateEnd : todayDate()}
+              onChange={(e) => setReceptionDateEnd(e.target.value)}
+            />
+
             <FormLabel mt={6}>担当</FormLabel>
             <Select
-              placeholder="全て選択"
+              placeholder='全て選択'
               value={stampStaffFilter}
               onChange={(e) => setStampStaffFilter(e.target.value)}
             >
@@ -90,7 +116,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>発生内容</FormLabel>
             <Select
-              placeholder="全て選択"
+              placeholder='全て選択'
               value={occurrenceFilter}
               onChange={(e) => setOccurrenceFilter(e.target.value)}
             >
@@ -103,7 +129,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>修正処置</FormLabel>
             <Select
-              placeholder="全て選択"
+              placeholder='全て選択'
               value={amendmentFilter}
               onChange={(e) => setAmendmentFilter(e.target.value)}
             >
@@ -116,7 +142,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>対策</FormLabel>
             <Select
-              placeholder="全て選択"
+              placeholder='全て選択'
               value={counterplanFilter}
               onChange={(e) => setCounterplanFilter(e.target.value)}
             >
@@ -127,13 +153,13 @@ const ClaimFilterArea = ({
               ))}
             </Select>
 
-            <Flex mt={6} justifyContent="center">
+            <Flex mt={6} justifyContent='center'>
               <Button onClick={onFilterReset}>リセット</Button>
             </Flex>
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button variant='outline' mr={3} onClick={onClose}>
               閉じる
             </Button>
           </DrawerFooter>

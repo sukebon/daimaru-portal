@@ -70,6 +70,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //修正処置完了 事務局へ渡す
   const amendmentClaim = async (id: string) => {
+    const result = window.confirm('提出して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 2,
@@ -80,6 +82,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //対策完了 事務局へ渡す
   const counterplanClaim = async (id: string) => {
+    const result = window.confirm('提出して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
@@ -90,6 +94,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //上司承認
   const bossApprovalClaim = async (id: string) => {
+    const result = window.confirm('承認して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 6,
@@ -101,6 +107,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //上司却下
   const bossRejectedClaim = async (id: string) => {
+    const result = window.confirm('却下して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
@@ -112,6 +120,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //管理者承認
   const managerApprovalClaim = async (id: string) => {
+    const result = window.confirm('承認して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 7,
@@ -123,6 +133,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //管理者却下
   const managerRejectedClaim = async (id: string) => {
+    const result = window.confirm('却下して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
@@ -134,6 +146,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //TOP マネジメント承認
   const topManegmentApprovalClaim = async (id: string) => {
+    const result = window.confirm('承認して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 8,
@@ -145,6 +159,8 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //TOP マネジメント却下
   const topManegmentRejectedClaim = async (id: string) => {
+    const result = window.confirm('却下して宜しいでしょうか？');
+    if (!result) return;
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 4,
