@@ -207,9 +207,10 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
           <div className={styles.container}>
             <main>
               <Flex
-                w={{ base: '100%' }}
+                w='100%'
                 mx='auto'
-                p={'6'}
+                px={6}
+                pb={6}
                 flexDirection={{ base: 'column', lg: 'row' }}
               >
                 {/* クレーム件数エリア */}
@@ -259,7 +260,8 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   )}
                 </Box>
                 <Box
-                  w={{ base: '100%', md: '800px' }}
+                  // w={{ base: '100%', md: '800px' }}
+                  w='100%'
                   mt='6'
                   mx='auto'
                   ml={{ base: '0', lg: '6' }}
@@ -267,7 +269,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   rounded='md'
                   boxShadow='xs'
                   bg='white'
-                  flex={'1'}
+                  flex='1'
                   borderRadius={'lg'}
                 >
                   <Flex
