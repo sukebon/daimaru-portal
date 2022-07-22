@@ -3,6 +3,40 @@ import Image from "next/image";
 import Link from "next/link";
 
 const CatalogArea = () => {
+  const catalogItems = [
+    {
+      link: "https://my.ebook5.net/daimaru-hakui/my-uniform-club/",
+      src: "/myuni.jpg",
+      alt: "myuni カタログ",
+    },
+    {
+      link: "https://my.ebook5.net/daimaru-hakui/serenade-vol5/",
+      src: "/serenade.jpg",
+      alt: "serenade カタログ",
+    },
+  ];
+  const linkItems = [
+    {
+      title: "マイユニポータル",
+      link: "https://myuni.vercel.app/",
+      color: "rgb(45, 55, 72)",
+    },
+    {
+      title: "ホームページ",
+      link: "https://www.daimaru-hakui.co.jp/",
+      color: "rgb(49, 74, 151)",
+    },
+    {
+      title: "在庫照会",
+      link: "https://stock-next.vercel.app/",
+      color: "rgb(49, 151, 149)",
+    },
+    {
+      title: "組織カレンダー",
+      link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
+      color: "#00bcd4",
+    },
+  ];
   return (
     <>
       <Flex
@@ -16,30 +50,20 @@ const CatalogArea = () => {
         flexDirection={{ base: "column", md: "row", lg: "column", xl: "row" }}
       >
         <Flex flex="2">
-          <Flex flex="1" p="3" justifyContent="center">
-            <Link href="https://my.ebook5.net/daimaru-hakui/my-uniform-club/">
-              <a target="_blank">
-                <Image
-                  src="/myuni.jpg"
-                  alt="myuni カタログ"
-                  width={220}
-                  height={300}
-                />
-              </a>
-            </Link>
-          </Flex>
-          <Flex flex="1" p="3" justifyContent="center">
-            <Link href="https://my.ebook5.net/daimaru-hakui/serenade-vol5/">
-              <a target="_blank">
-                <Image
-                  src="/serenade.jpg"
-                  alt="serenade カタログ"
-                  width={220}
-                  height={300}
-                />
-              </a>
-            </Link>
-          </Flex>
+          {catalogItems.map((item) => (
+            <Flex flex="1" p="3" justifyContent="center" key={item.link}>
+              <Link href={item.link}>
+                <a target="_blank">
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    width={220}
+                    height={300}
+                  />
+                </a>
+              </Link>
+            </Flex>
+          ))}
         </Flex>
         <Flex
           flex="1"
@@ -49,68 +73,23 @@ const CatalogArea = () => {
           p={3}
           w="100%"
         >
-          <Box h="30%">
-            <Link href="https://myuni.vercel.app/">
-              <a target={"_blank"}>
-                <Flex
-                  h="100%"
-                  minH="50px"
-                  backgroundColor="rgb(45, 55, 72)"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Box fontSize={{ base: "xs", md: "md" }}>
-                    マイユニポータル
-                  </Box>
-                </Flex>
-              </a>
-            </Link>
-          </Box>
-          <Box h="30%">
-            <Link href="https://www.daimaru-hakui.co.jp/">
-              <a target={"_blank"}>
-                <Flex
-                  height="100%"
-                  minH="50px"
-                  backgroundColor="rgb(49, 74, 151)"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Box fontSize={{ base: "xs", md: "md" }}>ホームページ</Box>
-                </Flex>
-              </a>
-            </Link>
-          </Box>
-          <Box h="30%">
-            <Link href="https://stock-next.vercel.app/">
-              <a target={"_blank"}>
-                <Flex
-                  height="100%"
-                  minH="50px"
-                  backgroundColor="rgb(49, 151, 149)"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Box fontSize={{ base: "xs", md: "md" }}>在庫照会</Box>
-                </Flex>
-              </a>
-            </Link>
-          </Box>
-          <Box h="30%">
-            <Link href="https://calendar.nextset.jp/daimaruhakui/gp/calendar.html">
-              <a target={"_blank"}>
-                <Flex
-                  height="100%"
-                  minH="50px"
-                  backgroundColor="#00bcd4"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Box fontSize={{ base: "xs", md: "md" }}>組織カレンダー</Box>
-                </Flex>
-              </a>
-            </Link>
-          </Box>
+          {linkItems.map((item) => (
+            <Box h="30%" key={item.title}>
+              <Link href={item.link}>
+                <a target={"_blank"}>
+                  <Flex
+                    h="100%"
+                    minH="50px"
+                    backgroundColor={item.color}
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Box fontSize={{ base: "xs", md: "md" }}>{item.title}</Box>
+                  </Flex>
+                </a>
+              </Link>
+            </Box>
+          ))}
         </Flex>
       </Flex>
     </>
