@@ -1,10 +1,10 @@
-import { Button, Flex } from '@chakra-ui/react';
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import React from 'react';
-import { db, storage } from '../../../../firebase';
+import { Button, Flex } from "@chakra-ui/react";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+import React from "react";
+import { db, storage } from "../../../../firebase";
 
 type Props = {
   claim: {
@@ -48,20 +48,20 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //クレーム報告書を削除
   const deleteClaim = async (id: string) => {
-    const result = window.confirm('削除して宜しいでしょうか？');
+    const result = window.confirm("削除して宜しいでしょうか？");
     if (!result) return;
 
-    await deleteDoc(doc(db, 'claimList', id));
+    await deleteDoc(doc(db, "claimList", id));
 
-    if (claim.imagePath1 === '') {
-      router.push('/claims');
+    if (claim.imagePath1 === "") {
+      router.push("/claims");
       return;
     }
     const imageRef = ref(storage, claim.imagePath1);
     await deleteObject(imageRef)
       .then(() => {
         router.push(`/claims`);
-        console.log('削除成功');
+        console.log("削除成功");
       })
       .catch((error) => {
         console.log(error);
@@ -70,36 +70,37 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //修正処置完了 事務局へ渡す
   const amendmentClaim = async (id: string) => {
-    const result = window.confirm('提出して宜しいでしょうか？');
+    const result = window.confirm("提出して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 2,
-      operator: '事務局',
+      operator: "事務局",
     });
     router.push(`/claims`);
   };
 
   //対策完了 事務局へ渡す
   const counterplanClaim = async (id: string) => {
-    const result = window.confirm('提出して宜しいでしょうか？');
+    const result = window.confirm("提出して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '事務局',
+      operator: "事務局",
+      stampSolver: currentUser,
     });
     router.push(`/claims`);
   };
 
   //上司承認
   const bossApprovalClaim = async (id: string) => {
-    const result = window.confirm('承認して宜しいでしょうか？');
+    const result = window.confirm("承認して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 6,
-      operator: '管理者',
+      operator: "管理者",
       stampBoss: currentUser,
     });
     router.push(`/claims`);
@@ -107,25 +108,25 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //上司却下
   const bossRejectedClaim = async (id: string) => {
-    const result = window.confirm('却下して宜しいでしょうか？');
+    const result = window.confirm("却下して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '事務局',
-      message: 'クレーム報告書が戻されました。',
+      operator: "事務局",
+      message: "クレーム報告書が戻されました。",
     });
     router.push(`/claims`);
   };
 
   //管理者承認
   const managerApprovalClaim = async (id: string) => {
-    const result = window.confirm('承認して宜しいでしょうか？');
+    const result = window.confirm("承認して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 7,
-      operator: 'TM',
+      operator: "TM",
       stampManager: currentUser,
     });
     router.push(`/claims`);
@@ -133,25 +134,25 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //管理者却下
   const managerRejectedClaim = async (id: string) => {
-    const result = window.confirm('却下して宜しいでしょうか？');
+    const result = window.confirm("却下して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '事務局',
-      message: '管理者に却下されました',
+      operator: "事務局",
+      message: "管理者に却下されました",
     });
     router.push(`/claims`);
   };
 
   //TOP マネジメント承認
   const topManegmentApprovalClaim = async (id: string) => {
-    const result = window.confirm('承認して宜しいでしょうか？');
+    const result = window.confirm("承認して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 8,
-      operator: '-',
+      operator: "-",
       stampTm: currentUser,
     });
     router.push(`/claims`);
@@ -159,13 +160,13 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
   //TOP マネジメント却下
   const topManegmentRejectedClaim = async (id: string) => {
-    const result = window.confirm('却下して宜しいでしょうか？');
+    const result = window.confirm("却下して宜しいでしょうか？");
     if (!result) return;
-    const docRef = doc(db, 'claimList', id);
+    const docRef = doc(db, "claimList", id);
     await updateDoc(docRef, {
       status: 4,
-      operator: '事務局',
-      message: 'トップマネジメントに却下されました',
+      operator: "事務局",
+      message: "トップマネジメントに却下されました",
     });
     router.push(`/claims`);
   };
@@ -176,14 +177,14 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
       {Number(claim.status) === 1 &&
         (claim.operator === currentUser ||
           claim.stampStaff === currentUser) && (
-          <Flex justifyContent='center'>
+          <Flex justifyContent="center">
             <Button
               mt={12}
-              colorScheme='facebook'
+              colorScheme="facebook"
               onClick={() => {
                 amendmentClaim(queryId);
               }}
-              disabled={!claim.amendmentContent}
+              disabled={!claim.amendmentSelect}
             >
               事務局へ提出する
             </Button>
@@ -192,10 +193,10 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
       {/* 対策を記入して事務局へ送信 */}
       {Number(claim.status) === 3 && claim.operator === currentUser && (
-        <Flex justifyContent='center'>
+        <Flex justifyContent="center">
           <Button
             mt={12}
-            colorScheme='facebook'
+            colorScheme="facebook"
             onClick={() => {
               counterplanClaim(queryId);
             }}
@@ -208,11 +209,11 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
       {/* 上司が完了日と対策selectを記入　承認して管理職へ提出　却下して事務局へ提出 */}
       {Number(claim.status) === 5 && claim.operator === currentUser && (
-        <Flex justifyContent='center'>
+        <Flex justifyContent="center">
           <Button
             mt={12}
             mr={3}
-            colorScheme='blue'
+            colorScheme="blue"
             onClick={() => {
               bossApprovalClaim(queryId);
             }}
@@ -222,7 +223,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
           </Button>
           <Button
             mt={12}
-            colorScheme='red'
+            colorScheme="red"
             onClick={() => {
               bossRejectedClaim(queryId);
             }}
@@ -234,11 +235,11 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
       {/* 管理職が確認　承認してTMへ提出　却下して事務局へ提出 */}
       {Number(claim.status) === 6 && enabledManager() && (
-        <Flex justifyContent='center'>
+        <Flex justifyContent="center">
           <Button
             mt={12}
             mr={3}
-            colorScheme='blue'
+            colorScheme="blue"
             onClick={() => {
               managerApprovalClaim(queryId);
             }}
@@ -247,7 +248,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
           </Button>
           <Button
             mt={12}
-            colorScheme='red'
+            colorScheme="red"
             onClick={() => {
               managerRejectedClaim(queryId);
             }}
@@ -259,11 +260,11 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
 
       {/* TMが確認　承認して完了　却下して事務局へ提出 */}
       {Number(claim.status) === 7 && enabledTopManegment() && (
-        <Flex justifyContent='center'>
+        <Flex justifyContent="center">
           <Button
             mt={12}
             mr={3}
-            colorScheme='blue'
+            colorScheme="blue"
             onClick={() => {
               topManegmentApprovalClaim(queryId);
             }}
@@ -272,7 +273,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
           </Button>
           <Button
             mt={12}
-            colorScheme='red'
+            colorScheme="red"
             onClick={() => {
               topManegmentRejectedClaim(queryId);
             }}

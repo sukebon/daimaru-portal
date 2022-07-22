@@ -135,6 +135,7 @@ const ClaimId = () => {
       stampOffice: currentUser,
       operator: claim.stampStaff, //作業者
     });
+    router.push(`/claims`);
   };
 
   //クレーム報告書のステータスを変更
