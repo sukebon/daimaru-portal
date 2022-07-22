@@ -401,7 +401,9 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
                 <Radio
                   key={list.id}
                   value={list.id}
-                  isDisabled={!enabledCounterplanAndOffice()}
+                  isDisabled={
+                    !enabledBossAndOffice() && !enabledCounterplanAndOffice()
+                  }
                 >
                   {list.title}
                 </Radio>
@@ -471,6 +473,8 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
           onChange={(e) => setCompletionDate(e.target.value)}
         />
       </Box>
+
+      {/* 削除ボタン */}
       {enabledOffice() && (
         <Flex justifyContent="center">
           <Button
