@@ -10,6 +10,7 @@ export type ClaimProps = {
     counterplanContent: string;
     author: string;
     stampStaff: string;
+    stampCounterplan: string;
     stampOffice: string;
     stampBoss: string;
     stampManager: string;

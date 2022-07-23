@@ -50,25 +50,27 @@ const ClaimEditButton: NextPage<Props> = ({
               </Link>
             </Box>
             {/* 事務局のみ編集可 */}
-            {Number(claim.status) >= 1 && enabledOffice() && (
-              <Box w='100%' ml={1}>
-                <Button
-                  w='100%'
-                  onClick={() => {
-                    isEdit();
-                    setEdit(true);
-                  }}
-                >
-                  編集
-                </Button>
-              </Box>
-            )}
+            {(Number(claim.status) == 4 || Number(claim.status) >= 6) &&
+              enabledOffice() && (
+                <Box w='100%' ml={1}>
+                  <Button
+                    w='100%'
+                    onClick={() => {
+                      isEdit();
+                      setEdit(true);
+                    }}
+                  >
+                    編集
+                  </Button>
+                </Box>
+              )}
             {/* 受付から内容確認 担当者・記入者・作業者・事務局のみ編集可 */}
             {Number(claim.status) >= 1 &&
               Number(claim.status) <= 3 &&
               (claim.stampStaff === currentUser ||
                 claim.author === currentUser ||
-                claim.operator === currentUser) && (
+                claim.operator === currentUser ||
+                enabledOffice()) && (
                 <Box w='100%' ml={1}>
                   <Button
                     w='100%'
@@ -82,19 +84,20 @@ const ClaimEditButton: NextPage<Props> = ({
                 </Box>
               )}
             {/* 上司承認中 上司と事務局のみ編集可 */}
-            {Number(claim.status) === 5 && claim.operator === currentUser && (
-              <Box w='100%' ml={1}>
-                <Button
-                  w='100%'
-                  onClick={() => {
-                    isEdit();
-                    setEdit(true);
-                  }}
-                >
-                  編集
-                </Button>
-              </Box>
-            )}
+            {Number(claim.status) === 5 &&
+              (claim.operator === currentUser || enabledOffice()) && (
+                <Box w='100%' ml={1}>
+                  <Button
+                    w='100%'
+                    onClick={() => {
+                      isEdit();
+                      setEdit(true);
+                    }}
+                  >
+                    編集
+                  </Button>
+                </Box>
+              )}
           </Flex>
         )}
         {edit && (

@@ -49,6 +49,16 @@ const ClaimStampArea: NextPage<ClaimProps> = ({ claim, users }) => {
             </Box>
           </Box>
           <Box textAlign='center'>
+            <Box fontSize='xs'>対策記入者</Box>
+            <Box py={2} color='red' fontWeight='bold'>
+              {claim.stampOffice &&
+                users.map(
+                  (user: { uid: string; name: string }) =>
+                    user.uid === claim.stampCounterplan && user.name
+                )}
+            </Box>
+          </Box>
+          <Box textAlign='center'>
             <Box fontSize='xs'>上司</Box>
             <Box py={2} color='red' fontWeight='bold'>
               {claim.stampBoss &&

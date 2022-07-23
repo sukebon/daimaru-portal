@@ -30,6 +30,8 @@ const ClaimFilterArea = ({
   setReceptionDateEnd,
   stampStaffFilter,
   setStampStaffFilter,
+  customerFilter,
+  setCustomerFilter,
   occurrenceFilter,
   setOccurrenceFilter,
   amendmentFilter,
@@ -62,7 +64,7 @@ const ClaimFilterArea = ({
 
     setStampStaffList(arrayUsers);
   }, [claims]);
-
+  console.log(customerFilter);
   return (
     <>
       <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
@@ -113,6 +115,16 @@ const ClaimFilterArea = ({
                 </option>
               ))}
             </Select>
+
+            <FormLabel mt={6}>顧客名</FormLabel>
+            <Input
+              type='text'
+              w='100%'
+              p={2}
+              mt={3}
+              value={customerFilter}
+              onChange={(e) => setCustomerFilter(e.target.value)}
+            />
 
             <FormLabel mt={6}>発生内容</FormLabel>
             <Select

@@ -10,7 +10,14 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore';
 import { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../../../firebase';
@@ -43,6 +50,7 @@ const Claim: NextPage = () => {
   const [receptionDateStart, setReceptionDateStart] = useState();
   const [receptionDateEnd, setReceptionDateEnd] = useState();
   const [stampStaffFilter, setStampStaffFilter] = useState('');
+  const [customerFilter, setCustomerFilter] = useState('');
   const [occurrenceFilter, setOccurrenceFilter] = useState('');
   const [amendmentFilter, setAmendmentFilter] = useState('');
   const [counterplanFilter, setCounterplanFilter] = useState('');
@@ -67,11 +75,26 @@ const Claim: NextPage = () => {
     });
   }, []);
 
+  // //クレーム一覧を取得
+  // useEffect(() => {
+  //   const claimsCollectionRef = collection(db, 'claimList');
+  //   const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
+  //   getDocs(q).then((querySnapshot) => {
+  //     setClaims(
+  //       querySnapshot.docs.map((doc) => ({
+  //         ...doc.data(),
+  //         id: doc.id,
+  //       }))
+  //     );
+  //   });
+  //   console.log('クレーム一覧取得');
+  // }, []);
+
   //クレーム一覧を取得
   useEffect(() => {
     const claimsCollectionRef = collection(db, 'claimList');
     const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
-    getDocs(q).then((querySnapshot) => {
+    const unsub = onSnapshot(q, (querySnapshot) => {
       setClaims(
         querySnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -98,9 +121,14 @@ const Claim: NextPage = () => {
       const date2 = new Date(receptionDateEnd);
       if (date1.getTime() <= date2.getTime()) return claim;
     });
+    //担当者で絞り込み
     newClaims = newClaims.filter((claim: { stampStaff: string }) => {
       if (!stampStaffFilter) return claim;
       if (claim.stampStaff == stampStaffFilter) return claim;
+    });
+    newClaims = newClaims.filter((claim: { customer: string }) => {
+      if (!customerFilter) return claim;
+      if (claim.customer.includes(customerFilter)) return claim;
     });
     //発生内容を絞り込み
     newClaims = newClaims.filter((claim: { occurrenceSelect: string }) => {
@@ -122,6 +150,7 @@ const Claim: NextPage = () => {
     receptionDateStart,
     receptionDateEnd,
     stampStaffFilter,
+    customerFilter,
     occurrenceFilter,
     amendmentFilter,
     counterplanFilter,
@@ -191,10 +220,6 @@ const Claim: NextPage = () => {
     return newUsers;
   };
 
-  function onFilterClick() {
-    console.log('OK');
-  }
-
   return (
     <>
       {currentUser && (
@@ -216,6 +241,8 @@ const Claim: NextPage = () => {
                     receptionDateEnd={receptionDateEnd}
                     setReceptionDateEnd={setReceptionDateEnd}
                     stampStaffFilter={stampStaffFilter}
+                    customerFilter={customerFilter}
+                    setCustomerFilter={setCustomerFilter}
                     setStampStaffFilter={setStampStaffFilter}
                     occurrenceFilter={occurrenceFilter}
                     setOccurrenceFilter={setOccurrenceFilter}
@@ -228,17 +255,17 @@ const Claim: NextPage = () => {
                 <Table size='sm'>
                   <Thead>
                     <Tr>
-                      <Th>作業者</Th>
-                      <Th>ステータス</Th>
-                      <Th>受付日</Th>
-                      <Th>受付NO.</Th>
-                      <Th>担当</Th>
-                      <Th>顧客名</Th>
-                      <Th>発生日</Th>
-                      <Th>発生内容</Th>
-                      <Th>修正処置</Th>
-                      <Th>対策</Th>
-                      <Th>完了日</Th>
+                      <Th minW='80px'>作業者</Th>
+                      <Th minW='95px'>ステータス</Th>
+                      <Th minW='105px'>受付日</Th>
+                      <Th minW='80px'>受付NO.</Th>
+                      <Th minW='100px'>担当</Th>
+                      <Th minW='260px'>顧客名</Th>
+                      <Th minW='105px'>発生日</Th>
+                      <Th minW='150px'>発生内容</Th>
+                      <Th minW='160px'>修正処置</Th>
+                      <Th minW='120px'>対策</Th>
+                      <Th minW='105px'>完了日</Th>
                       <Th></Th>
                     </Tr>
                   </Thead>
