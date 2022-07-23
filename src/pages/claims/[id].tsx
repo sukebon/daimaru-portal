@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 //クレーム報告書　個別ページ
-import React, { useEffect, useState } from "react";
-import { Box, Button, Flex, Input } from "@chakra-ui/react";
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Flex, Input } from '@chakra-ui/react';
 import {
   collection,
   deleteDoc,
@@ -11,26 +11,26 @@ import {
   orderBy,
   query,
   updateDoc,
-} from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
-import { auth, db, storage } from "../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../../store/authState";
-import { taskflow } from "../../../data";
-import { todayDate } from "../../../functions";
+} from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
+import { auth, db, storage } from '../../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
+import { authState } from '../../../store/authState';
+import { taskflow } from '../../../data';
+import { todayDate } from '../../../functions';
 
-import ClaimSelectSendButton from "../../components/claims/button/ClaimSelectSendButton";
-import ClaimReport from "../../components/claims/ClaimReport";
-import ClaimConfirmSendButton from "../../components/claims/button/ClaimConfirmSendButton";
-import ClaimEditButton from "../../components/claims/button/ClaimEditButton";
-import ClaimProgress from "../../components/claims/ClaimProgress";
-import ClaimMessage from "../../components/claims/ClaimMessage";
-import ClaimEditReport from "../../components/claims/ClaimEditReport";
-import Link from "next/link";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import ClaimStampArea from "../../components/claims/ClaimStampArea";
+import ClaimSelectSendButton from '../../components/claims/button/ClaimSelectSendButton';
+import ClaimReport from '../../components/claims/ClaimReport';
+import ClaimConfirmSendButton from '../../components/claims/button/ClaimConfirmSendButton';
+import ClaimEditButton from '../../components/claims/button/ClaimEditButton';
+import ClaimProgress from '../../components/claims/ClaimProgress';
+import ClaimMessage from '../../components/claims/ClaimMessage';
+import ClaimEditReport from '../../components/claims/ClaimEditReport';
+import Link from 'next/link';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import ClaimStampArea from '../../components/claims/ClaimStampArea';
 
 //クレーム報告書作成
 
@@ -42,7 +42,7 @@ const ClaimId = () => {
   const [claim, setClaim] = useState<any>([]); //クレームの個別記事を取得
   const [claims, setClaims] = useState<any>([]); //クレーム一覧を取得
   const [users, setUsers] = useState<any>([]); //ユーザー一覧
-  const [selectUser, setSelectUser] = useState(""); //送信先選択
+  const [selectUser, setSelectUser] = useState(''); //送信先選択
   const [selectTask, setSelectTask] = useState<number>(0); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
@@ -50,42 +50,42 @@ const ClaimId = () => {
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
-  const [customer, setCustomer] = useState(""); //顧客名
-  const [occurrenceDate, setOccurrenceDate] = useState(""); //発生日
-  const [occurrenceSelect, setOccurrenceSelect] = useState(""); //発生選択
-  const [occurrenceContent, setOccurrenceContent] = useState(""); //発生内容
-  const [amendmentSelect, setAmendmentSelect] = useState(""); //修正処置選択
-  const [amendmentContent, setAmendmentContent] = useState(""); //修正処置内容
-  const [counterplanSelect, setCounterplanSelect] = useState(""); //対策選択
-  const [counterplanContent, setCounterplanContent] = useState(""); //対策内容
-  const [completionDate, setCompletionDate] = useState(""); //完了日
-  const [causeDepartmentSelect, setCauseDepartmentSelect] = useState(""); //起因部署
+  const [customer, setCustomer] = useState(''); //顧客名
+  const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
+  const [occurrenceSelect, setOccurrenceSelect] = useState(''); //発生選択
+  const [occurrenceContent, setOccurrenceContent] = useState(''); //発生内容
+  const [amendmentSelect, setAmendmentSelect] = useState(''); //修正処置選択
+  const [amendmentContent, setAmendmentContent] = useState(''); //修正処置内容
+  const [counterplanSelect, setCounterplanSelect] = useState(''); //対策選択
+  const [counterplanContent, setCounterplanContent] = useState(''); //対策内容
+  const [completionDate, setCompletionDate] = useState(''); //完了日
+  const [causeDepartmentSelect, setCauseDepartmentSelect] = useState(''); //起因部署
 
   const [receptionDate, setReceptionDate] = useState(todayDate); //受付日
-  const [receptionist, setReceptionist] = useState(""); //受付者
-  const [receptionNum, setReceptionNum] = useState(""); //受付NO.
-  const [stampStaff, setStampStaff] = useState(""); //担当者ハンコ
-  const [stampOffice, setStampOffice] = useState(""); //事務局ハンコ
-  const [stampBoss, setStampBoss] = useState(""); //上司ハンコ
-  const [stampManager, setStampManager] = useState(""); //管理者ハンコ
-  const [stampTm, setStampTm] = useState(""); //TMハンコ
-  const [status, setStatus] = useState(""); //ステータス
+  const [receptionist, setReceptionist] = useState(''); //受付者
+  const [receptionNum, setReceptionNum] = useState(''); //受付NO.
+  const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
+  const [stampOffice, setStampOffice] = useState(''); //事務局ハンコ
+  const [stampBoss, setStampBoss] = useState(''); //上司ハンコ
+  const [stampManager, setStampManager] = useState(''); //管理者ハンコ
+  const [stampTm, setStampTm] = useState(''); //TMハンコ
+  const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
 
   const [fileUpload1, setFileUpload1] = useState<any>();
   const [fileUpload2, setFileUpload2] = useState<any>();
   const [fileUpload3, setFileUpload3] = useState<any>();
-  const [imageUrl1, setImageUrl1] = useState("");
-  const [imageUrl2, setImageUrl2] = useState("");
-  const [imageUrl3, setImageUrl3] = useState("");
-  const [imagePath1, setImagePath1] = useState("");
-  const [imagePath2, setImagePath2] = useState("");
-  const [imagePath3, setImagePath3] = useState("");
+  const [imageUrl1, setImageUrl1] = useState('');
+  const [imageUrl2, setImageUrl2] = useState('');
+  const [imageUrl3, setImageUrl3] = useState('');
+  const [imagePath1, setImagePath1] = useState('');
+  const [imagePath2, setImagePath2] = useState('');
+  const [imagePath3, setImagePath3] = useState('');
 
   useEffect(() => {
     if (user === null) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router, user]);
 
@@ -96,10 +96,10 @@ const ClaimId = () => {
     imagePath2: string,
     imagePath3: string
   ) => {
-    const result = window.confirm("削除して宜しいでしょうか？");
+    const result = window.confirm('削除して宜しいでしょうか？');
     if (!result) return;
 
-    await deleteDoc(doc(db, "claimList", id));
+    await deleteDoc(doc(db, 'claimList', id));
 
     fileDelete(imagePath1);
     fileDelete(imagePath2);
@@ -110,14 +110,14 @@ const ClaimId = () => {
 
   //画像を削除
   const fileDelete = async (path: string) => {
-    if (path === "") {
+    if (path === '') {
       return;
     }
     const imageRef = ref(storage, `${path}`);
     await deleteObject(imageRef)
       .then(() => {
         console.log(path);
-        console.log("削除成功");
+        console.log('削除成功');
       })
       .catch((error) => {
         console.log(error);
@@ -126,7 +126,7 @@ const ClaimId = () => {
 
   //クレーム報告書を受付、担当者に修正処置を依頼
   const acceptClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 1,
       receptionist: currentUser,
@@ -140,19 +140,19 @@ const ClaimId = () => {
 
   //クレーム報告書のステータスを変更
   const switchStatus = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: Number(selectTask),
       operator: selectUser,
-      message: "",
+      message: '',
     });
-    router.push("/claims");
+    router.push('/claims');
   };
 
   //クレーム一覧を取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, "claimList");
-    const q = query(claimsCollectionRef, orderBy("receptionNum", "desc"));
+    const claimsCollectionRef = collection(db, 'claimList');
+    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
     getDocs(q).then((querySnapshot) => {
       setClaims(
         querySnapshot.docs.map((doc) => ({
@@ -183,7 +183,7 @@ const ClaimId = () => {
 
   //クレーム報告書を更新
   const updateClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       customer,
       receptionNum,
@@ -202,7 +202,7 @@ const ClaimId = () => {
 
   //クレーム報告書の発生内容を更新
   const updateOccurrenceClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       occurrenceSelect,
       occurrenceContent,
@@ -211,7 +211,7 @@ const ClaimId = () => {
 
   //クレーム報告書の修正処置を更新
   const updateAmendmentClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       amendmentSelect,
       amendmentContent,
@@ -219,20 +219,9 @@ const ClaimId = () => {
     });
   };
 
-  //クレーム報告書を担当者入力欄の更新
-  const updateStaffClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
-    await updateDoc(docRef, {
-      occurrenceSelect,
-      occurrenceContent,
-      amendmentSelect,
-      amendmentContent,
-    });
-  };
-
   //クレーム報告書を対策者・上司入力欄の更新
   const updateCounterplanClaim = async (id: any) => {
-    const docRef = doc(db, "claimList", id);
+    const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       counterplanSelect,
       counterplanContent,
@@ -242,15 +231,15 @@ const ClaimId = () => {
 
   // クレーム報告書を取得;
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "claimList", `${queryId}`), (doc) => {
+    const unsub = onSnapshot(doc(db, 'claimList', `${queryId}`), (doc) => {
       setClaim(doc.data());
     });
   }, [queryId, edit]);
 
   //ユーザー一覧を取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, "authority");
-    const q = query(usersCollectionRef, orderBy("rank", "asc"));
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
     const unsub = onSnapshot(q, (querySnapshot: any) => {
       setUsers(
         querySnapshot.docs.map((doc: any) => ({
@@ -299,34 +288,35 @@ const ClaimId = () => {
     return false;
   };
 
-  //記入者と事務局のみ編集可
-  const enabledAuthorAndOffice = () => {
-    const office = isoOfficeUsers.map((user: { uid: string }) => {
-      return user.uid;
-    });
-    if (claim.author === currentUser || office.includes(currentUser))
+  //記入者のみ編集可
+  const enabledAuthor = () => {
+    if (claim.author === currentUser) return true;
+    return false;
+  };
+
+  //担当者のみ編集可
+  const enabledStaff = () => {
+    if (claim.stampStaff === currentUser) return true;
+    return false;
+  };
+
+  //対策者のみ編集可
+  const enabledCounterplan = () => {
+    if (claim.operator === currentUser && Number(claim.status) === 3)
       return true;
     return false;
   };
 
-  //担当者と事務局のみ編集可
-  const enabledStaffAndOffice = () => {
-    const office = isoOfficeUsers.map((user: { uid: string }) => {
+  //上司のみ編集可
+  const enabledBoss = () => {
+    const boss = isoBossUsers.map((user: { uid: string }) => {
       return user.uid;
     });
-    if (claim.stampStaff === currentUser || office.includes(currentUser))
-      return true;
-    return false;
-  };
 
-  //対策記入者と事務局のみ編集可
-  const enabledCounterplanAndOffice = () => {
-    const office = isoOfficeUsers.map((user: { uid: string }) => {
-      return user.uid;
-    });
     if (
-      (claim.operator === currentUser && Number(claim.status) === 3) ||
-      office.includes(currentUser)
+      claim.operator === currentUser &&
+      boss.includes(currentUser) &&
+      Number(claim.status) === 5
     )
       return true;
     return false;
@@ -400,35 +390,35 @@ const ClaimId = () => {
 
   //編集をキャンセルしたときに、setを空にする
   const editCancel = () => {
-    setCustomer("");
-    setOccurrenceDate("");
-    setOccurrenceSelect("");
-    setOccurrenceContent("");
-    setAmendmentSelect("");
-    setAmendmentContent("");
-    setCounterplanSelect("");
-    setCounterplanContent("");
-    setReceptionNum("");
-    setReceptionDate("");
-    setCompletionDate("");
-    setImageUrl1("");
-    setImageUrl2("");
-    setImageUrl3("");
-    setImagePath1("");
-    setImagePath2("");
-    setImagePath3("");
+    setCustomer('');
+    setOccurrenceDate('');
+    setOccurrenceSelect('');
+    setOccurrenceContent('');
+    setAmendmentSelect('');
+    setAmendmentContent('');
+    setCounterplanSelect('');
+    setCounterplanContent('');
+    setReceptionNum('');
+    setReceptionDate('');
+    setCompletionDate('');
+    setImageUrl1('');
+    setImageUrl2('');
+    setImageUrl3('');
+    setImagePath1('');
+    setImagePath2('');
+    setImagePath3('');
   };
 
   return (
     <>
       {claim && currentUser && (
         <>
-          <Box w="100%" p={6} backgroundColor={"#f7f7f7"} position="relative">
-            <Flex justifyContent="space-between" color="gray.600">
+          <Box w='100%' p={6} backgroundColor={'#f7f7f7'} position='relative'>
+            <Flex justifyContent='space-between' color='gray.600'>
               {nextPrevPage(queryId, 1) !== undefined ? (
                 <Link href={`/claims/${nextPrevPage(queryId, 1)}`}>
                   <a>
-                    <Flex alignItems="center">
+                    <Flex alignItems='center'>
                       <ArrowBackIcon />
                       前のクレーム
                     </Flex>
@@ -441,7 +431,7 @@ const ClaimId = () => {
               {nextPrevPage(queryId, -1) !== undefined ? (
                 <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
                   <a>
-                    <Flex alignItems="center">
+                    <Flex alignItems='center'>
                       次のクレーム
                       <ArrowForwardIcon />
                     </Flex>
@@ -474,7 +464,6 @@ const ClaimId = () => {
               updateClaim={updateClaim}
               updateOccurrenceClaim={updateOccurrenceClaim}
               updateAmendmentClaim={updateAmendmentClaim}
-              updateStaffClaim={updateStaffClaim}
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}
@@ -482,10 +471,10 @@ const ClaimId = () => {
 
             {/* レポート部分メイン */}
             <Box
-              w={{ base: "100%", md: "750px" }}
-              mx="auto"
+              w={{ base: '100%', md: '750px' }}
+              mx='auto'
               p={6}
-              backgroundColor="white"
+              backgroundColor='white'
               borderRadius={6}
             >
               {/* 受付ナンバー　受付日 */}
@@ -493,18 +482,18 @@ const ClaimId = () => {
                 <>
                   {!edit && (
                     <Flex
-                      alignItems="center"
-                      justifyContent="space-between"
-                      w="100%"
+                      alignItems='center'
+                      justifyContent='space-between'
+                      w='100%'
                     >
-                      <Flex mr={1} alignItems="center">
-                        <Box fontSize="lg" fontWeight="semibold" mr={1}>
+                      <Flex mr={1} alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付NO
                         </Box>
                         <Box>{claim.receptionNum}</Box>
                       </Flex>
-                      <Flex alignItems="center">
-                        <Box fontSize="lg" fontWeight="semibold" mr={1}>
+                      <Flex alignItems='center'>
+                        <Box fontSize='lg' fontWeight='semibold' mr={1}>
                           受付日
                         </Box>
                         <Box>{claim.receptionDate}</Box>
@@ -548,10 +537,14 @@ const ClaimId = () => {
                     causeDepartmentSelect={causeDepartmentSelect}
                     setCauseDepartmentSelect={setCauseDepartmentSelect}
                     enabledOffice={enabledOffice}
-                    enabledAuthorAndOffice={enabledAuthorAndOffice}
-                    enabledStaffAndOffice={enabledStaffAndOffice}
-                    enabledCounterplanAndOffice={enabledCounterplanAndOffice}
-                    enabledBossAndOffice={enabledBossAndOffice}
+                    enabledAuthor={enabledAuthor}
+                    enabledStaff={enabledStaff}
+                    enabledCounterplan={enabledCounterplan}
+                    enabledBoss={enabledBoss}
+                    // enabledAuthorAndOffice={enabledAuthorAndOffice}
+                    // enabledStaffAndOffice={enabledStaffAndOffice}
+                    // enabledCounterplanAndOffice={enabledCounterplanAndOffice}
+                    // enabledBossAndOffice={enabledBossAndOffice}
                     imageUrl1={imageUrl1}
                     imageUrl2={imageUrl2}
                     imageUrl3={imageUrl3}
@@ -578,34 +571,34 @@ const ClaimId = () => {
               {/*'未処理 受付NO. 受付日 入力欄*/}
               {Number(claim.status) === 0 && enabledOffice() && (
                 <>
-                  <Flex alignItems="center" w="100%" mt={10}>
-                    <Flex mr={5} alignItems="center">
-                      <Box fontSize="lg" fontWeight="semibold" minW="70px">
+                  <Flex alignItems='center' w='100%' mt={10}>
+                    <Flex mr={5} alignItems='center'>
+                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
                         受付NO
                       </Box>
                       <Input
-                        type="text"
-                        placeholder="例 4-001"
+                        type='text'
+                        placeholder='例 4-001'
                         value={receptionNum}
                         onChange={(e) => setReceptionNum(e.target.value)}
                       />
                     </Flex>
-                    <Flex mr={1} alignItems="center">
-                      <Box fontSize="lg" fontWeight="semibold" minW="70px">
+                    <Flex mr={1} alignItems='center'>
+                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
                         受付日
                       </Box>
                       <Input
-                        type="date"
+                        type='date'
                         value={receptionDate}
                         onChange={(e) => setReceptionDate(e.target.value)}
                       />
                     </Flex>
                   </Flex>
-                  <Flex justifyContent="center">
+                  <Flex justifyContent='center'>
                     <Button
                       mt={6}
                       mr={3}
-                      colorScheme="blue"
+                      colorScheme='blue'
                       onClick={() => {
                         acceptClaim(queryId);
                       }}
@@ -615,7 +608,7 @@ const ClaimId = () => {
                     </Button>
                     <Button
                       mt={6}
-                      colorScheme="red"
+                      colorScheme='red'
                       onClick={() =>
                         deleteClaim(
                           queryId,
@@ -682,7 +675,6 @@ const ClaimId = () => {
               updateClaim={updateClaim}
               updateOccurrenceClaim={updateOccurrenceClaim}
               updateAmendmentClaim={updateAmendmentClaim}
-              updateStaffClaim={updateStaffClaim}
               updateCounterplanClaim={updateCounterplanClaim}
               editCancel={editCancel}
               enabledOffice={enabledOffice}

@@ -26,10 +26,10 @@ export type ClaimStateProps = {
   causeDepartmentSelect: string;
   setCauseDepartmentSelect: any;
   enabledOffice: any;
-  enabledAuthorAndOffice: any;
-  enabledStaffAndOffice: any;
-  enabledCounterplanAndOffice: any;
-  enabledBossAndOffice: any;
+  enabledAuthor: any;
+  enabledStaff: any;
+  enabledCounterplan: any;
+  enabledBoss: any;
   fileUpload1: any;
   fileUpload2: any;
   fileUpload3: any;

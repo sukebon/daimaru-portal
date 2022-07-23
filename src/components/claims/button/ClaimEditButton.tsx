@@ -18,7 +18,6 @@ type Props = {
   updateClaim: any;
   updateOccurrenceClaim: any;
   updateAmendmentClaim: any;
-  updateStaffClaim: any;
   updateCounterplanClaim: any;
   editCancel: any;
   enabledOffice: any;
@@ -34,7 +33,6 @@ const ClaimEditButton: NextPage<Props> = ({
   updateClaim,
   updateOccurrenceClaim,
   updateAmendmentClaim,
-  updateStaffClaim,
   updateCounterplanClaim,
   editCancel,
   enabledOffice,
@@ -51,13 +49,26 @@ const ClaimEditButton: NextPage<Props> = ({
                 </a>
               </Link>
             </Box>
+            {/* 事務局のみ編集可 */}
+            {Number(claim.status) >= 1 && enabledOffice() && (
+              <Box w='100%' ml={1}>
+                <Button
+                  w='100%'
+                  onClick={() => {
+                    isEdit();
+                    setEdit(true);
+                  }}
+                >
+                  編集
+                </Button>
+              </Box>
+            )}
             {/* 受付から内容確認 担当者・記入者・作業者・事務局のみ編集可 */}
             {Number(claim.status) >= 1 &&
-              Number(claim.status) <= 4 &&
+              Number(claim.status) <= 3 &&
               (claim.stampStaff === currentUser ||
                 claim.author === currentUser ||
-                claim.operator === currentUser ||
-                enabledOffice()) && (
+                claim.operator === currentUser) && (
                 <Box w='100%' ml={1}>
                   <Button
                     w='100%'
@@ -71,23 +82,7 @@ const ClaimEditButton: NextPage<Props> = ({
                 </Box>
               )}
             {/* 上司承認中 上司と事務局のみ編集可 */}
-            {Number(claim.status) === 5 &&
-              (claim.operator === currentUser || enabledOffice()) && (
-                <Box w='100%' ml={1}>
-                  <Button
-                    w='100%'
-                    onClick={() => {
-                      isEdit();
-                      setEdit(true);
-                    }}
-                  >
-                    編集
-                  </Button>
-                </Box>
-              )}
-
-            {/* 上司承認中 上司と事務局のみ編集可 */}
-            {Number(claim.status) >= 6 && enabledOffice() && (
+            {Number(claim.status) === 5 && claim.operator === currentUser && (
               <Box w='100%' ml={1}>
                 <Button
                   w='100%'
@@ -111,12 +106,10 @@ const ClaimEditButton: NextPage<Props> = ({
               onClick={() => {
                 enabledOffice() && updateClaim(queryId); //事務局用アップデート（すべて）
 
-                // claim.stampStaff === currentUser && updateStaffClaim(queryId); //担当者用アップデート（発生内容・修正処置）
-
-                claim.author === currentUser && updateOccurrenceClaim(queryId);
+                claim.author === currentUser && updateOccurrenceClaim(queryId); //記入者アップデート（発生内容）
 
                 claim.stampStaff === currentUser &&
-                  updateAmendmentClaim(queryId);
+                  updateAmendmentClaim(queryId); //担当者アップデート（修正処置）
 
                 (Number(claim.status) === 3 || Number(claim.status) === 5) &&
                   claim.operator === currentUser &&

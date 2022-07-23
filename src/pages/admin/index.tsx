@@ -58,11 +58,7 @@ const Admin = () => {
   }, [router, user]);
 
   //初期設定に追加
-  const setTopManegment = async (user: {
-    uid: string;
-    name: string;
-    rank: number;
-  }) => {
+  const setting = async (user: { uid: string; name: string; rank: number }) => {
     try {
       const docRef = doc(db, 'authority', user.uid);
       await setDoc(docRef, {
@@ -72,6 +68,7 @@ const Admin = () => {
         isoManager: false,
         isoBoss: false,
         isoOffice: false,
+        isoSalesStaff: false,
         rank: user.rank,
       });
     } catch (e) {
@@ -126,6 +123,18 @@ const Admin = () => {
     }
   };
 
+  //営業担当に追加
+  const addSalesStaff = async (user: { uid: string; name: string }) => {
+    try {
+      const docRef = doc(db, 'authority', user.uid);
+      await updateDoc(docRef, {
+        isoSalesStaff: true,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   //トップマネジメントから削除
   const removeTopManegment = async (user: { uid: string; name: string }) => {
     try {
@@ -171,6 +180,18 @@ const Admin = () => {
     }
   };
 
+  //営業担当から削除
+  const removeSalesStaff = async (user: { uid: string; name: string }) => {
+    try {
+      const docRef = doc(db, 'authority', user.uid);
+      await updateDoc(docRef, {
+        isoSalesStaff: false,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   //firestore authority 情報の取得
   useEffect(() => {
     const usersCollectionRef = collection(db, 'authority');
@@ -199,7 +220,7 @@ const Admin = () => {
           <Box
             p={6}
             mx={'auto'}
-            w={{ base: '100%', md: '700px' }}
+            w={{ base: '100%', md: '900px' }}
             bg='white'
             borderRadius={'5px'}
           >
@@ -220,6 +241,7 @@ const Admin = () => {
                         <Th>ISO 管理者</Th>
                         <Th>ISO 上長</Th>
                         <Th>ISO 事務局</Th>
+                        <Th>営業・販売</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -231,6 +253,7 @@ const Admin = () => {
                           isoManager: boolean;
                           isoBoss: boolean;
                           isoOffice: boolean;
+                          isoSalesStaff: boolean;
                         }) => (
                           <Tr key={user.uid}>
                             <Td>{user.name}</Td>
@@ -290,6 +313,20 @@ const Admin = () => {
                                 </Button>
                               )}
                             </Td>
+                            <Td>
+                              {user.isoSalesStaff ? (
+                                <Button
+                                  onClick={() => removeSalesStaff(user)}
+                                  colorScheme='blue'
+                                >
+                                  有効
+                                </Button>
+                              ) : (
+                                <Button onClick={() => addSalesStaff(user)}>
+                                  無効
+                                </Button>
+                              )}
+                            </Td>
                           </Tr>
                         )
                       )}
@@ -304,7 +341,7 @@ const Admin = () => {
                       {Users.map(
                         (user: { uid: string; name: string; rank: number }) => (
                           <WrapItem key={user.uid}>
-                            <Button onClick={() => setTopManegment(user)}>
+                            <Button onClick={() => setting(user)}>
                               {user.name}
                             </Button>
                           </WrapItem>
