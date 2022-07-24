@@ -129,7 +129,7 @@ const ClaimConfirmSendButton: NextPage<Props> = ({
     const docRef = doc(db, 'claimList', id);
     await updateDoc(docRef, {
       status: 8,
-      operator: '-',
+      operator: '',
       stampTm: currentUser,
     });
     router.push(`/claims`);

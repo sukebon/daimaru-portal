@@ -47,6 +47,7 @@ const ClaimFilterArea = ({
     setReceptionDateStart('');
     setReceptionDateEnd('');
     setStampStaffFilter('');
+    setCustomerFilter('');
     setOccurrenceFilter('');
     setAmendmentFilter('');
     setCounterplanFilter('');
@@ -122,6 +123,7 @@ const ClaimFilterArea = ({
               w='100%'
               p={2}
               mt={3}
+              placeholder='顧客名を入力'
               value={customerFilter}
               onChange={(e) => setCustomerFilter(e.target.value)}
             />

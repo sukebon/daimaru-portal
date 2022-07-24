@@ -173,7 +173,7 @@ const Claim: NextPage = () => {
           case 7:
             return 'TM';
           case 8:
-            return '-';
+            return '';
           default:
             return users.map((user: { uid: string; name: string }) => {
               if (user.uid == claim.operator) return user.name;
