@@ -232,25 +232,28 @@ const Claim: NextPage = () => {
           >
             <Flex flexDirection={'column'} alignItems={'center'}>
               <TableContainer backgroundColor='white' borderRadius={6} p={6}>
-                <Flex mb={6} justifyContent='right'>
-                  <ClaimFilterArea
-                    claims={claims}
-                    users={users}
-                    receptionDateStart={receptionDateStart}
-                    setReceptionDateStart={setReceptionDateStart}
-                    receptionDateEnd={receptionDateEnd}
-                    setReceptionDateEnd={setReceptionDateEnd}
-                    stampStaffFilter={stampStaffFilter}
-                    customerFilter={customerFilter}
-                    setCustomerFilter={setCustomerFilter}
-                    setStampStaffFilter={setStampStaffFilter}
-                    occurrenceFilter={occurrenceFilter}
-                    setOccurrenceFilter={setOccurrenceFilter}
-                    amendmentFilter={amendmentFilter}
-                    setAmendmentFilter={setAmendmentFilter}
-                    counterplanFilter={counterplanFilter}
-                    setCounterplanFilter={setCounterplanFilter}
-                  />
+                <Flex mb={6} justifyContent='space-between'>
+                  <Box fontSize='lg'>全{filterClaims.length}件</Box>
+                  <Box>
+                    <ClaimFilterArea
+                      claims={claims}
+                      users={users}
+                      receptionDateStart={receptionDateStart}
+                      setReceptionDateStart={setReceptionDateStart}
+                      receptionDateEnd={receptionDateEnd}
+                      setReceptionDateEnd={setReceptionDateEnd}
+                      stampStaffFilter={stampStaffFilter}
+                      customerFilter={customerFilter}
+                      setCustomerFilter={setCustomerFilter}
+                      setStampStaffFilter={setStampStaffFilter}
+                      occurrenceFilter={occurrenceFilter}
+                      setOccurrenceFilter={setOccurrenceFilter}
+                      amendmentFilter={amendmentFilter}
+                      setAmendmentFilter={setAmendmentFilter}
+                      counterplanFilter={counterplanFilter}
+                      setCounterplanFilter={setCounterplanFilter}
+                    />
+                  </Box>
                 </Flex>
                 <Table size='sm'>
                   <Thead>

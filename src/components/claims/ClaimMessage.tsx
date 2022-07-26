@@ -27,7 +27,7 @@ const ClaimMessage: NextPage<Props> = ({
 }) => {
   return (
     <>
-      <Flex
+      <Box
         w={{ base: '100%', md: '750px' }}
         mx='auto'
         justifyContent='space-between'
@@ -164,7 +164,7 @@ const ClaimMessage: NextPage<Props> = ({
             <Box>{claim.message}</Box>
           </Alert>
         )}
-      </Flex>
+      </Box>
     </>
   );
 };

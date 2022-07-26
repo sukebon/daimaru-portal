@@ -31,6 +31,7 @@ import ClaimEditReport from '../../components/claims/ClaimEditReport';
 import Link from 'next/link';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import ClaimStampArea from '../../components/claims/ClaimStampArea';
+import ClaimAccept from '../../components/claims/ClaimAccept';
 
 //クレーム報告書作成
 
@@ -541,10 +542,6 @@ const ClaimId = () => {
                     enabledStaff={enabledStaff}
                     enabledCounterplan={enabledCounterplan}
                     enabledBoss={enabledBoss}
-                    // enabledAuthorAndOffice={enabledAuthorAndOffice}
-                    // enabledStaffAndOffice={enabledStaffAndOffice}
-                    // enabledCounterplanAndOffice={enabledCounterplanAndOffice}
-                    // enabledBossAndOffice={enabledBossAndOffice}
                     imageUrl1={imageUrl1}
                     imageUrl2={imageUrl2}
                     imageUrl3={imageUrl3}
@@ -569,60 +566,17 @@ const ClaimId = () => {
               )}
 
               {/*'未処理 受付NO. 受付日 入力欄*/}
-              {Number(claim.status) === 0 && enabledOffice() && (
-                <>
-                  <Flex alignItems='center' w='100%' mt={10}>
-                    <Flex mr={5} alignItems='center'>
-                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
-                        受付NO
-                      </Box>
-                      <Input
-                        type='text'
-                        placeholder='例 4-001'
-                        value={receptionNum}
-                        onChange={(e) => setReceptionNum(e.target.value)}
-                      />
-                    </Flex>
-                    <Flex mr={1} alignItems='center'>
-                      <Box fontSize='lg' fontWeight='semibold' minW='70px'>
-                        受付日
-                      </Box>
-                      <Input
-                        type='date'
-                        value={receptionDate}
-                        onChange={(e) => setReceptionDate(e.target.value)}
-                      />
-                    </Flex>
-                  </Flex>
-                  <Flex justifyContent='center'>
-                    <Button
-                      mt={6}
-                      mr={3}
-                      colorScheme='blue'
-                      onClick={() => {
-                        acceptClaim(queryId);
-                      }}
-                      disabled={receptionNum && receptionDate ? false : true}
-                    >
-                      受け付ける
-                    </Button>
-                    <Button
-                      mt={6}
-                      colorScheme='red'
-                      onClick={() =>
-                        deleteClaim(
-                          queryId,
-                          claim.imagePath1,
-                          claim.imagePath2,
-                          claim.imagePath3
-                        )
-                      }
-                    >
-                      削除する
-                    </Button>
-                  </Flex>
-                </>
-              )}
+              <ClaimAccept
+                claim={claim}
+                queryId={queryId}
+                enabledOffice={enabledOffice}
+                receptionNum={receptionNum}
+                setReceptionNum={setReceptionNum}
+                receptionDate={receptionDate}
+                setReceptionDate={setReceptionDate}
+                acceptClaim={acceptClaim}
+                deleteClaim={deleteClaim}
+              />
 
               {!edit && (
                 <>

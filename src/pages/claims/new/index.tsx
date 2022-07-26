@@ -8,6 +8,7 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -120,9 +121,14 @@ const ClaimNew = () => {
     });
   };
 
+  //ユーザーリストを取得
   useEffect(() => {
     const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const q = query(
+      usersCollectionRef,
+      orderBy('rank', 'asc'),
+      where('isoSalesStaff', '==', true)
+    );
     const unsub = onSnapshot(q, (querySnapshot: any) => {
       setUsers(
         querySnapshot.docs.map((doc: any) => ({
