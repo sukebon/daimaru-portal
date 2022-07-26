@@ -1,17 +1,7 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Stack,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -23,9 +13,6 @@ import {
   WrapItem,
 } from '@chakra-ui/react';
 import {
-  addDoc,
-  arrayRemove,
-  arrayUnion,
   collection,
   doc,
   onSnapshot,
