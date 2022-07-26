@@ -32,7 +32,15 @@ const ClaimMessage: NextPage<Props> = ({
         mx='auto'
         justifyContent='space-between'
       >
-        {/* 担当者に表示するメッセージ　 */}
+        {/* 事務局に表示するメッセージ */}
+        {claim.message && Number(claim.status) <= 7 && (
+          <Alert status='error'>
+            <AlertIcon />
+            <Box whiteSpace='pre-wrap'>{claim.message}</Box>
+          </Alert>
+        )}
+
+        {/* 事務局に表示するメッセージ　 */}
         {Number(claim.status) === 0 && enabledOffice() && (
           <Alert status='info'>
             <AlertIcon />
@@ -63,7 +71,7 @@ const ClaimMessage: NextPage<Props> = ({
                     <Box>
                       編集ボタンをクリックして、【修正処置】を記入してください。
                       <br />
-                      記入が完了次第、下のブルーのボタンをクリックしてください。
+                      記入が完了次第、下の【事務局へ提出する】ボタンをクリックしてください。
                     </Box>
                   </Box>
                 )
@@ -97,7 +105,7 @@ const ClaimMessage: NextPage<Props> = ({
                     <Box>
                       編集ボタンをクリックして、【対策】を記入してください。
                       <br />
-                      記入が完了次第、下のブルーのボタンをクリックしてください。
+                      記入が完了次第、下の【事務局へ提出する】ボタンをクリックしてください。
                     </Box>
                   </Box>
                 )
@@ -129,7 +137,7 @@ const ClaimMessage: NextPage<Props> = ({
                     <Box>
                       編集ボタンをクリックして、【完了日】の記入と対策の確認をしてください。
                       <br />
-                      記入と確認が完了次第、下のブルーのボタンをクリックしてください。
+                      記入と確認が完了次第、下の【承認する】ボタンをクリックしてください。
                       <br />
                       やり直しの場合は却下してください。
                     </Box>
@@ -144,7 +152,11 @@ const ClaimMessage: NextPage<Props> = ({
           <Alert status='info'>
             <AlertIcon />
             <Box>
-              <Box>内容を確認してから承認ボタンをクリックしてください。</Box>
+              <Box>
+                内容を確認してから【承認する】ボタンをクリックしてください。
+                <br />
+                やり直しの場合は却下してください。
+              </Box>
             </Box>
           </Alert>
         )}
@@ -153,15 +165,11 @@ const ClaimMessage: NextPage<Props> = ({
         {Number(claim.status) === 7 && enabledTopManegment() && (
           <Alert status='info'>
             <AlertIcon />
-            <Box>内容を確認してから承認ボタンをクリックしてください。</Box>
-          </Alert>
-        )}
-
-        {/* 事務局に表示するメッセージ */}
-        {claim.message && Number(claim.status) === 4 && enabledOffice() && (
-          <Alert status='error'>
-            <AlertIcon />
-            <Box>{claim.message}</Box>
+            <Box>
+              内容を確認してから【承認する】ボタンをクリックしてください。
+              <br />
+              やり直しの場合は却下してください。
+            </Box>
           </Alert>
         )}
       </Box>

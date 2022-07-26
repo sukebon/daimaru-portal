@@ -145,7 +145,7 @@ const ClaimId = () => {
     await updateDoc(docRef, {
       status: Number(selectTask),
       operator: selectUser,
-      message: '',
+      // message: '',
     });
     router.push('/claims');
   };
@@ -583,6 +583,7 @@ const ClaimId = () => {
                   {/*決定ボタン*/}
                   <ClaimConfirmSendButton
                     claim={claim}
+                    users={users}
                     currentUser={currentUser}
                     queryId={queryId}
                     receptionDate={receptionDate}

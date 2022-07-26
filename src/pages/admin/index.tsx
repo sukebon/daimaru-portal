@@ -333,8 +333,7 @@ const Admin = () => {
                     </Tbody>
                   </Table>
                 </TableContainer>
-                {(currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-                  currentUser === 'Glkhk9WERWcEQWwdlfjD5a2jT6m1') && (
+                {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && (
                   <Box mt={12}>
                     <Text>初期設定（アプリに登録する）</Text>
                     <Wrap spacing='5px' p={3}>

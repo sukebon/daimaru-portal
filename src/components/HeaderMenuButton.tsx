@@ -87,7 +87,7 @@ const HeaderMenuButton: NextPage = () => {
 
         <MenuDivider />
         {(currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-          currentUser === 'Glkhk9WERWcEQWwdlfjD5a2jT6m1') && (
+          currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2') && (
           <>
             <Link href='/admin/'>
               <a>
