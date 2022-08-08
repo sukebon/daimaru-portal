@@ -107,14 +107,26 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   //【クレーム】クレーム一覧リスト取得
   useEffect(() => {
     const claimsCollectionRef = collection(db, 'claimList');
-    getDocs(claimsCollectionRef).then((querySnapshot) => {
-      setClaims(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
+    try {
+      const unsub = onSnapshot(claimsCollectionRef, (querySnapshot) => {
+        setClaims(
+          querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        );
+      });
+      // getDocs(claimsCollectionRef).then((querySnapshot) => {
+      //   setClaims(
+      //     querySnapshot.docs.map((doc) => ({
+      //       ...doc.data(),
+      //       id: doc.id,
+      //     }))
+      //   );
+      // });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   //各リストを取得
