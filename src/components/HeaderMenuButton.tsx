@@ -7,14 +7,14 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
-} from '@chakra-ui/react';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { auth, db } from '../../firebase';
-import { authState } from '../../store/authState';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { NextPage } from 'next';
+} from "@chakra-ui/react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { auth, db } from "../../firebase";
+import { authState } from "../../store/authState";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { NextPage } from "next";
 
 const HeaderMenuButton: NextPage = () => {
   const currentUser = useRecoilValue(authState);
@@ -22,8 +22,8 @@ const HeaderMenuButton: NextPage = () => {
 
   //users情報を取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -42,54 +42,61 @@ const HeaderMenuButton: NextPage = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} colore='#241749'>
+      <MenuButton as={Button} colore="#241749">
         Menu
       </MenuButton>
       <MenuList>
-        <Box mx='4'>
-          <Box fontSize='xs'>ユーザー名</Box>
+        <Box mx="4">
+          <Box fontSize="xs">ユーザー名</Box>
           {users.map(
             (user: { uid: string; name: string; email: string }) =>
               currentUser === user.uid && <Box key={user.uid}>{user.name}</Box>
           )}
         </Box>
         <MenuDivider />
-        <Link href='/'>
+        <Link href="/">
           <a>
             <MenuItem>トップページ</MenuItem>
           </a>
         </Link>
         <MenuDivider />
-        <MenuGroup title='お手伝い依頼'></MenuGroup>
-        <Link href='/recruitment'>
+        <MenuGroup title="お手伝い依頼"></MenuGroup>
+        <Link href="/recruitment">
           <a>
             <MenuItem pl={6}>作成</MenuItem>
           </a>
         </Link>
         <MenuDivider />
-        <MenuGroup title='クレーム報告書'></MenuGroup>
+        <MenuGroup title="クレーム報告書"></MenuGroup>
 
-        <Link href='/claims/new'>
+        <Link href="/claims/new">
           <a>
             <MenuItem pl={6}>作成</MenuItem>
           </a>
         </Link>
-        <Link href='/claims/'>
+        <Link href="/claims/">
           <a>
             <MenuItem pl={6}>一覧</MenuItem>
           </a>
         </Link>
-        <Link href='/claims/graph'>
+        <Link href="/claims/graph">
           <a>
             <MenuItem pl={6}>集計（グラフ）</MenuItem>
           </a>
         </Link>
+        <MenuDivider />
+        <MenuGroup title="メーカー受発注"></MenuGroup>
+        <Link href="/makerweb">
+          <a>
+            <MenuItem pl={6}>メーカーリスト</MenuItem>
+          </a>
+        </Link>
 
         <MenuDivider />
-        {(currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' ||
-          currentUser === 'EVKsigM546MbnakzkDmG0QHlfmn2') && (
+        {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
+          currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
           <>
-            <Link href='/admin/'>
+            <Link href="/admin/">
               <a>
                 <MenuItem>管理者ページ</MenuItem>
               </a>
@@ -97,6 +104,7 @@ const HeaderMenuButton: NextPage = () => {
             <MenuDivider />
           </>
         )}
+
         <MenuItem onClick={logout}>ログアウト</MenuItem>
       </MenuList>
     </Menu>
