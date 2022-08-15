@@ -91,16 +91,16 @@ const HeaderMenuButton: NextPage = () => {
             <MenuItem pl={6}>メーカーリスト</MenuItem>
           </a>
         </Link>
-        <Link href="/dm">
-          <a>
-            <MenuItem pl={6}>ダイレクトメール</MenuItem>
-          </a>
-        </Link>
 
         <MenuDivider />
         {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
           currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
           <>
+            <Link href="/dm">
+              <a>
+                <MenuItem pl={6}>チラシ・リーフレット</MenuItem>
+              </a>
+            </Link>
             <Link href="/admin/">
               <a>
                 <MenuItem>管理者ページ</MenuItem>
