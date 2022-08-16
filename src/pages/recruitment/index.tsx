@@ -13,7 +13,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
 import RecruitmentPost from '../../components/recruitmentComp/RecruitmentPost';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store/authState.js';
+import { authState } from '../../../store';
 import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import { Administrator } from '../../../data';

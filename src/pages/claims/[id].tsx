@@ -17,7 +17,7 @@ import { auth, db, storage } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 import { taskflow } from '../../../data';
 import { todayDate } from '../../../functions';
 

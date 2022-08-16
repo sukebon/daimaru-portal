@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState } from 'recoil';
-import { authState } from '../../store/authState.js';
+import { authState } from '../../store';
 
 import {
   Flex,

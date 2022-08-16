@@ -5,7 +5,7 @@ import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { auth, db } from '../../../firebase';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 
 interface Props {
   request: {

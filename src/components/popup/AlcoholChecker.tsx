@@ -15,7 +15,7 @@ import { useRecoilValue } from 'recoil';
 import { Users } from '../../../data';
 import { db } from '../../../firebase';
 import { todayDate } from '../../../functions';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 
 const AlcoholChecker = () => {
   const currentUser = useRecoilValue(authState);

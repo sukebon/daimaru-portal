@@ -23,10 +23,9 @@ import {
   where,
 } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../store/authState.js';
+import { authState } from '../../store/';
 import AlcoholChecker from '../components/popup/AlcoholChecker';
 import { todayDate } from '../../functions';
-import { Administrator, Users } from '../../data';
 import Link from 'next/link';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {

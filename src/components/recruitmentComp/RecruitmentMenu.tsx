@@ -11,7 +11,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { db } from '../../../firebase';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 import { Administrator } from '../../../data';
 
 interface Props {

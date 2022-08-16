@@ -22,7 +22,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { Users, Administrator } from '../../../data.js';
 import { starLevel, dayOfWeek, dateTime } from '../../../functions.js';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 import RecruitmentButton from './RecruitmentButton';
 import RecruitmentMemberList from './RecruitmentMemberList';
 import RecruitmentMenu from './RecruitmentMenu';

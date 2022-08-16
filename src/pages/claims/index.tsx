@@ -30,7 +30,7 @@ import {
 } from '../../../data';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store/authState';
+import { authState } from '../../../store';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
 import ClaimFilterArea from '../../components/claims/ClaimFilterArea';

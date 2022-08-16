@@ -1,6 +1,7 @@
-[{
-    "origin": ["https://daimaru-portal.vercel.app/", "http://localhost:3000"],
-    "responseHeader": ["*"],
+[
+  {
+    "origin": ["*"],
     "method": ["GET"],
-    "maxAgeSeconds": 86400
-  }]
+    "maxAgeSeconds": 3600
+  }
+]

@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { auth, db, storage } from '../../../../firebase';
-import { authState } from '../../../../store/authState';
+import { authState } from '../../../../store';
 import ClaimInputCustomer from '../../../components/claims/new/ClaimInputCustomer';
 import ClaimInputOccurrence from '../../../components/claims/new/ClaimInputOccurrence';
 import ClaimInputAmendment from '../../../components/claims/new/ClaimInputAmendment';
