@@ -16,7 +16,7 @@ import {
   Stack,
   Text,
   useDisclosure,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   addDoc,
   collection,
@@ -24,29 +24,29 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
-} from 'firebase/storage';
-import React, { useEffect, useState } from 'react';
-import { db, storage } from '../../../firebase';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { authState, spinnerAtom } from '../../../store';
-import DmDrawer from '../../components/dm/DmDrawer';
-import Styles from './Dm.module.css';
-import SpinnerLoading from '../../components/SpinnerLoading';
-import { AddIcon } from '@chakra-ui/icons';
-import { useRouter } from 'next/router';
+} from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { db, storage } from "../../../firebase";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { authState, spinnerAtom } from "../../../store";
+import DmDrawer from "../../components/dm/DmDrawer";
+import Styles from "./Dm.module.css";
+import SpinnerLoading from "../../components/SpinnerLoading";
+import { AddIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 const Dm = () => {
   //ファイルをアップロード
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
   const [images, setImages] = useState<any>([]);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [fileUploadImg, setFileUploadImg] = useState<File | any>(null);
   const [fileUploadPdf, setFileUploadPdf] = useState<File | any>(null);
 
@@ -56,8 +56,8 @@ const Dm = () => {
   const [spinner, setSpinner] = useRecoilState(spinnerAtom);
 
   useEffect(() => {
-    if (currentUser === '') {
-      router.push('/login');
+    if (currentUser === "") {
+      router.push("/login");
     }
   }, [currentUser, router]);
 
@@ -66,7 +66,7 @@ const Dm = () => {
     const getImages = async () => {
       try {
         const unsub = onSnapshot(
-          collection(db, 'dmImages'),
+          collection(db, "dmImages"),
           (querySnapshot) => {
             setImages(
               querySnapshot.docs.map((doc) => ({
@@ -88,13 +88,13 @@ const Dm = () => {
     pathImg: string;
     pathPdf: string;
   }) => {
-    const result = window.confirm('削除して宜しいでしょうか？');
+    const result = window.confirm("削除して宜しいでしょうか？");
     if (!result) return;
     setSpinner(true);
     try {
-      await deleteDoc(doc(db, 'dmImages', `${post.id}`));
+      await deleteDoc(doc(db, "dmImages", `${post.id}`));
       imagesStorageDelete(post.pathImg, post.pathPdf);
-      console.log('success');
+      console.log("success");
     } catch (err) {
       console.log(err);
     } finally {
@@ -119,13 +119,13 @@ const Dm = () => {
     setSpinner(true);
     const fileImg = fileUploadImg[0];
     const filePdf = fileUploadPdf[0];
-    const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const S = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const N = 16;
     const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
       .map((n) => S[n % S.length])
-      .join('');
-    const fileNameImg = randomChar + '_' + fileImg.name; //保存するファイルの名前
-    const fileNamePdf = randomChar + '_' + filePdf.name; //保存するファイルの名前
+      .join("");
+    const fileNameImg = randomChar + "_" + fileImg.name; //保存するファイルの名前
+    const fileNamePdf = randomChar + "_" + filePdf.name; //保存するファイルの名前
     const imagePathImg = `/dmImages/${fileNameImg}`; //保存するstorageのpath
     const imagePathPdf = `/dmImages/${fileNamePdf}`; //保存するstorageのpath
     const storageRefImg = ref(storage, imagePathImg);
@@ -137,7 +137,7 @@ const Dm = () => {
       const urlPdf = await getDownloadURL(ref(storage, imagePathPdf));
       const pathImg = storageRefImg.fullPath;
       const pathPdf = storageRefPdf.fullPath;
-      await addDoc(collection(db, 'dmImages'), {
+      await addDoc(collection(db, "dmImages"), {
         title,
         urlImg,
         pathImg,
@@ -148,10 +148,10 @@ const Dm = () => {
         user: currentUser,
         createdAt: serverTimestamp(),
       });
-      setTitle('');
-      setFileUploadImg('');
-      setFileUploadPdf('');
-      console.log('upload success');
+      setTitle("");
+      setFileUploadImg("");
+      setFileUploadPdf("");
+      console.log("upload success");
     } catch (error) {
       console.log(error);
     } finally {
@@ -164,7 +164,7 @@ const Dm = () => {
     const date = new Date(time.toDate());
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
-    const day = date.getDay();
+    const day = date.getDate();
     return `登録日：${year}/${month}/${day}`;
   };
 
@@ -173,12 +173,12 @@ const Dm = () => {
       {currentUser && (
         <>
           <SpinnerLoading />
-          <Box bg='#f7f7f7' minH='80vh' p={6}>
-            <Container maxW='1145px' p={6} pr={0} bg='white' borderRadius={6}>
-              <Flex justifyContent='right'>
+          <Box bg="#f7f7f7" minH="80vh" p={6}>
+            <Container maxW="1145px" p={6} pr={0} bg="white" borderRadius={6}>
+              <Flex justifyContent="right">
                 <Button
                   leftIcon={<AddIcon />}
-                  colorScheme='teal'
+                  colorScheme="teal"
                   onClick={onOpen}
                   mr={6}
                 >
@@ -187,14 +187,14 @@ const Dm = () => {
               </Flex>
               {images.length >= 1 ? (
                 <Flex
-                  flexDirection='row'
-                  flexWrap='wrap'
-                  justifyContent='center'
+                  flexDirection="row"
+                  flexWrap="wrap"
+                  justifyContent="center"
                 >
                   {images.map((image: any) => (
-                    <Box key={image.id} mt={12} w='200px' mr={6}>
-                      <a href={image.urlPdf} target='_blanck' rel='noopener'>
-                        <Box as='figure'>
+                    <Box key={image.id} mt={12} w="200px" mr={6}>
+                      <a href={image.urlPdf} target="_blanck" rel="noopener">
+                        <Box as="figure">
                           <img
                             src={image.urlImg}
                             alt={image.nameImg}
@@ -202,15 +202,15 @@ const Dm = () => {
                           />
                         </Box>
                       </a>
-                      <Text whiteSpace='pre-wrap'>{image.title}</Text>
-                      <Box whiteSpace='pre-wrap'>
+                      <Text whiteSpace="pre-wrap">{image.title}</Text>
+                      <Box whiteSpace="pre-wrap">
                         {timestamp(image.createdAt)}
                       </Box>
                       {currentUser === image.user && (
                         <Button
-                          colorScheme='red'
-                          size='sm'
-                          w='100%'
+                          colorScheme="red"
+                          size="sm"
+                          w="100%"
                           mt={1}
                           onClick={() => deleteImage(image)}
                         >
@@ -222,9 +222,9 @@ const Dm = () => {
                 </Flex>
               ) : (
                 <Box
-                  textAlign='center'
+                  textAlign="center"
                   py={12}
-                  fontSize={{ base: 'xs', md: '2xl' }}
+                  fontSize={{ base: "xs", md: "2xl" }}
                 >
                   現在登録されているチラシはありません。
                 </Box>
@@ -234,27 +234,27 @@ const Dm = () => {
 
           <Drawer
             isOpen={isOpen}
-            placement='right'
+            placement="right"
             initialFocusRef={firstField}
             onClose={onClose}
-            size='sm'
+            size="sm"
           >
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />
-              <DrawerHeader borderBottomWidth='1px'>登録</DrawerHeader>
+              <DrawerHeader borderBottomWidth="1px">登録</DrawerHeader>
 
               <DrawerBody>
-                <Stack spacing='24px'>
+                <Stack spacing="24px">
                   <Box>
-                    <FormLabel htmlFor='title' mt={3}>
+                    <FormLabel htmlFor="title" mt={3}>
                       ■見出し
                     </FormLabel>
                     <Input
                       ref={firstField}
-                      id='title'
+                      id="title"
                       value={title}
-                      placeholder='見出しを入力してください'
+                      placeholder="見出しを入力してください"
                       onChange={(e) => setTitle(e.target.value)}
                     />
                   </Box>
@@ -272,13 +272,13 @@ const Dm = () => {
                   </Box>
                 ) : (
                   <Input
-                    type='file'
-                    width='auto'
+                    type="file"
+                    width="auto"
                     mt={3}
-                    border='none'
-                    accept='image/*'
+                    border="none"
+                    accept="image/*"
                     onChange={(e) => setFileUploadImg(e.target.files)}
-                    _focus={{ border: 'none' }}
+                    _focus={{ border: "none" }}
                   />
                 )}
 
@@ -287,25 +287,25 @@ const Dm = () => {
                   <Box mt={3}>⇒{fileUploadPdf[0] && fileUploadPdf[0].name}</Box>
                 ) : (
                   <Input
-                    type='file'
-                    width='auto'
+                    type="file"
+                    width="auto"
                     mt={3}
-                    border='none'
-                    accept='application/pdf'
+                    border="none"
+                    accept="application/pdf"
                     onChange={(e) => setFileUploadPdf(e.target.files)}
-                    _focus={{ border: 'none' }}
+                    _focus={{ border: "none" }}
                   />
                 )}
 
-                <Flex mt={8} justifyContent='center'></Flex>
+                <Flex mt={8} justifyContent="center"></Flex>
 
-                <Flex justifyContent='center' pb={9}>
+                <Flex justifyContent="center" pb={9}>
                   <Button
-                    variant='outline'
+                    variant="outline"
                     onClick={() => {
-                      setTitle('');
-                      setFileUploadImg('');
-                      setFileUploadPdf('');
+                      setTitle("");
+                      setFileUploadImg("");
+                      setFileUploadPdf("");
                     }}
                   >
                     リセット
@@ -313,14 +313,14 @@ const Dm = () => {
                 </Flex>
               </DrawerBody>
 
-              <DrawerFooter borderTopWidth='1px'>
-                <Flex justifyContent='center' w='100%'>
-                  <Button variant='outline' mr={3} onClick={onClose}>
+              <DrawerFooter borderTopWidth="1px">
+                <Flex justifyContent="center" w="100%">
+                  <Button variant="outline" mr={3} onClick={onClose}>
                     Close
                   </Button>
                   <Button
-                    type='submit'
-                    colorScheme='facebook'
+                    type="submit"
+                    colorScheme="facebook"
                     disabled={!title || !fileUploadImg || !fileUploadPdf}
                     onClick={() => onfileUpload()}
                   >
