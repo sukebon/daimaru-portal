@@ -24,7 +24,7 @@ import {
 } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../store/';
-import AlcoholChecker from '../components/popup/AlcoholChecker';
+import AlcoholChecker from '../components/alcohol/AlcoholChecker';
 import { todayDate } from '../../functions';
 import Link from 'next/link';
 
@@ -266,9 +266,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                   <QuickLink link={linkData.contents} />
                   <CatalogArea />
 
-                  {(alcoholArray && alcoholArray.includes(currentUser)) || (
-                    <AlcoholChecker />
-                  )}
+                  <AlcoholChecker />
                 </Box>
                 <Box
                   // w={{ base: '100%', md: '800px' }}
