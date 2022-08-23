@@ -29,11 +29,7 @@ const AlcoholId = () => {
   //アルコールチェックデータを取得
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckData");
-    const q = query(
-      collectionRef,
-      where("date", "==", `${queryId}`),
-      orderBy("date", "asc")
-    );
+    const q = query(collectionRef, where("date", "==", `${queryId}`));
     getDocs(q).then((querySnapshot) => {
       setPosts(
         querySnapshot.docs.map((doc) => ({
