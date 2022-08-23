@@ -34,8 +34,8 @@ import { authState } from "../../../store";
 const CheckDrawer = () => {
   const currentUser = useRecoilValue(authState);
   const [alcoholList, setAlcoholList] = useState<any>([]);
-  const [alcoholCheck1, setAlcoholCheck1] = useState("");
-  const [alcoholCheck2, setAlcoholCheck2] = useState("");
+  const [alcoholCheck1, setAlcoholCheck1] = useState("1");
+  const [alcoholCheck2, setAlcoholCheck2] = useState("1");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   //アルコールチェック登録
@@ -111,7 +111,7 @@ const CheckDrawer = () => {
                 <Box>アルコールの検査はしましたか？</Box>
                 <RadioGroup
                   defaultValue="2"
-                  value={alcoholCheck1 || "1"}
+                  value={alcoholCheck1}
                   onChange={(e) => setAlcoholCheck1(e)}
                 >
                   <Stack spacing={8} direction="row" mt={1}>
@@ -129,7 +129,7 @@ const CheckDrawer = () => {
                 <RadioGroup
                   defaultValue="2"
                   mt={1}
-                  value={alcoholCheck2 || "1"}
+                  value={alcoholCheck2}
                   onChange={(e) => setAlcoholCheck2(e)}
                 >
                   <Stack spacing={9} direction="row">
