@@ -9,14 +9,14 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { db } from '../../../firebase';
-import { authState } from '../../../store';
+} from "@chakra-ui/react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { db } from "../../../firebase";
+import { authState } from "../../../store";
 
 const Alcohol = () => {
   const currentUser = useRecoilValue(authState);
@@ -25,27 +25,32 @@ const Alcohol = () => {
   const [users, setUsers] = useState<any>([]);
 
   useEffect(() => {
-    if (currentUser === '') {
-      router.push('/login');
+    if (currentUser === "") {
+      router.push("/login");
     }
   }, [router, currentUser]);
 
   useEffect(() => {
-    const collectionRef = collection(db, 'alcoholCheckList');
-    getDocs(collectionRef).then((querySnapshot) => {
-      setPosts(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
+    const collectionRef = collection(db, "alcoholCheckList");
+    const q = query(collectionRef, orderBy("id", "desc"));
+    try {
+      getDocs(q).then((querySnapshot) => {
+        setPosts(
+          querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   //users情報
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -72,22 +77,22 @@ const Alcohol = () => {
       {userAuthority(currentUser) && (
         <Box
           p={6}
-          backgroundColor={'#f7f7f7'}
-          paddingBottom={'50px'}
-          minH={'100vh'}
+          backgroundColor={"#f7f7f7"}
+          paddingBottom={"50px"}
+          minH={"100vh"}
         >
-          <Flex flexDirection={'column'} alignItems={'center'}>
-            <TableContainer backgroundColor='white' borderRadius={6} p={6}>
-              <Box as='h1' fontSize='lg'>
+          <Flex flexDirection={"column"} alignItems={"center"}>
+            <TableContainer backgroundColor="white" borderRadius={6} p={6}>
+              <Box as="h1" fontSize="lg">
                 アルコールチェック一覧
               </Box>
 
-              <Table size='sm' mt={6}>
+              <Table size="sm" mt={6}>
                 <Thead>
                   <Tr>
-                    <Th minW='130x'>日付</Th>
-                    <Th minW='50px'>提出者</Th>
-                    <Th minW='50px'>未提出者</Th>
+                    <Th minW="130x">日付</Th>
+                    <Th minW="50px">提出者</Th>
+                    <Th minW="50px">未提出者</Th>
                     <Th></Th>
                   </Tr>
                 </Thead>
