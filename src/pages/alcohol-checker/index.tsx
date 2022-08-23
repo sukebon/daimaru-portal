@@ -28,7 +28,7 @@ const Alcohol = () => {
       );
     });
   }, []);
-  console.log(posts);
+
   return (
     <Box
       p={6}
@@ -45,8 +45,8 @@ const Alcohol = () => {
             <Thead>
               <Tr>
                 <Th minW="130x">日付</Th>
-                <Th minW="50px">完了</Th>
-                <Th minW="50px">未処理</Th>
+                <Th minW="50px">提出者</Th>
+                <Th minW="50px">未提出者</Th>
                 <Th></Th>
               </Tr>
             </Thead>

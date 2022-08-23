@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Table,
   TableContainer,
@@ -10,8 +9,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import Link from "next/link";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
@@ -33,7 +31,7 @@ const AlcoholId = () => {
         }))
       );
     });
-  }, []);
+  }, [queryId]);
 
   useEffect(() => {
     const usersRef = collection(db, "authority");
@@ -63,8 +61,8 @@ const AlcoholId = () => {
             <Thead>
               <Tr>
                 <Th minW="130x">名前</Th>
-                <Th minW="50px">完了</Th>
-                <Th minW="50px">未処理</Th>
+                <Th minW="50px">アルコールの検査</Th>
+                <Th minW="50px">酒気帯び</Th>
                 <Th></Th>
               </Tr>
             </Thead>
