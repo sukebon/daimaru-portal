@@ -24,6 +24,19 @@ export const todayDate = () => {
   return `${year}-${month}-${date}`;
 };
 
+//今日の日付を取得
+export const datetime = () => {
+  const newDate = new Date();
+  const year = newDate.getFullYear();
+  let month = newDate.getMonth() + 1;
+  month = ('0' + month).slice(-2);
+  let date = newDate.getDate();
+  date = ('0' + date).slice(-2);
+  const hours = newDate.getHours();
+  const minutes = newDate.getMinutes();
+  return `${year}-${month}-${date} ${hours}:${minutes}`;
+};
+
 export const beginningDate = () => {
   const newDate = new Date();
   const year = newDate.getFullYear();
