@@ -34,6 +34,8 @@ import { authState } from "../../../store";
 const CheckDrawer = () => {
   const currentUser = useRecoilValue(authState);
   const [alcoholList, setAlcoholList] = useState<any>([]);
+  const [alcoholCheck1, setAlcoholCheck1] = useState("");
+  const [alcoholCheck2, setAlcoholCheck2] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   //アルコールチェック登録
@@ -55,6 +57,8 @@ const CheckDrawer = () => {
         date: `${todayDate()}`,
         user: currentUser,
         createdAt: serverTimestamp(),
+        alcoholCheck1,
+        alcoholCheck2,
       });
     } catch (e) {
       console.error(e);
@@ -67,30 +71,6 @@ const CheckDrawer = () => {
       setAlcoholList(querySnapshot.data());
     });
   }, []);
-
-  // const setAlcoholCheckList = async () => {
-  //   try {
-  //     const docRef = doc(db, 'alcoholCheckList', `${todayDate()}`);
-  //     const docSnap = await getDoc(docRef);
-  //     if (!docSnap.exists()) {
-  //       await setDoc(docRef, {
-  //         [currentUser]: {
-  //           uid: currentUser,
-  //           updatedAt: serverTimestamp(),
-  //         },
-  //       });
-  //     } else {
-  //       await updateDoc(docRef, {
-  //         [currentUser]: {
-  //           uid: currentUser,
-  //           updatedAt: serverTimestamp(),
-  //         },
-  //       });
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
 
   return (
     <>
@@ -129,7 +109,11 @@ const CheckDrawer = () => {
             <>
               <Box>
                 <Box>アルコールの検査はしましたか？</Box>
-                <RadioGroup defaultValue="2">
+                <RadioGroup
+                  defaultValue="2"
+                  value={alcoholCheck1}
+                  onChange={(e) => setAlcoholCheck1(e)}
+                >
                   <Stack spacing={8} direction="row" mt={1}>
                     <Radio colorScheme="red" value="1">
                       No
@@ -142,7 +126,12 @@ const CheckDrawer = () => {
               </Box>
               <Box mt={3}>
                 <Box>酒気帯び</Box>
-                <RadioGroup defaultValue="2" mt={1}>
+                <RadioGroup
+                  defaultValue="2"
+                  mt={1}
+                  value={alcoholCheck2}
+                  onChange={(e) => setAlcoholCheck2(e)}
+                >
                   <Stack spacing={9} direction="row">
                     <Radio colorScheme="red" value="1">
                       有
