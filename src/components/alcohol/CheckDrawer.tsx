@@ -111,14 +111,14 @@ const CheckDrawer = () => {
                 <Box>アルコールの検査はしましたか？</Box>
                 <RadioGroup
                   defaultValue="2"
-                  value={alcoholCheck1}
+                  value={alcoholCheck1 || "1"}
                   onChange={(e) => setAlcoholCheck1(e)}
                 >
                   <Stack spacing={8} direction="row" mt={1}>
-                    <Radio colorScheme="red" value="1">
+                    <Radio colorScheme="red" value="0">
                       No
                     </Radio>
-                    <Radio colorScheme="green" value="2">
+                    <Radio colorScheme="green" value="1">
                       Yes
                     </Radio>
                   </Stack>
@@ -129,14 +129,14 @@ const CheckDrawer = () => {
                 <RadioGroup
                   defaultValue="2"
                   mt={1}
-                  value={alcoholCheck2}
+                  value={alcoholCheck2 || "1"}
                   onChange={(e) => setAlcoholCheck2(e)}
                 >
                   <Stack spacing={9} direction="row">
-                    <Radio colorScheme="red" value="1">
+                    <Radio colorScheme="red" value="0">
                       有
                     </Radio>
-                    <Radio colorScheme="green" value="2">
+                    <Radio colorScheme="green" value="1">
                       無
                     </Radio>
                   </Stack>
