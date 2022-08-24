@@ -30,6 +30,7 @@ const Alcohol = () => {
     }
   }, [router, currentUser]);
 
+  //アルコールチェッカーリスト
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckList");
     const q = query(collectionRef, orderBy("id", "desc"));
