@@ -49,6 +49,12 @@ const AlcoholId = () => {
     });
   }, [queryId]);
 
+  const postsDateAsc = (array: [], property: string) => {
+    array.sort(function (a, b) {
+      return a[property] < b[property] ? -1 : 1; //オブジェクトの降順ソート
+    });
+  };
+
   //user一覧取得
   useEffect(() => {
     const usersRef = collection(db, "authority");
