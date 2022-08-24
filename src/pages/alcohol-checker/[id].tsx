@@ -15,16 +15,25 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
 import { datetime, dateTime } from "../../../functions";
+import { authState } from "../../../store";
 
 const AlcoholId = () => {
+  const currentUser = useRecoilValue(authState);
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
   const [list, setList] = useState<any>([]);
   const [notUsers, setNotUsers] = useState<any>([]);
   const router = useRouter();
   const queryId = router.query.id;
+
+  useEffect(() => {
+    if (currentUser === "") {
+      router.push("/login");
+    }
+  }, [router, currentUser]);
 
   //アルコールチェックデータを取得
   useEffect(() => {
