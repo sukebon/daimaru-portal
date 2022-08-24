@@ -61,6 +61,7 @@ const Alcohol = () => {
     });
   }, []);
 
+  //アルコールチェッカー権限者
   const userAuthority = (userId: string) => {
     const newUsers = users.map(
       (user: { alcoholChecker: boolean; uid: string }) => {
@@ -101,7 +102,7 @@ const Alcohol = () => {
                     <Tr key={post.id}>
                       <Td>{post.id}</Td>
                       <Td>{post.member.length}名</Td>
-                      <Td>{24 - post.member.length}名</Td>
+                      <Td>{users.length - post.member.length}名</Td>
                       <Td>
                         <Link href={`alcohol-checker/${post.id}`}>
                           <a>
