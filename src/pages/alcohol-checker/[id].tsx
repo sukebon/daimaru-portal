@@ -49,6 +49,12 @@ const AlcoholId = () => {
     });
   }, [queryId]);
 
+  const postsDateAsc = (array: [], property: string) => {
+    array.sort(function (a, b) {
+      return a[property] < b[property] ? -1 : 1; //オブジェクトの降順ソート
+    });
+  };
+
   //user一覧取得
   useEffect(() => {
     const usersRef = collection(db, "authority");
@@ -157,6 +163,7 @@ const AlcoholId = () => {
                       alcoholCheck1: string;
                       alcoholCheck2: string;
                       createdAt: any;
+                      datetime: string;
                     }) => (
                       <Tr key={post.id}>
                         <Td>
@@ -171,7 +178,7 @@ const AlcoholId = () => {
                         <Td>
                           {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
                         </Td>
-                        <Td>{post.createdAt}</Td>
+                        <Td>{post.datetime && post.datetime}</Td>
                       </Tr>
                     )
                   )}
