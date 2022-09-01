@@ -11,11 +11,10 @@ import { db } from '../../../firebase';
 import { auth } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
-import RecruitmentPost from '../../components/recruitmentComp/RecruitmentPost';
+import RecruitmentPosts from '../../components/recruitmentComp/RecruitmentPosts';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../store';
 import { useRouter } from 'next/router';
-import Header from '../../components/Header';
 import { Administrator } from '../../../data';
 
 const Recruitment = () => {
@@ -98,9 +97,9 @@ const Recruitment = () => {
                 borderRadius={6}
               >
                 {Administrator.includes(currentUser) ? (
-                  <RecruitmentPost requests={requests} />
+                  <RecruitmentPosts requests={requests} />
                 ) : (
-                  <RecruitmentPost requests={currentRequests} />
+                  <RecruitmentPosts requests={currentRequests} />
                 )}
               </Box>
             </Flex>

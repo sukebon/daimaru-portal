@@ -34,14 +34,16 @@ interface Props {
     sendAt: string;
     recruitment: boolean;
   };
-  isEdit: any;
+  edit: boolean;
+  setEdit: any;
   oldTitleContent: any;
   cancelTitleContent: any;
 }
 
 const RecruitmentMenu: NextPage<Props> = ({
   request,
-  isEdit,
+  edit,
+  setEdit,
   oldTitleContent,
   cancelTitleContent,
 }) => {
@@ -102,7 +104,7 @@ const RecruitmentMenu: NextPage<Props> = ({
         {request.display === true && (
           <MenuItem
             onClick={() => {
-              isEdit(request.id);
+              setEdit(!edit);
               oldTitleContent(request);
               cancelTitleContent(request);
             }}
@@ -110,7 +112,7 @@ const RecruitmentMenu: NextPage<Props> = ({
             編集
           </MenuItem>
         )}
-        {Administrator.includes(currentUser) ? (
+        {Administrator.includes(currentUser) && (
           <>
             {request.display === true ? (
               <MenuItem onClick={() => hideRequest(request.id)}>
@@ -122,11 +124,9 @@ const RecruitmentMenu: NextPage<Props> = ({
               </MenuItem>
             )}
           </>
-        ) : (
-          ''
         )}
 
-        {Administrator.includes(currentUser) ? (
+        {Administrator.includes(currentUser) && (
           <>
             {request.recruitment ? (
               <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
@@ -138,14 +138,10 @@ const RecruitmentMenu: NextPage<Props> = ({
               </MenuItem>
             )}
           </>
-        ) : (
-          ''
         )}
 
-        {Administrator.includes(currentUser) ? (
+        {Administrator.includes(currentUser) && (
           <MenuItem onClick={() => deleteAt(request.id)}>削除</MenuItem>
-        ) : (
-          ''
         )}
       </MenuList>
     </Menu>

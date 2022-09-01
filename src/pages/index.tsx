@@ -5,7 +5,7 @@ import Information from '../components/Information';
 import QuickLink from '../components/QuickLink';
 import Slogan from '../components/Slogan';
 import CatalogArea from '../components/CatalogArea';
-import RecruitmentPost from '../components/recruitmentComp/RecruitmentPost';
+import RecruitmentPosts from '../components/recruitmentComp/RecruitmentPosts';
 import styles from '../styles/Home.module.css';
 import { Box, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -306,9 +306,9 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     </Tabs>
                   </Flex>
                   {display ? (
-                    <RecruitmentPost requests={requests} />
+                    <RecruitmentPosts requests={requests} />
                   ) : (
-                    <RecruitmentPost requests={hideRequests} />
+                    <RecruitmentPosts requests={hideRequests} />
                   )}
                 </Box>
               </Flex>

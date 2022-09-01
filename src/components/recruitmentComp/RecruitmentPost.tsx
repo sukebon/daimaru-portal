@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import {
   Box,
   Button,
@@ -14,21 +13,21 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react';
+import { doc, updateDoc } from 'firebase/firestore';
 import { NextPage } from 'next';
 import React, { useState } from 'react';
-import { db, auth } from '../../../firebase';
-import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { Users, Administrator } from '../../../data.js';
-import { starLevel, dayOfWeek, dateTime } from '../../../functions.js';
 import { useRecoilValue } from 'recoil';
+import { Administrator, Users } from '../../../data';
+import { auth, db } from '../../../firebase';
+import { dateTime, dayOfWeek, starLevel } from '../../../functions';
 import { authState } from '../../../store';
 import RecruitmentButton from './RecruitmentButton';
 import RecruitmentMemberList from './RecruitmentMemberList';
 import RecruitmentMenu from './RecruitmentMenu';
 
-interface Props {
-  requests: {
+type Props = {
+  request: {
     id: string;
     title: string;
     startDay: string;
@@ -46,13 +45,15 @@ interface Props {
     editAt: boolean;
     sendAt: string;
     recruitment: boolean;
-  }[];
-}
+    author: string;
+    endDay: string;
+  };
+};
 
-const RecruitmentPost: NextPage<Props> = ({ requests }) => {
+const RecruitmentPost: NextPage<Props> = ({ request }) => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
-  const [editButton, setEditButton] = useState(true);
+  const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState('');
   const [startDay, setStartDay] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -73,25 +74,6 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
   const [cancelMoreless, setCancelMoreless] = useState('');
   const [cancelLevel, setCancelLevel] = useState('');
   const [cancelContent, setCancelContent] = useState('');
-
-  //リクエストを編集する
-  const isEdit = async (uid: any) => {
-    const docRef = doc(db, 'requestList', uid);
-    await updateDoc(docRef, {
-      title: title,
-      startDay: startDay,
-      startTime: startTime,
-      endDay: endDay,
-      endTime: endTime,
-      applicant: applicant,
-      person: person,
-      moreless: moreless,
-      level: level,
-      content: content,
-      editAt: true,
-    });
-    setEditButton(false);
-  };
 
   //タイトルとコンテンツの値を保持する
   const oldTitleContent = (request: any) => {
@@ -137,7 +119,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
       content: content,
       editAt: false,
     });
-    setEditButton(true);
+    setEdit(false);
   };
 
   //編集をキャンセルする
@@ -166,7 +148,7 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
     setCancelMoreless('');
     setCancelLevel('');
     setCancelContent('');
-    setEditButton(true);
+    setEdit(false);
   };
 
   // 作成者を表示;
@@ -178,249 +160,238 @@ const RecruitmentPost: NextPage<Props> = ({ requests }) => {
   };
 
   return (
-    <>
-      {requests.map((request: any) => (
+    <Box
+      key={request.id}
+      style={{ width: '100%' }}
+      display={request.deleteAt ? 'none' : 'block'}
+    >
+      {!request.deleteAt && (
         <Box
-          key={request.id}
-          style={{ width: '100%' }}
-          display={request.deleteAt ? 'none' : 'block'}
+          maxW='sm'
+          borderTop='none'
+          overflow='hidden'
+          margin={'0 auto 0'}
+          padding={'20px 20px 0'}
+          minW={{ base: '100%' }}
+          backgroundColor={request.display === false ? '#999' : 'white'}
         >
-          {!request.deleteAt && (
-            <Box
-              maxW='sm'
-              borderTop='none'
-              overflow='hidden'
-              margin={'0 auto 0'}
-              padding={'20px 20px 0'}
-              minW={{ base: '100%' }}
-              backgroundColor={request.display === false ? '#999' : 'white'}
-            >
-              <Flex justifyContent={'space-between'}>
-                <Flex
-                  flexDirection={'column'}
-                  marginRight={'10px'}
-                  width={'100%'}
-                >
-                  {/* 編集画面を表示 */}
-                  {!request.editAt ? (
-                    <>
-                      <Flex
-                        justifyContent={'space-between'}
-                        alignItems={'center'}
-                      >
-                        <Text fontSize={'2xl'}>{starLevel(request.level)}</Text>
-                        {/* メニューボタン */}
-                        {editButton && (
-                          <>
-                            {currentUser === request.author ||
-                            Administrator.includes(currentUser) ? (
-                              <RecruitmentMenu
-                                request={request}
-                                isEdit={isEdit}
-                                oldTitleContent={oldTitleContent}
-                                cancelTitleContent={cancelTitleContent}
-                              />
-                            ) : (
-                              ''
-                            )}
-                          </>
-                        )}
-                      </Flex>
-                      <Heading fontSize={'xl'} paddingBottom={'10px'} mt={'2'}>
-                        {request.title}
-                      </Heading>
-                      <Flex
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        fontSize={'sm'}
-                      >
-                        <Text marginRight={'10px'}>
-                          【開始】{request.startDay}
-                          {request.startTime && `-${request.startTime}`}
-                          {dayOfWeek(request.startDay)}
-                        </Text>
-                        <Text marginRight={'10px'}>
-                          【終了】{request.endDay}
-                          {request.endTime && `-${request.endTime}`}
-                          {dayOfWeek(request.endDay)}
-                        </Text>
-                        <Text marginRight={'10px'}>
-                          【募集人数】{request.applicant}人{request.moreless}
-                        </Text>
-                      </Flex>
-                      <Flex
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        fontSize={'sm'}
-                      >
-                        <Text>【責任者】{request.person}</Text>
-                        {Administrator.includes(currentUser) ? (
-                          <Text>【作成者】{authorDispay(request.author)}</Text>
+          <Flex justifyContent={'space-between'}>
+            <Flex flexDirection={'column'} marginRight={'10px'} width={'100%'}>
+              {/* 編集画面を表示 */}
+              {!edit ? (
+                <>
+                  <Flex justifyContent={'space-between'} alignItems={'center'}>
+                    <Text fontSize={'2xl'}>{starLevel(request.level)}</Text>
+                    {/* メニューボタン */}
+                    {!edit && (
+                      <>
+                        {currentUser === request.author ||
+                        Administrator.includes(currentUser) ? (
+                          <RecruitmentMenu
+                            request={request}
+                            // isEdit={isEdit}
+                            edit={edit}
+                            setEdit={setEdit}
+                            oldTitleContent={oldTitleContent}
+                            cancelTitleContent={cancelTitleContent}
+                          />
                         ) : (
                           ''
                         )}
-                      </Flex>
-                      <Text
-                        padding={'10px 0'}
-                        whiteSpace={'pre-wrap'}
-                        fontSize={'sm'}
-                      >
-                        {request.content}
-                      </Text>
-                    </>
-                  ) : (
-                    //編集画面↓
-                    <>
-                      <Input
-                        value={title}
-                        placeholder={'タイトル'}
-                        onChange={(e) => setTitle(e.target.value)}
-                        width={'100%'}
-                        fontSize={'md'}
-                        marginBottom={'10px'}
-                      />
-                      <Flex>
-                        <Input
-                          id='startDay'
-                          type='date'
-                          value={startDay}
-                          placeholder='開始時刻'
-                          marginRight={'10px'}
-                          marginBottom={'10px'}
-                          onChange={(e) => setStartDay(e.target.value)}
-                        />
-                        <Select
-                          value={startTime}
-                          placeholder='---'
-                          onChange={(e) => setStartTime(e.target.value)}
-                        >
-                          {dateTime.map((d, index) => (
-                            <option key={index} value={d}>
-                              {d}
-                            </option>
-                          ))}
-                        </Select>
-                      </Flex>
-                      <Flex>
-                        <Input
-                          id='endDay'
-                          type='date'
-                          value={endDay}
-                          placeholder='終了時刻'
-                          marginRight={'10px'}
-                          marginBottom={'10px'}
-                          onChange={(e) => setEndDay(e.target.value)}
-                        />
-                        <Select
-                          value={endTime}
-                          placeholder='---'
-                          onChange={(e) => setEndTime(e.target.value)}
-                        >
-                          {dateTime.map((d, index) => (
-                            <option key={index} value={d}>
-                              {d}
-                            </option>
-                          ))}
-                        </Select>
-                      </Flex>
-                      <Flex>
-                        <Input
-                          id='person'
-                          type='string'
-                          value={person}
-                          placeholder='タスク責任者'
-                          marginRight={'10px'}
-                          marginBottom={'10px'}
-                          onChange={(e) => setPerson(e.target.value)}
-                        />
-                        <Select
-                          value={level}
-                          placeholder='---'
-                          marginBottom={'10px'}
-                          onChange={(e) => setLevel(e.target.value)}
-                        >
-                          <option value='3'>★★★</option>
-                          <option value='2'>★★</option>
-                          <option value='1'>★</option>
-                        </Select>
-                      </Flex>
-                      <Flex marginBottom={'10px'}>
-                        <NumberInput
-                          flex={'1'}
-                          value={applicant}
-                          placeholder='募集人数'
-                          marginRight={'10px'}
-                          onChange={(e) => setApplicant(e)}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <Select
-                          flex={'1'}
-                          value={moreless}
-                          placeholder='---'
-                          onChange={(e) => setMoreless(e.target.value)}
-                        >
-                          <option value='以上'>以上</option>
-                          <option value='まで'>まで</option>
-                        </Select>
-                      </Flex>
-                      <Textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        fontSize={'sm'}
-                        marginBottom={'10px'}
-                        whiteSpace={'pre-wrap'}
-                      >
-                        {content}
-                      </Textarea>
-                      <Flex marginBottom={'10px'}>
-                        <Button
-                          onClick={() => confirm(request)}
-                          flex={'1'}
-                          marginRight={'10px'}
-                          colorScheme='blue'
-                        >
-                          OK
-                        </Button>
-                        <Button
-                          onClick={() => cancel(request)}
-                          flex={'1'}
-                          colorScheme='red'
-                        >
-                          キャンセル
-                        </Button>
-                      </Flex>
-                    </>
-                  )}
-                </Flex>
+                      </>
+                    )}
+                  </Flex>
+                  <Heading fontSize={'xl'} paddingBottom={'10px'} mt={'2'}>
+                    {request.title}
+                  </Heading>
+                  <Flex
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    fontSize={'sm'}
+                  >
+                    <Text marginRight={'10px'}>
+                      【開始】{request.startDay}
+                      {request.startTime && `-${request.startTime}`}
+                      {dayOfWeek(request.startDay)}
+                    </Text>
+                    <Text marginRight={'10px'}>
+                      【終了】{request.endDay}
+                      {request.endTime && `-${request.endTime}`}
+                      {dayOfWeek(request.endDay)}
+                    </Text>
+                    <Text marginRight={'10px'}>
+                      【募集人数】{request.applicant}人{request.moreless}
+                    </Text>
+                  </Flex>
+                  <Flex
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    fontSize={'sm'}
+                  >
+                    <Text>【責任者】{request.person}</Text>
+                    {Administrator.includes(currentUser) && (
+                      <Text>【作成者】{authorDispay(request.author)}</Text>
+                    )}
+                  </Flex>
+                  <Text
+                    padding={'10px 0'}
+                    whiteSpace={'pre-wrap'}
+                    fontSize={'sm'}
+                  >
+                    {request.content}
+                  </Text>
+                </>
+              ) : (
+                //編集画面↓
+                <>
+                  <Input
+                    value={title}
+                    placeholder={'タイトル'}
+                    onChange={(e) => setTitle(e.target.value)}
+                    width={'100%'}
+                    fontSize={'md'}
+                    marginBottom={'10px'}
+                  />
+                  <Flex>
+                    <Input
+                      id='startDay'
+                      type='date'
+                      value={startDay}
+                      placeholder='開始時刻'
+                      marginRight={'10px'}
+                      marginBottom={'10px'}
+                      onChange={(e) => setStartDay(e.target.value)}
+                    />
+                    <Select
+                      value={startTime}
+                      placeholder='---'
+                      onChange={(e) => setStartTime(e.target.value)}
+                    >
+                      {dateTime.map((d, index) => (
+                        <option key={index} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </Select>
+                  </Flex>
+                  <Flex>
+                    <Input
+                      id='endDay'
+                      type='date'
+                      value={endDay}
+                      placeholder='終了時刻'
+                      marginRight={'10px'}
+                      marginBottom={'10px'}
+                      onChange={(e) => setEndDay(e.target.value)}
+                    />
+                    <Select
+                      value={endTime}
+                      placeholder='---'
+                      onChange={(e) => setEndTime(e.target.value)}
+                    >
+                      {dateTime.map((d, index) => (
+                        <option key={index} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </Select>
+                  </Flex>
+                  <Flex>
+                    <Input
+                      id='person'
+                      type='string'
+                      value={person}
+                      placeholder='タスク責任者'
+                      marginRight={'10px'}
+                      marginBottom={'10px'}
+                      onChange={(e) => setPerson(e.target.value)}
+                    />
+                    <Select
+                      value={level}
+                      placeholder='---'
+                      marginBottom={'10px'}
+                      onChange={(e) => setLevel(e.target.value)}
+                    >
+                      <option value='3'>★★★</option>
+                      <option value='2'>★★</option>
+                      <option value='1'>★</option>
+                    </Select>
+                  </Flex>
+                  <Flex marginBottom={'10px'}>
+                    <NumberInput
+                      flex={'1'}
+                      value={applicant}
+                      placeholder='募集人数'
+                      marginRight={'10px'}
+                      onChange={(e) => setApplicant(e)}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    <Select
+                      flex={'1'}
+                      value={moreless}
+                      placeholder='---'
+                      onChange={(e) => setMoreless(e.target.value)}
+                    >
+                      <option value='以上'>以上</option>
+                      <option value='まで'>まで</option>
+                    </Select>
+                  </Flex>
+                  <Textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    fontSize={'sm'}
+                    marginBottom={'10px'}
+                    whiteSpace={'pre-wrap'}
+                  >
+                    {content}
+                  </Textarea>
+                  <Flex marginBottom={'10px'}>
+                    <Button
+                      onClick={() => confirm(request)}
+                      flex={'1'}
+                      marginRight={'10px'}
+                      colorScheme='blue'
+                    >
+                      OK
+                    </Button>
+                    <Button
+                      onClick={() => cancel(request)}
+                      flex={'1'}
+                      colorScheme='red'
+                    >
+                      キャンセル
+                    </Button>
+                  </Flex>
+                </>
+              )}
+            </Flex>
+          </Flex>
+
+          {/* 参加メンバー羅列 */}
+          {!edit && (
+            <Flex
+              flexDirection={{ base: 'column', md: 'row' }}
+              justifyContent={'space-between'}
+              alignItems={'center'}
+              marginTop={{ base: '10px' }}
+              padding={'5px 0 10px'}
+            >
+              <Flex flexWrap={'wrap'}>
+                {/* 参加メンバー一覧 */}
+                <RecruitmentMemberList request={request} />
               </Flex>
 
-              {/* 参加メンバー羅列 */}
-              {!request.editAt && (
-                <Flex
-                  flexDirection={{ base: 'column', md: 'row' }}
-                  justifyContent={'space-between'}
-                  alignItems={'center'}
-                  marginTop={{ base: '10px' }}
-                  padding={'5px 0 10px'}
-                >
-                  <Flex flexWrap={'wrap'}>
-                    {/* 参加メンバー一覧 */}
-                    <RecruitmentMemberList request={request} />
-                  </Flex>
-
-                  {/* 参加ボタン */}
-                  <RecruitmentButton request={request} />
-                </Flex>
-              )}
-              <hr />
-            </Box>
+              {/* 参加ボタン */}
+              <RecruitmentButton request={request} />
+            </Flex>
           )}
+          <hr />
         </Box>
-      ))}
-    </>
+      )}
+    </Box>
   );
 };
 
