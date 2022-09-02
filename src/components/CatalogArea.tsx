@@ -18,7 +18,7 @@ const CatalogArea = () => {
   const linkItems = [
     {
       title: "マイユニポータル",
-      link: "https://myuni.vercel.app/",
+      link: "https://myuni.vercel.app/catalog",
       color: "rgb(45, 55, 72)",
     },
     {
@@ -53,7 +53,7 @@ const CatalogArea = () => {
           {catalogItems.map((item) => (
             <Flex flex="1" p="3" justifyContent="center" key={item.link}>
               <Link href={item.link}>
-                <a target="_blank">
+                <a target="_blank" style={{ fontSize: 0 }}>
                   <Image
                     src={item.src}
                     alt={item.alt}
