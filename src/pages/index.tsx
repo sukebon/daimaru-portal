@@ -21,12 +21,12 @@ import {
   orderBy,
   query,
   where,
-} from 'firebase/firestore';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../store/';
-import CheckDrawer from '../components/alcohol/CheckDrawer';
-import { todayDate } from '../../functions';
-import Link from 'next/link';
+} from "firebase/firestore";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../store/";
+import CheckDrawer from "../components/alcohol/CheckDrawer";
+import { datetime, todayDate } from "../../functions";
+import Link from "next/link";
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -47,17 +47,17 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
   //掲載中（表示）案件
   useEffect(() => {
-    const requestsCollectionRef = collection(db, 'requestList');
+    const requestsCollectionRef = collection(db, "requestList");
     const q = query(
       requestsCollectionRef,
-      where('display', '==', true),
-      orderBy('sendAt', 'desc')
+      where("display", "==", true),
+      orderBy("sendAt", "desc")
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
@@ -72,11 +72,11 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   //終了（非表示）案件
   useEffect(() => {
-    const requestCollectionRef = collection(db, 'requestList');
+    const requestCollectionRef = collection(db, "requestList");
     const q = query(
       requestCollectionRef,
-      where('display', '==', false),
-      orderBy('sendAt', 'desc')
+      where("display", "==", false),
+      orderBy("sendAt", "desc")
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
       setHideRequests(
@@ -91,8 +91,8 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   //users情報
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -105,7 +105,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 
   //【クレーム】クレーム一覧リスト取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, 'claimList');
+    const claimsCollectionRef = collection(db, "claimList");
     try {
       const unsub = onSnapshot(claimsCollectionRef, (querySnapshot) => {
         setClaims(
@@ -186,7 +186,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   //アルコールチェック
   useEffect(() => {
     const unsub = onSnapshot(
-      doc(db, 'alcoholCheckList', `${todayDate()}`),
+      doc(db, "alcoholCheckList", `${todayDate()}`),
       (doc) => {
         setAlcoholObject(doc.data());
       }
@@ -210,46 +210,46 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     <>
       <Head>
         <title>大丸白衣ポータル</title>
-        <meta name='description' content='大丸白衣ポータル' />
-        <link rel='icon' href='/favicon.ico' />
+        <meta name="description" content="大丸白衣ポータル" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       {currentUser && (
-        <div style={{ backgroundColor: '#f7f7f7' }}>
+        <div style={{ backgroundColor: "#f7f7f7" }}>
           <div className={styles.container}>
             <main>
               <Flex
-                w='100%'
-                mx='auto'
+                w="100%"
+                mx="auto"
                 px={6}
                 pb={6}
-                flexDirection={{ base: 'column', lg: 'row' }}
+                flexDirection={{ base: "column", lg: "row" }}
               >
                 {/* クレーム件数エリア */}
-                <Box w={{ base: '100%', lg: '800px' }} mx='auto' flex={'1'}>
+                <Box w={{ base: "100%", lg: "800px" }} mx="auto" flex={"1"}>
                   {claimCount() && (
                     <Box
-                      width='100%'
-                      boxShadow='xs'
-                      mt='6'
-                      p='6'
-                      rounded='md'
-                      bg='white'
+                      width="100%"
+                      boxShadow="xs"
+                      mt="6"
+                      p="6"
+                      rounded="md"
+                      bg="white"
                     >
-                      <Text fontSize='md' mt='1' ml='1'>
+                      <Text fontSize="md" mt="1" ml="1">
                         クレーム報告書 未処理件数：
-                        <Box as='span' color='red' fontWeight='bold'>
+                        <Box as="span" color="red" fontWeight="bold">
                           {claimCount()}
-                        </Box>{' '}
+                        </Box>{" "}
                         件
                         <Box>
                           ※「Menu」にある
-                          <Link href='/claims'>
+                          <Link href="/claims">
                             <a>
                               <Text
-                                as='span'
-                                textDecoration='underline'
+                                as="span"
+                                textDecoration="underline"
                                 _hover={{
-                                  textDecoration: 'none',
+                                  textDecoration: "none",
                                 }}
                               >
                                 クレーム報告書一覧
@@ -269,37 +269,37 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 </Box>
                 <Box
                   // w={{ base: '100%', md: '800px' }}
-                  w='100%'
-                  mt='6'
-                  mx='auto'
-                  ml={{ base: '0', lg: '6' }}
-                  p='6'
-                  rounded='md'
-                  boxShadow='xs'
-                  bg='white'
-                  flex='1'
-                  borderRadius={'lg'}
+                  w="100%"
+                  mt="6"
+                  mx="auto"
+                  ml={{ base: "0", lg: "6" }}
+                  p="6"
+                  rounded="md"
+                  boxShadow="xs"
+                  bg="white"
+                  flex="1"
+                  borderRadius={"lg"}
                 >
                   <Flex
-                    flexDirection={{ base: 'column', lg: 'row' }}
-                    alignItems={'center'}
-                    mt='1'
-                    mb='2'
+                    flexDirection={{ base: "column", lg: "row" }}
+                    alignItems={"center"}
+                    mt="1"
+                    mb="2"
                   >
-                    <Text fontSize='2xl' mb='2' mr='3'>
+                    <Text fontSize="2xl" mb="2" mr="3">
                       お手伝い依頼一覧
                     </Text>
                     <Tabs
-                      size='sm'
-                      variant='soft-rounded'
-                      colorScheme='gray'
-                      mb='2'
+                      size="sm"
+                      variant="soft-rounded"
+                      colorScheme="gray"
+                      mb="2"
                     >
                       <TabList>
-                        <Tab onClick={isDisplay} _focus={{ outline: 'none' }}>
+                        <Tab onClick={isDisplay} _focus={{ outline: "none" }}>
                           掲載中
                         </Tab>
-                        <Tab onClick={isHide} _focus={{ outline: 'none' }}>
+                        <Tab onClick={isHide} _focus={{ outline: "none" }}>
                           掲載終了
                         </Tab>
                       </TabList>
@@ -323,10 +323,10 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 export default Home;
 
 export async function getStaticProps() {
-  const accessPoint = 'https://portal-site.microcms.io/api/v1';
+  const accessPoint = "https://portal-site.microcms.io/api/v1";
   const options = {
     headers: {
-      'X-MICROCMS-API-KEY': '5c23d3e8eaa0448388ca527e0e00c829611f',
+      "X-MICROCMS-API-KEY": "5c23d3e8eaa0448388ca527e0e00c829611f",
     },
   };
   const sloganRes = await fetch(`${accessPoint}/slogan`, options);

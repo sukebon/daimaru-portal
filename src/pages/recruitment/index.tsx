@@ -1,5 +1,5 @@
-import { Box, Flex } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { Box, Flex } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import {
   collection,
   onSnapshot,
@@ -11,10 +11,11 @@ import { db } from '../../../firebase';
 import { auth } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
-import RecruitmentPosts from '../../components/recruitmentComp/RecruitmentPosts';
+import RecruitmentPost from '../../components/recruitmentComp/RecruitmentPost';
 import { useRecoilValue } from 'recoil';
 import { authState } from '../../../store';
 import { useRouter } from 'next/router';
+import Header from '../../components/Header';
 import { Administrator } from '../../../data';
 
 const Recruitment = () => {
@@ -26,14 +27,14 @@ const Recruitment = () => {
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
   //管理者用投稿リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'requestList');
-    const q = query(usersCollectionRef, orderBy('sendAt', 'desc'));
+    const usersCollectionRef = collection(db, "requestList");
+    const q = query(usersCollectionRef, orderBy("sendAt", "desc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
         querySnapshot.docs.map((doc) => ({
@@ -47,10 +48,10 @@ const Recruitment = () => {
 
   //作成者用投稿リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'requestList');
+    const usersCollectionRef = collection(db, "requestList");
     const q = query(
       usersCollectionRef,
-      where('author', '==', currentUser)
+      where("author", "==", currentUser)
       // orderBy('sendAt', 'desc')
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
@@ -69,31 +70,31 @@ const Recruitment = () => {
       {currentUser && (
         <>
           <Box
-            width={'100%'}
-            backgroundColor={'#f7f7f7'}
-            paddingBottom={'50px'}
-            minH={'100vh'}
+            width={"100%"}
+            backgroundColor={"#f7f7f7"}
+            paddingBottom={"50px"}
+            minH={"100vh"}
             p={6}
           >
             <Flex
-              flexDirection={'column'}
-              alignItems={'center'}
-              margin={'0 auto'}
+              flexDirection={"column"}
+              alignItems={"center"}
+              margin={"0 auto"}
             >
               <Box
-                w={{ base: '100%', md: '800px' }}
-                mx='auto'
+                w={{ base: "100%", md: "800px" }}
+                mx="auto"
                 p={6}
-                backgroundColor='white'
+                backgroundColor="white"
                 borderRadius={6}
               >
                 <RecruitmentForm />
               </Box>
               <Box
-                w={{ base: '100%', md: '800px' }}
-                mt='6'
-                mx='auto'
-                backgroundColor='white'
+                w={{ base: "100%", md: "800px" }}
+                mt="6"
+                mx="auto"
+                backgroundColor="white"
                 borderRadius={6}
               >
                 {Administrator.includes(currentUser) ? (

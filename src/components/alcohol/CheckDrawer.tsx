@@ -28,7 +28,7 @@ import {
 import React, { memo, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
-import { datetime, todayDate } from "../../../functions";
+import { dateTime, datetime, todayDate } from "../../../functions";
 import { authState } from "../../../store";
 
 const CheckDrawer = () => {
