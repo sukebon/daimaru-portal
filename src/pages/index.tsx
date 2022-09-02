@@ -1,17 +1,17 @@
-import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import Information from "../components/Information";
-import QuickLink from "../components/QuickLink";
-import Slogan from "../components/Slogan";
-import CatalogArea from "../components/CatalogArea";
-import RecruitmentPost from "../components/recruitmentComp/RecruitmentPost";
-import styles from "../styles/Home.module.css";
-import { Box, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { auth } from "../../firebase";
-import { db } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import type { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Information from '../components/Information';
+import QuickLink from '../components/QuickLink';
+import Slogan from '../components/Slogan';
+import CatalogArea from '../components/CatalogArea';
+import RecruitmentPosts from '../components/recruitmentComp/RecruitmentPosts';
+import styles from '../styles/Home.module.css';
+import { Box, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { auth } from '../../firebase';
+import { db } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import {
   collection,
   doc,
@@ -306,9 +306,9 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                     </Tabs>
                   </Flex>
                   {display ? (
-                    <RecruitmentPost requests={requests} />
+                    <RecruitmentPosts requests={requests} />
                   ) : (
-                    <RecruitmentPost requests={hideRequests} />
+                    <RecruitmentPosts requests={hideRequests} />
                   )}
                 </Box>
               </Flex>
