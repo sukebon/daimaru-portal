@@ -23,8 +23,9 @@ import {
 import { beginningDate, todayDate } from '../../../functions';
 
 const ClaimFilterArea = ({
-  claims,
   users,
+  claims,
+  filterClaims,
   receptionDateStart,
   setReceptionDateStart,
   receptionDateEnd,
@@ -71,6 +72,11 @@ const ClaimFilterArea = ({
   }, [claims]);
   return (
     <>
+      {claims.length !== filterClaims.length && (
+        <Button onClick={onFilterReset} mr={2}>
+          フィルター解除
+        </Button>
+      )}
       <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
         絞り込み
       </Button>

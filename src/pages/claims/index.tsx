@@ -24,9 +24,16 @@ import {
 import Link from 'next/link';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
+  amendmentState,
   authState,
+  causeDepartmentState,
   claimsState,
-  filterClaimsState,
+  counterplanState,
+  customerState,
+  occurrenceState,
+  receptionDateEndState,
+  receptionDateStartState,
+  stampStaffState,
   usersState,
 } from '../../../store';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -45,16 +52,23 @@ const Claim: NextPage = () => {
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
-  const [filterClaims, setFilterClaims] = useRecoilState(filterClaimsState);
-  // const [filterClaims, setFilterClaims] = useState<any>(claims);
-  const [receptionDateStart, setReceptionDateStart] = useState();
-  const [receptionDateEnd, setReceptionDateEnd] = useState();
-  const [stampStaffFilter, setStampStaffFilter] = useState('');
-  const [customerFilter, setCustomerFilter] = useState('');
-  const [occurrenceFilter, setOccurrenceFilter] = useState('');
-  const [amendmentFilter, setAmendmentFilter] = useState('');
-  const [counterplanFilter, setCounterplanFilter] = useState('');
-  const [causeDepartmentFilter, setCauseDepartmentFilter] = useState('');
+  const [filterClaims, setFilterClaims] = useState<any>(claims);
+  const [receptionDateStart, setReceptionDateStart] = useRecoilState(
+    receptionDateStartState
+  );
+  const [receptionDateEnd, setReceptionDateEnd] = useRecoilState(
+    receptionDateEndState
+  );
+  const [stampStaffFilter, setStampStaffFilter] =
+    useRecoilState(stampStaffState);
+  const [customerFilter, setCustomerFilter] = useRecoilState(customerState);
+  const [occurrenceFilter, setOccurrenceFilter] =
+    useRecoilState(occurrenceState);
+  const [amendmentFilter, setAmendmentFilter] = useRecoilState(amendmentState);
+  const [counterplanFilter, setCounterplanFilter] =
+    useRecoilState(counterplanState);
+  const [causeDepartmentFilter, setCauseDepartmentFilter] =
+    useRecoilState(causeDepartmentState);
 
   useEffect(() => {
     if (user === null) {
@@ -197,11 +211,14 @@ const Claim: NextPage = () => {
             <Flex flexDirection={'column'} alignItems={'center'}>
               <TableContainer backgroundColor='white' borderRadius={6} p={6}>
                 <Flex mb={6} justifyContent='space-between'>
-                  <Box fontSize='lg'>全{filterClaims.length}件</Box>
+                  <Box fontSize='lg'>
+                    {filterClaims.length}件/全{claims.length}件
+                  </Box>
                   <Box>
                     <ClaimFilterArea
-                      claims={claims}
                       users={users}
+                      claims={claims}
+                      filterClaims={filterClaims}
                       receptionDateStart={receptionDateStart}
                       setReceptionDateStart={setReceptionDateStart}
                       receptionDateEnd={receptionDateEnd}
