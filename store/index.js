@@ -14,6 +14,11 @@ export const claimsState = atom({
   default: [],
 });
 
+export const filterClaimsState = atom({
+  key: 'filterClaimsState',
+  default: [],
+});
+
 export const usersState = atom({
   key: 'usersState',
   default: [],

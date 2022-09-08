@@ -69,7 +69,6 @@ const ClaimFilterArea = ({
 
     setStampStaffList(arrayUsers);
   }, [claims]);
-  console.log(customerFilter);
   return (
     <>
       <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>

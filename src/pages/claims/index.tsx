@@ -22,8 +22,13 @@ import {
   claimSelectList3,
 } from '../../../data';
 import Link from 'next/link';
-import { useRecoilValue } from 'recoil';
-import { authState, claimsState, usersState } from '../../../store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  authState,
+  claimsState,
+  filterClaimsState,
+  usersState,
+} from '../../../store';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
 import ClaimFilterArea from '../../components/claims/ClaimFilterArea';
@@ -40,7 +45,8 @@ const Claim: NextPage = () => {
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
-  const [filterClaims, setFilterClaims] = useState<any>(claims);
+  const [filterClaims, setFilterClaims] = useRecoilState(filterClaimsState);
+  // const [filterClaims, setFilterClaims] = useState<any>(claims);
   const [receptionDateStart, setReceptionDateStart] = useState();
   const [receptionDateEnd, setReceptionDateEnd] = useState();
   const [stampStaffFilter, setStampStaffFilter] = useState('');
@@ -112,6 +118,7 @@ const Claim: NextPage = () => {
     counterplanFilter,
     causeDepartmentFilter,
     claims,
+    setFilterClaims,
   ]);
 
   //作業者を表示する関数
