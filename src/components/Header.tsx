@@ -5,45 +5,49 @@ import HeaderMenuButton from './HeaderMenuButton';
 import { authState } from '../../store';
 import { useRecoilValue } from 'recoil';
 import { NextPage } from 'next';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../firebase';
+import { useRouter } from 'next/router';
 
 const Header: NextPage = () => {
+  const router = useRouter();
   const currentUser = useRecoilValue(authState);
-  const [users, setUsers] = useState<any>([]);
-  const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
-  const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
-  const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
-  const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
+
+  useEffect(() => {
+    if (currentUser === '') {
+      router.push('/login');
+    }
+  }, [router, currentUser]);
 
   return (
     <>
-      <Flex
-        width={'100%'}
-        height={'60px'}
-        padding={'0 10px'}
-        justifyContent='space-between'
-        alignItems='center'
-        backgroundColor='#38b2ac'
-        position='sticky'
-        top={0}
-        zIndex={100}
-      >
-        <Flex alignItems={'center'} color={'white'}>
-          <Link href='/'>
-            <a>
-              <Text
-                color={'white'}
-                fontSize={{ base: 'large', md: '2xl' }}
-                fontWeight={'bold'}
-              >
-                社内用ポータルサイト
-              </Text>
-            </a>
-          </Link>
+      {currentUser && (
+        <Flex
+          width={'100%'}
+          height={'60px'}
+          padding={'0 10px'}
+          justifyContent='space-between'
+          alignItems='center'
+          backgroundColor='#38b2ac'
+          position='sticky'
+          top={0}
+          zIndex={100}
+        >
+          <Flex alignItems={'center'} color={'white'}>
+            <Link href='/'>
+              <a>
+                <Text
+                  color={'white'}
+                  fontSize={{ base: 'large', md: '2xl' }}
+                  fontWeight={'bold'}
+                >
+                  社内用ポータルサイト
+                </Text>
+              </a>
+            </Link>
+          </Flex>
+          <HeaderMenuButton />
         </Flex>
-        <HeaderMenuButton />
-      </Flex>
+      )}
     </>
   );
 };

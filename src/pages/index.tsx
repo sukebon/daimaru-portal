@@ -1,63 +1,70 @@
-import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import Information from "../components/Information";
-import QuickLink from "../components/QuickLink";
-import Slogan from "../components/Slogan";
-import CatalogArea from "../components/CatalogArea";
-import RecruitmentPosts from "../components/recruitmentComp/RecruitmentPosts";
-import styles from "../styles/Home.module.css";
-import { Box, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { auth } from "../../firebase";
-import { db } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import type { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Information from '../components/Information';
+import QuickLink from '../components/QuickLink';
+import Slogan from '../components/Slogan';
+import CatalogArea from '../components/CatalogArea';
+import RecruitmentPosts from '../components/recruitmentComp/RecruitmentPosts';
+import styles from '../styles/Home.module.css';
+import { Box, Flex, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { auth } from '../../firebase';
+import { db } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
   query,
   where,
-} from "firebase/firestore";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../store/";
-import CheckDrawer from "../components/alcohol/CheckDrawer";
-import { datetime, todayDate } from "../../functions";
-import Link from "next/link";
+} from 'firebase/firestore';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  authState,
+  claimsState,
+  hideRequestsState,
+  requestsState,
+  usersState,
+} from '../../store/';
+import CheckDrawer from '../components/alcohol/CheckDrawer';
+import { datetime, todayDate } from '../../functions';
+import Link from 'next/link';
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
-  const [requests, setRequests] = useState<any>([]);
+  // const [requests, setRequests] = useState<any>([]);
+  const [users, setUsers] = useRecoilState<any>(usersState); //ユーザー一覧リスト
+  const [claims, setClaims] = useRecoilState<any>(claimsState); //クレーム一覧リスト
+  const [requests, setRequests] = useRecoilState<any>(requestsState); //リクエスト一覧リスト
+  const [hideRequests, setHideRequests] =
+    useRecoilState<any>(hideRequestsState); //リクエスト一覧リスト
 
-  const [users, setUsers] = useState<any>([]);
-  const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
   const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
   const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
-  const [hideRequests, setHideRequests] = useState<any>([]);
   const [display, setDisplay] = useState<boolean>(true);
   const [alcoholObject, setAlcoholObject] = useState<any>({});
   const [alcoholArray, setAlcoholArray] = useState<any>([]);
 
   useEffect(() => {
     if (user === null) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router, user]);
 
   //掲載中（表示）案件
   useEffect(() => {
-    const requestsCollectionRef = collection(db, "requestList");
+    const requestsCollectionRef = collection(db, 'requestList');
     const q = query(
       requestsCollectionRef,
-      where("display", "==", true),
-      orderBy("sendAt", "desc")
+      where('display', '==', true),
+      orderBy('sendAt', 'desc')
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
@@ -68,15 +75,15 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
       );
     });
     return unsub;
-  }, [currentUser]);
+  }, [setRequests]);
 
   //終了（非表示）案件
   useEffect(() => {
-    const requestCollectionRef = collection(db, "requestList");
+    const requestCollectionRef = collection(db, 'requestList');
     const q = query(
       requestCollectionRef,
-      where("display", "==", false),
-      orderBy("sendAt", "desc")
+      where('display', '==', false),
+      orderBy('sendAt', 'desc')
     );
     const unsub = onSnapshot(q, (querySnapshot) => {
       setHideRequests(
@@ -87,12 +94,12 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
       );
     });
     return unsub;
-  }, [currentUser]);
+  }, [setHideRequests]);
 
   //users情報
   useEffect(() => {
-    const usersCollectionRef = collection(db, "authority");
-    const q = query(usersCollectionRef, orderBy("rank", "asc"));
+    const usersCollectionRef = collection(db, 'authority');
+    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -101,32 +108,21 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
         }))
       );
     });
-  }, []);
+  }, [setUsers]);
 
   //【クレーム】クレーム一覧リスト取得
   useEffect(() => {
-    const claimsCollectionRef = collection(db, "claimList");
-    try {
-      const unsub = onSnapshot(claimsCollectionRef, (querySnapshot) => {
-        setClaims(
-          querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      });
-      // getDocs(claimsCollectionRef).then((querySnapshot) => {
-      //   setClaims(
-      //     querySnapshot.docs.map((doc) => ({
-      //       ...doc.data(),
-      //       id: doc.id,
-      //     }))
-      //   );
-      // });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    const claimsCollectionRef = collection(db, 'claimList');
+    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      setClaims(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, [setClaims]);
 
   //各リストを取得
   useEffect(() => {
@@ -186,7 +182,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   //アルコールチェック
   useEffect(() => {
     const unsub = onSnapshot(
-      doc(db, "alcoholCheckList", `${todayDate()}`),
+      doc(db, 'alcoholCheckList', `${todayDate()}`),
       (doc) => {
         setAlcoholObject(doc.data());
       }
@@ -210,46 +206,46 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     <>
       <Head>
         <title>大丸白衣ポータル</title>
-        <meta name="description" content="大丸白衣ポータル" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='大丸白衣ポータル' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
       {currentUser && (
-        <div style={{ backgroundColor: "#f7f7f7" }}>
+        <div style={{ backgroundColor: '#f7f7f7' }}>
           <div className={styles.container}>
             <main>
               <Flex
-                w="100%"
-                mx="auto"
+                w='100%'
+                mx='auto'
                 px={6}
                 pb={6}
-                flexDirection={{ base: "column", lg: "row" }}
+                flexDirection={{ base: 'column', lg: 'row' }}
               >
                 {/* クレーム件数エリア */}
-                <Box w={{ base: "100%", lg: "800px" }} mx="auto" flex={"1"}>
+                <Box w={{ base: '100%', lg: '800px' }} mx='auto' flex={'1'}>
                   {claimCount() && (
                     <Box
-                      width="100%"
-                      boxShadow="xs"
-                      mt="6"
-                      p="6"
-                      rounded="md"
-                      bg="white"
+                      width='100%'
+                      boxShadow='xs'
+                      mt='6'
+                      p='6'
+                      rounded='md'
+                      bg='white'
                     >
-                      <Text fontSize="md" mt="1" ml="1">
+                      <Text fontSize='md' mt='1' ml='1'>
                         クレーム報告書 未処理件数：
-                        <Box as="span" color="red" fontWeight="bold">
+                        <Box as='span' color='red' fontWeight='bold'>
                           {claimCount()}
-                        </Box>{" "}
+                        </Box>{' '}
                         件
                         <Box>
                           ※「Menu」にある
-                          <Link href="/claims">
+                          <Link href='/claims'>
                             <a>
                               <Text
-                                as="span"
-                                textDecoration="underline"
+                                as='span'
+                                textDecoration='underline'
                                 _hover={{
-                                  textDecoration: "none",
+                                  textDecoration: 'none',
                                 }}
                               >
                                 クレーム報告書一覧
@@ -269,37 +265,37 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 </Box>
                 <Box
                   // w={{ base: '100%', md: '800px' }}
-                  w="100%"
-                  mt="6"
-                  mx="auto"
-                  ml={{ base: "0", lg: "6" }}
-                  p="6"
-                  rounded="md"
-                  boxShadow="xs"
-                  bg="white"
-                  flex="1"
-                  borderRadius={"lg"}
+                  w='100%'
+                  mt='6'
+                  mx='auto'
+                  ml={{ base: '0', lg: '6' }}
+                  p='6'
+                  rounded='md'
+                  boxShadow='xs'
+                  bg='white'
+                  flex='1'
+                  borderRadius={'lg'}
                 >
                   <Flex
-                    flexDirection={{ base: "column", lg: "row" }}
-                    alignItems={"center"}
-                    mt="1"
-                    mb="2"
+                    flexDirection={{ base: 'column', lg: 'row' }}
+                    alignItems={'center'}
+                    mt='1'
+                    mb='2'
                   >
-                    <Text fontSize="2xl" mb="2" mr="3">
+                    <Text fontSize='2xl' mb='2' mr='3'>
                       お手伝い依頼一覧
                     </Text>
                     <Tabs
-                      size="sm"
-                      variant="soft-rounded"
-                      colorScheme="gray"
-                      mb="2"
+                      size='sm'
+                      variant='soft-rounded'
+                      colorScheme='gray'
+                      mb='2'
                     >
                       <TabList>
-                        <Tab onClick={isDisplay} _focus={{ outline: "none" }}>
+                        <Tab onClick={isDisplay} _focus={{ outline: 'none' }}>
                           掲載中
                         </Tab>
-                        <Tab onClick={isHide} _focus={{ outline: "none" }}>
+                        <Tab onClick={isHide} _focus={{ outline: 'none' }}>
                           掲載終了
                         </Tab>
                       </TabList>
@@ -323,10 +319,10 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
 export default Home;
 
 export async function getStaticProps() {
-  const accessPoint = "https://portal-site.microcms.io/api/v1";
+  const accessPoint = 'https://portal-site.microcms.io/api/v1';
   const options = {
     headers: {
-      "X-MICROCMS-API-KEY": "5c23d3e8eaa0448388ca527e0e00c829611f",
+      'X-MICROCMS-API-KEY': '5c23d3e8eaa0448388ca527e0e00c829611f',
     },
   };
   const sloganRes = await fetch(`${accessPoint}/slogan`, options);

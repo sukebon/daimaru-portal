@@ -9,38 +9,32 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-} from "firebase/firestore";
-import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
-import { auth, db } from "../../../firebase";
-import { claimSelectList4, Users } from "../../../data";
+} from '@chakra-ui/react';
+
+import { NextPage } from 'next';
+import React, { useEffect, useState } from 'react';
+import { auth } from '../../../firebase';
+import { claimSelectList4, Users } from '../../../data';
 import {
   taskflow,
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from "../../../data";
-import Link from "next/link";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../../store";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import ClaimFilterArea from "../../components/claims/ClaimFilterArea";
+} from '../../../data';
+import Link from 'next/link';
+import { useRecoilValue } from 'recoil';
+import { authState, claimsState, usersState } from '../../../store';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'next/router';
+import ClaimFilterArea from '../../components/claims/ClaimFilterArea';
 
 const Claim: NextPage = () => {
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
   const [user] = useAuthState(auth);
-  const [users, setUsers] = useState<any>([]); //ユーザー一覧リスト
-  const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
+  const users = useRecoilValue(usersState); //ユーザー一覧リスト
+  const claims = useRecoilValue(claimsState); //クレーム一覧リスト
+
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
   const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
   const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
@@ -49,62 +43,18 @@ const Claim: NextPage = () => {
   const [filterClaims, setFilterClaims] = useState<any>(claims);
   const [receptionDateStart, setReceptionDateStart] = useState();
   const [receptionDateEnd, setReceptionDateEnd] = useState();
-  const [stampStaffFilter, setStampStaffFilter] = useState("");
-  const [customerFilter, setCustomerFilter] = useState("");
-  const [occurrenceFilter, setOccurrenceFilter] = useState("");
-  const [amendmentFilter, setAmendmentFilter] = useState("");
-  const [counterplanFilter, setCounterplanFilter] = useState("");
-  const [causeDepartmentFilter, setCauseDepartmentFilter] = useState("");
+  const [stampStaffFilter, setStampStaffFilter] = useState('');
+  const [customerFilter, setCustomerFilter] = useState('');
+  const [occurrenceFilter, setOccurrenceFilter] = useState('');
+  const [amendmentFilter, setAmendmentFilter] = useState('');
+  const [counterplanFilter, setCounterplanFilter] = useState('');
+  const [causeDepartmentFilter, setCauseDepartmentFilter] = useState('');
 
   useEffect(() => {
     if (user === null) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [router, user]);
-
-  //users情報
-  useEffect(() => {
-    const usersCollectionRef = collection(db, "authority");
-    const q = query(usersCollectionRef, orderBy("rank", "asc"));
-    getDocs(q).then((querySnapshot) => {
-      setUsers(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-  }, []);
-
-  // //クレーム一覧を取得
-  // useEffect(() => {
-  //   const claimsCollectionRef = collection(db, 'claimList');
-  //   const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
-  //   getDocs(q).then((querySnapshot) => {
-  //     setClaims(
-  //       querySnapshot.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       }))
-  //     );
-  //   });
-  //   console.log('クレーム一覧取得');
-  // }, []);
-
-  //クレーム一覧を取得
-  useEffect(() => {
-    const claimsCollectionRef = collection(db, "claimList");
-    const q = query(claimsCollectionRef, orderBy("receptionNum", "desc"));
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setClaims(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    console.log("クレーム一覧取得");
-  }, []);
 
   //フィルターでクレーム一覧を絞り込み
   useEffect(() => {
@@ -170,24 +120,24 @@ const Claim: NextPage = () => {
       case claim.operator:
         switch (claim.status) {
           case 0:
-            return "事務局";
+            return '事務局';
           case 2:
-            return "事務局";
+            return '事務局';
           case 4:
-            return "事務局";
+            return '事務局';
           case 6:
-            return "管理者";
+            return '管理者';
           case 7:
-            return "TM";
+            return 'TM';
           case 8:
-            return "";
+            return '';
           default:
             return users.map((user: { uid: string; name: string }) => {
               if (user.uid == claim.operator) return user.name;
             });
         }
       default:
-        return "事務局";
+        return '事務局';
     }
   };
 
@@ -233,14 +183,14 @@ const Claim: NextPage = () => {
         <>
           <Box
             p={6}
-            backgroundColor={"#f7f7f7"}
-            paddingBottom={"50px"}
-            minH={"100vh"}
+            backgroundColor={'#f7f7f7'}
+            paddingBottom={'50px'}
+            minH={'100vh'}
           >
-            <Flex flexDirection={"column"} alignItems={"center"}>
-              <TableContainer backgroundColor="white" borderRadius={6} p={6}>
-                <Flex mb={6} justifyContent="space-between">
-                  <Box fontSize="lg">全{filterClaims.length}件</Box>
+            <Flex flexDirection={'column'} alignItems={'center'}>
+              <TableContainer backgroundColor='white' borderRadius={6} p={6}>
+                <Flex mb={6} justifyContent='space-between'>
+                  <Box fontSize='lg'>全{filterClaims.length}件</Box>
                   <Box>
                     <ClaimFilterArea
                       claims={claims}
@@ -264,21 +214,21 @@ const Claim: NextPage = () => {
                     />
                   </Box>
                 </Flex>
-                <Table size="sm">
+                <Table size='sm'>
                   <Thead>
                     <Tr>
-                      <Th minW="80px">作業者</Th>
-                      <Th minW="95px">ステータス</Th>
-                      <Th minW="105px">受付日</Th>
-                      <Th minW="80px">受付NO.</Th>
-                      <Th minW="100px">担当</Th>
-                      <Th minW="260px">顧客名</Th>
-                      <Th minW="105px">発生日</Th>
-                      <Th minW="150px">発生内容</Th>
-                      <Th minW="160px">修正処置</Th>
-                      <Th minW="120px">対策</Th>
-                      <Th minW="120px">起因部署</Th>
-                      <Th minW="105px">完了日</Th>
+                      <Th minW='80px'>作業者</Th>
+                      <Th minW='95px'>ステータス</Th>
+                      <Th minW='105px'>受付日</Th>
+                      <Th minW='80px'>受付NO.</Th>
+                      <Th minW='100px'>担当</Th>
+                      <Th minW='260px'>顧客名</Th>
+                      <Th minW='105px'>発生日</Th>
+                      <Th minW='150px'>発生内容</Th>
+                      <Th minW='160px'>修正処置</Th>
+                      <Th minW='120px'>対策</Th>
+                      <Th minW='120px'>起因部署</Th>
+                      <Th minW='105px'>完了日</Th>
                       <Th></Th>
                     </Tr>
                   </Thead>
@@ -298,8 +248,8 @@ const Claim: NextPage = () => {
                             currentUser
                           ) &&
                             claim.status === 7)
-                            ? "yellow.100"
-                            : "white"
+                            ? 'yellow.100'
+                            : 'white'
                         }
                       >
                         <Td>{currentOperator(claim)}</Td>
@@ -321,7 +271,7 @@ const Claim: NextPage = () => {
                           {claimSelectList1.map(
                             (c) =>
                               c.id == claim.occurrenceSelect &&
-                              c.headline + " " + c.title
+                              c.headline + ' ' + c.title
                           )}
                         </Td>
                         <Td>

@@ -1,23 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 //クレーム報告書　個別ページ
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Flex, Input } from '@chakra-ui/react';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-} from 'firebase/firestore';
+import { Box, Flex } from '@chakra-ui/react';
+import { deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { auth, db, storage } from '../../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { authState, claimsState, usersState } from '../../../store';
 import { taskflow } from '../../../data';
 import { todayDate } from '../../../functions';
 
@@ -40,9 +31,9 @@ const ClaimId = () => {
   const queryId = router.query.id;
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
+  const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
   const [claim, setClaim] = useState<any>([]); //クレームの個別記事を取得
-  const [claims, setClaims] = useState<any>([]); //クレーム一覧を取得
-  const [users, setUsers] = useState<any>([]); //ユーザー一覧
+  const [claims, setClaims] = useRecoilState<any>(claimsState); //クレーム一覧を取得
   const [selectUser, setSelectUser] = useState(''); //送信先選択
   const [selectTask, setSelectTask] = useState<number>(0); //タスクの選択
   const [edit, setEdit] = useState(false); //編集画面切替
@@ -89,6 +80,13 @@ const ClaimId = () => {
       router.push('/login');
     }
   }, [router, user]);
+
+  // クレーム報告書を取得;
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'claimList', `${queryId}`), (doc) => {
+      setClaim(doc.data());
+    });
+  }, [queryId, edit]);
 
   //クレーム報告書を削除
   const deleteClaim = async (
@@ -149,20 +147,6 @@ const ClaimId = () => {
     });
     router.push('/claims');
   };
-
-  //クレーム一覧を取得
-  useEffect(() => {
-    const claimsCollectionRef = collection(db, 'claimList');
-    const q = query(claimsCollectionRef, orderBy('receptionNum', 'desc'));
-    getDocs(q).then((querySnapshot) => {
-      setClaims(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-  }, []);
 
   //nextページ prevページのIDを取得
   const nextPrevPage = (id: any, page: number) => {
@@ -229,28 +213,6 @@ const ClaimId = () => {
       completionDate,
     });
   };
-
-  // クレーム報告書を取得;
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'claimList', `${queryId}`), (doc) => {
-      setClaim(doc.data());
-    });
-  }, [queryId, edit]);
-
-  //ユーザー一覧を取得
-  useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
-    const unsub = onSnapshot(q, (querySnapshot: any) => {
-      setUsers(
-        querySnapshot.docs.map((doc: any) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, []);
 
   //各リストを取得
   useEffect(() => {

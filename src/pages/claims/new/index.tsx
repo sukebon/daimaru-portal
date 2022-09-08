@@ -3,19 +3,15 @@ import {
   addDoc,
   collection,
   doc,
-  onSnapshot,
-  orderBy,
-  query,
   serverTimestamp,
   updateDoc,
-  where,
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilValue } from 'recoil';
 import { auth, db, storage } from '../../../../firebase';
-import { authState } from '../../../../store';
+import { authState, usersState } from '../../../../store';
 import ClaimInputCustomer from '../../../components/claims/new/ClaimInputCustomer';
 import ClaimInputOccurrence from '../../../components/claims/new/ClaimInputOccurrence';
 import ClaimInputAmendment from '../../../components/claims/new/ClaimInputAmendment';
@@ -28,7 +24,8 @@ const ClaimNew = () => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
-  const [users, setUsers] = useState([]);
+  const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
+  const [filterUsers, setFilterUsers] = useState([]); //絞り込んだユーザー一覧リスト
   const [customer, setCustomer] = useState(''); //顧客名
   const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
   const [occurrenceSelect, setOccurrenceSelect] = useState(''); //発生選択
@@ -50,7 +47,6 @@ const ClaimNew = () => {
   const [status, setStatus] = useState(''); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
-  // const [users, setUsers] = useState<any>([]);
   const [fileUpload1, setFileUpload1] = useState<any>();
   const [fileUpload2, setFileUpload2] = useState<any>();
   const [fileUpload3, setFileUpload3] = useState<any>();
@@ -123,22 +119,11 @@ const ClaimNew = () => {
 
   //ユーザーリストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(
-      usersCollectionRef,
-      orderBy('rank', 'asc'),
-      where('isoSalesStaff', '==', true)
-    );
-    const unsub = onSnapshot(q, (querySnapshot: any) => {
-      setUsers(
-        querySnapshot.docs.map((doc: any) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
+    const newUsers = users.filter((user: { isoSalesStaff: boolean }) => {
+      if (user.isoSalesStaff === true) return user;
     });
-    return unsub;
-  }, []);
+    setFilterUsers(newUsers);
+  }, [users]);
 
   return (
     <>
@@ -182,7 +167,7 @@ const ClaimNew = () => {
                     onChange={(e) => setStampStaff(e.target.value)}
                     placeholder='担当者を選択'
                   >
-                    {users.map((user: { uid: string; name: string }) => (
+                    {filterUsers.map((user: { uid: string; name: string }) => (
                       <option key={user.uid} value={user.uid}>
                         {user.name}
                       </option>

@@ -15,7 +15,7 @@ type Props = {
     applicant: string;
     person: string;
     moreless: string;
-    member: string;
+    member: [];
     level: string;
     content: string;
     display: boolean;

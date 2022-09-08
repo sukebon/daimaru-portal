@@ -18,7 +18,7 @@ interface Props {
     applicant: string;
     person: string;
     moreless: string;
-    member: string;
+    member: string[];
     level: string;
     content: string;
     display: boolean;
@@ -31,7 +31,8 @@ interface Props {
 
 const RecruitmentButton: NextPage<Props> = ({ request }) => {
   const [user] = useAuthState(auth);
-  const currentUser = useRecoilValue(authState);
+  const currentUser: any = useRecoilValue(authState);
+
   //参加する
   const addRequest = async (uid: string) => {
     const docRef = doc(db, 'requestList', uid);
