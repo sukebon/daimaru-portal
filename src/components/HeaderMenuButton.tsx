@@ -101,11 +101,11 @@ const HeaderMenuButton: NextPage = () => {
         </Link>
         {currentUser === 'MBTOK9Jr0eRWVuoT2YXgZNMoBQH3' && (
           <>
-            <Link href='/dm'>
+            {/* <Link href='/dm'>
               <a>
                 <MenuItem pl={6}>チラシ・リーフレット</MenuItem>
               </a>
-            </Link>
+            </Link> */}
           </>
         )}
         <MenuDivider />
@@ -117,6 +117,17 @@ const HeaderMenuButton: NextPage = () => {
                 <MenuItem>管理者ページ</MenuItem>
               </a>
             </Link>
+            <Link href='/sales/'>
+              <a>
+                <MenuItem>売上一覧</MenuItem>
+              </a>
+            </Link>
+            <Link href='/sales/new'>
+              <a>
+                <MenuItem>売上登録</MenuItem>
+              </a>
+            </Link>
+
             <MenuDivider />
           </>
         )}
