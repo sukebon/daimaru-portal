@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Flex,
+  slideFadeConfig,
   Table,
   TableCaption,
   TableContainer,
@@ -102,6 +103,7 @@ const Sales = () => {
                 <Th>目標売上</Th>
                 <Th>着地売上</Th>
                 <Th>差額</Th>
+                <Th>達成率</Th>
                 <Th>編集</Th>
               </Tr>
             </Thead>
@@ -119,6 +121,15 @@ const Sales = () => {
                     {(
                       Number(sale.currentLanding) - Number(sale.currentTarget)
                     ).toLocaleString()}
+                  </Td>
+                  <Td isNumeric>
+                    {(
+                      (Number(sale.currentLanding) /
+                        Number(sale.currentTarget)) *
+                      100
+                    )
+                      .toString()
+                      .slice(0, 4) + "%"}
                   </Td>
                   <Td>
                     {(Administrator.includes(currentUser) ||
@@ -140,6 +151,11 @@ const Sales = () => {
                 </Td>
                 <Td fontWeight="bold" isNumeric>
                   {(Number(landingSum) - Number(targetSum)).toLocaleString()}
+                </Td>
+                <Td fontWeight="bold" isNumeric>
+                  {((Number(landingSum) / Number(targetSum)) * 100)
+                    .toString()
+                    .slice(0, 4) + "%"}
                 </Td>
               </Tr>
             </Tbody>
