@@ -13,11 +13,19 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
+import { authState } from "../../../store";
 
 type Props = {
   docId: string;
@@ -25,6 +33,7 @@ type Props = {
 
 const SalesEditModal: NextPage<Props> = ({ docId }) => {
   const router = useRouter();
+  const currentUser = useRecoilValue(authState);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [salesObj, setSalesObj] = useState<any>();
 
@@ -60,6 +69,7 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
     try {
       await updateDoc(docRef, {
         currentTarget: salesObj.currentTarget,
+        currentAchieve: salesObj.currentAchieve,
         currentLanding: salesObj.currentLanding,
         updatedAt: serverTimestamp(),
       });
@@ -90,20 +100,30 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
           <ModalBody>
             <Stack spacing={6}>
               <Box>
-                <Text>目標売上</Text>
+                <Text>予算</Text>
                 <Input
                   mt={2}
-                  placeholder="目標額を入力してください"
+                  placeholder="予算を入力してください"
                   name="currentTarget"
                   value={salesObj?.currentTarget}
                   onChange={handleInputChange}
                 />
               </Box>
               <Box>
-                <Text>着地売上</Text>
+                <Text>実績</Text>
                 <Input
                   mt={2}
-                  placeholder="着地金額を入力してください"
+                  placeholder="実績を入力してください"
+                  name="currentAchieve"
+                  value={salesObj?.currentAchieve}
+                  onChange={handleInputChange}
+                />
+              </Box>
+              <Box>
+                <Text>着地</Text>
+                <Input
+                  mt={2}
+                  placeholder="着地を入力してください"
                   name="currentLanding"
                   value={salesObj?.currentLanding}
                   onChange={handleInputChange}

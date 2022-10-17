@@ -24,7 +24,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { authState, usersState } from "../../../store";
@@ -32,12 +32,11 @@ import SalesEditModal from "../../components/sales/SalesEditModal";
 
 const Sales = () => {
   const currentUser = useRecoilValue(authState);
-  const [users, setUsers] = useRecoilState<any>(usersState); //ユーザー一覧リスト
+  const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
   const [sales, setSeles] = useState<any>();
   const [targetSum, setTargetSum] = useState<number>();
+  const [AchiveSum, setAchiveSum] = useState<number>();
   const [landingSum, setLandingSum] = useState<number>();
-  // const [recentAtDate, setRecentAtDate] = useState(new Date());
-  // const [sinceAtDate, setSinceAtDate] = useState("2022-10-31");
 
   // salesデータを取得
   useEffect(() => {
@@ -82,6 +81,12 @@ const Sales = () => {
     });
     setTargetSum(target);
 
+    let achive = 0;
+    sales?.forEach((sale: any) => {
+      achive += Number(sale.currentAchieve);
+    });
+    setAchiveSum(achive);
+
     let landing = 0;
     sales?.forEach((sale: any) => {
       landing += Number(sale.currentLanding);
@@ -91,7 +96,7 @@ const Sales = () => {
 
   return (
     <Box backgroundColor={"#f7f7f7"} pt={6} minH={"calc(100vh - 135px)"}>
-      <Container maxW="700px" mt={6}>
+      <Container maxW="800px" mt={6}>
         <Box my={3} fontSize="xl">
           今月売上一覧
         </Box>
@@ -100,8 +105,9 @@ const Sales = () => {
             <Thead>
               <Tr>
                 <Th>担当</Th>
-                <Th>目標売上</Th>
-                <Th>着地売上</Th>
+                <Th>予算</Th>
+                <Th>実績</Th>
+                <Th>着地</Th>
                 <Th>差額</Th>
                 <Th>達成率</Th>
                 <Th>編集</Th>
@@ -113,6 +119,9 @@ const Sales = () => {
                   <Td mr={6}>{dispName(sale.currentUser)}</Td>
                   <Td isNumeric>
                     {Number(sale.currentTarget).toLocaleString()}
+                  </Td>
+                  <Td isNumeric>
+                    {Number(sale.currentAchieve).toLocaleString()}
                   </Td>
                   <Td isNumeric>
                     {Number(sale.currentLanding).toLocaleString()}
@@ -147,6 +156,9 @@ const Sales = () => {
                   {targetSum?.toLocaleString()}
                 </Td>
                 <Td fontWeight="bold" isNumeric>
+                  {AchiveSum?.toLocaleString()}
+                </Td>
+                <Td fontWeight="bold" isNumeric>
                   {landingSum?.toLocaleString()}
                 </Td>
                 <Td fontWeight="bold" isNumeric>
@@ -168,6 +180,18 @@ const Sales = () => {
             </a>
           </Link>
         </Box>
+        {/* {Administrator.includes(currentUser) && (
+          <>
+            <Box mt={6} p={6} bgColor="white" borderRadius={6}>
+              <Box>未登録者</Box>
+              <Flex>
+                {users.map((user: any) => (
+                  <Box key={user.id}>{user.name}</Box>
+                ))}
+              </Flex>
+            </Box>
+          </>
+        )} */}
       </Container>
     </Box>
   );
