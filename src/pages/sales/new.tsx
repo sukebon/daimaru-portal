@@ -20,6 +20,7 @@ const SalesNew = () => {
   const currentUser = useRecoilValue(authState);
   const [salesObj, setSalesObj] = useState({
     currentTarget: "",
+    currentAchieve: "",
     currentLanding: "",
   });
 
@@ -40,6 +41,7 @@ const SalesNew = () => {
     try {
       await setDoc(docRef, {
         currentTarget: salesObj.currentTarget,
+        currentAchieve: salesObj.currentAchieve,
         currentLanding: salesObj.currentLanding,
         currentUser,
         createdAt: serverTimestamp(),
@@ -68,14 +70,21 @@ const SalesNew = () => {
             <Text>{dateTitle()}月 売上</Text>
             <Input
               mr={2}
-              placeholder="目標額を入力してください"
+              placeholder="予算を入力してください"
               name="currentTarget"
               value={salesObj.currentTarget}
               onChange={handleInputChange}
             />
             <Input
               mr={2}
-              placeholder="着地金額を入力してください"
+              placeholder="実績を入力してください"
+              name="currentAchieve"
+              value={salesObj.currentAchieve}
+              onChange={handleInputChange}
+            />
+            <Input
+              mr={2}
+              placeholder="着地を入力してください"
               name="currentLanding"
               value={salesObj.currentLanding}
               onChange={handleInputChange}
