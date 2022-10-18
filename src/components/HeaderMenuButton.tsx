@@ -118,18 +118,18 @@ const HeaderMenuButton: NextPage = () => {
           </>
         )}
         <MenuDivider />
-        {currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
-          (currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2" && (
-            <>
-              <Link href="/admin/">
-                <a>
-                  <MenuItem>管理者ページ</MenuItem>
-                </a>
-              </Link>
+        {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
+          currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
+          <>
+            <Link href="/admin/">
+              <a>
+                <MenuItem>管理者ページ</MenuItem>
+              </a>
+            </Link>
 
-              <MenuDivider />
-            </>
-          ))}
+            <MenuDivider />
+          </>
+        )}
         {(Administrator.includes(currentUser) ||
           userSalesAuthority(currentUser)) && (
           <>
