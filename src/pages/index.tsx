@@ -34,6 +34,7 @@ import {
 import CheckDrawer from "../components/alcohol/CheckDrawer";
 import { datetime, todayDate } from "../../functions";
 import Link from "next/link";
+import ClaimArea from "../components/ClaimArea";
 
 const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -45,10 +46,6 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
   const [requests, setRequests] = useRecoilState<any>(requestsState); //リクエスト一覧リスト
   const [hideRequests, setHideRequests] =
     useRecoilState<any>(hideRequestsState); //リクエスト一覧リスト
-
-  const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
-  const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
-  const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
 
   const [display, setDisplay] = useState<boolean>(true);
   const [alcoholObject, setAlcoholObject] = useState<any>({});
@@ -111,7 +108,6 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
       );
     });
   }, [setUsers]);
-  console.log(currentUser);
 
   // 未登録であればauthorityに登録
   useEffect(() => {
@@ -142,62 +138,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     });
   }, [setClaims]);
 
-  //各リストを取得
-  useEffect(() => {
-    //ISO 事務局のリスト(オブジェクト）
-    setIsoOfficeUsers(
-      users.filter((user: any) => {
-        return user.isoOffice === true;
-      })
-    );
-    //ISOマネージャーのリスト(オブジェクト）
-    setIsoManagerUsers(
-      users.filter((user: any) => {
-        return user.isoManager === true;
-      })
-    );
-    //ISO トップマネジメントのリスト(オブジェクト）
-    setIsoTopManegmentUsers(
-      users.filter((user: any) => {
-        return user.isoTopManegment === true;
-      })
-    );
-    //ISO 上司のリスト(オブジェクト）
-  }, [users]);
-
-  //【クレーム】iso（事務局・管理者・TM）のオブジェクトからuidのみ取り出して配列にする
-  const searchUsers = (array: { uid: string }[]) => {
-    const newUsers = array.map((user: { uid: string }) => {
-      return user.uid;
-    });
-    return newUsers;
-  };
-
-  //【クレーム】各自クレーム処理件数
-  const claimCount = () => {
-    let result = 0;
-    claims.forEach((claim: any) => {
-      if (
-        claim.operator == currentUser ||
-        (searchUsers(isoOfficeUsers).includes(currentUser) &&
-          claim.status === Number(0)) ||
-        (searchUsers(isoOfficeUsers).includes(currentUser) &&
-          claim.status === Number(2)) ||
-        (searchUsers(isoOfficeUsers).includes(currentUser) &&
-          claim.status === Number(4)) ||
-        (searchUsers(isoManagerUsers).includes(currentUser) &&
-          claim.status === Number(6)) ||
-        (searchUsers(isoTopManegmentUsers).includes(currentUser) &&
-          claim.status === Number(7))
-      ) {
-        result++;
-      }
-    });
-    if (result === 0) return;
-    return result;
-  };
-
-  //アルコールチェック
+  //アルコールチェックLIST取得
   useEffect(() => {
     const unsub = onSnapshot(
       doc(db, "alcoholCheckList", `${todayDate()}`),
@@ -207,6 +148,7 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
     );
   }, [currentUser]);
 
+  // アルコールKEYを取得して配列を作成
   useEffect(() => {
     if (alcoholObject) {
       setAlcoholArray(Object.keys(alcoholObject).map((arr) => arr));
@@ -239,43 +181,10 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 flexDirection={{ base: "column", lg: "row" }}
               >
                 {/* クレーム件数エリア */}
+
                 <Box w={{ base: "100%", lg: "800px" }} mx="auto" flex={"1"}>
-                  {claimCount() && (
-                    <Box
-                      width="100%"
-                      boxShadow="xs"
-                      mt="6"
-                      p="6"
-                      rounded="md"
-                      bg="white"
-                    >
-                      <Text fontSize="md" mt="1" ml="1">
-                        クレーム報告書 未処理件数：
-                        <Box as="span" color="red" fontWeight="bold">
-                          {claimCount()}
-                        </Box>{" "}
-                        件
-                        <Box>
-                          ※「Menu」にある
-                          <Link href="/claims">
-                            <a>
-                              <Text
-                                as="span"
-                                textDecoration="underline"
-                                _hover={{
-                                  textDecoration: "none",
-                                }}
-                              >
-                                クレーム報告書一覧
-                              </Text>
-                            </a>
-                          </Link>
-                          をcheckしてください。
-                        </Box>
-                      </Text>
-                    </Box>
-                  )}
                   <CheckDrawer />
+                  <ClaimArea />
                   <Slogan slogan={sloganData.slogan} />
                   <Information news={newsData.contents} />
                   <QuickLink link={linkData.contents} />
