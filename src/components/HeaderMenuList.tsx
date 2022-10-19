@@ -35,19 +35,12 @@ const HeaderMenuList = () => {
     { title: "メーカーWEB", link: "/makerweb", blank: false },
   ];
 
-  const css = {
-    size: "sm",
-    variant: "outline",
-    colorScheme: "blue",
-    fontWeight: "bold",
-  };
-
   return (
     <>
       <Box display={{ base: "block", lg: "none" }}>
         <Menu>
-          <MenuButton as={Button} mr={3}>
-            リンク
+          <MenuButton as={Button} colorScheme="blue" variant="outline" mr={3}>
+            Menu
           </MenuButton>
           <MenuList>
             {menu.map((m) => (

@@ -15,6 +15,7 @@ import { auth } from "../../firebase";
 import { authState, usersState } from "../../store";
 import { NextPage } from "next";
 import { Administrator } from "../../data";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 const HeaderMenuButton: NextPage = () => {
   const [currentUser, setCurrentUser] = useRecoilState(authState);
@@ -48,8 +49,8 @@ const HeaderMenuButton: NextPage = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} colorScheme="blue">
-        Menu
+      <MenuButton as={Button} colorScheme="blue" pb={1}>
+        <HamburgerIcon />
       </MenuButton>
       <MenuList fontSize="xs">
         <Box mx="4">
@@ -77,13 +78,7 @@ const HeaderMenuButton: NextPage = () => {
             <MenuDivider />
           </>
         )}
-        <MenuGroup title="お手伝い依頼" fontSize="xs"></MenuGroup>
-        <Link href="/recruitment">
-          <a>
-            <MenuItem pl={6}>作成</MenuItem>
-          </a>
-        </Link>
-        <MenuDivider />
+
         <MenuGroup title="クレーム報告書" fontSize="xs"></MenuGroup>
 
         <Link href="/claims/new">
@@ -101,13 +96,7 @@ const HeaderMenuButton: NextPage = () => {
             <MenuItem pl={6}>集計（グラフ）</MenuItem>
           </a>
         </Link>
-        <MenuDivider />
-        <MenuGroup title="メーカー情報" fontSize="xs"></MenuGroup>
-        <Link href="/makerweb">
-          <a>
-            <MenuItem pl={6}>WEB発注リスト</MenuItem>
-          </a>
-        </Link>
+
         {currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" && (
           <>
             {/* <Link href='/dm'>
@@ -118,18 +107,7 @@ const HeaderMenuButton: NextPage = () => {
           </>
         )}
         <MenuDivider />
-        {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
-          currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
-          <>
-            <Link href="/admin/">
-              <a>
-                <MenuItem>管理者ページ</MenuItem>
-              </a>
-            </Link>
 
-            <MenuDivider />
-          </>
-        )}
         {(Administrator.includes(currentUser) ||
           userSalesAuthority(currentUser)) && (
           <>
@@ -139,6 +117,18 @@ const HeaderMenuButton: NextPage = () => {
                 <MenuItem pl={6}>一覧・登録</MenuItem>
               </a>
             </Link>
+            <MenuDivider />
+          </>
+        )}
+        {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
+          currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
+          <>
+            <Link href="/admin/">
+              <a>
+                <MenuItem>管理者ページ</MenuItem>
+              </a>
+            </Link>
+
             <MenuDivider />
           </>
         )}

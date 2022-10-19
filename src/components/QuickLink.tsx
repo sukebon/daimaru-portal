@@ -43,7 +43,15 @@ const QuickLink: NextPage<any> = ({ links, categories }) => {
                     .map((link: any) => (
                       <ListItem key={link.id}>
                         <Link href={link.link}>
-                          <a target="_blank">{link.title}</a>
+                          <a target="_blank">
+                            <Box
+                              fontWeight={
+                                link.bold === true ? "bold" : "normal"
+                              }
+                            >
+                              {link.title}
+                            </Box>
+                          </a>
                         </Link>
                       </ListItem>
                     ))}
