@@ -1,19 +1,47 @@
 import { Box, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 
-interface Props {
-  slogan: string;
-}
-
-const Slogan: NextPage<Props> = ({ slogan }) => {
+const Slogan: NextPage = () => {
   return (
     <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
       <Text fontSize="2xl" mt="1" ml="1">
         スローガン
       </Text>
 
-      <Box my="3">
-        <Box lineHeight={10} dangerouslySetInnerHTML={{ __html: slogan }}></Box>
+      <Box my="3" lineHeight={6}>
+        <Text>
+          ①
+          <Box as="span" color="red">
+            売上予算
+          </Box>
+          及び
+          <Box as="span" color="red">
+            利益予算
+          </Box>
+          に対し常に
+          <Box as="span" color="red">
+            最新かつ正確な現状を把握
+          </Box>
+          する
+        </Text>
+        <Text>
+          ②目標達成に伴う
+          <Box as="span" color="red">
+            問題・課題を即分析し解決に向け全力で行動
+          </Box>
+          する
+        </Text>
+        <Text>
+          ③
+          <Box as="span" color="red">
+            情報
+          </Box>
+          の伝達・共有は相手に伝わったかを
+          <Box as="span" color="red">
+            何度も何度も確認
+          </Box>
+          する
+        </Text>
       </Box>
     </Box>
   );

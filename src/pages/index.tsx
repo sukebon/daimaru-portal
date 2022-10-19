@@ -32,11 +32,10 @@ import {
   usersState,
 } from "../../store/";
 import CheckDrawer from "../components/alcohol/CheckDrawer";
-import { datetime, todayDate } from "../../functions";
-import Link from "next/link";
+import { todayDate } from "../../functions";
 import ClaimArea from "../components/ClaimArea";
 
-const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
+const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
@@ -185,9 +184,12 @@ const Home: NextPage<any> = ({ sloganData, newsData, linkData }) => {
                 <Box w={{ base: "100%", lg: "800px" }} mx="auto" flex={"1"}>
                   <CheckDrawer />
                   <ClaimArea />
-                  <Slogan slogan={sloganData.slogan} />
+                  <Slogan />
                   <Information news={newsData.contents} />
-                  <QuickLink link={linkData.contents} />
+                  <QuickLink
+                    links={linkData.contents}
+                    categories={categoryData.contents}
+                  />
                   <CatalogArea />
                 </Box>
                 <Box
@@ -252,8 +254,12 @@ export async function getStaticProps() {
       "X-MICROCMS-API-KEY": "5c23d3e8eaa0448388ca527e0e00c829611f",
     },
   };
-  const sloganRes = await fetch(`${accessPoint}/slogan`, options);
-  const sloganData = await sloganRes.json();
+
+  const categoryRes = await fetch(
+    `${accessPoint}/categories?limit=10`,
+    options
+  );
+  const categoryData = await categoryRes.json();
   const newsRes = await fetch(`${accessPoint}/news?limit=100`, options);
   const newsData = await newsRes.json();
   const linkRes = await fetch(`${accessPoint}/access-link?limit=100`, options);
@@ -261,7 +267,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      sloganData,
+      categoryData,
       newsData,
       linkData,
     },
