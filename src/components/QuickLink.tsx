@@ -1,18 +1,58 @@
-import { Box, Flex, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  ListItem,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
 
-const QuickLink: NextPage<any> = (props) => {
+const QuickLink: NextPage<any> = ({ links, categories }) => {
+  console.log(categories);
   return (
     <>
       <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
         <Text fontSize="2xl" my="1" ml="1">
           クイックアクセスリンク
         </Text>
-        <Flex flexDirection={{ base: "column", lg: "row" }} mt="5">
+        <Tabs>
+          <TabList mt={3}>
+            {categories?.map((c: any) => (
+              <Tab key={c.id}>{c.name}</Tab>
+            ))}
+          </TabList>
+
+          <TabPanels>
+            {categories.map((category: any) => (
+              <TabPanel key={category.id}>
+                <UnorderedList spacing={3} mx="6" mt={3}>
+                  {links
+                    .filter(
+                      (link: any) =>
+                        link.category?.name === category.name && true
+                    )
+                    .map((link: any) => (
+                      <ListItem key={link.id}>
+                        <Link href={link.link}>
+                          <a target="_blank">{link.title}</a>
+                        </Link>
+                      </ListItem>
+                    ))}
+                </UnorderedList>
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+        {/* <Flex flexDirection={{ base: "column", lg: "row" }} mt="5">
           <Box w={{ base: "100%", lg: "50%" }}>
             <UnorderedList spacing={3} mb="3" mx="6">
-              {props.link.map(
+              {links.map(
                 (value: any, index: number) =>
                   index <= 9 && (
                     <ListItem key={value.id}>
@@ -26,7 +66,7 @@ const QuickLink: NextPage<any> = (props) => {
           </Box>
           <Box w={{ base: "100%", lg: "50%" }}>
             <UnorderedList spacing={3} mb="3" mx="6">
-              {props.link.map(
+              {links.map(
                 (value: any, index: number) =>
                   10 <= index && (
                     <ListItem key={value.id}>
@@ -38,7 +78,7 @@ const QuickLink: NextPage<any> = (props) => {
               )}
             </UnorderedList>
           </Box>
-        </Flex>
+        </Flex> */}
       </Box>
     </>
   );
