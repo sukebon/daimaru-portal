@@ -7,7 +7,7 @@ import Slogan from "../components/Slogan";
 import CatalogArea from "../components/CatalogArea";
 import RecruitmentPosts from "../components/recruitmentComp/RecruitmentPosts";
 import styles from "../styles/Home.module.css";
-import { Box, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { auth } from "../../firebase";
 import { db } from "../../firebase";
@@ -34,6 +34,7 @@ import {
 import CheckDrawer from "../components/alcohol/CheckDrawer";
 import { todayDate } from "../../functions";
 import ClaimArea from "../components/ClaimArea";
+import Link from "next/link";
 
 const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -206,29 +207,43 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
                   borderRadius={"lg"}
                 >
                   <Flex
-                    flexDirection={{ base: "column", lg: "row" }}
-                    alignItems={"center"}
-                    mt="1"
-                    mb="2"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    flexDirection={{
+                      base: "column",
+                      md: "row",
+                      lg: "column",
+                      xl: "row",
+                    }}
+                    mb={3}
+                    gap={3}
                   >
-                    <Text fontSize="2xl" mb="2" mr="3">
-                      お手伝い依頼一覧
-                    </Text>
-                    <Tabs
-                      size="sm"
-                      variant="soft-rounded"
-                      colorScheme="gray"
-                      mb="2"
+                    <Flex
+                      flexDirection={{ base: "column", md: "row" }}
+                      alignItems="center"
+                      gap={3}
                     >
-                      <TabList>
-                        <Tab onClick={isDisplay} _focus={{ outline: "none" }}>
-                          掲載中
-                        </Tab>
-                        <Tab onClick={isHide} _focus={{ outline: "none" }}>
-                          掲載終了
-                        </Tab>
-                      </TabList>
-                    </Tabs>
+                      <Text fontSize="2xl" mr="3">
+                        お手伝い依頼一覧
+                      </Text>
+                      <Tabs size="sm" variant="soft-rounded" colorScheme="gray">
+                        <TabList>
+                          <Tab onClick={isDisplay} _focus={{ outline: "none" }}>
+                            掲載中
+                          </Tab>
+                          <Tab onClick={isHide} _focus={{ outline: "none" }}>
+                            掲載終了
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                    </Flex>
+                    <Box>
+                      <Link href="/recruitment">
+                        <a>
+                          <Button colorScheme="blue">お手伝い依頼を作成</Button>
+                        </a>
+                      </Link>
+                    </Box>
                   </Flex>
                   {display ? (
                     <RecruitmentPosts requests={requests} />

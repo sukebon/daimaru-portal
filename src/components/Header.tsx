@@ -23,9 +23,9 @@ const Header: NextPage = () => {
     <>
       {currentUser && (
         <Flex
-          width={"100%"}
-          height={"60px"}
-          padding={"0 10px"}
+          width="100%"
+          height="60px"
+          px={6}
           justifyContent="space-between"
           alignItems="center"
           bg="white"

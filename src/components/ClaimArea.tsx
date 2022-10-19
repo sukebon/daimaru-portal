@@ -142,31 +142,49 @@ const ClaimArea = () => {
       )}
       <Flex
         width="100%"
-        alignItems="center"
-        justifyContent={{ base: "flex-start", md: "space-between" }}
-        flexDirection={{ base: "column", md: "row" }}
-        boxShadow="xs"
         mt="6"
         p="6"
+        alignItems="center"
+        justifyContent={{ base: "flex-start", md: "space-between" }}
+        flexDirection={{
+          base: "column",
+          md: "row",
+          lg: "column",
+          xl: "column",
+          "2xl": "row",
+        }}
+        gap={6}
+        boxShadow="xs"
         rounded="md"
         bg="white"
       >
-        <Flex w="100%" my={1} fontSize="lg" alignItems="center">
+        <Flex w={{ base: "auto" }} fontSize="lg" alignItems="center">
           <Text>今月のクレーム報告件数:</Text>
           <Text fontSize="3xl" fontWeight="bold" mx={2} color="red">
             {claimCount}
           </Text>
           <Text>件</Text>
         </Flex>
-        <Box w="100%" my={1}>
-          <Link href="/claims/new">
-            <a>
-              <Button colorScheme="blue" w="100%">
-                クレーム報告書を作成
-              </Button>
-            </a>
-          </Link>
-        </Box>
+        <Flex flex="1" flexDirection={{ base: "column", sm: "row" }} gap={6}>
+          <Box w={{ base: "100%" }}>
+            <Link href="/claims/">
+              <a>
+                <Button colorScheme="gray" w="100%">
+                  クレーム報告書一覧
+                </Button>
+              </a>
+            </Link>
+          </Box>
+          <Box w="100%">
+            <Link href="/claims/new">
+              <a>
+                <Button colorScheme="blue" w="100%">
+                  クレーム報告書を作成
+                </Button>
+              </a>
+            </Link>
+          </Box>
+        </Flex>
       </Flex>
     </>
   );
