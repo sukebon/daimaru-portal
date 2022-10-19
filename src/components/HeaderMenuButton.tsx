@@ -48,7 +48,7 @@ const HeaderMenuButton: NextPage = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} colore="#241749">
+      <MenuButton as={Button} colorScheme="blue">
         Menu
       </MenuButton>
       <MenuList fontSize="xs">
