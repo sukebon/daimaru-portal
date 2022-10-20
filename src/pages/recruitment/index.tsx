@@ -1,40 +1,21 @@
-import { Box, Flex } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db } from '../../../firebase';
-import { auth } from '../../../firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import RecruitmentForm from '../../components/recruitmentComp/RecruitmentForm';
-import RecruitmentPosts from '../../components/recruitmentComp/RecruitmentPosts';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../../../store';
-import { useRouter } from 'next/router';
-import Header from '../../components/Header';
-import { Administrator } from '../../../data';
+import React, { useEffect, useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import { db } from "../../../firebase";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import RecruitmentForm from "../../components/recruitmentComp/RecruitmentForm";
+import RecruitmentPosts from "../../components/recruitmentComp/RecruitmentPosts";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../store";
 
 const Recruitment = () => {
-  const [user] = useAuthState(auth);
+  const currentUser = useRecoilValue(authState);
   const [requests, setRequests] = useState<any>([]);
   const [currentRequests, setCurrentRequests] = useState<any>([]);
-  const currentUser = useRecoilValue(authState);
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   if (user === null) {
-  //     router.push("/login");
-  //   }
-  // }, [router, user]);
 
   //管理者用投稿リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'requestList');
-    const q = query(usersCollectionRef, orderBy('sendAt', 'desc'));
+    const usersCollectionRef = collection(db, "requestList");
+    const q = query(usersCollectionRef, orderBy("sendAt", "desc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
         querySnapshot.docs.map((doc) => ({
@@ -48,60 +29,35 @@ const Recruitment = () => {
 
   //作成者用投稿リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'requestList');
-    const q = query(
-      usersCollectionRef,
-      where('author', '==', currentUser)
-      // orderBy('sendAt', 'desc')
+    setCurrentRequests(
+      requests.filter(
+        (request: { author: string }) => request.author === currentUser
+      )
     );
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setCurrentRequests(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, [currentUser]);
+  }, [currentUser, requests]);
 
   return (
     <>
       {currentUser && (
         <>
-          <Box
-            width={'100%'}
-            backgroundColor={'#f7f7f7'}
-            paddingBottom={'50px'}
-            minH={'100vh'}
-            p={6}
-          >
-            <Flex
-              flexDirection={'column'}
-              alignItems={'center'}
-              margin={'0 auto'}
-            >
+          <Box w="100%" bg="#f7f7f7" p={6} minH="100vh">
+            <Flex flexDirection="column" alignItems="center">
               <Box
-                w={{ base: '100%', md: '800px' }}
-                mx='auto'
+                w={{ base: "100%", md: "800px" }}
                 p={6}
-                backgroundColor='white'
-                borderRadius={6}
+                bg="white"
+                rounded="md"
               >
                 <RecruitmentForm />
               </Box>
               <Box
-                w={{ base: '100%', md: '800px' }}
-                mt='6'
-                mx='auto'
-                backgroundColor='white'
-                borderRadius={6}
+                w={{ base: "100%", md: "800px" }}
+                mt="6"
+                p={3}
+                bg="white"
+                rounded="md"
               >
-                {Administrator.includes(currentUser) ? (
-                  <RecruitmentPosts requests={requests} />
-                ) : (
-                  <RecruitmentPosts requests={currentRequests} />
-                )}
+                <RecruitmentPosts requests={currentRequests} />
               </Box>
             </Flex>
           </Box>
