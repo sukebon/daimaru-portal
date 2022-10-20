@@ -169,7 +169,7 @@ const ClaimArea = () => {
           <Box w={{ base: "100%" }}>
             <Link href="/claims/">
               <a>
-                <Button colorScheme="gray" w="100%">
+                <Button colorScheme="blue" variant="outline" w="100%">
                   クレーム報告書一覧
                 </Button>
               </a>
