@@ -3,7 +3,13 @@ import type { NextPage } from "next";
 
 const Slogan: NextPage = () => {
   return (
-    <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
+    <Box
+      width="100%"
+      boxShadow="xs"
+      p={{ base: 3, md: 6 }}
+      rounded="md"
+      bg="white"
+    >
       <Text fontSize="2xl" mt="1" ml="1">
         スローガン
       </Text>
@@ -24,14 +30,14 @@ const Slogan: NextPage = () => {
           </Box>
           する
         </Text>
-        <Text>
+        <Text mt={2}>
           ②目標達成に伴う
           <Box as="span" color="red">
             問題・課題を即分析し解決に向け全力で行動
           </Box>
           する
         </Text>
-        <Text>
+        <Text mt={2}>
           ③
           <Box as="span" color="red">
             情報

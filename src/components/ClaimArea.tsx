@@ -29,8 +29,6 @@ const ClaimArea = () => {
     const lastDate = new Date(year, month, 0);
     const startDate = `${year}-${month}-01`;
     const endDate = `${year}-${month}-${lastDate.getDate()}`;
-    console.log(startDate);
-    console.log(endDate);
     const q = query(
       collection(db, "claimList"),
       orderBy("receptionDate"),
@@ -101,7 +99,7 @@ const ClaimArea = () => {
   return (
     <>
       {myClaimCount() && (
-        <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
+        <Box width="100%" boxShadow="xs" p="6" rounded="md" bg="white">
           <Flex
             fontSize="md"
             mt="1"
@@ -142,7 +140,6 @@ const ClaimArea = () => {
       )}
       <Flex
         width="100%"
-        mt="6"
         p="6"
         alignItems="center"
         justifyContent={{ base: "flex-start", md: "space-between" }}

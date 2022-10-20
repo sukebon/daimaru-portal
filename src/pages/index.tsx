@@ -5,9 +5,8 @@ import Information from "../components/Information";
 import QuickLink from "../components/QuickLink";
 import Slogan from "../components/Slogan";
 import CatalogArea from "../components/CatalogArea";
-import RecruitmentPosts from "../components/recruitmentComp/RecruitmentPosts";
 import styles from "../styles/Home.module.css";
-import { Box, Button, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { auth } from "../../firebase";
 import { db } from "../../firebase";
@@ -21,33 +20,21 @@ import {
   orderBy,
   query,
   setDoc,
-  where,
 } from "firebase/firestore";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  authState,
-  claimsState,
-  hideRequestsState,
-  requestsState,
-  usersState,
-} from "../../store/";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authState, claimsState, usersState } from "../../store/";
 import CheckDrawer from "../components/alcohol/CheckDrawer";
 import { todayDate } from "../../functions";
 import ClaimArea from "../components/ClaimArea";
-import Link from "next/link";
+import RecruitmentArea from "../components/RecruitmentArea";
 
 const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
-  // const [requests, setRequests] = useState<any>([]);
-  const [users, setUsers] = useRecoilState<any>(usersState); //ユーザー一覧リスト
-  const [claims, setClaims] = useRecoilState<any>(claimsState); //クレーム一覧リスト
-  const [requests, setRequests] = useRecoilState<any>(requestsState); //リクエスト一覧リスト
-  const [hideRequests, setHideRequests] =
-    useRecoilState<any>(hideRequestsState); //リクエスト一覧リスト
+  const setUsers = useSetRecoilState<any>(usersState); //ユーザー一覧リスト
+  const setClaims = useSetRecoilState<any>(claimsState); //クレーム一覧リスト
 
-  const [display, setDisplay] = useState<boolean>(true);
   const [alcoholObject, setAlcoholObject] = useState<any>({});
   const [alcoholArray, setAlcoholArray] = useState<any>([]);
 
@@ -56,44 +43,6 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
       router.push("/login");
     }
   }, [router, user]);
-
-  //掲載中（表示）案件
-  useEffect(() => {
-    const requestsCollectionRef = collection(db, "requestList");
-    const q = query(
-      requestsCollectionRef,
-      where("display", "==", true),
-      orderBy("sendAt", "desc")
-    );
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setRequests(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, [setRequests]);
-
-  //終了（非表示）案件
-  useEffect(() => {
-    const requestCollectionRef = collection(db, "requestList");
-    const q = query(
-      requestCollectionRef,
-      where("display", "==", false),
-      orderBy("sendAt", "desc")
-    );
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setHideRequests(
-        querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
-    });
-    return unsub;
-  }, [setHideRequests]);
 
   //users情報
   useEffect(() => {
@@ -155,13 +104,6 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
     }
   }, [alcoholObject]);
 
-  const isDisplay = () => {
-    setDisplay(true);
-  };
-  const isHide = () => {
-    setDisplay(false);
-  };
-
   return (
     <>
       <Head>
@@ -170,91 +112,35 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {currentUser && (
-        <div style={{ backgroundColor: "#f7f7f7" }}>
-          <div className={styles.container}>
-            <main>
+        <Box bg="#f7f7f7">
+          <Box className={styles.container}>
+            <Box as="main">
               <Flex
                 w="100%"
-                mx="auto"
-                px={6}
-                pb={6}
+                p={6}
+                gap={6}
                 flexDirection={{ base: "column", lg: "row" }}
               >
-                {/* クレーム件数エリア */}
-
-                <Box w={{ base: "100%", lg: "800px" }} mx="auto" flex={"1"}>
-                  <CheckDrawer />
-                  <ClaimArea />
-                  <Slogan />
-                  <Information news={newsData.contents} />
-                  <QuickLink
-                    links={linkData.contents}
-                    categories={categoryData.contents}
-                  />
-                  <CatalogArea />
+                <Box flex={1}>
+                  <Stack spacing={6}>
+                    <CheckDrawer />
+                    <ClaimArea />
+                    <Slogan />
+                    <Information news={newsData.contents} />
+                    <QuickLink
+                      links={linkData.contents}
+                      categories={categoryData.contents}
+                    />
+                    <CatalogArea />
+                  </Stack>
                 </Box>
-                <Box
-                  // w={{ base: '100%', md: '800px' }}
-                  w="100%"
-                  mt="6"
-                  mx="auto"
-                  ml={{ base: "0", lg: "6" }}
-                  p="6"
-                  rounded="md"
-                  boxShadow="xs"
-                  bg="white"
-                  flex="1"
-                  borderRadius={"lg"}
-                >
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    flexDirection={{
-                      base: "column",
-                      md: "row",
-                      lg: "column",
-                      xl: "row",
-                    }}
-                    mb={3}
-                    gap={3}
-                  >
-                    <Flex
-                      flexDirection={{ base: "column", md: "row" }}
-                      alignItems="center"
-                      gap={3}
-                    >
-                      <Text fontSize="2xl" mr="3">
-                        お手伝い依頼一覧
-                      </Text>
-                      <Tabs size="sm" variant="soft-rounded" colorScheme="gray">
-                        <TabList>
-                          <Tab onClick={isDisplay} _focus={{ outline: "none" }}>
-                            掲載中
-                          </Tab>
-                          <Tab onClick={isHide} _focus={{ outline: "none" }}>
-                            掲載終了
-                          </Tab>
-                        </TabList>
-                      </Tabs>
-                    </Flex>
-                    <Box>
-                      <Link href="/recruitment">
-                        <a>
-                          <Button colorScheme="blue">お手伝い依頼を作成</Button>
-                        </a>
-                      </Link>
-                    </Box>
-                  </Flex>
-                  {display ? (
-                    <RecruitmentPosts requests={requests} />
-                  ) : (
-                    <RecruitmentPosts requests={hideRequests} />
-                  )}
+                <Box flex={1}>
+                  <RecruitmentArea />
                 </Box>
               </Flex>
-            </main>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
       )}
     </>
   );
