@@ -163,7 +163,7 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
   };
 
   // newラベルを表示
-  const currentTime = (time: any) => {
+  const newLabel = (time: any) => {
     const currentDay = new Date();
     const requestDay = new Date(time);
     const difference = currentDay.getTime() - requestDay.getTime();
@@ -188,11 +188,11 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
           bgColor={request.display === false ? "#999" : "white"}
         >
           <Flex justifyContent="space-between">
-            <Flex flexDirection="column" mr={3} width="100%">
+            <Flex flexDirection="column" width="100%">
               {/* 編集画面を表示 */}
               {!edit ? (
                 <>
-                  {currentTime(request?.sendAt.toDate()) && (
+                  {newLabel(request?.sendAt.toDate()) && (
                     <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
                       New
                     </Badge>
@@ -206,7 +206,6 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                         Administrator.includes(currentUser) ? (
                           <RecruitmentMenu
                             request={request}
-                            // isEdit={isEdit}
                             edit={edit}
                             setEdit={setEdit}
                             oldTitleContent={oldTitleContent}
