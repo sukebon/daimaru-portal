@@ -174,17 +174,13 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
   return (
     <Box
       key={request.id}
-      style={{ width: "100%" }}
+      w="100%"
       display={request.deleteAt ? "none" : "block"}
     >
       {!request.deleteAt && (
         <Box
-          maxW="sm"
-          minW="100%"
-          my={0}
+          w="100%"
           p={3}
-          borderTop="none"
-          overflow="hidden"
           bgColor={request.display === false ? "#999" : "white"}
         >
           <Flex justifyContent="space-between">

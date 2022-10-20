@@ -42,6 +42,9 @@ const Sales = () => {
   const [targetSum, setTargetSum] = useState<number>();
   const [AchiveSum, setAchiveSum] = useState<number>();
   const [landingSum, setLandingSum] = useState<number>();
+  const [currentMonth, setCurrentMonth] = useState(""); //今月 2022-10
+
+  console.log(currentMonth);
 
   // salesデータを取得
   useEffect(() => {
@@ -49,7 +52,8 @@ const Sales = () => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const lastDate = new Date(year, month, 0);
-    const recentAtDate = `${year}-${month}-1`;
+    const recentAtDate = `${year}-${month}-01`;
+    setCurrentMonth(`${year}-${month}`);
     const sinceAtDate = `${year}-${month}-${lastDate.getDate()}`;
 
     const salesCollectionRef = collection(db, "sales");
@@ -101,6 +105,7 @@ const Sales = () => {
     }
   };
 
+  // フィルターを掛けたusersを一人ずつ登録していく
   useEffect(() => {
     const filterUsers = users
       .filter((user: { isoSalesStaff: boolean }) => user.isoSalesStaff)
@@ -176,12 +181,15 @@ const Sales = () => {
                     </Td>
                     <Td isNumeric>
                       {(
-                        Number(sale.currentLanding) - Number(sale.currentTarget)
+                        Number(sale.currentLanding) -
+                        Number(sale.currentTarget) +
+                        Number(sale.currentAchieve)
                       ).toLocaleString()}
                     </Td>
                     <Td isNumeric>
                       {(
-                        (Number(sale.currentLanding) /
+                        ((Number(sale.currentLanding) +
+                          Number(sale.currentAchieve)) /
                           Number(sale.currentTarget)) *
                         100
                       )
@@ -191,7 +199,9 @@ const Sales = () => {
                     <Td>
                       {(Administrator.includes(currentUser) ||
                         sale.currentUser === currentUser) && (
-                        <SalesEditModal docId={"2022-10_" + sale.currentUser} />
+                        <SalesEditModal
+                          docId={`${currentMonth}_${sale.currentUser}`}
+                        />
                       )}
                     </Td>
                   </Tr>
