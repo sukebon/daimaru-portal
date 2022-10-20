@@ -41,10 +41,10 @@ const HeaderMenuButton: NextPage = () => {
     return newUsers.includes(userId);
   };
 
-  const logout = (event: any) => {
-    event.preventDefault();
+  const logout = (e: any) => {
+    e.preventDefault();
     auth.signOut();
-    setCurrentUser("");
+    // setCurrentUser("");
   };
 
   return (
