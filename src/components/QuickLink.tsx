@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   ListItem,
   Tab,
   TabList,
@@ -14,10 +13,15 @@ import { NextPage } from "next";
 import Link from "next/link";
 
 const QuickLink: NextPage<any> = ({ links, categories }) => {
-  console.log(categories);
   return (
     <>
-      <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
+      <Box
+        width="100%"
+        boxShadow="xs"
+        p={{ base: 3, md: 6 }}
+        rounded="md"
+        bg="white"
+      >
         <Text fontSize="2xl" my="1" ml="1">
           クイックアクセスリンク
         </Text>

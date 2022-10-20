@@ -4,7 +4,13 @@ import { NextPage } from "next";
 const Information: NextPage<any> = (props) => {
   return (
     <>
-      <Box width="100%" boxShadow="xs" mt="6" p="6" rounded="md" bg="white">
+      <Box
+        width="100%"
+        boxShadow="xs"
+        p={{ base: 3, md: 6 }}
+        rounded="md"
+        bg="white"
+      >
         <Text fontSize="2xl" mb="4" ml="1">
           お知らせ
         </Text>

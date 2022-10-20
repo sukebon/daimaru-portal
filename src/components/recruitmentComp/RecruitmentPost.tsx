@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   Flex,
   Heading,
   Input,
@@ -10,21 +11,21 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Stack,
   Text,
   Textarea,
-} from '@chakra-ui/react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { NextPage } from 'next';
-import React, { useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilValue } from 'recoil';
-import { Administrator, Users } from '../../../data';
-import { auth, db } from '../../../firebase';
-import { dateTime, dayOfWeek, starLevel } from '../../../functions';
-import { authState } from '../../../store';
-import RecruitmentButton from './RecruitmentButton';
-import RecruitmentMemberList from './RecruitmentMemberList';
-import RecruitmentMenu from './RecruitmentMenu';
+} from "@chakra-ui/react";
+import { doc, updateDoc } from "firebase/firestore";
+import { NextPage } from "next";
+import React, { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { Administrator, Users } from "../../../data";
+import { db } from "../../../firebase";
+import { dateTime, dayOfWeek, starLevel } from "../../../functions";
+import { authState } from "../../../store";
+import RecruitmentButton from "./RecruitmentButton";
+import RecruitmentMemberList from "./RecruitmentMemberList";
+import RecruitmentMenu from "./RecruitmentMenu";
 
 type Props = {
   request: {
@@ -51,29 +52,28 @@ type Props = {
 };
 
 const RecruitmentPost: NextPage<Props> = ({ request }) => {
-  const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const [edit, setEdit] = useState(false);
-  const [title, setTitle] = useState('');
-  const [startDay, setStartDay] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endDay, setEndDay] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [applicant, setApplicant] = useState('1');
-  const [person, setPerson] = useState('');
-  const [moreless, setMoreless] = useState('');
-  const [level, setLevel] = useState('');
-  const [content, setContent] = useState('');
-  const [cancelTitle, setCancelTitle] = useState('');
-  const [cancelStartDay, setCancelStartDay] = useState('');
-  const [cancelStartTime, setCancelStartTime] = useState('');
-  const [cancelEndDay, setCancelEndDay] = useState('');
-  const [cancelEndTime, setCancelEndTime] = useState('');
-  const [cancelApplicant, setCancelApplicant] = useState('1');
-  const [cancelPerson, setCancelPerson] = useState('');
-  const [cancelMoreless, setCancelMoreless] = useState('');
-  const [cancelLevel, setCancelLevel] = useState('');
-  const [cancelContent, setCancelContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [startDay, setStartDay] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDay, setEndDay] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [applicant, setApplicant] = useState("1");
+  const [person, setPerson] = useState("");
+  const [moreless, setMoreless] = useState("");
+  const [level, setLevel] = useState("");
+  const [content, setContent] = useState("");
+  const [cancelTitle, setCancelTitle] = useState("");
+  const [cancelStartDay, setCancelStartDay] = useState("");
+  const [cancelStartTime, setCancelStartTime] = useState("");
+  const [cancelEndDay, setCancelEndDay] = useState("");
+  const [cancelEndTime, setCancelEndTime] = useState("");
+  const [cancelApplicant, setCancelApplicant] = useState("1");
+  const [cancelPerson, setCancelPerson] = useState("");
+  const [cancelMoreless, setCancelMoreless] = useState("");
+  const [cancelLevel, setCancelLevel] = useState("");
+  const [cancelContent, setCancelContent] = useState("");
 
   //タイトルとコンテンツの値を保持する
   const oldTitleContent = (request: any) => {
@@ -105,12 +105,12 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
 
   //編集を確定する
   const confirm = async (request: any) => {
-    const docRef = doc(db, 'requestList', request.id);
+    const docRef = doc(db, "requestList", request.id);
     await updateDoc(docRef, {
       title: title,
-      startDay: startDay || '未定',
+      startDay: startDay || "未定",
       startTime: startTime,
-      endDay: endDay || '未定',
+      endDay: endDay || "未定",
       endTime: endTime,
       applicant: applicant,
       person,
@@ -124,12 +124,12 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
 
   //編集をキャンセルする
   const cancel = async (request: any) => {
-    const docRef = doc(db, 'requestList', request.id);
+    const docRef = doc(db, "requestList", request.id);
     await updateDoc(docRef, {
       title: cancelTitle,
-      startDay: cancelStartDay || '未定',
+      startDay: cancelStartDay || "未定",
       startTime: cancelStartTime,
-      endDay: cancelEndDay || '未定',
+      endDay: cancelEndDay || "未定",
       endTime: cancelEndTime,
       applicant: cancelApplicant,
       person: cancelPerson,
@@ -138,16 +138,16 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
       content: cancelContent,
       editAt: false,
     });
-    setCancelTitle('');
-    setCancelStartDay('');
-    setCancelStartTime('');
-    setCancelEndDay('');
-    setCancelEndTime('');
-    setCancelApplicant('');
-    setCancelPerson('');
-    setCancelMoreless('');
-    setCancelLevel('');
-    setCancelContent('');
+    setCancelTitle("");
+    setCancelStartDay("");
+    setCancelStartTime("");
+    setCancelEndDay("");
+    setCancelEndTime("");
+    setCancelApplicant("");
+    setCancelPerson("");
+    setCancelMoreless("");
+    setCancelLevel("");
+    setCancelContent("");
     setEdit(false);
   };
 
@@ -162,26 +162,26 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
   return (
     <Box
       key={request.id}
-      style={{ width: '100%' }}
-      display={request.deleteAt ? 'none' : 'block'}
+      style={{ width: "100%" }}
+      display={request.deleteAt ? "none" : "block"}
     >
       {!request.deleteAt && (
         <Box
-          maxW='sm'
-          borderTop='none'
-          overflow='hidden'
-          margin={'0 auto 0'}
-          padding={'20px 20px 0'}
-          minW={{ base: '100%' }}
-          backgroundColor={request.display === false ? '#999' : 'white'}
+          maxW="sm"
+          minW="100%"
+          my={0}
+          p={3}
+          borderTop="none"
+          overflow="hidden"
+          bgColor={request.display === false ? "#999" : "white"}
         >
-          <Flex justifyContent={'space-between'}>
-            <Flex flexDirection={'column'} marginRight={'10px'} width={'100%'}>
+          <Flex justifyContent="space-between">
+            <Flex flexDirection="column" mr={3} width="100%">
               {/* 編集画面を表示 */}
               {!edit ? (
                 <>
-                  <Flex justifyContent={'space-between'} alignItems={'center'}>
-                    <Text fontSize={'2xl'}>{starLevel(request.level)}</Text>
+                  <Flex justifyContent="space-between" alignItems="center">
+                    <Text fontSize="2xl">{starLevel(request.level)}</Text>
                     {/* メニューボタン */}
                     {!edit && (
                       <>
@@ -196,73 +196,72 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                             cancelTitleContent={cancelTitleContent}
                           />
                         ) : (
-                          ''
+                          ""
                         )}
                       </>
                     )}
                   </Flex>
-                  <Heading fontSize={'xl'} paddingBottom={'10px'} mt={'2'}>
+                  <Heading fontSize="xl" pb={6} mt={2}>
                     {request.title}
                   </Heading>
                   <Flex
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    fontSize={'sm'}
+                    flexDirection={{
+                      base: "column",
+                      md: "row",
+                      lg: "column",
+                      "2xl": "row",
+                    }}
+                    fontSize="sm"
+                    gap={2}
                   >
-                    <Text marginRight={'10px'}>
+                    <Text>
                       【開始】{request.startDay}
                       {request.startTime && `-${request.startTime}`}
                       {dayOfWeek(request.startDay)}
                     </Text>
-                    <Text marginRight={'10px'}>
+                    <Text>
                       【終了】{request.endDay}
                       {request.endTime && `-${request.endTime}`}
                       {dayOfWeek(request.endDay)}
                     </Text>
-                    <Text marginRight={'10px'}>
+                    <Text>
                       【募集人数】{request.applicant}人{request.moreless}
                     </Text>
                   </Flex>
                   <Flex
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    fontSize={'sm'}
+                    flexDirection={{ base: "column", md: "row" }}
+                    fontSize="sm"
                   >
                     <Text>【責任者】{request.person}</Text>
                     {Administrator.includes(currentUser) && (
                       <Text>【作成者】{authorDispay(request.author)}</Text>
                     )}
                   </Flex>
-                  <Text
-                    padding={'10px 0'}
-                    whiteSpace={'pre-wrap'}
-                    fontSize={'sm'}
-                  >
+                  <Text py={3} whiteSpace={"pre-wrap"} fontSize={"sm"}>
                     {request.content}
                   </Text>
                 </>
               ) : (
                 //編集画面↓
-                <>
+                <Stack spacing={3}>
                   <Input
+                    w="100%"
                     value={title}
-                    placeholder={'タイトル'}
+                    placeholder={"タイトル"}
                     onChange={(e) => setTitle(e.target.value)}
-                    width={'100%'}
-                    fontSize={'md'}
-                    marginBottom={'10px'}
+                    fontSize="md"
                   />
-                  <Flex>
+                  <Flex gap={3}>
                     <Input
-                      id='startDay'
-                      type='date'
+                      id="startDay"
+                      type="date"
                       value={startDay}
-                      placeholder='開始時刻'
-                      marginRight={'10px'}
-                      marginBottom={'10px'}
+                      placeholder="開始時刻"
                       onChange={(e) => setStartDay(e.target.value)}
                     />
                     <Select
                       value={startTime}
-                      placeholder='---'
+                      placeholder="---"
                       onChange={(e) => setStartTime(e.target.value)}
                     >
                       {dateTime.map((d, index) => (
@@ -272,19 +271,17 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                       ))}
                     </Select>
                   </Flex>
-                  <Flex>
+                  <Flex gap={3}>
                     <Input
-                      id='endDay'
-                      type='date'
+                      id="endDay"
+                      type="date"
                       value={endDay}
-                      placeholder='終了時刻'
-                      marginRight={'10px'}
-                      marginBottom={'10px'}
+                      placeholder="終了時刻"
                       onChange={(e) => setEndDay(e.target.value)}
                     />
                     <Select
                       value={endTime}
-                      placeholder='---'
+                      placeholder="---"
                       onChange={(e) => setEndTime(e.target.value)}
                     >
                       {dateTime.map((d, index) => (
@@ -294,33 +291,29 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                       ))}
                     </Select>
                   </Flex>
-                  <Flex>
+                  <Flex gap={3}>
                     <Input
-                      id='person'
-                      type='string'
+                      id="person"
+                      type="string"
                       value={person}
-                      placeholder='タスク責任者'
-                      marginRight={'10px'}
-                      marginBottom={'10px'}
+                      placeholder="タスク責任者"
                       onChange={(e) => setPerson(e.target.value)}
                     />
                     <Select
                       value={level}
-                      placeholder='---'
-                      marginBottom={'10px'}
+                      placeholder="---"
                       onChange={(e) => setLevel(e.target.value)}
                     >
-                      <option value='3'>★★★</option>
-                      <option value='2'>★★</option>
-                      <option value='1'>★</option>
+                      <option value="3">★★★</option>
+                      <option value="2">★★</option>
+                      <option value="1">★</option>
                     </Select>
                   </Flex>
-                  <Flex marginBottom={'10px'}>
+                  <Flex gap={3}>
                     <NumberInput
-                      flex={'1'}
+                      flex={1}
                       value={applicant}
-                      placeholder='募集人数'
-                      marginRight={'10px'}
+                      placeholder="募集人数"
                       onChange={(e) => setApplicant(e)}
                     >
                       <NumberInputField />
@@ -330,42 +323,42 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                       </NumberInputStepper>
                     </NumberInput>
                     <Select
-                      flex={'1'}
+                      flex={1}
                       value={moreless}
-                      placeholder='---'
+                      placeholder="---"
                       onChange={(e) => setMoreless(e.target.value)}
                     >
-                      <option value='以上'>以上</option>
-                      <option value='まで'>まで</option>
+                      <option value="以上">以上</option>
+                      <option value="まで">まで</option>
                     </Select>
                   </Flex>
                   <Textarea
+                    h={48}
+                    fontSize="sm"
+                    whiteSpace="pre-wrap"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    fontSize={'sm'}
-                    marginBottom={'10px'}
-                    whiteSpace={'pre-wrap'}
                   >
                     {content}
                   </Textarea>
-                  <Flex marginBottom={'10px'}>
+                  <Flex gap={3}>
                     <Button
+                      colorScheme="blue"
                       onClick={() => confirm(request)}
-                      flex={'1'}
-                      marginRight={'10px'}
-                      colorScheme='blue'
+                      flex={1}
                     >
                       OK
                     </Button>
                     <Button
+                      flex={1}
                       onClick={() => cancel(request)}
-                      flex={'1'}
-                      colorScheme='red'
+                      colorScheme="red"
                     >
                       キャンセル
                     </Button>
                   </Flex>
-                </>
+                  <Divider mb={3} />
+                </Stack>
               )}
             </Flex>
           </Flex>
@@ -373,13 +366,13 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
           {/* 参加メンバー羅列 */}
           {!edit && (
             <Flex
-              flexDirection={{ base: 'column', md: 'row' }}
-              justifyContent={'space-between'}
-              alignItems={'center'}
-              marginTop={{ base: '10px' }}
-              padding={'5px 0 10px'}
+              flexDirection={{ base: "column", md: "row" }}
+              justifyContent={"space-between"}
+              alignItems="center"
+              gap={3}
+              py={3}
             >
-              <Flex flexWrap={'wrap'}>
+              <Flex flexWrap={"wrap"}>
                 {/* 参加メンバー一覧 */}
                 <RecruitmentMemberList request={request} />
               </Flex>
@@ -388,7 +381,7 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
               <RecruitmentButton request={request} />
             </Flex>
           )}
-          <hr />
+          <Divider mb={3} />
         </Box>
       )}
     </Box>
