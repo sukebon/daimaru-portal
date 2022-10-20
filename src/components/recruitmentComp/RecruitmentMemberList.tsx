@@ -1,8 +1,8 @@
-import { Box } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { usersState } from '../../../store/index.js';
+import { Box, Flex } from "@chakra-ui/react";
+import { NextPage } from "next";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { usersState } from "../../../store/index.js";
 
 interface Props {
   request: {
@@ -42,19 +42,13 @@ const RecruitmentMemberList: NextPage<Props> = ({ request }) => {
 
   return (
     <>
-      {usersfilter.map((user: any, index: number) => (
-        <Box
-          key={index}
-          padding={'5px'}
-          margin={'10px 10px 0 0'}
-          borderRadius={'lg'}
-          backgroundColor={'gray.500'}
-          color={'white'}
-          fontSize={{ base: 'sm' }}
-        >
-          {user.name}
-        </Box>
-      ))}
+      <Flex wrap="wrap" rounded="md" color="white" fontSize="sm" gap={2}>
+        {usersfilter.map((user: any, index: number) => (
+          <Box key={index} padding={1} rounded="md" bg={"gray.500"}>
+            {user.name}
+          </Box>
+        ))}
+      </Flex>
     </>
   );
 };

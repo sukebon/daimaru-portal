@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -11,6 +12,8 @@ import {
   NumberInputField,
   NumberInputStepper,
   Select,
+  Skeleton,
+  SkeletonText,
   Stack,
   Text,
   Textarea,
@@ -44,7 +47,7 @@ type Props = {
     display: boolean;
     deleteAt: boolean;
     editAt: boolean;
-    sendAt: string;
+    sendAt: any;
     recruitment: boolean;
     author: string;
     endDay: string;
@@ -159,6 +162,15 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
     return usersfilter[0].name;
   };
 
+  // newラベルを表示
+  const currentTime = (time: any) => {
+    const currentDay = new Date();
+    const requestDay = new Date(time);
+    const difference = currentDay.getTime() - requestDay.getTime();
+    const date = difference / 86400000;
+    return date <= 3 ? true : false;
+  };
+
   return (
     <Box
       key={request.id}
@@ -180,6 +192,11 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
               {/* 編集画面を表示 */}
               {!edit ? (
                 <>
+                  {currentTime(request?.sendAt.toDate()) && (
+                    <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
+                      New
+                    </Badge>
+                  )}
                   <Flex justifyContent="space-between" alignItems="center">
                     <Text fontSize="2xl">{starLevel(request.level)}</Text>
                     {/* メニューボタン */}
@@ -201,6 +218,7 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
                       </>
                     )}
                   </Flex>
+
                   <Heading fontSize="xl" pb={6} mt={2}>
                     {request.title}
                   </Heading>
