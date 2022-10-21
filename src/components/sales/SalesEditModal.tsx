@@ -13,13 +13,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  doc,
-  getDoc,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -70,7 +64,7 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
       await updateDoc(docRef, {
         currentTarget: salesObj.currentTarget,
         currentAchieve: salesObj.currentAchieve,
-        currentLanding: salesObj.currentLanding,
+        currentExpect: salesObj.currentExpect,
         updatedAt: serverTimestamp(),
       });
     } catch (err) {
@@ -120,12 +114,12 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
                 />
               </Box>
               <Box>
-                <Text>着地</Text>
+                <Text>計上予定</Text>
                 <Input
                   mt={2}
-                  placeholder="着地を入力してください"
-                  name="currentLanding"
-                  value={salesObj?.currentLanding}
+                  placeholder="計上予定を入力してください"
+                  name="currentExpect"
+                  value={salesObj?.currentExpect}
                   onChange={handleInputChange}
                 />
               </Box>
