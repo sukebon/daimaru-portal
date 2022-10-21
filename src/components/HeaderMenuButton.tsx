@@ -108,18 +108,14 @@ const HeaderMenuButton: NextPage = () => {
         )}
         <MenuDivider />
 
-        {(Administrator.includes(currentUser) ||
-          userSalesAuthority(currentUser)) && (
-          <>
-            <MenuGroup title="売上表(今月）" fontSize="xs"></MenuGroup>
-            <Link href="/sales/">
-              <a>
-                <MenuItem pl={6}>一覧・登録</MenuItem>
-              </a>
-            </Link>
-            <MenuDivider />
-          </>
-        )}
+        <MenuGroup title="売上表(今月）" fontSize="xs"></MenuGroup>
+        <Link href="/sales/">
+          <a>
+            <MenuItem pl={6}>一覧・登録</MenuItem>
+          </a>
+        </Link>
+        <MenuDivider />
+
         {(currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" ||
           currentUser === "EVKsigM546MbnakzkDmG0QHlfmn2") && (
           <>
