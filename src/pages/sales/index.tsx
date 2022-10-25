@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -154,9 +155,11 @@ const Sales = () => {
   return (
     <Box bg="#f7f7f7" py={6} minH={"calc(100vh - 135px)"}>
       <Container mt={6} maxW="1100px">
-        <Box my={3} fontSize="xl">
-          {currentMonth}月 売上一覧
-        </Box>
+        <Flex>
+          <Box my={3} fontSize="xl">
+            {currentMonth}月 売上一覧
+          </Box>
+        </Flex>
         <TableContainer bg="white" rounded="md" p={6} boxShadow="md">
           <Table variant="simple">
             <Thead>
@@ -208,20 +211,20 @@ const Sales = () => {
                       <Td isNumeric>
                         {Number(sale.currentExpect).toLocaleString()}
                       </Td>
-                      <Td isNumeric>
+                      <Td fontWeight="bold" isNumeric>
                         {(
                           Number(sale.currentAchieve) +
                           Number(sale.currentExpect)
                         ).toLocaleString()}
                       </Td>
-                      <Td isNumeric>
+                      <Td fontWeight="bold" isNumeric>
                         {(
                           Number(sale.currentExpect) -
                           Number(sale.currentTarget) +
                           Number(sale.currentAchieve)
                         ).toLocaleString()}
                       </Td>
-                      <Td isNumeric>
+                      <Td fontWeight="bold" isNumeric>
                         {getAchievementRate(
                           Number(sale.currentExpect),
                           Number(sale.currentAchieve),

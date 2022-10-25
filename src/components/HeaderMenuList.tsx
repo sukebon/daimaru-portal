@@ -22,11 +22,7 @@ const HeaderMenuList = () => {
       link: "https://www.daimaru-hakui.co.jp/",
       blank: true,
     },
-    {
-      title: "在庫表",
-      link: "https://stock-next.vercel.app/login",
-      blank: true,
-    },
+
     {
       title: "組織カレンダー",
       link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
