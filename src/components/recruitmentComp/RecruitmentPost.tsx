@@ -22,10 +22,10 @@ import { doc, updateDoc } from "firebase/firestore";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { Administrator, Users } from "../../../data";
+import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { dateTime, dayOfWeek, starLevel } from "../../../functions";
-import { authState } from "../../../store";
+import { authState, usersState } from "../../../store";
 import RecruitmentButton from "./RecruitmentButton";
 import RecruitmentMemberList from "./RecruitmentMemberList";
 import RecruitmentMenu from "./RecruitmentMenu";
@@ -56,6 +56,7 @@ type Props = {
 
 const RecruitmentPost: NextPage<Props> = ({ request }) => {
   const currentUser = useRecoilValue(authState);
+  const users = useRecoilValue(usersState);
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState("");
   const [startDay, setStartDay] = useState("");
@@ -156,10 +157,12 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
 
   // 作成者を表示;
   const authorDispay = (authorId: string) => {
-    const usersfilter = Users.filter((user) => {
-      return user.uid === authorId;
-    });
-    return usersfilter[0].name;
+    const usersfilter: any = users.filter(
+      (user: { uid: string; name: string }) => {
+        return user.uid === authorId;
+      }
+    );
+    return usersfilter[0]?.name;
   };
 
   // newラベルを表示

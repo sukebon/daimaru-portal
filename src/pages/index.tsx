@@ -27,6 +27,7 @@ import CheckDrawer from "../components/alcohol/CheckDrawer";
 import { todayDate } from "../../functions";
 import ClaimArea from "../components/ClaimArea";
 import RecruitmentArea from "../components/RecruitmentArea";
+import SalesArea from "../components/SalesArea";
 
 const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
   const [user] = useAuthState(auth);
@@ -125,6 +126,7 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
                   <Stack spacing={6}>
                     <CheckDrawer />
                     <ClaimArea />
+                    <SalesArea />
                     <Slogan />
                     <Information news={newsData.contents} />
                     <QuickLink

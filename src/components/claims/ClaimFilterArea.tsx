@@ -12,15 +12,15 @@ import {
   Input,
   Select,
   useDisclosure,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
   claimSelectList4,
-} from '../../../data';
-import { beginningDate, todayDate } from '../../../functions';
+} from "../../../data";
+import { beginningDate, todayDate } from "../../../functions";
 
 const ClaimFilterArea = ({
   users,
@@ -48,14 +48,14 @@ const ClaimFilterArea = ({
   const [stampStaffList, setStampStaffList] = useState<any>([]);
 
   const onFilterReset = () => {
-    setReceptionDateStart('');
-    setReceptionDateEnd('');
-    setStampStaffFilter('');
-    setCustomerFilter('');
-    setOccurrenceFilter('');
-    setAmendmentFilter('');
-    setCounterplanFilter('');
-    setCauseDepartmentFilter('');
+    setReceptionDateStart("");
+    setReceptionDateEnd("");
+    setStampStaffFilter("");
+    setCustomerFilter("");
+    setOccurrenceFilter("");
+    setAmendmentFilter("");
+    setCounterplanFilter("");
+    setCauseDepartmentFilter("");
   };
 
   //担当フィルターのリストを作成
@@ -77,12 +77,12 @@ const ClaimFilterArea = ({
           フィルター解除
         </Button>
       )}
-      <Button ref={btnRef} colorScheme='teal' onClick={onOpen}>
+      <Button ref={btnRef} colorScheme="blue" onClick={onOpen}>
         絞り込み
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement='right'
+        placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
       >
@@ -94,16 +94,16 @@ const ClaimFilterArea = ({
           <DrawerBody>
             <FormLabel mt={6}>受付日</FormLabel>
             <Input
-              type='date'
-              w='100%'
+              type="date"
+              w="100%"
               p={2}
               mt={3}
               value={receptionDateStart ? receptionDateStart : beginningDate()}
               onChange={(e) => setReceptionDateStart(e.target.value)}
             />
             <Input
-              type='date'
-              w='100%'
+              type="date"
+              w="100%"
               p={2}
               mt={3}
               value={receptionDateEnd ? receptionDateEnd : todayDate()}
@@ -112,7 +112,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>担当</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={stampStaffFilter}
               onChange={(e) => setStampStaffFilter(e.target.value)}
             >
@@ -128,18 +128,18 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>顧客名</FormLabel>
             <Input
-              type='text'
-              w='100%'
+              type="text"
+              w="100%"
               p={2}
               mt={3}
-              placeholder='顧客名を入力'
+              placeholder="顧客名を入力"
               value={customerFilter}
               onChange={(e) => setCustomerFilter(e.target.value)}
             />
 
             <FormLabel mt={6}>発生内容</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={occurrenceFilter}
               onChange={(e) => setOccurrenceFilter(e.target.value)}
             >
@@ -152,7 +152,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>修正処置</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={amendmentFilter}
               onChange={(e) => setAmendmentFilter(e.target.value)}
             >
@@ -165,7 +165,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>対策</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={counterplanFilter}
               onChange={(e) => setCounterplanFilter(e.target.value)}
             >
@@ -178,7 +178,7 @@ const ClaimFilterArea = ({
 
             <FormLabel mt={6}>起因部署</FormLabel>
             <Select
-              placeholder='全て選択'
+              placeholder="全て選択"
               value={causeDepartmentFilter}
               onChange={(e) => setCauseDepartmentFilter(e.target.value)}
             >
@@ -191,11 +191,11 @@ const ClaimFilterArea = ({
           </DrawerBody>
 
           <DrawerFooter>
-            <Flex mt={6} justifyContent='center' w='100%'>
+            <Flex mt={6} justifyContent="center" w="100%">
               <Button onClick={onFilterReset} mr={3}>
                 リセット
               </Button>
-              <Button variant='outline' onClick={onClose}>
+              <Button variant="outline" onClick={onClose}>
                 閉じる
               </Button>
             </Flex>

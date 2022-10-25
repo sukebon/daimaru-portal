@@ -1,4 +1,4 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,15 +10,14 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { db } from '../../../firebase';
-import { datetime, dateTime } from '../../../functions';
-import { authState } from '../../../store';
+} from "@chakra-ui/react";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { db } from "../../../firebase";
+import { authState } from "../../../store";
 
 const AlcoholId = () => {
   const currentUser = useRecoilValue(authState);
@@ -30,15 +29,15 @@ const AlcoholId = () => {
   const queryId = router.query.id;
 
   useEffect(() => {
-    if (currentUser === '') {
-      router.push('/login');
+    if (currentUser === "") {
+      router.push("/login");
     }
   }, [router, currentUser]);
 
   //アルコールチェックデータを取得
   useEffect(() => {
-    const collectionRef = collection(db, 'alcoholCheckData');
-    const q = query(collectionRef, where('date', '==', `${queryId}`));
+    const collectionRef = collection(db, "alcoholCheckData");
+    const q = query(collectionRef, where("date", "==", `${queryId}`));
     getDocs(q).then((querySnapshot) => {
       setPosts(
         querySnapshot.docs.map((doc) => ({
@@ -57,8 +56,8 @@ const AlcoholId = () => {
 
   //user一覧取得
   useEffect(() => {
-    const usersRef = collection(db, 'authority');
-    const q = query(usersRef, orderBy('rank', 'asc'));
+    const usersRef = collection(db, "authority");
+    const q = query(usersRef, orderBy("rank", "asc"));
     getDocs(q).then((querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({
@@ -85,7 +84,7 @@ const AlcoholId = () => {
 
   //アルコールチェックリスト
   useEffect(() => {
-    const collectionRef = collection(db, 'alcoholCheckList');
+    const collectionRef = collection(db, "alcoholCheckList");
     getDocs(collectionRef).then((querySnapshot) => {
       setList(
         querySnapshot.docs.map((doc) => ({
@@ -118,9 +117,9 @@ const AlcoholId = () => {
     <>
       <Box
         p={6}
-        backgroundColor={'#f7f7f7'}
-        paddingBottom={'50px'}
-        minH={'100vh'}
+        backgroundColor={"#f7f7f7"}
+        paddingBottom={"50px"}
+        minH={"100vh"}
       >
         {/* {nextPrevPage(queryId, -1) !== undefined ? (
           <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
@@ -134,24 +133,24 @@ const AlcoholId = () => {
         ) : (
           <Box></Box>
         )} */}
-        <Flex flexDirection={'column'} alignItems={'center'}>
-          <TableContainer bg='white' borderRadius={6} p={6} mt={2}>
-            <Link href='/alcohol-checker'>
+        <Flex flexDirection={"column"} alignItems={"center"}>
+          <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
+            <Link href="/alcohol-checker">
               <a>
-                <Button w='100%'>一覧へ戻る</Button>
+                <Button w="100%">一覧へ戻る</Button>
               </a>
             </Link>
 
-            <Flex justifyContent='space-between' mt={6}>
-              <Box fontSize='lg'>{queryId}</Box>
+            <Flex justifyContent="space-between" mt={6}>
+              <Box fontSize="lg">{queryId}</Box>
             </Flex>
-            <Table size='sm' mt={6}>
+            <Table size="sm" mt={6}>
               <Thead>
                 <Tr>
-                  <Th minW='160px'>名前</Th>
-                  <Th minW='50px'>アルコールの検査</Th>
-                  <Th minW='50px'>酒気帯び</Th>
-                  <Th minW='150px'>提出時刻</Th>
+                  <Th minW="160px">名前</Th>
+                  <Th minW="50px">アルコールの検査</Th>
+                  <Th minW="50px">酒気帯び</Th>
+                  <Th minW="150px">提出時刻</Th>
                   <Th></Th>
                 </Tr>
               </Thead>
@@ -172,14 +171,14 @@ const AlcoholId = () => {
                         )}
                       </Td>
                       <Td>
-                        {Number(post.alcoholCheck1) === 1 ? '済み' : '未'}
+                        {Number(post.alcoholCheck1) === 1 ? "済み" : "未"}
                       </Td>
                       <Td>
-                        {Number(post.alcoholCheck2) === 1 ? 'なし' : 'あり'}
+                        {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
                       </Td>
                       <Td>
                         {post.createdAt &&
-                          post.createdAt.toDate().toLocaleTimeString('en-US')}
+                          post.createdAt.toDate().toLocaleTimeString("en-US")}
                       </Td>
                     </Tr>
                   )
@@ -192,9 +191,9 @@ const AlcoholId = () => {
                           user.uid === notUser && user.name
                       )}
                     </Td>
-                    <Td textAlign='center'></Td>
-                    <Td textAlign='center'></Td>
-                    <Td textAlign='center'></Td>
+                    <Td textAlign="center"></Td>
+                    <Td textAlign="center"></Td>
+                    <Td textAlign="center"></Td>
                   </Tr>
                 ))}
               </Tbody>

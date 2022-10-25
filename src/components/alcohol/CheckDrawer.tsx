@@ -25,10 +25,10 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
-import { dateTime, datetime, todayDate } from "../../../functions";
+import { todayDate } from "../../../functions";
 import { authState } from "../../../store";
 
 const CheckDrawer = () => {
