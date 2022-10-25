@@ -153,7 +153,7 @@ const Sales = () => {
 
   return (
     <Box bg="#f7f7f7" py={6} minH={"calc(100vh - 135px)"}>
-      <Container mt={6} maxW="1000px">
+      <Container mt={6} maxW="1100px">
         <Box my={3} fontSize="xl">
           {currentMonth}月 売上一覧
         </Box>
@@ -165,6 +165,7 @@ const Sales = () => {
                 <Th>予算</Th>
                 <Th>実績</Th>
                 <Th>計上予定</Th>
+                <Th>合計</Th>
                 <Th>差額</Th>
                 <Th>達成率</Th>
                 <Th>更新日</Th>
@@ -193,7 +194,7 @@ const Sales = () => {
                           Number(sale.currentAchieve),
                           Number(sale.currentTarget)
                         ) >= 100
-                          ? "#00f3a0"
+                          ? "#d4bf0096"
                           : ""
                       }
                     >
@@ -206,6 +207,12 @@ const Sales = () => {
                       </Td>
                       <Td isNumeric>
                         {Number(sale.currentExpect).toLocaleString()}
+                      </Td>
+                      <Td isNumeric>
+                        {(
+                          Number(sale.currentAchieve) +
+                          Number(sale.currentExpect)
+                        ).toLocaleString()}
                       </Td>
                       <Td isNumeric>
                         {(
@@ -246,6 +253,7 @@ const Sales = () => {
                 <Td isNumeric>{targetSum?.toLocaleString()}</Td>
                 <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
                 <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
+                <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
                 <Td isNumeric>{(ExpectSum - targetSum).toLocaleString()}</Td>
                 <Td isNumeric>
                   {getAchievementRate(ExpectSum, AchiveSum, targetSum)}%

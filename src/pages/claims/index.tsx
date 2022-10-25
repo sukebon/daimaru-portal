@@ -9,20 +9,20 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { NextPage } from 'next';
-import React, { useEffect, useState } from 'react';
-import { auth } from '../../../firebase';
-import { claimSelectList4, Users } from '../../../data';
+import { NextPage } from "next";
+import React, { useEffect, useState } from "react";
+import { auth } from "../../../firebase";
+import { claimSelectList4 } from "../../../data";
 import {
   taskflow,
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
-} from '../../../data';
-import Link from 'next/link';
-import { useRecoilState, useRecoilValue } from 'recoil';
+} from "../../../data";
+import Link from "next/link";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   amendmentState,
   authState,
@@ -35,10 +35,10 @@ import {
   receptionDateStartState,
   stampStaffState,
   usersState,
-} from '../../../store';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRouter } from 'next/router';
-import ClaimFilterArea from '../../components/claims/ClaimFilterArea';
+} from "../../../store";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
+import ClaimFilterArea from "../../components/claims/ClaimFilterArea";
 
 const Claim: NextPage = () => {
   const currentUser = useRecoilValue(authState);
@@ -72,7 +72,7 @@ const Claim: NextPage = () => {
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
@@ -141,24 +141,24 @@ const Claim: NextPage = () => {
       case claim.operator:
         switch (claim.status) {
           case 0:
-            return '事務局';
+            return "事務局";
           case 2:
-            return '事務局';
+            return "事務局";
           case 4:
-            return '事務局';
+            return "事務局";
           case 6:
-            return '管理者';
+            return "管理者";
           case 7:
-            return 'TM';
+            return "TM";
           case 8:
-            return '';
+            return "";
           default:
             return users.map((user: { uid: string; name: string }) => {
               if (user.uid == claim.operator) return user.name;
             });
         }
       default:
-        return '事務局';
+        return "事務局";
     }
   };
 
@@ -204,14 +204,19 @@ const Claim: NextPage = () => {
         <>
           <Box
             p={6}
-            backgroundColor={'#f7f7f7'}
-            paddingBottom={'50px'}
-            minH={'100vh'}
+            backgroundColor={"#f7f7f7"}
+            paddingBottom={"50px"}
+            minH={"100vh"}
           >
-            <Flex flexDirection={'column'} alignItems={'center'}>
-              <TableContainer backgroundColor='white' borderRadius={6} p={6}>
-                <Flex mb={6} justifyContent='space-between'>
-                  <Box fontSize='lg'>
+            <Flex flexDirection={"column"} alignItems={"center"}>
+              <TableContainer
+                w="1700px"
+                backgroundColor="white"
+                borderRadius={6}
+                p={6}
+              >
+                <Flex mb={6} justifyContent="space-between">
+                  <Box fontSize="lg">
                     {filterClaims.length}件/全{claims.length}件
                   </Box>
                   <Box>
@@ -238,22 +243,22 @@ const Claim: NextPage = () => {
                     />
                   </Box>
                 </Flex>
-                <Table size='sm'>
+                <Table size="sm">
                   <Thead>
                     <Tr>
-                      <Th minW='80px'>作業者</Th>
-                      <Th minW='95px'>ステータス</Th>
-                      <Th minW='105px'>受付日</Th>
-                      <Th minW='80px'>受付NO.</Th>
-                      <Th minW='100px'>担当</Th>
-                      <Th minW='260px'>顧客名</Th>
-                      <Th minW='105px'>発生日</Th>
-                      <Th minW='150px'>発生内容</Th>
-                      <Th minW='160px'>修正処置</Th>
-                      <Th minW='120px'>対策</Th>
-                      <Th minW='120px'>起因部署</Th>
-                      <Th minW='105px'>完了日</Th>
-                      <Th></Th>
+                      <Th>詳細</Th>
+                      <Th minW="80px">作業者</Th>
+                      <Th minW="95px">ステータス</Th>
+                      <Th minW="105px">受付日</Th>
+                      <Th minW="80px">受付NO.</Th>
+                      <Th minW="100px">担当</Th>
+                      <Th minW="260px">顧客名</Th>
+                      <Th minW="105px">発生日</Th>
+                      <Th minW="150px">発生内容</Th>
+                      <Th minW="160px">修正処置</Th>
+                      <Th minW="120px">対策</Th>
+                      <Th minW="120px">起因部署</Th>
+                      <Th minW="105px">完了日</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -272,10 +277,17 @@ const Claim: NextPage = () => {
                             currentUser
                           ) &&
                             claim.status === 7)
-                            ? 'yellow.100'
-                            : 'white'
+                            ? "yellow.100"
+                            : "white"
                         }
                       >
+                        <Td>
+                          <Link href={`/claims/${claim.id}`}>
+                            <a>
+                              <Button size="sm">詳細</Button>
+                            </a>
+                          </Link>
+                        </Td>
                         <Td>{currentOperator(claim)}</Td>
                         <Td>
                           {taskflow.map(
@@ -285,8 +297,9 @@ const Claim: NextPage = () => {
                         <Td>{claim.receptionDate}</Td>
                         <Td>{claim.receptionNum}</Td>
                         <Td>
-                          {Users.map(
-                            (user) => user.uid == claim.stampStaff && user.name
+                          {users.map(
+                            (user: { uid: string; name: string }) =>
+                              user.uid == claim.stampStaff && user.name
                           )}
                         </Td>
                         <Td>{claim.customer}</Td>
@@ -295,7 +308,7 @@ const Claim: NextPage = () => {
                           {claimSelectList1.map(
                             (c) =>
                               c.id == claim.occurrenceSelect &&
-                              c.headline + ' ' + c.title
+                              c.headline + " " + c.title
                           )}
                         </Td>
                         <Td>
@@ -315,13 +328,6 @@ const Claim: NextPage = () => {
                           )}
                         </Td>
                         <Td>{claim.completionDate}</Td>
-                        <Td>
-                          <Link href={`/claims/${claim.id}`}>
-                            <a>
-                              <Button>詳細</Button>
-                            </a>
-                          </Link>
-                        </Td>
                       </Tr>
                     ))}
                   </Tbody>

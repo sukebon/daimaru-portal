@@ -1,50 +1,49 @@
-import { Box, Button, Select } from '@chakra-ui/react';
+import { Box, Button, Select } from "@chakra-ui/react";
 import {
   addDoc,
   collection,
   doc,
   serverTimestamp,
   updateDoc,
-} from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilValue } from 'recoil';
-import { auth, db, storage } from '../../../../firebase';
-import { authState, usersState } from '../../../../store';
-import ClaimInputCustomer from '../../../components/claims/new/ClaimInputCustomer';
-import ClaimInputOccurrence from '../../../components/claims/new/ClaimInputOccurrence';
-import ClaimInputAmendment from '../../../components/claims/new/ClaimInputAmendment';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import ClaimInputAttached from '../../../components/claims/new/ClaimInputAttached';
+} from "firebase/firestore";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilValue } from "recoil";
+import { auth, db, storage } from "../../../../firebase";
+import { authState, usersState } from "../../../../store";
+import ClaimInputCustomer from "../../../components/claims/new/ClaimInputCustomer";
+import ClaimInputOccurrence from "../../../components/claims/new/ClaimInputOccurrence";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import ClaimInputAttached from "../../../components/claims/new/ClaimInputAttached";
 
 //クレーム報告書作成
 
 const ClaimNew = () => {
+  const router = useRouter();
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
-  const router = useRouter();
   const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
   const [filterUsers, setFilterUsers] = useState([]); //絞り込んだユーザー一覧リスト
-  const [customer, setCustomer] = useState(''); //顧客名
-  const [occurrenceDate, setOccurrenceDate] = useState(''); //発生日
-  const [occurrenceSelect, setOccurrenceSelect] = useState(''); //発生選択
-  const [occurrenceContent, setOccurrenceContent] = useState(''); //発生内容
-  const [amendmentSelect, setAmendmentSelect] = useState(''); //修正処置選択
-  const [amendmentContent, setAmendmentContent] = useState(''); //修正処置内容
-  const [counterplanSelect, setCounterplanSelect] = useState(''); //対策選択
-  const [counterplanContent, setCounterplanContent] = useState(''); //対策内容
-  const [completionDate, setCompletionDate] = useState(''); //完了日
-  const [receptionDate, setReceptionDate] = useState(''); //受付日
-  const [receptionist, setReceptionist] = useState(''); //受付者
-  const [receptionNum, setReceptionNum] = useState(''); //受付NO.
-  const [author, setAuthor] = useState(''); //記入者ハンコ
-  const [stampStaff, setStampStaff] = useState(''); //担当者ハンコ
-  const [stampOffice, setStampOffice] = useState(''); //事務局ハンコ
-  const [stampBoss, setStampBoss] = useState(''); //上司ハンコ
-  const [stampManager, setStampManager] = useState(''); //管理者ハンコ
-  const [stampTm, setStampTm] = useState(''); //TMハンコ
-  const [status, setStatus] = useState(''); //ステータス
+  const [customer, setCustomer] = useState(""); //顧客名
+  const [occurrenceDate, setOccurrenceDate] = useState(""); //発生日
+  const [occurrenceSelect, setOccurrenceSelect] = useState(""); //発生選択
+  const [occurrenceContent, setOccurrenceContent] = useState(""); //発生内容
+  const [amendmentSelect, setAmendmentSelect] = useState(""); //修正処置選択
+  const [amendmentContent, setAmendmentContent] = useState(""); //修正処置内容
+  const [counterplanSelect, setCounterplanSelect] = useState(""); //対策選択
+  const [counterplanContent, setCounterplanContent] = useState(""); //対策内容
+  const [completionDate, setCompletionDate] = useState(""); //完了日
+  const [receptionDate, setReceptionDate] = useState(""); //受付日
+  const [receptionist, setReceptionist] = useState(""); //受付者
+  const [receptionNum, setReceptionNum] = useState(""); //受付NO.
+  const [author, setAuthor] = useState(""); //記入者ハンコ
+  const [stampStaff, setStampStaff] = useState(""); //担当者ハンコ
+  const [stampOffice, setStampOffice] = useState(""); //事務局ハンコ
+  const [stampBoss, setStampBoss] = useState(""); //上司ハンコ
+  const [stampManager, setStampManager] = useState(""); //管理者ハンコ
+  const [stampTm, setStampTm] = useState(""); //TMハンコ
+  const [status, setStatus] = useState(""); //ステータス
   const [deletedAt, setDeletedAt] = useState(null); //論理削除
   const [createdAt, setCreatedAt] = useState(null); //作成日
   const [fileUpload1, setFileUpload1] = useState<any>();
@@ -53,28 +52,28 @@ const ClaimNew = () => {
 
   useEffect(() => {
     if (user === null) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [router, user]);
 
   const AddClaim = async (e: any) => {
-    const result = window.confirm('提出して宜しいでしょうか？');
+    const result = window.confirm("提出して宜しいでしょうか？");
     if (!result) return;
     try {
-      const docRef = await addDoc(collection(db, 'claimList'), {
+      const docRef = await addDoc(collection(db, "claimList"), {
         customer, //顧客名
         occurrenceDate, //発生日
         occurrenceSelect, //発生選択
         occurrenceContent, //発生内容
         amendmentSelect, //修正処置選択
         amendmentContent, //修正処置内容
-        causeDepartmentSelect: '', //起因部署
+        causeDepartmentSelect: "", //起因部署
         counterplanSelect, //対策選択
         counterplanContent, //対策内容
         completionDate, //完了日
         receptionDate, //受付日
         receptionist, //受付者
-        receptionNum: '未設定', //受付NO.
+        receptionNum: "未設定", //受付NO.
         author: currentUser, //記入者
         stampStaff: stampStaff, //担当者ハンコ
         stampOffice, //事務局ハンコ
@@ -84,16 +83,16 @@ const ClaimNew = () => {
         status: 0, //ステータス
         deletedAt: null, //論理削除
         createdAt: serverTimestamp(), //作成日
-        operator: '事務局', //作業者
+        operator: "事務局", //作業者
       });
 
       fileUpload1 && onFileUpload(docRef.id, fileUpload1, 1);
       fileUpload2 && onFileUpload(docRef.id, fileUpload2, 2);
       fileUpload3 && onFileUpload(docRef.id, fileUpload3, 3);
 
-      router.push('/claims');
+      router.push("/claims");
     } catch (e) {
-      console.error('Error adding document: ', e);
+      console.error("Error adding document: ", e);
     }
   };
 
@@ -108,10 +107,10 @@ const ClaimNew = () => {
       getDownloadURL(
         ref(storage, `images/claims/${id}/${fileUpload[0].name}`)
       ).then((url) => {
-        const docRef = doc(db, 'claimList', id);
+        const docRef = doc(db, "claimList", id);
         updateDoc(docRef, {
-          ['imageUrl' + num]: url,
-          ['imagePath' + num]: storageRef.fullPath,
+          ["imageUrl" + num]: url,
+          ["imagePath" + num]: storageRef.fullPath,
         });
       });
     });
@@ -129,15 +128,15 @@ const ClaimNew = () => {
     <>
       {currentUser && (
         <>
-          <Box w='100%' p={6} backgroundColor={'#f7f7f7'}>
+          <Box w="100%" p={6} backgroundColor={"#f7f7f7"}>
             <Box
-              w={{ base: '100%', md: '700px' }}
-              mx='auto'
+              w={{ base: "100%", md: "700px" }}
+              mx="auto"
               p={6}
-              backgroundColor='white'
+              backgroundColor="white"
               borderRadius={6}
             >
-              <Box w='100%' textAlign='right'>
+              <Box w="100%" textAlign="right">
                 作成者：
                 {users.map(
                   (user: { uid: string; name: string }) =>
@@ -145,27 +144,27 @@ const ClaimNew = () => {
                 )}
               </Box>
               <Box
-                as='h1'
-                w='100%'
+                as="h1"
+                w="100%"
                 mt={9}
                 p={3}
-                fontSize='28px'
-                fontWeight='semibold'
-                textAlign='center'
+                fontSize="28px"
+                fontWeight="semibold"
+                textAlign="center"
               >
                 クレーム報告書
               </Box>
               <Box>
-                <Box mt={10} fontSize='lg' fontWeight='semibold'>
+                <Box mt={10} fontSize="lg" fontWeight="semibold">
                   担当者名
-                  <Box as='span' color='red'>
+                  <Box as="span" color="red">
                     （必須）
                   </Box>
                 </Box>
                 <Box mt={2}>
                   <Select
                     onChange={(e) => setStampStaff(e.target.value)}
-                    placeholder='担当者を選択'
+                    placeholder="担当者を選択"
                   >
                     {filterUsers.map((user: { uid: string; name: string }) => (
                       <option key={user.uid} value={user.uid}>
@@ -210,7 +209,7 @@ const ClaimNew = () => {
 
               {/* 添付書類 */}
               <Box mt={9}>
-                <Box mr={3} fontSize='lg' fontWeight='semibold'>
+                <Box mr={3} fontSize="lg" fontWeight="semibold">
                   添付書類（※画像形式 jpeg jpg png）
                 </Box>
                 <ClaimInputAttached
@@ -228,7 +227,7 @@ const ClaimNew = () => {
               </Box>
 
               {/*送信ボタン*/}
-              <Box mt={12} textAlign='center'>
+              <Box mt={12} textAlign="center">
                 <Button
                   disabled={
                     customer &&
