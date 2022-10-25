@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
-import { Users, Administrator } from "../../../data";
+import { Administrator } from "../../../data";
 import { auth, db } from "../../../firebase";
 import { authState } from "../../../store";
 import AdminEditModal from "../../components/admin/AdminEditModal";
