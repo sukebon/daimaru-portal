@@ -191,7 +191,7 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
               {/* 編集画面を表示 */}
               {!edit ? (
                 <>
-                  {newLabel(request?.sendAt.toDate()) && (
+                  {newLabel(request?.sendAt?.toDate()) && (
                     <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
                       New
                     </Badge>

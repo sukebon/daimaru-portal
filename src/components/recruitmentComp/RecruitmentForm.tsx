@@ -20,10 +20,12 @@ import { db, auth } from "../../../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
 import { dateTime } from "../../../functions";
+import { useRouter } from "next/router";
 // import { dateTime } from '../../../date';
 
 const Form = () => {
   const [user] = useAuthState(auth);
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [startDay, setStartDay] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -69,6 +71,8 @@ const Form = () => {
       setContent("");
     } catch (e) {
       console.error("Error adding document: ", e);
+    } finally {
+      router.push("/");
     }
   };
 
