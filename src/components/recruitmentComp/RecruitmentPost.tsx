@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { doc, updateDoc } from "firebase/firestore";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Administrator } from "../../../data";
 import { db } from "../../../firebase";

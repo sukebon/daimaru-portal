@@ -58,7 +58,6 @@ const Form = () => {
         author: user?.uid,
         recruitment: true,
       });
-      console.log("Document written with ID: ", docRef.id);
       setTitle("");
       setStartDay("");
       setStartTime("");
