@@ -8,12 +8,14 @@ import {
   startAt,
 } from "firebase/firestore";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../firebase";
 import { authState, claimsState, usersState } from "../../store";
 
 const ClaimArea = () => {
+  const router = useRouter();
   const claims = useRecoilValue(claimsState);
   const users = useRecoilValue(usersState);
   const currentUser = useRecoilValue(authState);
@@ -96,6 +98,19 @@ const ClaimArea = () => {
     });
     return newUsers;
   };
+
+  // 点滅
+  let label: any = document.getElementById("classLabel");
+  label?.animate(
+    {
+      background: ["white", "#ffce00"],
+    },
+    {
+      iterations: Infinity,
+      duration: 1000,
+    }
+  );
+
   return (
     <>
       {myClaimCount() && (
@@ -123,8 +138,11 @@ const ClaimArea = () => {
                 <a>
                   <Text
                     as="span"
+                    p={2}
                     fontWeight="bold"
+                    rounded="md"
                     textDecoration="underline"
+                    id="classLabel"
                     _hover={{
                       textDecoration: "none",
                     }}
@@ -133,7 +151,7 @@ const ClaimArea = () => {
                   </Text>
                 </a>
               </Link>
-              をcheckしてください。
+              を check してください。
             </Box>
           </Flex>
         </Box>
