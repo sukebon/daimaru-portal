@@ -257,7 +257,9 @@ const Sales = () => {
                 <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
                 <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
                 <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
-                <Td isNumeric>{(ExpectSum - targetSum).toLocaleString()}</Td>
+                <Td isNumeric>
+                  {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
+                </Td>
                 <Td isNumeric>
                   {getAchievementRate(ExpectSum, AchiveSum, targetSum)}%
                 </Td>
