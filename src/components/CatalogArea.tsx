@@ -26,11 +26,11 @@ const CatalogArea = () => {
       link: "https://www.daimaru-hakui.co.jp/",
       color: "rgb(49, 74, 151)",
     },
-    {
-      title: "在庫照会",
-      link: "https://stock-next.vercel.app/",
-      color: "rgb(49, 151, 149)",
-    },
+    // {
+    //   title: "在庫照会",
+    //   link: "https://stock-next.vercel.app/",
+    //   color: "rgb(49, 151, 149)",
+    // },
     {
       title: "組織カレンダー",
       link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
