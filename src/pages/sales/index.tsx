@@ -155,10 +155,11 @@ const Sales = () => {
   return (
     <Box bg="#f7f7f7" py={6} minH={"calc(100vh - 135px)"}>
       <Container mt={6} maxW="1100px">
-        <Flex>
+        <Flex justifyContent="space-between" alignItems="center">
           <Box my={3} fontSize="xl">
             {currentMonth}月 売上一覧
           </Box>
+          <Box>（単位:万円）</Box>
         </Flex>
         <TableContainer bg="white" rounded="md" p={6} boxShadow="md">
           <Table variant="simple">

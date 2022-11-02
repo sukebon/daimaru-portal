@@ -142,7 +142,7 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
                 />
               </Box>
             </Stack>
-            <Stack
+            {/* <Stack
               mt={6}
               p={3}
               spacing={3}
@@ -192,7 +192,7 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
                 ＝
               </Box>
               <Button onClick={addBaseSales}>計算</Button>
-            </Stack>
+            </Stack> */}
           </ModalBody>
 
           <ModalFooter>
