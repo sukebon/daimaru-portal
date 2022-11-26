@@ -11,6 +11,7 @@ import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../../../firebase';
+import ProgressInpuArea from '../../../components/progress/ProgressInpuArea';
 
 const ProgressId = () => {
   const router = useRouter();
@@ -101,73 +102,25 @@ const ProgressId = () => {
   return (
     <Box w='100%' bg='#f7f7f7' paddingBottom='50px' minH='100vh' p={6}>
       <Container bg='white' p={6}>
-        <Flex alignItems='center' justifyContent='space-between'>
-          <Box>編集</Box>
-        </Flex>
-        <Box mt={12}>
-          <Text>タイトル</Text>
-          <Input
-            type='text'
-            name='title'
-            value={items.title}
-            onChange={handleInputChange}
-          />
-          <Flex mt={6} gap={6}>
-            <Box w='100%'>
-              <Text>開始日</Text>
-              <Input
-                type='date'
-                name='startDate'
-                value={items.startDate}
-                onChange={handleInputChange}
-              />
-            </Box>
-            <Box w='100%'>
-              <Text>終了日</Text>
-              <Input
-                type='date'
-                name='endDate'
-                value={items.endDate}
-                onChange={handleInputChange}
-              />
-            </Box>
-          </Flex>
-          <Text mt={3}>項目</Text>
-          {items?.contents?.map((content: any, index) => (
-            <Flex key={index} mt={1} gap={6} w='100%' alignItems='center'>
-              <Input
-                w='100%'
-                type='text'
-                name='title'
-                value={content.title}
-                onChange={(e) => handleInputsChange(e, index)}
-              />
-
-              <Switch
-                id={content.title}
-                value={content.result}
-                isChecked={content.result}
-                onChange={() => handleSwitchChange(content.result, index)}
-              />
-            </Flex>
-          ))}
-          <Button mt={6} onClick={addTitle}>
-            追加
+        <ProgressInpuArea
+          progress={progress}
+          pageTitle={'編集'}
+          items={items}
+          setItems={setItems}
+        />
+        <Flex mt={12} gap={3}>
+          <Button
+            w='100%'
+            onClick={() => {
+              reset();
+            }}
+          >
+            キャンセル
           </Button>
-          <Flex mt={6} gap={3}>
-            <Button
-              w='100%'
-              onClick={() => {
-                reset();
-              }}
-            >
-              キャンセル
-            </Button>
-            <Button w='100%' colorScheme='blue' onClick={updateProgress}>
-              更新
-            </Button>
-          </Flex>
-        </Box>
+          <Button w='100%' colorScheme='blue' onClick={updateProgress}>
+            更新
+          </Button>
+        </Flex>
       </Container>
     </Box>
   );

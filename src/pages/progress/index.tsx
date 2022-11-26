@@ -13,14 +13,29 @@ import {
   Switch,
   Text,
 } from '@chakra-ui/react';
-import { collection, getDocs } from 'firebase/firestore';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+} from 'firebase/firestore';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { db } from '../../../firebase';
 
+type ProgressesType = {
+  id: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  contents: { title: string; result: boolean }[];
+}[];
+
 const ProgressIndex = () => {
   const [items, setItems] = useState<any>({});
-  const [progresses, setProgresses] = useState<any>();
+  const [progresses, setProgresses] = useState<ProgressesType>();
 
   const handleSwitchChange = (prop: string) => {
     const value = items[prop] ? false : true;
@@ -30,10 +45,14 @@ const ProgressIndex = () => {
   useEffect(() => {
     const getProgresses = async () => {
       const progressesRef = collection(db, 'progresses');
-      const querySnapshot = await getDocs(progressesRef);
-      setProgresses(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      );
+      onSnapshot(progressesRef, (querySnapshot) => {
+        setProgresses(
+          querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          })) as ProgressesType
+        );
+      });
     };
     getProgresses();
   }, []);
@@ -72,6 +91,18 @@ const ProgressIndex = () => {
     return deadline;
   };
 
+  const deleteProgress = async (progressId: string) => {
+    const result = window.confirm('削除して宜しいでしょうか');
+    if (!result) return;
+    const docsRef = doc(db, 'progresses', `${progressId}`);
+    try {
+      await deleteDoc(docsRef);
+    } catch (err) {
+      console.log(err);
+    } finally {
+    }
+  };
+
   return (
     <Box w='100%' bg='#f7f7f7' paddingBottom='50px' minH='100vh' p={6}>
       <Container maxW='1000px' bg='white' p={6}>
@@ -87,18 +118,30 @@ const ProgressIndex = () => {
         </Flex>
       </Container>
       <Container maxW='1000px' mt={3} p={0}>
-        <Flex gap={6}>
-          {progresses?.map((progress: any) => (
+        <Flex flexWrap='wrap' w='100%' gap={6}>
+          {progresses?.map((progress) => (
             <>
-              <Box w='50%' bg='white' mt={3} p={6}>
+              <Box
+                w={{ base: '100%', md: 'calc(50% - 0.75rem)' }}
+                bg='white'
+                mt={3}
+                p={6}
+              >
                 <Box>
-                  <Flex justifyContent='space-between'>
+                  <Flex alignItems='center' justifyContent='space-between'>
                     <Text fontSize='xl'>{progress.title}</Text>
-                    <Link href={`/progress/edit/${progress.id}`}>
-                      <a>
-                        <Button size='sm'>編集</Button>
-                      </a>
-                    </Link>
+                    <Flex gap={3}>
+                      <Link href={`/progress/edit/${progress.id}`}>
+                        <a>
+                          <FaEdit color='gray' />
+                        </a>
+                      </Link>
+                      <FaTrashAlt
+                        color='gray'
+                        cursor='pointer'
+                        onClick={() => deleteProgress(progress.id)}
+                      />
+                    </Flex>
                   </Flex>
                   <Flex
                     mt={6}
@@ -106,8 +149,8 @@ const ProgressIndex = () => {
                     justifyContent='space-between'
                   >
                     <Flex gap={6}>
-                      <Text>開始： {progress.startDate}</Text>
-                      <Text>終了： {progress.endDate}</Text>
+                      <Text>開始：{progress.startDate}</Text>
+                      <Text>終了：{progress.endDate}</Text>
                     </Flex>
                     <Text>
                       残日数
@@ -115,7 +158,7 @@ const ProgressIndex = () => {
                     </Text>
                   </Flex>
                   <Progress
-                    mt={1}
+                    mt={2}
                     isAnimated
                     hasStripe
                     value={getDeadLineProgress(
@@ -148,7 +191,7 @@ const ProgressIndex = () => {
                       ))}
                     </Stack>
                     <Flex flexDirection='column' justifyContent='center'>
-                      <Box textAlign='center'>達成率</Box>
+                      <Box textAlign='center'>進捗率</Box>
                       <Box>
                         <CircularProgress
                           value={getAchieveRate(progress?.contents)}
