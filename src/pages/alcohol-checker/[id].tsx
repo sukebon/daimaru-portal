@@ -28,12 +28,6 @@ const AlcoholId = () => {
   const router = useRouter();
   const queryId = router.query.id;
 
-  useEffect(() => {
-    if (currentUser === "") {
-      router.push("/login");
-    }
-  }, [router, currentUser]);
-
   //アルコールチェックデータを取得
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckData");
@@ -115,13 +109,7 @@ const AlcoholId = () => {
 
   return (
     <>
-      <Box
-        p={6}
-        backgroundColor={"#f7f7f7"}
-        paddingBottom={"50px"}
-        minH={"100vh"}
-      >
-        {/* {nextPrevPage(queryId, -1) !== undefined ? (
+      {/* {nextPrevPage(queryId, -1) !== undefined ? (
           <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
             <a>
               <Flex alignItems='center'>
@@ -133,74 +121,71 @@ const AlcoholId = () => {
         ) : (
           <Box></Box>
         )} */}
-        <Flex flexDirection={"column"} alignItems={"center"}>
-          <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
-            <Link href="/alcohol-checker">
-              <a>
-                <Button w="100%">一覧へ戻る</Button>
-              </a>
-            </Link>
+      <Flex flexDirection={"column"} alignItems={"center"}>
+        <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
+          <Link href="/alcohol-checker">
+            <a>
+              <Button w="100%">一覧へ戻る</Button>
+            </a>
+          </Link>
 
-            <Flex justifyContent="space-between" mt={6}>
-              <Box fontSize="lg">{queryId}</Box>
-            </Flex>
-            <Table size="sm" mt={6}>
-              <Thead>
-                <Tr>
-                  <Th minW="160px">名前</Th>
-                  <Th minW="50px">アルコールの検査</Th>
-                  <Th minW="50px">酒気帯び</Th>
-                  <Th minW="150px">提出時刻</Th>
-                  <Th></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {posts.map(
-                  (post: {
-                    id: string;
-                    uid: string;
-                    alcoholCheck1: string;
-                    alcoholCheck2: string;
-                    createdAt: any;
-                  }) => (
-                    <Tr key={post.id}>
-                      <Td>
-                        {users.map(
-                          (user: { uid: string; name: string }) =>
-                            user.uid === post.uid && user.name
-                        )}
-                      </Td>
-                      <Td>
-                        {Number(post.alcoholCheck1) === 1 ? "済み" : "未"}
-                      </Td>
-                      <Td>
-                        {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
-                      </Td>
-                      <Td>
-                        {post.createdAt &&
-                          post.createdAt.toDate().toLocaleTimeString("en-US")}
-                      </Td>
-                    </Tr>
-                  )
-                )}
-                {notUsers.map((notUser: string) => (
-                  <Tr key={notUser}>
+          <Flex justifyContent="space-between" mt={6}>
+            <Box fontSize="lg">{queryId}</Box>
+          </Flex>
+          <Table size="sm" mt={6}>
+            <Thead>
+              <Tr>
+                <Th minW="160px">名前</Th>
+                <Th minW="50px">アルコールの検査</Th>
+                <Th minW="50px">酒気帯び</Th>
+                <Th minW="150px">提出時刻</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {posts.map(
+                (post: {
+                  id: string;
+                  uid: string;
+                  alcoholCheck1: string;
+                  alcoholCheck2: string;
+                  createdAt: any;
+                }) => (
+                  <Tr key={post.id}>
                     <Td>
                       {users.map(
                         (user: { uid: string; name: string }) =>
-                          user.uid === notUser && user.name
+                          user.uid === post.uid && user.name
                       )}
                     </Td>
-                    <Td textAlign="center"></Td>
-                    <Td textAlign="center"></Td>
-                    <Td textAlign="center"></Td>
+                    <Td>{Number(post.alcoholCheck1) === 1 ? "済み" : "未"}</Td>
+                    <Td>
+                      {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
+                    </Td>
+                    <Td>
+                      {post.createdAt &&
+                        post.createdAt.toDate().toLocaleTimeString("en-US")}
+                    </Td>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Flex>
-      </Box>
+                )
+              )}
+              {notUsers.map((notUser: string) => (
+                <Tr key={notUser}>
+                  <Td>
+                    {users.map(
+                      (user: { uid: string; name: string }) =>
+                        user.uid === notUser && user.name
+                    )}
+                  </Td>
+                  <Td textAlign="center"></Td>
+                  <Td textAlign="center"></Td>
+                  <Td textAlign="center"></Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Flex>
     </>
   );
 };

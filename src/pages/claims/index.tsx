@@ -70,12 +70,6 @@ const Claim: NextPage = () => {
   const [causeDepartmentFilter, setCauseDepartmentFilter] =
     useRecoilState(causeDepartmentState);
 
-  useEffect(() => {
-    if (user === null) {
-      router.push("/login");
-    }
-  }, [router, user]);
-
   //フィルターでクレーム一覧を絞り込み
   useEffect(() => {
     //受付日の開始日で絞り込み
@@ -202,139 +196,131 @@ const Claim: NextPage = () => {
     <>
       {currentUser && (
         <>
-          <Box
-            p={6}
-            backgroundColor={"#f7f7f7"}
-            paddingBottom={"50px"}
-            minH={"100vh"}
-          >
-            <Flex flexDirection={"column"} alignItems={"center"}>
-              <TableContainer
-                w="1700px"
-                backgroundColor="white"
-                borderRadius={6}
-                p={6}
-              >
-                <Flex mb={6} justifyContent="space-between">
-                  <Box fontSize="lg">
-                    {filterClaims.length}件/全{claims.length}件
-                  </Box>
-                  <Box>
-                    <ClaimFilterArea
-                      users={users}
-                      claims={claims}
-                      filterClaims={filterClaims}
-                      receptionDateStart={receptionDateStart}
-                      setReceptionDateStart={setReceptionDateStart}
-                      receptionDateEnd={receptionDateEnd}
-                      setReceptionDateEnd={setReceptionDateEnd}
-                      stampStaffFilter={stampStaffFilter}
-                      customerFilter={customerFilter}
-                      setCustomerFilter={setCustomerFilter}
-                      setStampStaffFilter={setStampStaffFilter}
-                      occurrenceFilter={occurrenceFilter}
-                      setOccurrenceFilter={setOccurrenceFilter}
-                      amendmentFilter={amendmentFilter}
-                      setAmendmentFilter={setAmendmentFilter}
-                      counterplanFilter={counterplanFilter}
-                      setCounterplanFilter={setCounterplanFilter}
-                      causeDepartmentFilter={causeDepartmentFilter}
-                      setCauseDepartmentFilter={setCauseDepartmentFilter}
-                    />
-                  </Box>
-                </Flex>
-                <Table size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th>詳細</Th>
-                      <Th minW="80px">作業者</Th>
-                      <Th minW="95px">ステータス</Th>
-                      <Th minW="105px">受付日</Th>
-                      <Th minW="80px">受付NO.</Th>
-                      <Th minW="100px">担当</Th>
-                      <Th minW="260px">顧客名</Th>
-                      <Th minW="105px">発生日</Th>
-                      <Th minW="150px">発生内容</Th>
-                      <Th minW="160px">修正処置</Th>
-                      <Th minW="120px">対策</Th>
-                      <Th minW="120px">起因部署</Th>
-                      <Th minW="105px">完了日</Th>
+          <Flex flexDirection={"column"} alignItems={"center"}>
+            <TableContainer
+              w="1700px"
+              backgroundColor="white"
+              borderRadius={6}
+              p={6}
+            >
+              <Flex mb={6} justifyContent="space-between">
+                <Box fontSize="lg">
+                  {filterClaims.length}件/全{claims.length}件
+                </Box>
+                <Box>
+                  <ClaimFilterArea
+                    users={users}
+                    claims={claims}
+                    filterClaims={filterClaims}
+                    receptionDateStart={receptionDateStart}
+                    setReceptionDateStart={setReceptionDateStart}
+                    receptionDateEnd={receptionDateEnd}
+                    setReceptionDateEnd={setReceptionDateEnd}
+                    stampStaffFilter={stampStaffFilter}
+                    customerFilter={customerFilter}
+                    setCustomerFilter={setCustomerFilter}
+                    setStampStaffFilter={setStampStaffFilter}
+                    occurrenceFilter={occurrenceFilter}
+                    setOccurrenceFilter={setOccurrenceFilter}
+                    amendmentFilter={amendmentFilter}
+                    setAmendmentFilter={setAmendmentFilter}
+                    counterplanFilter={counterplanFilter}
+                    setCounterplanFilter={setCounterplanFilter}
+                    causeDepartmentFilter={causeDepartmentFilter}
+                    setCauseDepartmentFilter={setCauseDepartmentFilter}
+                  />
+                </Box>
+              </Flex>
+              <Table size="sm">
+                <Thead>
+                  <Tr>
+                    <Th>詳細</Th>
+                    <Th minW="80px">作業者</Th>
+                    <Th minW="95px">ステータス</Th>
+                    <Th minW="105px">受付日</Th>
+                    <Th minW="80px">受付NO.</Th>
+                    <Th minW="100px">担当</Th>
+                    <Th minW="260px">顧客名</Th>
+                    <Th minW="105px">発生日</Th>
+                    <Th minW="150px">発生内容</Th>
+                    <Th minW="160px">修正処置</Th>
+                    <Th minW="120px">対策</Th>
+                    <Th minW="120px">起因部署</Th>
+                    <Th minW="105px">完了日</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {filterClaims.map((claim: any) => (
+                    <Tr
+                      key={claim.id}
+                      backgroundColor={
+                        claim.operator === currentUser ||
+                        (searchUsers(isoOfficeUsers).includes(currentUser) &&
+                          (claim.status === 0 ||
+                            claim.status === 2 ||
+                            claim.status === 4)) ||
+                        (searchUsers(isoManagerUsers).includes(currentUser) &&
+                          claim.status === 6) ||
+                        (searchUsers(isoTopManegmentUsers).includes(
+                          currentUser
+                        ) &&
+                          claim.status === 7)
+                          ? "yellow.100"
+                          : "white"
+                      }
+                    >
+                      <Td>
+                        <Link href={`/claims/${claim.id}`}>
+                          <a>
+                            <Button size="sm">詳細</Button>
+                          </a>
+                        </Link>
+                      </Td>
+                      <Td>{currentOperator(claim)}</Td>
+                      <Td>
+                        {taskflow.map(
+                          (task) => task.id == claim.status && task.status
+                        )}
+                      </Td>
+                      <Td>{claim.receptionDate}</Td>
+                      <Td>{claim.receptionNum}</Td>
+                      <Td>
+                        {users.map(
+                          (user: { uid: string; name: string }) =>
+                            user.uid == claim.stampStaff && user.name
+                        )}
+                      </Td>
+                      <Td>{claim.customer}</Td>
+                      <Td>{claim.occurrenceDate}</Td>
+                      <Td>
+                        {claimSelectList1.map(
+                          (c) =>
+                            c.id == claim.occurrenceSelect &&
+                            c.headline + " " + c.title
+                        )}
+                      </Td>
+                      <Td>
+                        {claimSelectList2.map(
+                          (c) => c.id == claim.amendmentSelect && c.title
+                        )}
+                      </Td>
+                      <Td>
+                        {claimSelectList3.map(
+                          (c) => c.id == claim.counterplanSelect && c.title
+                        )}
+                      </Td>
+                      <Td>
+                        {claimSelectList4.map(
+                          (c) => c.id == claim.causeDepartmentSelect && c.title
+                        )}
+                      </Td>
+                      <Td>{claim.completionDate}</Td>
                     </Tr>
-                  </Thead>
-                  <Tbody>
-                    {filterClaims.map((claim: any) => (
-                      <Tr
-                        key={claim.id}
-                        backgroundColor={
-                          claim.operator === currentUser ||
-                          (searchUsers(isoOfficeUsers).includes(currentUser) &&
-                            (claim.status === 0 ||
-                              claim.status === 2 ||
-                              claim.status === 4)) ||
-                          (searchUsers(isoManagerUsers).includes(currentUser) &&
-                            claim.status === 6) ||
-                          (searchUsers(isoTopManegmentUsers).includes(
-                            currentUser
-                          ) &&
-                            claim.status === 7)
-                            ? "yellow.100"
-                            : "white"
-                        }
-                      >
-                        <Td>
-                          <Link href={`/claims/${claim.id}`}>
-                            <a>
-                              <Button size="sm">詳細</Button>
-                            </a>
-                          </Link>
-                        </Td>
-                        <Td>{currentOperator(claim)}</Td>
-                        <Td>
-                          {taskflow.map(
-                            (task) => task.id == claim.status && task.status
-                          )}
-                        </Td>
-                        <Td>{claim.receptionDate}</Td>
-                        <Td>{claim.receptionNum}</Td>
-                        <Td>
-                          {users.map(
-                            (user: { uid: string; name: string }) =>
-                              user.uid == claim.stampStaff && user.name
-                          )}
-                        </Td>
-                        <Td>{claim.customer}</Td>
-                        <Td>{claim.occurrenceDate}</Td>
-                        <Td>
-                          {claimSelectList1.map(
-                            (c) =>
-                              c.id == claim.occurrenceSelect &&
-                              c.headline + " " + c.title
-                          )}
-                        </Td>
-                        <Td>
-                          {claimSelectList2.map(
-                            (c) => c.id == claim.amendmentSelect && c.title
-                          )}
-                        </Td>
-                        <Td>
-                          {claimSelectList3.map(
-                            (c) => c.id == claim.counterplanSelect && c.title
-                          )}
-                        </Td>
-                        <Td>
-                          {claimSelectList4.map(
-                            (c) =>
-                              c.id == claim.causeDepartmentSelect && c.title
-                          )}
-                        </Td>
-                        <Td>{claim.completionDate}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            </Flex>
-          </Box>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Flex>
         </>
       )}
     </>

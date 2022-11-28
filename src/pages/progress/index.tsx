@@ -15,28 +15,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
-
-type ProgressesType = {
-  id: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  contents: { title: string; result: boolean }[];
-}[];
+import { Administrator } from "../../../data";
+import { ProgressType } from "../../../types/progressTypes";
+import { useRecoilValue } from "recoil";
+import { authState } from "../../../store";
 
 const ProgressIndex = () => {
   const [items, setItems] = useState<any>({});
-  const [progresses, setProgresses] = useState<ProgressesType>();
+  const [progresses, setProgresses] = useState<ProgressType[]>([]);
+  const currentUser = useRecoilValue(authState);
 
   const handleSwitchChange = (prop: string) => {
     const value = items[prop] ? false : true;
@@ -51,7 +42,7 @@ const ProgressIndex = () => {
           querySnapshot.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
-          })) as ProgressesType
+          })) as ProgressType[]
         );
       });
     };
@@ -105,7 +96,7 @@ const ProgressIndex = () => {
   };
 
   return (
-    <Box w="100%" bg="#f7f7f7" paddingBottom="50px" minH="100vh" p={6}>
+    <>
       <Container maxW="1000px" bg="white" p={6}>
         <Flex justifyContent="space-between">
           <Box as="h1" fontSize="2xl">
@@ -132,16 +123,20 @@ const ProgressIndex = () => {
                   <Flex alignItems="center" justifyContent="space-between">
                     <Text fontSize="xl">{progress.title}</Text>
                     <Flex gap={3}>
-                      <Link href={`/progress/edit/${progress.id}`}>
-                        <a>
-                          <FaEdit color="gray" />
-                        </a>
-                      </Link>
-                      <FaTrashAlt
-                        color="gray"
-                        cursor="pointer"
-                        onClick={() => deleteProgress(progress.id)}
-                      />
+                      {Administrator.includes(currentUser) && (
+                        <>
+                          <Link href={`/progress/edit/${progress.id}`}>
+                            <a>
+                              <FaEdit color="gray" />
+                            </a>
+                          </Link>
+                          <FaTrashAlt
+                            color="gray"
+                            cursor="pointer"
+                            onClick={() => deleteProgress(progress.id)}
+                          />
+                        </>
+                      )}
                     </Flex>
                   </Flex>
                   <Flex
@@ -174,27 +169,40 @@ const ProgressIndex = () => {
                     justifyContent="space-between"
                   >
                     <Stack spacing={3}>
-                      {progress?.contents.map((content: any, index: number) => (
-                        <Flex key={index} justifyContent="space-between">
-                          <FormControl display="flex" alignItems="center">
-                            <FormLabel htmlFor={content.title} minW={12} mb="0">
-                              {content.title}
-                            </FormLabel>
-                            {content.result && (
-                              <Badge px={2} variant="solid" colorScheme="blue">
-                                完了
-                              </Badge>
-                            )}
-                            {/* <Switch
+                      {progress?.contents.map(
+                        (
+                          content: { title: string; result: boolean },
+                          index: number
+                        ) => (
+                          <Flex key={index} justifyContent="space-between">
+                            <FormControl display="flex" alignItems="center">
+                              <FormLabel
+                                htmlFor={content.title}
+                                minW={12}
+                                mb="0"
+                              >
+                                {content.title}
+                              </FormLabel>
+                              {content.result && (
+                                <Badge
+                                  px={2}
+                                  variant="solid"
+                                  colorScheme="blue"
+                                >
+                                  完了
+                                </Badge>
+                              )}
+                              {/* <Switch
                               id={content.result}
                               isChecked={content.result}
                               onChange={() =>
                                 handleSwitchChange(content.result)
                               }
                             /> */}
-                          </FormControl>
-                        </Flex>
-                      ))}
+                            </FormControl>
+                          </Flex>
+                        )
+                      )}
                     </Stack>
                     <Flex flexDirection="column" justifyContent="center">
                       <Box textAlign="center">進捗率</Box>
@@ -218,7 +226,7 @@ const ProgressIndex = () => {
           ))}
         </Flex>
       </Container>
-    </Box>
+    </>
   );
 };
 

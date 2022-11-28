@@ -21,7 +21,6 @@ import ClaimInputAttached from "../../../components/claims/new/ClaimInputAttache
 
 const ClaimNew = () => {
   const router = useRouter();
-  const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
   const [filterUsers, setFilterUsers] = useState([]); //絞り込んだユーザー一覧リスト
@@ -49,12 +48,6 @@ const ClaimNew = () => {
   const [fileUpload1, setFileUpload1] = useState<any>();
   const [fileUpload2, setFileUpload2] = useState<any>();
   const [fileUpload3, setFileUpload3] = useState<any>();
-
-  useEffect(() => {
-    if (user === null) {
-      router.push("/login");
-    }
-  }, [router, user]);
 
   const AddClaim = async (e: any) => {
     const result = window.confirm("提出して宜しいでしょうか？");
@@ -128,70 +121,69 @@ const ClaimNew = () => {
     <>
       {currentUser && (
         <>
-          <Box w="100%" p={6} backgroundColor={"#f7f7f7"}>
+          <Box
+            w={{ base: "100%", md: "700px" }}
+            mx="auto"
+            p={6}
+            backgroundColor="white"
+            borderRadius={6}
+          >
+            <Box w="100%" textAlign="right">
+              作成者：
+              {users.map(
+                (user: { uid: string; name: string }) =>
+                  user.uid === currentUser && user.name
+              )}
+            </Box>
             <Box
-              w={{ base: "100%", md: "700px" }}
-              mx="auto"
-              p={6}
-              backgroundColor="white"
-              borderRadius={6}
+              as="h1"
+              w="100%"
+              mt={9}
+              p={3}
+              fontSize="28px"
+              fontWeight="semibold"
+              textAlign="center"
             >
-              <Box w="100%" textAlign="right">
-                作成者：
-                {users.map(
-                  (user: { uid: string; name: string }) =>
-                    user.uid === currentUser && user.name
-                )}
-              </Box>
-              <Box
-                as="h1"
-                w="100%"
-                mt={9}
-                p={3}
-                fontSize="28px"
-                fontWeight="semibold"
-                textAlign="center"
-              >
-                クレーム報告書
-              </Box>
-              <Box>
-                <Box mt={10} fontSize="lg" fontWeight="semibold">
-                  担当者名
-                  <Box as="span" color="red">
-                    （必須）
-                  </Box>
-                </Box>
-                <Box mt={2}>
-                  <Select
-                    onChange={(e) => setStampStaff(e.target.value)}
-                    placeholder="担当者を選択"
-                  >
-                    {filterUsers.map((user: { uid: string; name: string }) => (
-                      <option key={user.uid} value={user.uid}>
-                        {user.name}
-                      </option>
-                    ))}
-                  </Select>
+              クレーム報告書
+            </Box>
+            <Box>
+              <Box mt={10} fontSize="lg" fontWeight="semibold">
+                担当者名
+                <Box as="span" color="red">
+                  （必須）
                 </Box>
               </Box>
+              <Box mt={2}>
+                <Select
+                  onChange={(e) => setStampStaff(e.target.value)}
+                  placeholder="担当者を選択"
+                >
+                  {filterUsers.map((user: { uid: string; name: string }) => (
+                    <option key={user.uid} value={user.uid}>
+                      {user.name}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+            </Box>
 
-              {/* 顧客名 */}
-              <ClaimInputCustomer
-                customer={customer}
-                setCustomer={setCustomer}
-                occurrenceDate={occurrenceDate}
-                setOccurrenceDate={setOccurrenceDate}
-              />
+            {/* 顧客名 */}
+            <ClaimInputCustomer
+              customer={customer}
+              setCustomer={setCustomer}
+              occurrenceDate={occurrenceDate}
+              setOccurrenceDate={setOccurrenceDate}
+            />
 
-              {/* 発生内容 */}
-              <ClaimInputOccurrence
-                occurrenceSelect={occurrenceSelect}
-                setOccurrenceSelect={setOccurrenceSelect}
-                occurrenceContent={occurrenceContent}
-                setOccurrenceContent={setOccurrenceContent}
-              />
+            {/* 発生内容 */}
+            <ClaimInputOccurrence
+              occurrenceSelect={occurrenceSelect}
+              setOccurrenceSelect={setOccurrenceSelect}
+              occurrenceContent={occurrenceContent}
+              setOccurrenceContent={setOccurrenceContent}
+            />
 
-              {/* 修正処置
+            {/* 修正処置
               <ClaimInputAmendment
                 amendmentSelect={amendmentSelect}
                 setAmendmentSelect={setAmendmentSelect}
@@ -199,52 +191,51 @@ const ClaimNew = () => {
                 setAmendmentContent={setAmendmentContent}
               /> */}
 
-              {/*対策 */}
-              {/* <ClaimInputCounteClaim
+            {/*対策 */}
+            {/* <ClaimInputCounteClaim
                 counterplanSelect={counterplanSelect}
                 setCounterplanSelect={setCounterplanSelect}
                 counterplanContent={counterplanContent}
                 setCounterplanContent={setCounterplanContent}
               /> */}
 
-              {/* 添付書類 */}
-              <Box mt={9}>
-                <Box mr={3} fontSize="lg" fontWeight="semibold">
-                  添付書類（※画像形式 jpeg jpg png）
-                </Box>
-                <ClaimInputAttached
-                  fileUpload={fileUpload1}
-                  setFileUpload={setFileUpload1}
-                />
-                <ClaimInputAttached
-                  fileUpload={fileUpload2}
-                  setFileUpload={setFileUpload2}
-                />
-                <ClaimInputAttached
-                  fileUpload={fileUpload3}
-                  setFileUpload={setFileUpload3}
-                />
+            {/* 添付書類 */}
+            <Box mt={9}>
+              <Box mr={3} fontSize="lg" fontWeight="semibold">
+                添付書類（※画像形式 jpeg jpg png）
               </Box>
+              <ClaimInputAttached
+                fileUpload={fileUpload1}
+                setFileUpload={setFileUpload1}
+              />
+              <ClaimInputAttached
+                fileUpload={fileUpload2}
+                setFileUpload={setFileUpload2}
+              />
+              <ClaimInputAttached
+                fileUpload={fileUpload3}
+                setFileUpload={setFileUpload3}
+              />
+            </Box>
 
-              {/*送信ボタン*/}
-              <Box mt={12} textAlign="center">
-                <Button
-                  disabled={
-                    customer &&
-                    occurrenceDate &&
-                    occurrenceSelect &&
-                    occurrenceContent &&
-                    stampStaff
-                      ? false
-                      : true
-                  }
-                  onClick={(e) => {
-                    AddClaim(e);
-                  }}
-                >
-                  提出する
-                </Button>
-              </Box>
+            {/*送信ボタン*/}
+            <Box mt={12} textAlign="center">
+              <Button
+                disabled={
+                  customer &&
+                  occurrenceDate &&
+                  occurrenceSelect &&
+                  occurrenceContent &&
+                  stampStaff
+                    ? false
+                    : true
+                }
+                onClick={(e) => {
+                  AddClaim(e);
+                }}
+              >
+                提出する
+              </Button>
             </Box>
           </Box>
         </>
