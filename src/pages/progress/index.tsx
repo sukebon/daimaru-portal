@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   CircularProgress,
@@ -12,18 +13,18 @@ import {
   Stack,
   Switch,
   Text,
-} from '@chakra-ui/react';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+} from "@chakra-ui/react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import {
   collection,
   deleteDoc,
   doc,
   getDocs,
   onSnapshot,
-} from 'firebase/firestore';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { db } from '../../../firebase';
+} from "firebase/firestore";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { db } from "../../../firebase";
 
 type ProgressesType = {
   id: string;
@@ -44,7 +45,7 @@ const ProgressIndex = () => {
 
   useEffect(() => {
     const getProgresses = async () => {
-      const progressesRef = collection(db, 'progresses');
+      const progressesRef = collection(db, "progresses");
       onSnapshot(progressesRef, (querySnapshot) => {
         setProgresses(
           querySnapshot.docs.map((doc) => ({
@@ -92,9 +93,9 @@ const ProgressIndex = () => {
   };
 
   const deleteProgress = async (progressId: string) => {
-    const result = window.confirm('削除して宜しいでしょうか');
+    const result = window.confirm("削除して宜しいでしょうか");
     if (!result) return;
-    const docsRef = doc(db, 'progresses', `${progressId}`);
+    const docsRef = doc(db, "progresses", `${progressId}`);
     try {
       await deleteDoc(docsRef);
     } catch (err) {
@@ -104,49 +105,49 @@ const ProgressIndex = () => {
   };
 
   return (
-    <Box w='100%' bg='#f7f7f7' paddingBottom='50px' minH='100vh' p={6}>
-      <Container maxW='1000px' bg='white' p={6}>
-        <Flex justifyContent='space-between'>
-          <Box as='h1' fontSize='2xl'>
+    <Box w="100%" bg="#f7f7f7" paddingBottom="50px" minH="100vh" p={6}>
+      <Container maxW="1000px" bg="white" p={6}>
+        <Flex justifyContent="space-between">
+          <Box as="h1" fontSize="2xl">
             進捗状況
           </Box>
-          <Link href='/progress/new'>
+          <Link href="/progress/new">
             <a>
-              <Button size='sm'>新規登録</Button>
+              <Button size="sm">新規登録</Button>
             </a>
           </Link>
         </Flex>
       </Container>
-      <Container maxW='1000px' mt={3} p={0}>
-        <Flex flexWrap='wrap' w='100%' gap={6}>
+      <Container maxW="1000px" mt={3} p={0}>
+        <Flex flexWrap="wrap" w="100%" gap={6}>
           {progresses?.map((progress) => (
             <>
               <Box
-                w={{ base: '100%', md: 'calc(50% - 0.75rem)' }}
-                bg='white'
+                w={{ base: "100%", md: "calc(50% - 0.75rem)" }}
+                bg="white"
                 mt={3}
                 p={6}
               >
                 <Box>
-                  <Flex alignItems='center' justifyContent='space-between'>
-                    <Text fontSize='xl'>{progress.title}</Text>
+                  <Flex alignItems="center" justifyContent="space-between">
+                    <Text fontSize="xl">{progress.title}</Text>
                     <Flex gap={3}>
                       <Link href={`/progress/edit/${progress.id}`}>
                         <a>
-                          <FaEdit color='gray' />
+                          <FaEdit color="gray" />
                         </a>
                       </Link>
                       <FaTrashAlt
-                        color='gray'
-                        cursor='pointer'
+                        color="gray"
+                        cursor="pointer"
                         onClick={() => deleteProgress(progress.id)}
                       />
                     </Flex>
                   </Flex>
                   <Flex
                     mt={6}
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    justifyContent='space-between'
+                    flexDirection={{ base: "column", md: "row" }}
+                    justifyContent="space-between"
                   >
                     <Flex gap={6}>
                       <Text>開始：{progress.startDate}</Text>
@@ -169,35 +170,40 @@ const ProgressIndex = () => {
 
                   <Flex
                     mt={6}
-                    alignItems='center'
-                    justifyContent='space-between'
+                    alignItems="center"
+                    justifyContent="space-between"
                   >
                     <Stack spacing={3}>
                       {progress?.contents.map((content: any, index: number) => (
-                        <Flex key={index} justifyContent='space-between'>
-                          <FormControl display='flex' alignItems='center'>
-                            <FormLabel htmlFor={content.title} minW={12} mb='0'>
+                        <Flex key={index} justifyContent="space-between">
+                          <FormControl display="flex" alignItems="center">
+                            <FormLabel htmlFor={content.title} minW={12} mb="0">
                               {content.title}
                             </FormLabel>
-                            <Switch
+                            {content.result && (
+                              <Badge px={2} variant="solid" colorScheme="blue">
+                                完了
+                              </Badge>
+                            )}
+                            {/* <Switch
                               id={content.result}
                               isChecked={content.result}
                               onChange={() =>
                                 handleSwitchChange(content.result)
                               }
-                            />
+                            /> */}
                           </FormControl>
                         </Flex>
                       ))}
                     </Stack>
-                    <Flex flexDirection='column' justifyContent='center'>
-                      <Box textAlign='center'>進捗率</Box>
+                    <Flex flexDirection="column" justifyContent="center">
+                      <Box textAlign="center">進捗率</Box>
                       <Box>
                         <CircularProgress
                           value={getAchieveRate(progress?.contents)}
-                          color='blue.400'
-                          size='180px'
-                          thickness='12px'
+                          color="blue.400"
+                          size="180px"
+                          thickness="12px"
                         >
                           <CircularProgressLabel>
                             {getAchieveRate(progress?.contents)}%
