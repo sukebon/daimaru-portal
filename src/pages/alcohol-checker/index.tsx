@@ -24,12 +24,6 @@ const Alcohol = () => {
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
-  useEffect(() => {
-    if (currentUser === "") {
-      router.push("/login");
-    }
-  }, [router, currentUser]);
-
   //アルコールチェッカーリスト
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckList");
@@ -77,47 +71,40 @@ const Alcohol = () => {
   return (
     <>
       {userAuthority(currentUser) && (
-        <Box
-          p={6}
-          backgroundColor={"#f7f7f7"}
-          paddingBottom={"50px"}
-          minH={"100vh"}
-        >
-          <Flex flexDirection={"column"} alignItems={"center"}>
-            <TableContainer backgroundColor="white" borderRadius={6} p={6}>
-              <Box as="h1" fontSize="lg">
-                アルコールチェック一覧
-              </Box>
+        <Flex flexDirection={"column"} alignItems={"center"}>
+          <TableContainer backgroundColor="white" borderRadius={6} p={6}>
+            <Box as="h1" fontSize="lg">
+              アルコールチェック一覧
+            </Box>
 
-              <Table size="sm" mt={6}>
-                <Thead>
-                  <Tr>
-                    <Th minW="130x">日付</Th>
-                    <Th minW="50px">提出者</Th>
-                    <Th minW="50px">未提出者</Th>
-                    <Th></Th>
+            <Table size="sm" mt={6}>
+              <Thead>
+                <Tr>
+                  <Th minW="130x">日付</Th>
+                  <Th minW="50px">提出者</Th>
+                  <Th minW="50px">未提出者</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {posts.map((post: { id: string; member: string[] }) => (
+                  <Tr key={post.id}>
+                    <Td>{post.id}</Td>
+                    <Td>{post.member.length}名</Td>
+                    <Td>{users.length - post.member.length}名</Td>
+                    <Td>
+                      <Link href={`alcohol-checker/${post.id}`}>
+                        <a>
+                          <Button>詳細</Button>
+                        </a>
+                      </Link>
+                    </Td>
                   </Tr>
-                </Thead>
-                <Tbody>
-                  {posts.map((post: { id: string; member: string[] }) => (
-                    <Tr key={post.id}>
-                      <Td>{post.id}</Td>
-                      <Td>{post.member.length}名</Td>
-                      <Td>{users.length - post.member.length}名</Td>
-                      <Td>
-                        <Link href={`alcohol-checker/${post.id}`}>
-                          <a>
-                            <Button>詳細</Button>
-                          </a>
-                        </Link>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Flex>
-        </Box>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Flex>
       )}
     </>
   );

@@ -11,7 +11,7 @@ import {
   Tr,
   Wrap,
   WrapItem,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   collection,
   doc,
@@ -19,34 +19,24 @@ import {
   orderBy,
   query,
   updateDoc,
-} from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilValue } from 'recoil';
-import { Administrator } from '../../../data';
-import { auth, db } from '../../../firebase';
-import { authState } from '../../../store';
-import AdminEditModal from '../../components/admin/AdminEditModal';
+} from "firebase/firestore";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilValue } from "recoil";
+import { Administrator } from "../../../data";
+import { auth, db } from "../../../firebase";
+import { authState } from "../../../store";
+import AdminEditModal from "../../components/admin/AdminEditModal";
 
 const Admin = () => {
-  const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
-  const router = useRouter();
-
   const [usersRegisterList, setUsersRegisterList] = useState<any>([]);
-
-  //ログインしていなかったらログイン画面へ
-  useEffect(() => {
-    if (user === null) {
-      router.push('/login');
-    }
-  }, [router, user]);
 
   //権限
   const isAuthority = async (user: any, prop: string) => {
     try {
-      const docRef = doc(db, 'authority', user.uid);
+      const docRef = doc(db, "authority", user.uid);
       let toggle;
       if (user[prop] && user[prop] === true) {
         toggle = false;
@@ -63,8 +53,8 @@ const Admin = () => {
 
   //firestore authority 情報の取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'authority');
-    const q = query(usersCollectionRef, orderBy('rank', 'asc'));
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setUsersRegisterList(
         querySnapshot.docs.map((doc) => ({
@@ -79,187 +69,181 @@ const Admin = () => {
   return (
     <>
       {Administrator.includes(currentUser) && (
-        <Box w='100%' bg='#f7f7f7' pb={6} minH='100vh' p={6}>
-          <Box
-            p={6}
-            mx='auto'
-            w={{ base: '100%', md: '1200px' }}
-            bg='white'
-            rounded='md'
-          >
-            <Box as='h1' fontSize='4xl'>
-              管理者設定画面
-            </Box>
-            <Box mt={12}>
-              <Text as='h2' fontSize='2xl'>
-                権限設定
-              </Text>
-              <Box p={6}>
-                <TableContainer>
-                  <Table size='sm' width={'100%'}>
-                    <Thead>
-                      <Tr>
-                        <Th>id</Th>
-                        <Th>名前</Th>
-                        <Th>ISO TM</Th>
-                        <Th>ISO 管理者</Th>
-                        <Th>ISO 上長</Th>
-                        <Th>ISO 事務局</Th>
-                        <Th>営業・販売</Th>
-                        <Th>ALチェック管理</Th>
-                        <Th>編集</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {usersRegisterList.map(
-                        (user: {
-                          uid: string;
-                          name: string;
-                          isoTopManegment: boolean;
-                          isoManager: boolean;
-                          isoBoss: boolean;
-                          isoOffice: boolean;
-                          isoSalesStaff: boolean;
-                          alcoholChecker: boolean;
-                          rank: number;
-                        }) => (
-                          <Tr key={user.uid}>
-                            <Td>{user?.rank}</Td>
-                            <Td>{user.name}</Td>
-                            <Td>
-                              {user.isoTopManegment ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoTopManegment')
-                                  }
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoTopManegment')
-                                  }
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              {user.isoManager ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoManager')
-                                  }
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoManager')
-                                  }
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              {user.isoBoss ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() => isAuthority(user, 'isoBoss')}
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() => isAuthority(user, 'isoBoss')}
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              {user.isoOffice ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() => isAuthority(user, 'isoOffice')}
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() => isAuthority(user, 'isoOffice')}
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              {user.isoSalesStaff ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoSalesStaff')
-                                  }
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'isoSalesStaff')
-                                  }
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              {user.alcoholChecker ? (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'alcoholChecker')
-                                  }
-                                  colorScheme='blue'
-                                >
-                                  有効
-                                </Button>
-                              ) : (
-                                <Button
-                                  size='xs'
-                                  onClick={() =>
-                                    isAuthority(user, 'alcoholChecker')
-                                  }
-                                >
-                                  無効
-                                </Button>
-                              )}
-                            </Td>
-                            <Td>
-                              <AdminEditModal uid={user.uid} />
-                            </Td>
-                          </Tr>
-                        )
-                      )}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </Box>
+        <Box
+          p={6}
+          mx="auto"
+          w={{ base: "100%", md: "1200px" }}
+          bg="white"
+          rounded="md"
+        >
+          <Box as="h1" fontSize="4xl">
+            管理者設定画面
+          </Box>
+          <Box mt={12}>
+            <Text as="h2" fontSize="2xl">
+              権限設定
+            </Text>
+            <Box p={6}>
+              <TableContainer>
+                <Table size="sm" width={"100%"}>
+                  <Thead>
+                    <Tr>
+                      <Th>id</Th>
+                      <Th>名前</Th>
+                      <Th>ISO TM</Th>
+                      <Th>ISO 管理者</Th>
+                      <Th>ISO 上長</Th>
+                      <Th>ISO 事務局</Th>
+                      <Th>営業・販売</Th>
+                      <Th>ALチェック管理</Th>
+                      <Th>編集</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {usersRegisterList.map(
+                      (user: {
+                        uid: string;
+                        name: string;
+                        isoTopManegment: boolean;
+                        isoManager: boolean;
+                        isoBoss: boolean;
+                        isoOffice: boolean;
+                        isoSalesStaff: boolean;
+                        alcoholChecker: boolean;
+                        rank: number;
+                      }) => (
+                        <Tr key={user.uid}>
+                          <Td>{user?.rank}</Td>
+                          <Td>{user.name}</Td>
+                          <Td>
+                            {user.isoTopManegment ? (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "isoTopManegment")
+                                }
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "isoTopManegment")
+                                }
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            {user.isoManager ? (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoManager")}
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoManager")}
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            {user.isoBoss ? (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoBoss")}
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoBoss")}
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            {user.isoOffice ? (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoOffice")}
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() => isAuthority(user, "isoOffice")}
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            {user.isoSalesStaff ? (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "isoSalesStaff")
+                                }
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "isoSalesStaff")
+                                }
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            {user.alcoholChecker ? (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "alcoholChecker")
+                                }
+                                colorScheme="blue"
+                              >
+                                有効
+                              </Button>
+                            ) : (
+                              <Button
+                                size="xs"
+                                onClick={() =>
+                                  isAuthority(user, "alcoholChecker")
+                                }
+                              >
+                                無効
+                              </Button>
+                            )}
+                          </Td>
+                          <Td>
+                            <AdminEditModal uid={user.uid} />
+                          </Td>
+                        </Tr>
+                      )
+                    )}
+                  </Tbody>
+                </Table>
+              </TableContainer>
             </Box>
           </Box>
         </Box>

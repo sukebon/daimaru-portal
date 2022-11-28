@@ -8,25 +8,25 @@ import {
   RadioGroup,
   Stack,
   Textarea,
-} from '@chakra-ui/react';
-import { doc, updateDoc } from 'firebase/firestore';
+} from "@chakra-ui/react";
+import { doc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
-} from 'firebase/storage';
-import { NextPage } from 'next';
-import React from 'react';
+} from "firebase/storage";
+import { NextPage } from "next";
+import React from "react";
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
   claimSelectList4,
-} from '../../../data';
-import { db, storage } from '../../../firebase';
-import { ClaimStateProps } from '../../../lib/ClaimStateProps';
-import ClaimEditAttached from './ClaimEditAttached';
+} from "../../../data";
+import { db, storage } from "../../../firebase";
+import { ClaimStateProps } from "../../../types/ClaimStateProps";
+import ClaimEditAttached from "./ClaimEditAttached";
 
 const ClaimEditReport: NextPage<ClaimStateProps> = ({
   queryId,
@@ -81,7 +81,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 }) => {
   //添付ファイルをアップロード
   const onFileUpload = (fileUpload: any, num: number) => {
-    const result = window.confirm('アップロードして宜しいでしょうか？');
+    const result = window.confirm("アップロードして宜しいでしょうか？");
     if (!result) return;
 
     const file = fileUpload[0];
@@ -103,10 +103,10 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
       getDownloadURL(
         ref(storage, `images/claims/${queryId}/${fileUpload[0].name}`)
       ).then((url) => {
-        const docRef = doc(db, 'claimList', `${queryId}`);
+        const docRef = doc(db, "claimList", `${queryId}`);
         updateDoc(docRef, {
-          ['imageUrl' + num]: url,
-          ['imagePath' + num]: storageRef.fullPath,
+          ["imageUrl" + num]: url,
+          ["imagePath" + num]: storageRef.fullPath,
         });
 
         if (num === 1) {
@@ -122,36 +122,36 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
           setImagePath3(storageRef.fullPath);
         }
 
-        console.log('アップロード成功');
+        console.log("アップロード成功");
       });
     });
   };
 
   //添付ファイルを削除
   const onFileDelete = (imagePath: string, num: number) => {
-    const result = window.confirm('削除して宜しいでしょうか？');
+    const result = window.confirm("削除して宜しいでしょうか？");
     if (!result) return;
     if (num === 1) {
-      setFileUpload1('');
-      setImageUrl1('');
+      setFileUpload1("");
+      setImageUrl1("");
     }
     if (num === 2) {
-      setFileUpload2('');
-      setImageUrl2('');
+      setFileUpload2("");
+      setImageUrl2("");
     }
     if (num === 3) {
-      setFileUpload3('');
-      setImageUrl3('');
+      setFileUpload3("");
+      setImageUrl3("");
     }
-    const docRef = doc(db, 'claimList', `${queryId}`);
+    const docRef = doc(db, "claimList", `${queryId}`);
     updateDoc(docRef, {
-      ['imageUrl' + num]: '',
-      ['imagePath' + num]: '',
+      ["imageUrl" + num]: "",
+      ["imagePath" + num]: "",
     }).then(() => {
       const desertRef = ref(storage, imagePath);
       deleteObject(desertRef)
         .then(() => {
-          console.log('削除成功');
+          console.log("削除成功");
         })
         .catch((error) => {
           console.log(error);
@@ -163,27 +163,27 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
     <>
       {/* 受付NO. 受付日 */}
       <Box>
-        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+        <Box mt={10} fontSize="lg" fontWeight="semibold">
           受付NO
         </Box>
         <Input
-          type='text'
-          w='100%'
+          type="text"
+          w="100%"
           p={2}
           mt={3}
-          placeholder='受付ナンバー 例 4-001'
+          placeholder="受付ナンバー 例 4-001"
           value={receptionNum}
           disabled={!enabledOffice()}
           onChange={(e) => setReceptionNum(e.target.value)}
         />
       </Box>
       <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+        <Box mt={9} fontSize="lg" fontWeight="semibold">
           受付日
         </Box>
         <Input
-          type='date'
-          w='100%'
+          type="date"
+          w="100%"
           p={2}
           mt={3}
           value={receptionDate}
@@ -194,15 +194,15 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 顧客名 */}
       <Box>
-        <Box mt={10} fontSize='lg' fontWeight='semibold'>
+        <Box mt={10} fontSize="lg" fontWeight="semibold">
           顧客名
         </Box>
         <Input
-          type='text'
-          w='100%'
+          type="text"
+          w="100%"
           p={2}
           mt={3}
-          placeholder='顧客名を入力'
+          placeholder="顧客名を入力"
           value={customer}
           disabled={!enabledOffice()}
           onChange={(e) => setCustomer(e.target.value)}
@@ -210,13 +210,13 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
       </Box>
 
       <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+        <Box mt={9} fontSize="lg" fontWeight="semibold">
           発生日
         </Box>
 
         <Input
-          type='date'
-          w='100%'
+          type="date"
+          w="100%"
           p={2}
           mt={3}
           value={occurrenceDate}
@@ -227,17 +227,17 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 発生内容 */}
       <Box mt={10}>
-        <Box as='h2' fontSize='lg' fontWeight='semibold'>
+        <Box as="h2" fontSize="lg" fontWeight="semibold">
           発生内容
         </Box>
-        <Box w='100%' mt={6}>
+        <Box w="100%" mt={6}>
           <RadioGroup
-            colorScheme='green'
+            colorScheme="green"
             value={occurrenceSelect}
             onChange={(e) => setOccurrenceSelect(e)}
           >
             <Box mt={3}>①製品起因</Box>
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList1.map(
                 (list, index) =>
                   index <= 3 && (
@@ -252,7 +252,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
               )}
             </Stack>
             <Box mt={3}>②受発注</Box>
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList1.map(
                 (list, index) =>
                   index >= 4 &&
@@ -268,7 +268,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
               )}
             </Stack>
             <Box mt={3}>③その他</Box>
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList1.map(
                 (list, index) =>
                   index === 7 && (
@@ -287,8 +287,8 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
         <Textarea
           mt={3}
           p={2}
-          w='100%'
-          placeholder='内容を入力'
+          w="100%"
+          placeholder="内容を入力"
           value={occurrenceContent}
           isDisabled={!enabledAuthor() && !enabledOffice()}
           onChange={(e) => setOccurrenceContent(e.target.value)}
@@ -297,17 +297,17 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/*修正処置 */}
       <Box mt={10}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           修正処置
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w="100%" mt={3}>
           <RadioGroup
-            colorScheme='green'
-            defaultValue='1'
+            colorScheme="green"
+            defaultValue="1"
             value={amendmentSelect}
             onChange={(e) => setAmendmentSelect(e)}
           >
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList2.map((list) => (
                 <Radio
                   key={list.id}
@@ -323,8 +323,8 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
         <Textarea
           mt={3}
           p={2}
-          w='100%'
-          placeholder='内容を入力'
+          w="100%"
+          placeholder="内容を入力"
           value={amendmentContent}
           disabled={!enabledStaff() && !enabledOffice()}
           onChange={(e) => setAmendmentContent(e.target.value)}
@@ -333,20 +333,20 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 起因部署 */}
       <Box mt={9}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           起因部署
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w="100%" mt={3}>
           <RadioGroup
-            colorScheme='green'
+            colorScheme="green"
             value={causeDepartmentSelect}
             onChange={(e) => setCauseDepartmentSelect(e)}
           >
             <Stack
               spacing={[1, 5]}
-              direction={['column', 'row']}
+              direction={["column", "row"]}
               px={2}
-              py={{ md: '2' }}
+              py={{ md: "2" }}
             >
               {claimSelectList4.map(
                 (list, index) =>
@@ -363,9 +363,9 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
             </Stack>
             <Stack
               spacing={[1, 5]}
-              direction={['column', 'row']}
+              direction={["column", "row"]}
               px={2}
-              py={{ md: '2' }}
+              py={{ md: "2" }}
             >
               {claimSelectList4.map(
                 (list, index) =>
@@ -386,17 +386,17 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 対策 */}
       <Box mt={9}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           対策
         </Flex>
-        <Box w='100%' mt={3}>
+        <Box w="100%" mt={3}>
           <RadioGroup
-            colorScheme='green'
-            defaultValue='1'
+            colorScheme="green"
+            defaultValue="1"
             value={counterplanSelect}
             onChange={(e) => setCounterplanSelect(e)}
           >
-            <Stack spacing={[1, 5]} direction={['column', 'row']} p={2}>
+            <Stack spacing={[1, 5]} direction={["column", "row"]} p={2}>
               {claimSelectList3.map((list) => (
                 <Radio
                   key={list.id}
@@ -414,8 +414,8 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
             <Textarea
               mt={3}
               p={2}
-              w='100%'
-              placeholder='内容を入力'
+              w="100%"
+              placeholder="内容を入力"
               value={counterplanContent}
               disabled={!enabledCounterplan() && !enabledOffice()}
               onChange={(e) => setCounterplanContent(e.target.value)}
@@ -426,7 +426,7 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 添付書類 */}
       <Box mt={9}>
-        <Flex as='h2' fontSize='lg' fontWeight='semibold'>
+        <Flex as="h2" fontSize="lg" fontWeight="semibold">
           添付書類（※画像形式 jpeg jpg png）
         </Flex>
         <ClaimEditAttached
@@ -460,12 +460,12 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 完了日 */}
       <Box>
-        <Box mt={9} fontSize='lg' fontWeight='semibold'>
+        <Box mt={9} fontSize="lg" fontWeight="semibold">
           完了日
         </Box>
         <Input
-          type='date'
-          w='100%'
+          type="date"
+          w="100%"
           p={2}
           mt={3}
           value={completionDate}
@@ -476,10 +476,10 @@ const ClaimEditReport: NextPage<ClaimStateProps> = ({
 
       {/* 削除ボタン */}
       {enabledOffice() && (
-        <Flex justifyContent='center'>
+        <Flex justifyContent="center">
           <Button
             mt={12}
-            colorScheme='red'
+            colorScheme="red"
             onClick={() =>
               deleteClaim(queryId, imagePath1, imagePath2, imagePath3)
             }

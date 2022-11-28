@@ -55,12 +55,6 @@ const Dm = () => {
   const firstField = React.useRef(null);
   const [spinner, setSpinner] = useRecoilState(spinnerAtom);
 
-  useEffect(() => {
-    if (currentUser === "") {
-      router.push("/login");
-    }
-  }, [currentUser, router]);
-
   //チラシ・リーフレット一覧を取得
   useEffect(() => {
     const getImages = async () => {
@@ -173,64 +167,58 @@ const Dm = () => {
       {currentUser && (
         <>
           <SpinnerLoading />
-          <Box bg="#f7f7f7" minH="80vh" p={6}>
-            <Container maxW="1145px" p={6} pr={0} bg="white" borderRadius={6}>
-              <Flex justifyContent="right">
-                <Button
-                  leftIcon={<AddIcon />}
-                  colorScheme="teal"
-                  onClick={onOpen}
-                  mr={6}
-                >
-                  チラシを登録する
-                </Button>
-              </Flex>
-              {images.length >= 1 ? (
-                <Flex
-                  flexDirection="row"
-                  flexWrap="wrap"
-                  justifyContent="center"
-                >
-                  {images.map((image: any) => (
-                    <Box key={image.id} mt={12} w="200px" mr={6}>
-                      <a href={image.urlPdf} target="_blanck" rel="noopener">
-                        <Box as="figure">
-                          <img
-                            src={image.urlImg}
-                            alt={image.nameImg}
-                            className={Styles.img}
-                          />
-                        </Box>
-                      </a>
-                      <Text whiteSpace="pre-wrap">{image.title}</Text>
-                      <Box whiteSpace="pre-wrap">
-                        {timestamp(image.createdAt)}
+          <Container maxW="1145px" p={6} pr={0} bg="white" borderRadius={6}>
+            <Flex justifyContent="right">
+              <Button
+                leftIcon={<AddIcon />}
+                colorScheme="teal"
+                onClick={onOpen}
+                mr={6}
+              >
+                チラシを登録する
+              </Button>
+            </Flex>
+            {images.length >= 1 ? (
+              <Flex flexDirection="row" flexWrap="wrap" justifyContent="center">
+                {images.map((image: any) => (
+                  <Box key={image.id} mt={12} w="200px" mr={6}>
+                    <a href={image.urlPdf} target="_blanck" rel="noopener">
+                      <Box as="figure">
+                        <img
+                          src={image.urlImg}
+                          alt={image.nameImg}
+                          className={Styles.img}
+                        />
                       </Box>
-                      {currentUser === image.user && (
-                        <Button
-                          colorScheme="red"
-                          size="sm"
-                          w="100%"
-                          mt={1}
-                          onClick={() => deleteImage(image)}
-                        >
-                          削除
-                        </Button>
-                      )}
+                    </a>
+                    <Text whiteSpace="pre-wrap">{image.title}</Text>
+                    <Box whiteSpace="pre-wrap">
+                      {timestamp(image.createdAt)}
                     </Box>
-                  ))}
-                </Flex>
-              ) : (
-                <Box
-                  textAlign="center"
-                  py={12}
-                  fontSize={{ base: "xs", md: "2xl" }}
-                >
-                  現在登録されているチラシはありません。
-                </Box>
-              )}
-            </Container>
-          </Box>
+                    {currentUser === image.user && (
+                      <Button
+                        colorScheme="red"
+                        size="sm"
+                        w="100%"
+                        mt={1}
+                        onClick={() => deleteImage(image)}
+                      >
+                        削除
+                      </Button>
+                    )}
+                  </Box>
+                ))}
+              </Flex>
+            ) : (
+              <Box
+                textAlign="center"
+                py={12}
+                fontSize={{ base: "xs", md: "2xl" }}
+              >
+                現在登録されているチラシはありません。
+              </Box>
+            )}
+          </Container>
 
           <Drawer
             isOpen={isOpen}

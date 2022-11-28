@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import React from "react";
-import { ClaimProps } from "../../../lib/ClaimProps";
+import { ClaimProps } from "../../../types/ClaimProps";
 
 const ClaimStampArea: NextPage<ClaimProps> = ({ claim, users }) => {
   return (

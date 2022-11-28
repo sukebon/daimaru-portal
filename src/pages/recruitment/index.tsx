@@ -40,27 +40,25 @@ const Recruitment = () => {
     <>
       {currentUser && (
         <>
-          <Box w="100%" bg="#f7f7f7" p={6} minH="100vh">
-            <Flex flexDirection="column" alignItems="center">
-              <Box
-                w={{ base: "100%", md: "800px" }}
-                p={6}
-                bg="white"
-                rounded="md"
-              >
-                <RecruitmentForm />
-              </Box>
-              <Box
-                w={{ base: "100%", md: "800px" }}
-                mt="6"
-                p={3}
-                bg="white"
-                rounded="md"
-              >
-                <RecruitmentPosts requests={currentRequests} />
-              </Box>
-            </Flex>
-          </Box>
+          <Flex flexDirection="column" alignItems="center">
+            <Box
+              w={{ base: "100%", md: "800px" }}
+              p={6}
+              bg="white"
+              rounded="md"
+            >
+              <RecruitmentForm />
+            </Box>
+            <Box
+              w={{ base: "100%", md: "800px" }}
+              mt="6"
+              p={3}
+              bg="white"
+              rounded="md"
+            >
+              <RecruitmentPosts requests={currentRequests} />
+            </Box>
+          </Flex>
         </>
       )}
     </>
