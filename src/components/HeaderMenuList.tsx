@@ -28,6 +28,11 @@ const HeaderMenuList = () => {
       link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
       blank: true,
     },
+    {
+      title: "会社カレンダー",
+      link: "/calendar",
+      blank: false,
+    },
     { title: "メーカーWEB", link: "/makerweb", blank: false },
   ];
 
