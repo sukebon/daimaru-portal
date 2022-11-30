@@ -29,7 +29,12 @@ import ClaimArea from "../components/ClaimArea";
 import RecruitmentArea from "../components/RecruitmentArea";
 import SalesArea from "../components/SalesArea";
 
-const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
+const Home: NextPage<any> = ({
+  categoryData,
+  newsData,
+  linkData,
+  calendarData,
+}) => {
   const [user] = useAuthState(auth);
   const currentUser = useRecoilValue(authState);
   const router = useRouter();
@@ -38,6 +43,8 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
 
   const [alcoholObject, setAlcoholObject] = useState<any>({});
   const [alcoholArray, setAlcoholArray] = useState<any>([]);
+
+  console.log(calendarData);
 
   useEffect(() => {
     if (user === null) {

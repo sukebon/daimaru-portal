@@ -1,7 +1,6 @@
 import {
   Box,
   Container,
-  Flex,
   Table,
   TableCaption,
   TableContainer,
@@ -13,11 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
-import { auth } from "../../../firebase";
 import { authState } from "../../../store";
 
 type Props = {
