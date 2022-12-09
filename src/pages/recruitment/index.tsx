@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { db } from "../../../firebase";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import RecruitmentForm from "../../components/recruitmentComp/RecruitmentForm";
-import RecruitmentPosts from "../../components/recruitmentComp/RecruitmentPosts";
+import RecruitmentForm from "../../components/recruitment/RecruitmentForm";
+import RecruitmentPosts from "../../components/recruitment/RecruitmentPosts";
 import { useRecoilValue } from "recoil";
 import { authState } from "../../../store";
 
@@ -14,8 +14,8 @@ const Recruitment = () => {
 
   //管理者用投稿リストを取得
   useEffect(() => {
-    const usersCollectionRef = collection(db, "requestList");
-    const q = query(usersCollectionRef, orderBy("sendAt", "desc"));
+    const requestsRef = collection(db, "requestList");
+    const q = query(requestsRef, orderBy("sendAt", "desc"));
     const unsub = onSnapshot(q, (querySnapshot) => {
       setRequests(
         querySnapshot.docs.map((doc) => ({

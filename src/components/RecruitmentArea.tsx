@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Box, Button, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
-import RecruitmentPosts from "./recruitmentComp/RecruitmentPosts";
+import RecruitmentPosts from "./recruitment/RecruitmentPosts";
 import {
   collection,
   onSnapshot,
