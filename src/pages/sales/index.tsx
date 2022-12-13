@@ -153,132 +153,129 @@ const Sales = () => {
   };
 
   return (
-    <Box bg="#f7f7f7" py={6} minH={"calc(100vh - 135px)"}>
-      <Container mt={6} maxW="1100px">
-        <Flex justifyContent="space-between" alignItems="center">
-          <Box my={3} fontSize="xl">
-            {currentMonth}月 売上一覧
-          </Box>
-          <Box>（単位:万円）</Box>
-        </Flex>
-        <TableContainer bg="white" rounded="md" p={6} boxShadow="md">
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>担当</Th>
-                <Th>予算</Th>
-                <Th>実績</Th>
-                <Th>計上予定</Th>
-                <Th>合計</Th>
-                <Th>差額</Th>
-                <Th>達成率</Th>
-                <Th>更新日</Th>
-                <Th>編集</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {sales
-                ?.sort(
-                  (a: { rank: number }, b: { rank: number }) => a.rank - b.rank
+    <Container maxW="1100px">
+      <Flex justifyContent="space-between" alignItems="center">
+        <Box my={3} fontSize="xl">
+          {currentMonth}月 売上一覧
+        </Box>
+        <Box>（単位:万円）</Box>
+      </Flex>
+      <TableContainer bg="white" rounded="md" p={6} boxShadow="md">
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>担当</Th>
+              <Th>予算</Th>
+              <Th>実績</Th>
+              <Th>計上予定</Th>
+              <Th>合計</Th>
+              <Th>差額</Th>
+              <Th>達成率</Th>
+              <Th>更新日</Th>
+              <Th>編集</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {sales
+              ?.sort(
+                (a: { rank: number }, b: { rank: number }) => a.rank - b.rank
+              )
+              ?.map(
+                (sale: {
+                  id: string;
+                  currentUser: string;
+                  currentExpect: string;
+                  currentAchieve: string;
+                  currentTarget: string;
+                  updatedAt: any;
+                }) => (
+                  <Tr
+                    key={sale.id}
+                    bgColor={
+                      getAchievementRate(
+                        Number(sale.currentExpect),
+                        Number(sale.currentAchieve),
+                        Number(sale.currentTarget)
+                      ) >= 100
+                        ? "#d4bf0096"
+                        : ""
+                    }
+                  >
+                    <Td mr={6}>{dispName(sale.currentUser)}</Td>
+                    <Td isNumeric>
+                      {Number(sale.currentTarget).toLocaleString()}
+                    </Td>
+                    <Td isNumeric>
+                      {Number(sale.currentAchieve).toLocaleString()}
+                    </Td>
+                    <Td isNumeric>
+                      {Number(sale.currentExpect).toLocaleString()}
+                    </Td>
+                    <Td fontWeight="bold" isNumeric>
+                      {(
+                        Number(sale.currentAchieve) + Number(sale.currentExpect)
+                      ).toLocaleString()}
+                    </Td>
+                    <Td fontWeight="bold" isNumeric>
+                      {(
+                        Number(sale.currentExpect) -
+                        Number(sale.currentTarget) +
+                        Number(sale.currentAchieve)
+                      ).toLocaleString()}
+                    </Td>
+                    <Td fontWeight="bold" isNumeric>
+                      {getAchievementRate(
+                        Number(sale.currentExpect),
+                        Number(sale.currentAchieve),
+                        Number(sale.currentTarget)
+                      )}
+                      %
+                    </Td>
+                    <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
+                    <Td>
+                      {(Administrator.includes(currentUser) ||
+                        sale.currentUser === currentUser) && (
+                        <SalesEditModal
+                          docId={`${currentMonth}_${sale.currentUser}`}
+                        />
+                      )}
+                    </Td>
+                  </Tr>
                 )
-                ?.map(
-                  (sale: {
-                    id: string;
-                    currentUser: string;
-                    currentExpect: string;
-                    currentAchieve: string;
-                    currentTarget: string;
-                    updatedAt: any;
-                  }) => (
-                    <Tr
-                      key={sale.id}
-                      bgColor={
-                        getAchievementRate(
-                          Number(sale.currentExpect),
-                          Number(sale.currentAchieve),
-                          Number(sale.currentTarget)
-                        ) >= 100
-                          ? "#d4bf0096"
-                          : ""
-                      }
-                    >
-                      <Td mr={6}>{dispName(sale.currentUser)}</Td>
-                      <Td isNumeric>
-                        {Number(sale.currentTarget).toLocaleString()}
-                      </Td>
-                      <Td isNumeric>
-                        {Number(sale.currentAchieve).toLocaleString()}
-                      </Td>
-                      <Td isNumeric>
-                        {Number(sale.currentExpect).toLocaleString()}
-                      </Td>
-                      <Td fontWeight="bold" isNumeric>
-                        {(
-                          Number(sale.currentAchieve) +
-                          Number(sale.currentExpect)
-                        ).toLocaleString()}
-                      </Td>
-                      <Td fontWeight="bold" isNumeric>
-                        {(
-                          Number(sale.currentExpect) -
-                          Number(sale.currentTarget) +
-                          Number(sale.currentAchieve)
-                        ).toLocaleString()}
-                      </Td>
-                      <Td fontWeight="bold" isNumeric>
-                        {getAchievementRate(
-                          Number(sale.currentExpect),
-                          Number(sale.currentAchieve),
-                          Number(sale.currentTarget)
-                        )}
-                        %
-                      </Td>
-                      <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
-                      <Td>
-                        {(Administrator.includes(currentUser) ||
-                          sale.currentUser === currentUser) && (
-                          <SalesEditModal
-                            docId={`${currentMonth}_${sale.currentUser}`}
-                          />
-                        )}
-                      </Td>
-                    </Tr>
-                  )
-                )}
-              <Tr
-                fontWeight="bold"
-                bgColor={
-                  getAchievementRate(ExpectSum, AchiveSum, targetSum) >= 100
-                    ? "#00f3a0"
-                    : ""
-                }
-              >
-                <Td mr={6}>合計</Td>
-                <Td isNumeric>{targetSum?.toLocaleString()}</Td>
-                <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
-                <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
-                <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
-                <Td isNumeric>
-                  {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
-                </Td>
-                <Td isNumeric>
-                  {getAchievementRate(ExpectSum, AchiveSum, targetSum)}%
-                </Td>
-                <Td></Td>
-                <Td></Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </TableContainer>
-        {/* <Box mt={6} textAlign="center">
+              )}
+            <Tr
+              fontWeight="bold"
+              bgColor={
+                getAchievementRate(ExpectSum, AchiveSum, targetSum) >= 100
+                  ? "#00f3a0"
+                  : ""
+              }
+            >
+              <Td mr={6}>合計</Td>
+              <Td isNumeric>{targetSum?.toLocaleString()}</Td>
+              <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
+              <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
+              <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
+              <Td isNumeric>
+                {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
+              </Td>
+              <Td isNumeric>
+                {getAchievementRate(ExpectSum, AchiveSum, targetSum)}%
+              </Td>
+              <Td></Td>
+              <Td></Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
+      {/* <Box mt={6} textAlign="center">
           <Link href="/sales/new">
             <a>
               <Button colorScheme="blue">売上登録</Button>
             </a>
           </Link>
         </Box> */}
-      </Container>
-    </Box>
+    </Container>
   );
 };
 
