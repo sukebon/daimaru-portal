@@ -1,7 +1,7 @@
+import React from "react";
+import { NextPage } from "next";
 import { Button } from "@chakra-ui/react";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { NextPage } from "next";
-import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
 import { auth, db } from "../../../firebase";

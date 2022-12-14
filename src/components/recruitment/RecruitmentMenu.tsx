@@ -19,15 +19,9 @@ interface Props {
   request: RequestTypes;
   edit: boolean;
   setEdit: Function;
-  oldTitleContent: any;
 }
 
-const RecruitmentMenu: NextPage<Props> = ({
-  request,
-  edit,
-  setEdit,
-  oldTitleContent,
-}) => {
+const RecruitmentMenu: NextPage<Props> = ({ request, edit, setEdit }) => {
   const currentUser = useRecoilValue(authState);
 
   //リクエストを非表示
@@ -86,40 +80,28 @@ const RecruitmentMenu: NextPage<Props> = ({
           <MenuItem
             onClick={() => {
               setEdit(!edit);
-              oldTitleContent(request);
             }}
           >
             編集
           </MenuItem>
         )}
-        {Administrator.includes(currentUser) && (
-          <>
-            {request.display === true ? (
-              <MenuItem onClick={() => hideRequest(request.id)}>
-                非表示
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={() => displayRequest(request.id)}>
-                表示
-              </MenuItem>
-            )}
-          </>
-        )}
+        <>
+          {request.display === true ? (
+            <MenuItem onClick={() => hideRequest(request.id)}>非表示</MenuItem>
+          ) : (
+            <MenuItem onClick={() => displayRequest(request.id)}>表示</MenuItem>
+          )}
 
-        {Administrator.includes(currentUser) && (
-          <>
-            {request.recruitment ? (
-              <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
-                募集を終了
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={() => isRecruitmentTrue(request.id)}>
-                募集を再開
-              </MenuItem>
-            )}
-          </>
-        )}
-
+          {request.recruitment ? (
+            <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
+              募集を終了
+            </MenuItem>
+          ) : (
+            <MenuItem onClick={() => isRecruitmentTrue(request.id)}>
+              募集を再開
+            </MenuItem>
+          )}
+        </>
         {Administrator.includes(currentUser) && (
           <MenuItem onClick={() => deleteAt(request.id)}>削除</MenuItem>
         )}
