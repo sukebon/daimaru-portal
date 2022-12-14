@@ -6,28 +6,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
 import { auth, db } from "../../../firebase";
 import { authState } from "../../../store";
+import { RequestTypes } from "../../../types/RequestTypes";
 
-interface Props {
-  request: {
-    id: string;
-    title: string;
-    startDay: string;
-    startTime: string;
-    endEnd: string;
-    endTime: string;
-    applicant: string;
-    person: string;
-    moreless: string;
-    member: string[];
-    level: string;
-    content: string;
-    display: boolean;
-    deleteAt: boolean;
-    editAt: boolean;
-    sendAt: string;
-    recruitment: boolean;
-  };
-}
+type Props = {
+  request: RequestTypes;
+};
 
 const RecruitmentButton: NextPage<Props> = ({ request }) => {
   const [user] = useAuthState(auth);
@@ -53,31 +36,25 @@ const RecruitmentButton: NextPage<Props> = ({ request }) => {
     <>
       {request.recruitment && (
         <>
-          {request.member.includes(currentUser) ? (
-            <Button
-              onClick={() => removeRequest(request.id)}
-              color="white"
-              bg="#17a6ca"
-              _hover={{ bg: "#17a6ca" }}
-              _focus={{ outline: "none" }}
-              fontSize={{ base: "sm" }}
-              marginTop={{ base: "10px", md: "0" }}
-            >
-              参加を取り消す
-            </Button>
-          ) : (
-            <Button
-              onClick={() => addRequest(request.id)}
-              color="white"
-              bg="orange"
-              _hover={{ bg: "##orange" }}
-              _focus={{ outline: "none" }}
-              fontSize={{ base: "sm" }}
-              marginTop={{ base: "10px", md: "0" }}
-            >
-              参加する
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              request.member.includes(currentUser)
+                ? removeRequest(request.id)
+                : addRequest(request.id);
+            }}
+            color="white"
+            bg={request.member.includes(currentUser) ? "#17a6ca" : "orange"}
+            _hover={{
+              bg: request.member.includes(currentUser) ? "#17a6ca" : "orange",
+            }}
+            _focus={{ outline: "none" }}
+            fontSize={{ base: "sm" }}
+            marginTop={{ base: "10px", md: "0" }}
+          >
+            {request.member.includes(currentUser)
+              ? "参加を取り消す"
+              : "参加する"}
+          </Button>
         </>
       )}
     </>

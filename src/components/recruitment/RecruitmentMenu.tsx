@@ -13,29 +13,12 @@ import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
 import { authState } from "../../../store";
 import { Administrator } from "../../../data";
+import { RequestTypes } from "../../../types/RequestTypes";
 
 interface Props {
-  request: {
-    id: string;
-    title: string;
-    startDay: string;
-    startTime: string;
-    endEnd: string;
-    endTime: string;
-    applicant: string;
-    person: string;
-    moreless: string;
-    member: [];
-    level: string;
-    content: string;
-    display: boolean;
-    deleteAt: boolean;
-    editAt: boolean;
-    sendAt: string;
-    recruitment: boolean;
-  };
+  request: RequestTypes;
   edit: boolean;
-  setEdit: any;
+  setEdit: Function;
   oldTitleContent: any;
 }
 

@@ -3,28 +3,11 @@ import { NextPage } from "next";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { usersState } from "../../../store/index.js";
+import { RequestTypes } from "../../../types/RequestTypes.js";
 
-interface Props {
-  request: {
-    id: string;
-    title: string;
-    startDay: string;
-    startTime: string;
-    endEnd: string;
-    endTime: string;
-    applicant: string;
-    person: string;
-    moreless: string;
-    member: string[];
-    level: string;
-    content: string;
-    display: boolean;
-    deleteAt: boolean;
-    editAt: boolean;
-    sendAt: string;
-    recruitment: boolean;
-  };
-}
+type Props = {
+  request: RequestTypes;
+};
 
 const RecruitmentMemberList: NextPage<Props> = ({ request }) => {
   const [usersfilter, setUsersfilter] = useState<any>([]);
