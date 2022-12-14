@@ -1,31 +1,12 @@
 /* eslint-disable react/display-name */
-import { NextPage } from 'next';
-import React from 'react';
-import { Box } from '@chakra-ui/react';
-import RecruitmentPost from './RecruitmentPost';
+import { NextPage } from "next";
+import React from "react";
+import { Box } from "@chakra-ui/react";
+import RecruitmentPost from "./RecruitmentPost";
+import { RequestTypes } from "../../../types/RequestTypes";
 
 type Props = {
-  requests: {
-    id: string;
-    title: string;
-    startDay: string;
-    startTime: string;
-    endEnd: string;
-    endTime: string;
-    applicant: string;
-    person: string;
-    moreless: string;
-    member: [];
-    level: string;
-    content: string;
-    display: boolean;
-    deleteAt: boolean;
-    editAt: boolean;
-    sendAt: string;
-    recruitment: boolean;
-    author: string;
-    endDay: string;
-  }[];
+  requests: RequestTypes[];
 };
 
 const RecruitmentPosts: NextPage<Props> = ({ requests }) => {
@@ -34,8 +15,8 @@ const RecruitmentPosts: NextPage<Props> = ({ requests }) => {
       {requests.map((request) => (
         <Box
           key={request.id}
-          style={{ width: '100%' }}
-          display={request.deleteAt ? 'none' : 'block'}
+          style={{ width: "100%" }}
+          display={request.deleteAt ? "none" : "block"}
         >
           <RecruitmentPost request={request} />
         </Box>

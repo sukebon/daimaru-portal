@@ -26,32 +26,13 @@ import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { dateTime, dayOfWeek, starLevel } from "../../../functions";
 import { authState, usersState } from "../../../store";
+import { RequestTypes } from "../../../types/RequestTypes";
 import RecruitmentButton from "./RecruitmentButton";
 import RecruitmentMemberList from "./RecruitmentMemberList";
 import RecruitmentMenu from "./RecruitmentMenu";
 
 type Props = {
-  request: {
-    id: string;
-    title: string;
-    startDay: string;
-    startTime: string;
-    endEnd: string;
-    endTime: string;
-    applicant: string;
-    person: string;
-    moreless: string;
-    member: [];
-    level: string;
-    content: string;
-    display: boolean;
-    deleteAt: boolean;
-    editAt: boolean;
-    sendAt: any;
-    recruitment: boolean;
-    author: string;
-    endDay: string;
-  };
+  request: RequestTypes;
 };
 
 const RecruitmentPost: NextPage<Props> = ({ request }) => {

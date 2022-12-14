@@ -198,7 +198,7 @@ const Claim: NextPage = () => {
         <>
           <Flex flexDirection={"column"} alignItems={"center"}>
             <TableContainer
-              w="1700px"
+              w="1800px"
               backgroundColor="white"
               borderRadius={6}
               p={6}
