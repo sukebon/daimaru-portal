@@ -17,16 +17,16 @@ const RecruitmentButton: NextPage<Props> = ({ request }) => {
   const currentUser = useRecoilValue(authState);
 
   //参加する
-  const addRequest = async (uid: string) => {
-    const docRef = doc(db, "requestList", uid);
+  const addRequest = async (id: string) => {
+    const docRef = doc(db, "requestList", id);
     await updateDoc(docRef, {
       member: arrayUnion(user && user.uid),
     });
   };
 
   //参加を取り消す
-  const removeRequest = async (uid: string) => {
-    const docRef = doc(db, "requestList", uid);
+  const removeRequest = async (id: string) => {
+    const docRef = doc(db, "requestList", id);
     await updateDoc(docRef, {
       member: arrayRemove(user && user.uid),
     });
@@ -35,27 +35,23 @@ const RecruitmentButton: NextPage<Props> = ({ request }) => {
   return (
     <>
       {request.recruitment && (
-        <>
-          <Button
-            onClick={() => {
-              request.member.includes(currentUser)
-                ? removeRequest(request.id)
-                : addRequest(request.id);
-            }}
-            color="white"
-            bg={request.member.includes(currentUser) ? "#17a6ca" : "orange"}
-            _hover={{
-              bg: request.member.includes(currentUser) ? "#17a6ca" : "orange",
-            }}
-            _focus={{ outline: "none" }}
-            fontSize={{ base: "sm" }}
-            marginTop={{ base: "10px", md: "0" }}
-          >
-            {request.member.includes(currentUser)
-              ? "参加を取り消す"
-              : "参加する"}
-          </Button>
-        </>
+        <Button
+          mt={{ base: "10px", md: "0" }}
+          color="white"
+          fontSize={{ base: "sm" }}
+          bg={request.member.includes(currentUser) ? "#17a6ca" : "orange"}
+          _focus={{ outline: "none" }}
+          _hover={{
+            bg: request.member.includes(currentUser) ? "#17a6ca" : "orange",
+          }}
+          onClick={() => {
+            request.member.includes(currentUser)
+              ? removeRequest(request.id)
+              : addRequest(request.id);
+          }}
+        >
+          {request.member.includes(currentUser) ? "参加を取り消す" : "参加する"}
+        </Button>
       )}
     </>
   );

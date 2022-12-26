@@ -38,108 +38,85 @@ const RecruitmentPost: NextPage<Props> = ({ request }) => {
   };
 
   return (
-    <Box
-      key={request.id}
-      w="100%"
-      display={request.deleteAt ? "none" : "block"}
-    >
-      {!request.deleteAt && (
-        <Box
-          w="100%"
-          p={3}
-          bgColor={request.display === false ? "#999" : "white"}
-        >
-          <Flex justifyContent="space-between">
-            <Flex flexDirection="column" width="100%">
-              {/* 編集画面を表示・非表示 */}
-              {!edit ? (
-                <>
-                  {newLabel(request?.sendAt?.toDate()) && (
-                    <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
-                      New
-                    </Badge>
-                  )}
-                  <Flex justifyContent="space-between" alignItems="center">
-                    <Text fontSize="2xl">{starLevel(request.level)}</Text>
-                    {/* メニューボタン  投稿者と管理者のみ表示*/}
-                    {(currentUser === request.author ||
-                      Administrator.includes(currentUser)) && (
-                      <RecruitmentMenu
-                        request={request}
-                        edit={edit}
-                        setEdit={setEdit}
-                      />
-                    )}
-                  </Flex>
-
-                  <Heading fontSize="xl" pb={6} mt={2}>
-                    {request.title}
-                  </Heading>
-                  <Flex
-                    flexDirection={{
-                      base: "column",
-                      md: "row",
-                      lg: "column",
-                      "2xl": "row",
-                    }}
-                    fontSize="sm"
-                    gap={2}
-                  >
-                    <Text>
-                      【開始】{request.startDay}
-                      {request.startTime && `-${request.startTime}`}
-                      {dayOfWeek(request.startDay)}
-                    </Text>
-                    <Text>
-                      【終了】{request.endDay}
-                      {request.endTime && `-${request.endTime}`}
-                      {dayOfWeek(request.endDay)}
-                    </Text>
-                    <Text>
-                      【募集人数】{request.applicant}人{request.moreless}
-                    </Text>
-                  </Flex>
-                  <Flex
-                    flexDirection={{ base: "column", md: "row" }}
-                    fontSize="sm"
-                  >
-                    <Text>【責任者】{request.person}</Text>
-                    {Administrator.includes(currentUser) && (
-                      <Text>【作成者】{authorDispay(request.author)}</Text>
-                    )}
-                  </Flex>
-                  <Text py={3} whiteSpace={"pre-wrap"} fontSize={"sm"}>
-                    {request.content}
-                  </Text>
-                </>
-              ) : (
-                //編集画面↓
-                <RecruitmentEditPost request={request} setEdit={setEdit} />
+    <Box w="100%" p={3} bgColor={request.display === false ? "#999" : "white"}>
+      <Flex justifyContent="space-between">
+        <Flex flexDirection="column" width="100%">
+          {!edit ? (
+            <>
+              {newLabel(request?.sendAt?.toDate()) && (
+                <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
+                  New
+                </Badge>
               )}
-            </Flex>
-          </Flex>
-
-          {/* 参加メンバー羅列 */}
-          {!edit && (
-            <Flex
-              flexDirection={{ base: "column", md: "row" }}
-              justifyContent={"space-between"}
-              alignItems="center"
-              gap={3}
-              py={3}
-            >
-              <Flex flexWrap={"wrap"}>
-                {/* 参加メンバー一覧 */}
-                <RecruitmentMemberList request={request} />
+              <Flex justifyContent="space-between" alignItems="center">
+                <Text fontSize="2xl">{starLevel(request.level)}</Text>
+                {/* メニューボタン  投稿者と管理者のみ表示*/}
+                {(currentUser === request.author ||
+                  Administrator.includes(currentUser)) && (
+                  <RecruitmentMenu
+                    request={request}
+                    edit={edit}
+                    setEdit={setEdit}
+                  />
+                )}
               </Flex>
 
-              {/* 参加ボタン */}
-              <RecruitmentButton request={request} />
-            </Flex>
+              <Heading fontSize="xl" pb={6} mt={2}>
+                {request.title}
+              </Heading>
+              <Flex
+                flexDirection={{
+                  base: "column",
+                  md: "row",
+                  lg: "column",
+                  "2xl": "row",
+                }}
+                fontSize="sm"
+                gap={2}
+              >
+                <Text>
+                  【開始】{request.startDay}
+                  {request.startTime && `-${request.startTime}`}
+                  {dayOfWeek(request.startDay)}
+                </Text>
+                <Text>
+                  【終了】{request.endDay}
+                  {request.endTime && `-${request.endTime}`}
+                  {dayOfWeek(request.endDay)}
+                </Text>
+                <Text>
+                  【募集人数】{request.applicant}人{request.moreless}
+                </Text>
+              </Flex>
+              <Flex flexDirection={{ base: "column", md: "row" }} fontSize="sm">
+                <Text>【責任者】{request.person}</Text>
+                {Administrator.includes(currentUser) && (
+                  <Text>【作成者】{authorDispay(request.author)}</Text>
+                )}
+              </Flex>
+              <Text py={3} whiteSpace="pre-wrap" fontSize="sm">
+                {request.content}
+              </Text>
+              <Flex
+                flexDirection={{ base: "column", md: "row" }}
+                justifyContent="space-between"
+                alignItems="center"
+                gap={3}
+                py={3}
+              >
+                <Flex flexWrap="wrap">
+                  <RecruitmentMemberList request={request} />
+                </Flex>
+                <RecruitmentButton request={request} />
+              </Flex>
+            </>
+          ) : (
+            //編集画面↓
+            <RecruitmentEditPost request={request} setEdit={setEdit} />
           )}
-          <Divider mb={3} />
-        </Box>
-      )}
+        </Flex>
+      </Flex>
+      <Divider mb={3} />
     </Box>
   );
 };

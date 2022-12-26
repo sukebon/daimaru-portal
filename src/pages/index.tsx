@@ -1,11 +1,10 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Information from "../components/Information";
-import QuickLink from "../components/QuickLink";
-import Slogan from "../components/Slogan";
-import CatalogArea from "../components/CatalogArea";
-import styles from "../styles/Home.module.css";
+import Information from "../components/toppage/Information";
+import QuickLink from "../components/toppage/QuickLink";
+import Slogan from "../components/toppage/Slogan";
+import CatalogArea from "../components/toppage/CatalogArea";
 import { Box, Flex, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { auth } from "../../firebase";
@@ -25,9 +24,9 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { authState, claimsState, usersState } from "../../store/";
 import CheckDrawer from "../components/alcohol/CheckDrawer";
 import { todayDate } from "../../functions";
-import ClaimArea from "../components/ClaimArea";
-import RecruitmentArea from "../components/RecruitmentArea";
-import SalesArea from "../components/SalesArea";
+import ClaimArea from "../components/toppage/ClaimArea";
+import RecruitmentArea from "../components/toppage/RecruitmentArea";
+import SalesArea from "../components/toppage/SalesArea";
 
 const Home: NextPage<any> = ({
   categoryData,

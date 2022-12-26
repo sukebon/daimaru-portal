@@ -6,7 +6,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { NextPage } from "next";
 import React from "react";
 import { useRecoilValue } from "recoil";
@@ -58,12 +58,22 @@ const RecruitmentMenu: NextPage<Props> = ({ request, edit, setEdit }) => {
 
   //リクエストを削除
   const deleteAt = async (uid: string) => {
-    const res = window.confirm("削除してよろしいでしょうか？");
-    if (res) {
-      const docRef = doc(db, "requestList", uid);
-      await updateDoc(docRef, {
-        deleteAt: true,
-      });
+    const result = window.confirm("削除してよろしいでしょうか？");
+    if (!result) return;
+    const docRef = doc(db, "requestList", uid);
+    await updateDoc(docRef, {
+      deleteAt: true,
+    });
+  };
+
+  const deleteRequest = async (id: string) => {
+    const result = window.confirm("削除してよろしいでしょうか？");
+    if (!result) return;
+    try {
+      const docRef = doc(db, "requestList", `${id}`);
+      await deleteDoc(docRef);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -103,7 +113,7 @@ const RecruitmentMenu: NextPage<Props> = ({ request, edit, setEdit }) => {
           )}
         </>
         {Administrator.includes(currentUser) && (
-          <MenuItem onClick={() => deleteAt(request.id)}>削除</MenuItem>
+          <MenuItem onClick={() => deleteRequest(request.id)}>削除</MenuItem>
         )}
       </MenuList>
     </Menu>

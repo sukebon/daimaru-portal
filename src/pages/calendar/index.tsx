@@ -16,13 +16,13 @@ type Props = {
 const Calendar: NextPage<Props> = ({ calendarData }) => {
   return (
     <Container maxW="900px" p={6} rounded="md" bg="white" boxShadow="xs">
-      <Tabs>
+      <Tabs variant="enclosed">
         <TabList>
           <Tab _focus={{ outline: "none" }}>本社・神戸</Tab>
           <Tab _focus={{ outline: "none" }}>徳島工場</Tab>
         </TabList>
 
-        <TabPanels>
+        <TabPanels mt={1}>
           <TabPanel p={0}>
             <img
               src={calendarData.imageHonsha.url}

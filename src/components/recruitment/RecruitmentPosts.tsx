@@ -13,11 +13,7 @@ const RecruitmentPosts: NextPage<Props> = ({ requests }) => {
   return (
     <>
       {requests.map((request) => (
-        <Box
-          key={request.id}
-          style={{ width: "100%" }}
-          display={request.deleteAt ? "none" : "block"}
-        >
+        <Box key={request.id} w="100%">
           <RecruitmentPost request={request} />
         </Box>
       ))}
