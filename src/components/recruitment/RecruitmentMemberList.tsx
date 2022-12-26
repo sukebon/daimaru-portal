@@ -27,7 +27,7 @@ const RecruitmentMemberList: NextPage<Props> = ({ request }) => {
     <>
       <Flex wrap="wrap" rounded="md" color="white" fontSize="sm" gap={2}>
         {usersfilter.map((user: any, index: number) => (
-          <Box key={index} padding={1} rounded="md" bg={"gray.500"}>
+          <Box key={index} p={1} rounded="md" bg={"gray.500"}>
             {user.name}
           </Box>
         ))}

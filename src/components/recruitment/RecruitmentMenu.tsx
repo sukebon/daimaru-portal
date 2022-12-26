@@ -6,7 +6,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { NextPage } from "next";
 import React from "react";
 import { useRecoilValue } from "recoil";
@@ -19,15 +19,9 @@ interface Props {
   request: RequestTypes;
   edit: boolean;
   setEdit: Function;
-  oldTitleContent: any;
 }
 
-const RecruitmentMenu: NextPage<Props> = ({
-  request,
-  edit,
-  setEdit,
-  oldTitleContent,
-}) => {
+const RecruitmentMenu: NextPage<Props> = ({ request, edit, setEdit }) => {
   const currentUser = useRecoilValue(authState);
 
   //リクエストを非表示
@@ -64,12 +58,22 @@ const RecruitmentMenu: NextPage<Props> = ({
 
   //リクエストを削除
   const deleteAt = async (uid: string) => {
-    const res = window.confirm("削除してよろしいでしょうか？");
-    if (res) {
-      const docRef = doc(db, "requestList", uid);
-      await updateDoc(docRef, {
-        deleteAt: true,
-      });
+    const result = window.confirm("削除してよろしいでしょうか？");
+    if (!result) return;
+    const docRef = doc(db, "requestList", uid);
+    await updateDoc(docRef, {
+      deleteAt: true,
+    });
+  };
+
+  const deleteRequest = async (id: string) => {
+    const result = window.confirm("削除してよろしいでしょうか？");
+    if (!result) return;
+    try {
+      const docRef = doc(db, "requestList", `${id}`);
+      await deleteDoc(docRef);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -86,42 +90,30 @@ const RecruitmentMenu: NextPage<Props> = ({
           <MenuItem
             onClick={() => {
               setEdit(!edit);
-              oldTitleContent(request);
             }}
           >
             編集
           </MenuItem>
         )}
-        {Administrator.includes(currentUser) && (
-          <>
-            {request.display === true ? (
-              <MenuItem onClick={() => hideRequest(request.id)}>
-                非表示
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={() => displayRequest(request.id)}>
-                表示
-              </MenuItem>
-            )}
-          </>
-        )}
+        <>
+          {request.display === true ? (
+            <MenuItem onClick={() => hideRequest(request.id)}>非表示</MenuItem>
+          ) : (
+            <MenuItem onClick={() => displayRequest(request.id)}>表示</MenuItem>
+          )}
 
+          {request.recruitment ? (
+            <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
+              募集を終了
+            </MenuItem>
+          ) : (
+            <MenuItem onClick={() => isRecruitmentTrue(request.id)}>
+              募集を再開
+            </MenuItem>
+          )}
+        </>
         {Administrator.includes(currentUser) && (
-          <>
-            {request.recruitment ? (
-              <MenuItem onClick={() => isRecruitmentFalse(request.id)}>
-                募集を終了
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={() => isRecruitmentTrue(request.id)}>
-                募集を再開
-              </MenuItem>
-            )}
-          </>
-        )}
-
-        {Administrator.includes(currentUser) && (
-          <MenuItem onClick={() => deleteAt(request.id)}>削除</MenuItem>
+          <MenuItem onClick={() => deleteRequest(request.id)}>削除</MenuItem>
         )}
       </MenuList>
     </Menu>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Box, Button, Flex, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
-import RecruitmentPosts from "./recruitment/RecruitmentPosts";
+import RecruitmentPosts from "../recruitment/RecruitmentPosts";
 import {
   collection,
   onSnapshot,
@@ -9,9 +9,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { useRecoilState } from "recoil";
-import { hideRequestsState, requestsState } from "../../store";
+import { hideRequestsState, requestsState } from "../../../store";
 
 const RecruitmentArea = () => {
   const [requests, setRequests] = useRecoilState<any>(requestsState); //リクエスト一覧リスト

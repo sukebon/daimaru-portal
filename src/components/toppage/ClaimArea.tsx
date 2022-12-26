@@ -11,8 +11,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { db } from "../../firebase";
-import { authState, claimsState, usersState } from "../../store";
+import { db } from "../../../firebase";
+import { authState, claimsState, usersState } from "../../../store";
 
 const ClaimArea = () => {
   const router = useRouter();

@@ -67,7 +67,6 @@ const Form = () => {
         level: inputs.level,
         content: inputs.content,
         member: [],
-        deleteAt: false,
         display: true,
         editAt: false,
         sendAt: serverTimestamp(),

@@ -3,9 +3,9 @@ import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { constSelector, useRecoilValue } from "recoil";
-import { Administrator } from "../../data";
-import { db } from "../../firebase";
-import { authState, usersState } from "../../store";
+import { Administrator } from "../../../data";
+import { db } from "../../../firebase";
+import { authState, usersState } from "../../../store";
 
 const SalesArea = () => {
   const users = useRecoilValue(usersState);
