@@ -43,19 +43,21 @@ const Sales = () => {
   useEffect(() => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
+    let month = date.getMonth() + 1;
     const lastDate = new Date(year, month, 0);
-    const recentAtDate = `${year}-${month}-01`;
+    let monthStr = "0" + String(month);
+    monthStr.slice(-2);
+    const startAtDate = `${year}-${monthStr}-01`;
+    const endAtDate = `${year}-${monthStr}-${lastDate.getDate()}`;
     setCurrentMonth(`${year}-${month}`);
-    const sinceAtDate = `${year}-${month}-${lastDate.getDate()}`;
 
     // 売上登録データ取得
     const salesCollectionRef = collection(db, "sales");
     const q = query(
       salesCollectionRef,
       orderBy("datetime"),
-      startAt(recentAtDate),
-      endAt(sinceAtDate)
+      startAt(startAtDate),
+      endAt(endAtDate)
     );
     try {
       onSnapshot(q, (querySnapshot) => {
@@ -65,6 +67,7 @@ const Sales = () => {
             id: doc.id,
           }))
         );
+        console.log(q);
         setRegisteredUser(
           querySnapshot.docs.map((doc) => doc.data().currentUser)
         );
@@ -78,8 +81,12 @@ const Sales = () => {
   const addSales = async (uid: string, rank: number) => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    let month = String(date.getMonth() + 1);
+    month = "0" + month;
+    month.slice(-2);
+    let day = String(date.getDate());
+    day = "0" + day;
+    day.slice(-2);
     const result = year + "-" + month;
 
     const docRef = doc(db, "sales", `${result}_${uid}`);
