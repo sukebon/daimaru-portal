@@ -81,9 +81,9 @@ const Sales = () => {
   const addSales = async (uid: string, rank: number) => {
     const date = new Date();
     const year = date.getFullYear();
-    let month = String(date.getMonth() + 1);
-    month = "0" + month;
-    month.slice(-2);
+    let month = date.getMonth() + 1;
+    let monthStr = "0" + month;
+    monthStr.slice(-2);
     let day = String(date.getDate());
     day = "0" + day;
     day.slice(-2);
@@ -99,7 +99,7 @@ const Sales = () => {
           currentExpect: 0,
           currentUser: uid,
           createdAt: serverTimestamp(),
-          datetime: `${year}-${month}-${day}`,
+          datetime: `${year}-${monthStr}-${day}`,
           rank,
         });
       } catch (err) {
