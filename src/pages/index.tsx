@@ -43,8 +43,6 @@ const Home: NextPage<any> = ({
   const [alcoholObject, setAlcoholObject] = useState<any>({});
   const [alcoholArray, setAlcoholArray] = useState<any>([]);
 
-  console.log(calendarData);
-
   useEffect(() => {
     if (user === null) {
       router.push("/login");
