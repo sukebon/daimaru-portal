@@ -75,14 +75,6 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
     }
   };
 
-  // 基礎売上計算
-  const addBaseSales = () => {
-    const calcSum =
-      Number(calcObj?.average) * Number(calcObj?.remain) +
-      Number(calcObj?.spot);
-    setSalesObj({ ...salesObj, currentExpect: calcSum });
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -93,6 +85,14 @@ const SalesEditModal: NextPage<Props> = ({ docId }) => {
     const name = e.target.name;
     const value = e.target.value;
     setCalcObj({ ...calcObj, [name]: value });
+  };
+
+  // 基礎売上計算
+  const addBaseSales = () => {
+    const calcSum =
+      Number(calcObj?.average) * Number(calcObj?.remain) +
+      Number(calcObj?.spot);
+    setSalesObj({ ...salesObj, currentExpect: calcSum });
   };
 
   return (
