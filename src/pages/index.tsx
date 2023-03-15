@@ -27,6 +27,7 @@ import { todayDate } from "../../functions";
 import ClaimArea from "../components/toppage/ClaimArea";
 import RecruitmentArea from "../components/toppage/RecruitmentArea";
 import SalesArea from "../components/toppage/SalesArea";
+import CuttingReportArea from "../components/toppage/CuttingReportArea";
 
 const Home: NextPage<any> = ({
   categoryData,
@@ -123,6 +124,7 @@ const Home: NextPage<any> = ({
           <Flex w="100%" gap={6} flexDirection={{ base: "column", lg: "row" }}>
             <Box flex={1}>
               <Stack spacing={6}>
+                <CuttingReportArea />
                 <CheckDrawer />
                 <ClaimArea />
                 <SalesArea />

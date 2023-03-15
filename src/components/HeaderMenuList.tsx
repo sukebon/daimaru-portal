@@ -22,10 +22,14 @@ const HeaderMenuList = () => {
       link: "https://www.daimaru-hakui.co.jp/",
       blank: true,
     },
-
     {
       title: "組織カレンダー",
       link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
+      blank: true,
+    },
+    {
+      title: "生地在庫",
+      link: "https://daimaru-kijizaiko.vercel.app/dashboard",
       blank: true,
     },
     {
