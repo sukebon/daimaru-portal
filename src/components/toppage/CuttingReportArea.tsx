@@ -32,7 +32,7 @@ const CuttingReportArea = () => {
           bg="white"
         >
           <Text fontSize="2xl" mb="4" ml="1">
-            本日の裁断報告書
+            本日登録の裁断報告書
           </Text>
 
           <TableContainer>
@@ -43,6 +43,7 @@ const CuttingReportArea = () => {
                   <Th>受注先名</Th>
                   <Th>品名</Th>
                   <Th>数量</Th>
+                  <Th>担当者</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -53,6 +54,7 @@ const CuttingReportArea = () => {
                       <Td>{value?.client}</Td>
                       <Td>{value?.itemName}</Td>
                       <Td>{value?.totalQuantity}</Td>
+                      <Td>{value?.username}</Td>
                     </Tr>
                   </>
                 ))}

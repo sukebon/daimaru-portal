@@ -10,4 +10,5 @@ export type CuttingReportType = {
   comment: string;
   products: { category: string; productId: string; quantity: number }[];
   serialNumber: number;
+  username: string;
 };
