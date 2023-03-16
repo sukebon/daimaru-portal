@@ -12,19 +12,15 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import Link from "next/link";
-import React from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { CuttingReportType } from "../../../types/CuttingReportType";
+import { useCuttingReport } from "../../hooks/UseCuttingReport";
+import CuttingReportModal from "../cutting-report/CuttingReportModal";
 
 const CuttingReportArea = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data } = useSWR("/api/cutting-reports/", fetcher);
-
-  const getSerialNumber = (serialNumber: number) => {
-    const str = "0000000000" + String(serialNumber);
-    return str.slice(-10);
-  };
+  const { data } = useSWRImmutable("/api/cutting-reports/", fetcher);
+  const { getSerialNumber } = useCuttingReport();
 
   return (
     <>
@@ -43,6 +39,7 @@ const CuttingReportArea = () => {
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
+                  <Th>詳細</Th>
                   <Th>裁断報告書NO.</Th>
                   <Th>加工指示書NO.</Th>
                   <Th>受注先名</Th>
@@ -53,29 +50,25 @@ const CuttingReportArea = () => {
               </Thead>
               <Tbody>
                 {data?.contents?.map((report: CuttingReportType) => (
-                  <>
-                    <Tr>
-                      <Td>{getSerialNumber(report?.serialNumber)}</Td>
-                      <Td>{report?.processNumber}</Td>
-                      <Td>{report?.client}</Td>
-                      <Td>{report?.itemName}</Td>
-                      <Td>{report?.totalQuantity}</Td>
-                      <Td>{report?.username}</Td>
-                    </Tr>
-                  </>
+                  <Tr key={report.id}>
+                    <Td>
+                      <CuttingReportModal report={report} />
+                    </Td>
+                    <Td fontSize="xs">
+                      {getSerialNumber(report?.serialNumber)}
+                    </Td>
+                    <Td fontSize="xs">{report?.processNumber}</Td>
+                    <Td fontSize="xs">{report?.client}</Td>
+                    <Td fontSize="xs">{report?.itemName}</Td>
+                    <Td fontSize="xs" isNumeric>
+                      {report?.totalQuantity}
+                    </Td>
+                    <Td fontSize="xs">{report?.username}</Td>
+                  </Tr>
                 ))}
               </Tbody>
             </Table>
           </TableContainer>
-          <Flex w="full" justifyContent="center">
-            <Link href="https://daimaru-kijizaiko.vercel.app/dashboard">
-              <a target="_blank" rel="noopener noreferrer">
-                <Button mt={6} colorScheme="blue">
-                  生地在庫アプリへ移動
-                </Button>
-              </a>
-            </Link>
-          </Flex>
         </Box>
       )}
     </>
