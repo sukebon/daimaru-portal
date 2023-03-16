@@ -96,16 +96,6 @@ const HeaderMenuButton: NextPage = () => {
             <MenuItem pl={6}>集計（グラフ）</MenuItem>
           </a>
         </Link>
-
-        {currentUser === "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3" && (
-          <>
-            {/* <Link href='/dm'>
-              <a>
-                <MenuItem pl={6}>チラシ・リーフレット</MenuItem>
-              </a>
-            </Link> */}
-          </>
-        )}
         <MenuDivider />
 
         <MenuGroup title="売上表(今月）" fontSize="xs"></MenuGroup>
