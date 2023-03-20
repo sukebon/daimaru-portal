@@ -1,5 +1,3 @@
-import React from "react";
-
 export const useCuttingReport = () => {
   // 用尺計算
   const scaleCalc = (meter: number, totalQuantity: number) => {

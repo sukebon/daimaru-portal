@@ -47,6 +47,14 @@ const HeaderMenuButton: NextPage = () => {
     setCurrentUser("");
   };
 
+  const MenuItemEL = (title: string, href: string) => (
+    <Link href={href}>
+      <a>
+        <MenuItem pl={6}>{title}</MenuItem>
+      </a>
+    </Link>
+  );
+
   return (
     <Menu>
       <MenuButton as={Button} colorScheme="blue" pb={1}>
@@ -61,64 +69,32 @@ const HeaderMenuButton: NextPage = () => {
           )}
         </Box>
         <MenuDivider />
-        <Link href="/">
-          <a>
-            <MenuItem>トップページ</MenuItem>
-          </a>
-        </Link>
+        {MenuItemEL("トップページ", "/")}
         <MenuDivider />
         {currentUser && userAlcoholAuthority(currentUser) && (
           <>
-            <MenuGroup title="アルコールチェック" fontSize="xs"></MenuGroup>
-            <Link href="/alcohol-checker">
-              <a>
-                <MenuItem pl={6}>一覧</MenuItem>
-              </a>
-            </Link>
+            <MenuGroup title="アルコールチェック" fontSize="xs">
+              {MenuItemEL("一覧", "/alcohol-checker")}
+            </MenuGroup>
             <MenuDivider />
           </>
         )}
-
-        <MenuGroup title="クレーム報告書" fontSize="xs"></MenuGroup>
-
-        <Link href="/claims/new">
-          <a>
-            <MenuItem pl={6}>作成</MenuItem>
-          </a>
-        </Link>
-        <Link href="/claims/">
-          <a>
-            <MenuItem pl={6}>一覧</MenuItem>
-          </a>
-        </Link>
-        <Link href="/claims/graph">
-          <a>
-            <MenuItem pl={6}>集計（グラフ）</MenuItem>
-          </a>
-        </Link>
+        <MenuGroup title="クレーム報告書" fontSize="xs">
+          {MenuItemEL("作成", "/claims/new")}
+          {MenuItemEL("一覧", "/claims")}
+          {MenuItemEL("集計（グラフ）", "/claims/graph")}
+        </MenuGroup>
         <MenuDivider />
 
-        <MenuGroup title="売上表(今月）" fontSize="xs"></MenuGroup>
-        <Link href="/sales/">
-          <a>
-            <MenuItem pl={6}>一覧・登録</MenuItem>
-          </a>
-        </Link>
+        <MenuGroup title="売上表(今月）" fontSize="xs">
+          {MenuItemEL("一覧・登録", "/sales")}
+        </MenuGroup>
         <MenuDivider />
-        <Link href="/progress">
-          <a>
-            <MenuItem>デジタルマーケティング進捗</MenuItem>
-          </a>
-        </Link>
+        {MenuItemEL("デジタルマーケティング進捗", "/progress")}
 
         {Administrator.includes(currentUser) && (
           <>
-            <Link href="/admin/">
-              <a>
-                <MenuItem>管理者ページ</MenuItem>
-              </a>
-            </Link>
-
+            {MenuItemEL("管理者ページ", "/admin")}
             <MenuDivider />
           </>
         )}

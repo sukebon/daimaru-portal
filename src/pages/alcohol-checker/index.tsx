@@ -17,6 +17,8 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
 import { authState } from "../../../store";
+import useSWR from "swr";
+import axios from "axios";
 
 const Alcohol = () => {
   const currentUser = useRecoilValue(authState);
@@ -24,23 +26,29 @@ const Alcohol = () => {
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
+  const features = (url: string) => axios.get(url).then((res) => res.data);
+  const { data: alcoholCheckList } = useSWR(
+    `/api/alcohol-chekers/list/`,
+    features
+  );
+
   //アルコールチェッカーリスト
-  useEffect(() => {
-    const collectionRef = collection(db, "alcoholCheckList");
-    const q = query(collectionRef, orderBy("id", "desc"));
-    try {
-      getDocs(q).then((querySnapshot) => {
-        setPosts(
-          querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }))
-        );
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const collectionRef = collection(db, "alcoholCheckList");
+  //   const q = query(collectionRef, orderBy("id", "desc"));
+  //   try {
+  //     getDocs(q).then((querySnapshot) => {
+  //       setPosts(
+  //         querySnapshot.docs.map((doc) => ({
+  //           ...doc.data(),
+  //           id: doc.id,
+  //         }))
+  //       );
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
 
   //users情報
   useEffect(() => {
@@ -87,20 +95,22 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {posts.map((post: { id: string; member: string[] }) => (
-                  <Tr key={post.id}>
-                    <Td>{post.id}</Td>
-                    <Td>{post.member.length}名</Td>
-                    <Td>{users.length - post.member.length}名</Td>
-                    <Td>
-                      <Link href={`alcohol-checker/${post.id}`}>
-                        <a>
-                          <Button>詳細</Button>
-                        </a>
-                      </Link>
-                    </Td>
-                  </Tr>
-                ))}
+                {alcoholCheckList?.contents.map(
+                  (post: { id: string; member: string[] }) => (
+                    <Tr key={post.id}>
+                      <Td>{post.id}</Td>
+                      <Td>{post.member.length}名</Td>
+                      <Td>{users.length - post.member.length}名</Td>
+                      <Td>
+                        <Link href={`alcohol-checker/${post.id}`}>
+                          <a>
+                            <Button>詳細</Button>
+                          </a>
+                        </Link>
+                      </Td>
+                    </Tr>
+                  )
+                )}
               </Tbody>
             </Table>
           </TableContainer>

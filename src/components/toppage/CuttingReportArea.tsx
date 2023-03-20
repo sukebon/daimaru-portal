@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -12,14 +10,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import useSWRImmutable from "swr/immutable";
+import useSWR from "swr";
 import { CuttingReportType } from "../../../types/CuttingReportType";
 import { useCuttingReport } from "../../hooks/UseCuttingReport";
 import CuttingReportModal from "../cutting-report/CuttingReportModal";
 
 const CuttingReportArea = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data } = useSWRImmutable("/api/cutting-reports/", fetcher);
+  const { data } = useSWR("/api/cutting-reports/", fetcher);
   const { getSerialNumber } = useCuttingReport();
 
   return (
