@@ -17,12 +17,18 @@ import CuttingReportModal from "../cutting-report/CuttingReportModal";
 
 const CuttingReportArea = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data } = useSWR("/api/cutting-reports/", fetcher);
+  const {
+    data: { contents: reports },
+  } = useSWR("/api/cutting-reports/", fetcher);
+  const {
+    data: { contents: readyMade },
+  } = useSWR("/api/cutting-reports-ready-made/", fetcher);
   const { getSerialNumber } = useCuttingReport();
+  console.log(readyMade);
 
   return (
     <>
-      {data?.contents?.length > 0 && (
+      {reports?.length > 0 && (
         <Box
           width="100%"
           boxShadow="xs"
@@ -47,7 +53,7 @@ const CuttingReportArea = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.contents?.map((report: CuttingReportType) => (
+                {reports.map((report: CuttingReportType) => (
                   <Tr key={report.id}>
                     <Td>
                       <CuttingReportModal report={report} />
