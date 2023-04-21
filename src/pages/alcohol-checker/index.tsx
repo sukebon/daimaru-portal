@@ -10,13 +10,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
 import { authState } from "../../../store";
+import useSWR from "swr";
+import axios from "axios";
 
 const Alcohol = () => {
   const currentUser = useRecoilValue(authState);
@@ -27,7 +29,7 @@ const Alcohol = () => {
   //アルコールチェッカーリスト
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckList");
-    const q = query(collectionRef, orderBy("id", "desc"));
+    const q = query(collectionRef, orderBy("id", "desc"), limit(60));
     try {
       getDocs(q).then((querySnapshot) => {
         setPosts(
@@ -87,7 +89,7 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {posts.map((post: { id: string; member: string[] }) => (
+                {posts?.map((post: { id: string; member: string[] }) => (
                   <Tr key={post.id}>
                     <Td>{post.id}</Td>
                     <Td>{post.member.length}名</Td>

@@ -42,12 +42,6 @@ const AlcoholId = () => {
     });
   }, [queryId]);
 
-  const postsDateAsc = (array: [], property: string) => {
-    array.sort(function (a, b) {
-      return a[property] < b[property] ? -1 : 1; //オブジェクトの降順ソート
-    });
-  };
-
   //user一覧取得
   useEffect(() => {
     const usersRef = collection(db, "authority");
@@ -71,7 +65,7 @@ const AlcoholId = () => {
       return post.uid;
     });
     newUsers = newUsers.filter((user: string) => {
-      if (!newPosts.includes(user)) return user;
+      if (!newPosts?.includes(user)) return user;
     });
     setNotUsers(newUsers);
   }, [users, posts]);
@@ -89,38 +83,8 @@ const AlcoholId = () => {
     });
   }, []);
 
-  //nextページ prevページのIDを取得
-  const nextPrevPage = (id: any, page: number) => {
-    let currentIndex = 0;
-    list.forEach((item: any, index: number) => {
-      if (item.id == id) {
-        currentIndex = index;
-      }
-    });
-    const array = list.filter((item: any, index: number) => {
-      if (currentIndex + page === index) return item.id;
-    });
-    let nextId;
-    if (array && array[0]) {
-      nextId = array[0].id;
-    }
-    return nextId;
-  };
-
   return (
     <>
-      {/* {nextPrevPage(queryId, -1) !== undefined ? (
-          <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
-            <a>
-              <Flex alignItems='center'>
-                次のクレーム
-                <ArrowForwardIcon />
-              </Flex>
-            </a>
-          </Link>
-        ) : (
-          <Box></Box>
-        )} */}
       <Flex flexDirection={"column"} alignItems={"center"}>
         <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
           <Link href="/alcohol-checker">
@@ -143,28 +107,27 @@ const AlcoholId = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {posts.map(
-                (post: {
+              {posts?.map(
+                (data: {
                   id: string;
                   uid: string;
                   alcoholCheck1: string;
                   alcoholCheck2: string;
                   createdAt: any;
                 }) => (
-                  <Tr key={post.id}>
+                  <Tr key={data.id}>
                     <Td>
                       {users.map(
                         (user: { uid: string; name: string }) =>
-                          user.uid === post.uid && user.name
+                          user.uid === data.uid && user.name
                       )}
                     </Td>
-                    <Td>{Number(post.alcoholCheck1) === 1 ? "済み" : "未"}</Td>
+                    <Td>{Number(data.alcoholCheck1) === 1 ? "済み" : "未"}</Td>
                     <Td>
-                      {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
+                      {Number(data.alcoholCheck2) === 1 ? "なし" : "あり"}
                     </Td>
                     <Td>
-                      {post.createdAt &&
-                        post.createdAt.toDate().toLocaleTimeString("en-US")}
+                      {data?.createdAt?.toDate().toLocaleTimeString("en-US")}
                     </Td>
                   </Tr>
                 )
