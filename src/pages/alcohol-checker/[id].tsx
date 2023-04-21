@@ -18,8 +18,6 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
 import { authState } from "../../../store";
-import useSWR from "swr";
-import axios from "axios";
 
 const AlcoholId = () => {
   const currentUser = useRecoilValue(authState);
@@ -30,29 +28,19 @@ const AlcoholId = () => {
   const router = useRouter();
   const queryId = router.query.id;
 
-  const features = (url: string) => axios.get(url).then((res) => res.data);
-  const { data: alcoholCheckData } = useSWR(
-    `/api/alcohol-chekers/data/${queryId}`,
-    features
-  );
-  const { data: alcoholCheckList } = useSWR(
-    `/api/alcohol-chekers/data/`,
-    features
-  );
-
   //アルコールチェックデータを取得
-  // useEffect(() => {
-  //   const collectionRef = collection(db, "alcoholCheckData");
-  //   const q = query(collectionRef, where("date", "==", `${queryId}`));
-  //   getDocs(q).then((querySnapshot) => {
-  //     setPosts(
-  //       querySnapshot.docs.map((doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       }))
-  //     );
-  //   });
-  // }, [queryId]);
+  useEffect(() => {
+    const collectionRef = collection(db, "alcoholCheckData");
+    const q = query(collectionRef, where("date", "==", `${queryId}`));
+    getDocs(q).then((querySnapshot) => {
+      setPosts(
+        querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    });
+  }, [queryId]);
 
   //user一覧取得
   useEffect(() => {
@@ -73,14 +61,14 @@ const AlcoholId = () => {
     let newUsers = users.map((user: { uid: string }) => {
       return user.uid;
     });
-    let newPosts = alcoholCheckData?.contents?.map((post: { uid: string }) => {
+    let newPosts = posts.map((post: { uid: string }) => {
       return post.uid;
     });
     newUsers = newUsers.filter((user: string) => {
       if (!newPosts?.includes(user)) return user;
     });
     setNotUsers(newUsers);
-  }, [users, alcoholCheckData]);
+  }, [users, posts]);
 
   //アルコールチェックリスト
   useEffect(() => {
@@ -119,7 +107,7 @@ const AlcoholId = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {alcoholCheckData?.contents.map(
+              {posts?.map(
                 (data: {
                   id: string;
                   uid: string;
@@ -139,7 +127,7 @@ const AlcoholId = () => {
                       {Number(data.alcoholCheck2) === 1 ? "なし" : "あり"}
                     </Td>
                     <Td>
-                      {/* data?.createdAt?.toDate().toLocaleTimeString("en-US")} */}
+                      {data?.createdAt?.toDate().toLocaleTimeString("en-US")}
                     </Td>
                   </Tr>
                 )

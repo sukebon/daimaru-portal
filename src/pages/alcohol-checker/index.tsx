@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -26,29 +26,23 @@ const Alcohol = () => {
   const [posts, setPosts] = useState<any>([]);
   const [users, setUsers] = useState<any>([]);
 
-  const features = (url: string) => axios.get(url).then((res) => res.data);
-  const { data: alcoholCheckList } = useSWR(
-    `/api/alcohol-chekers/list/`,
-    features
-  );
-
   //アルコールチェッカーリスト
-  // useEffect(() => {
-  //   const collectionRef = collection(db, "alcoholCheckList");
-  //   const q = query(collectionRef, orderBy("id", "desc"));
-  //   try {
-  //     getDocs(q).then((querySnapshot) => {
-  //       setPosts(
-  //         querySnapshot.docs.map((doc) => ({
-  //           ...doc.data(),
-  //           id: doc.id,
-  //         }))
-  //       );
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const collectionRef = collection(db, "alcoholCheckList");
+    const q = query(collectionRef, orderBy("id", "desc"), limit(60));
+    try {
+      getDocs(q).then((querySnapshot) => {
+        setPosts(
+          querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }))
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   //users情報
   useEffect(() => {
@@ -95,22 +89,20 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {alcoholCheckList?.contents.map(
-                  (post: { id: string; member: string[] }) => (
-                    <Tr key={post.id}>
-                      <Td>{post.id}</Td>
-                      <Td>{post.member.length}名</Td>
-                      <Td>{users.length - post.member.length}名</Td>
-                      <Td>
-                        <Link href={`alcohol-checker/${post.id}`}>
-                          <a>
-                            <Button>詳細</Button>
-                          </a>
-                        </Link>
-                      </Td>
-                    </Tr>
-                  )
-                )}
+                {posts?.map((post: { id: string; member: string[] }) => (
+                  <Tr key={post.id}>
+                    <Td>{post.id}</Td>
+                    <Td>{post.member.length}名</Td>
+                    <Td>{users.length - post.member.length}名</Td>
+                    <Td>
+                      <Link href={`alcohol-checker/${post.id}`}>
+                        <a>
+                          <Button>詳細</Button>
+                        </a>
+                      </Link>
+                    </Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
           </TableContainer>
