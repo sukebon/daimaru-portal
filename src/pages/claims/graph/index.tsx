@@ -33,8 +33,6 @@ import { beginningDate, todayDate } from "../../../../functions";
 import PieChart from "../../../components/claims/chart/PieChart";
 
 const GraphClaim = () => {
-  const router = useRouter();
-  const [user] = useAuthState(auth);
   const [claims, setClaims] = useState<any>([]); //クレーム一覧リスト
   const [startAtDate, setStartAtDate] = useState(beginningDate());
   const [endAtDate, setEndAtDate] = useState(todayDate());

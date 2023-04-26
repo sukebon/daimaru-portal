@@ -9,49 +9,42 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import React, { FC } from "react";
+import { useRecoilValue } from "recoil";
 import { auth } from "../../firebase";
-import { authState, usersState } from "../../store";
-import { NextPage } from "next";
 import { Administrator } from "../../data";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { useAuthStore } from "../../store/useAuthStore";
+import { User } from "../../types";
 
-const HeaderMenuButton: NextPage = () => {
-  const [currentUser, setCurrentUser] = useRecoilState(authState);
-  const users = useRecoilValue(usersState); //ユーザー一覧リスト
+export const HeaderMenuButton: FC = () => {
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const users = useAuthStore((state) => state.users);
 
   //アルコールチェック権限
   const userAlcoholAuthority = (userId: string) => {
-    const newUsers = users.map(
-      (user: { alcoholChecker: boolean; uid: string }) => {
-        if (user.alcoholChecker == true) return user.uid;
-      }
-    );
+    const newUsers = users.map((user: User) => {
+      if (user.alcoholChecker === true) return user.uid;
+    });
     return newUsers.includes(userId);
   };
 
   //営業マン権限
   const userSalesAuthority = (userId: string) => {
-    const newUsers = users.map(
-      (user: { isoSalesStaff: boolean; uid: string }) => {
-        if (user.isoSalesStaff == true) return user.uid;
-      }
-    );
+    const newUsers = users.map((user: User) => {
+      if (user.isoSalesStaff === true) return user.uid;
+    });
     return newUsers.includes(userId);
   };
 
   const logout = (e: any) => {
     e.preventDefault();
     auth.signOut();
-    setCurrentUser("");
   };
 
   const MenuItemEL = (title: string, href: string) => (
     <Link href={href}>
-      <a>
-        <MenuItem pl={6}>{title}</MenuItem>
-      </a>
+      <MenuItem pl={6}>{title}</MenuItem>
     </Link>
   );
 
@@ -64,7 +57,7 @@ const HeaderMenuButton: NextPage = () => {
         <Box mx="4">
           <Box fontSize="xs">ユーザー名</Box>
           {users.map(
-            (user: { uid: string; name: string; email: string }) =>
+            (user: User) =>
               currentUser === user.uid && <Box key={user.uid}>{user.name}</Box>
           )}
         </Box>
@@ -92,7 +85,7 @@ const HeaderMenuButton: NextPage = () => {
         <MenuDivider />
         {MenuItemEL("デジタルマーケティング進捗", "/progress")}
 
-        {Administrator.includes(currentUser) && (
+        {Administrator.includes(currentUser || "") && (
           <>
             {MenuItemEL("管理者ページ", "/admin")}
             <MenuDivider />
@@ -103,5 +96,3 @@ const HeaderMenuButton: NextPage = () => {
     </Menu>
   );
 };
-
-export default HeaderMenuButton;

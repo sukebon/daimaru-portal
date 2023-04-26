@@ -1,6 +1,6 @@
 export type ClaimStateProps = {
   queryId: string | string[] | undefined;
-  currentUser: string;
+  currentUser: string | undefined;
   customer: string;
   setCustomer: any;
   occurrenceDate: string;

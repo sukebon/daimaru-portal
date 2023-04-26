@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 import {
   HStack,
@@ -10,7 +10,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-const HeaderMenuList = () => {
+export const HeaderMenuList: FC = () => {
   const menu = [
     {
       title: "マイユニポータル",
@@ -35,9 +35,8 @@ const HeaderMenuList = () => {
     {
       title: "会社カレンダー",
       link: "/calendar",
-      blank: false,
     },
-    { title: "メーカーWEB", link: "/makerweb", blank: false },
+    { title: "メーカーWEB", link: "/makerweb" },
   ];
 
   return (
@@ -49,16 +48,12 @@ const HeaderMenuList = () => {
           </MenuButton>
           <MenuList>
             {menu.map((m) => (
-              <Link key={m.title} href={m.link}>
-                {m.blank === true ? (
-                  <a target="_blank">
-                    <MenuItem>{m.title}</MenuItem>
-                  </a>
-                ) : (
-                  <a>
-                    <MenuItem>{m.title}</MenuItem>
-                  </a>
-                )}
+              <Link
+                key={m.title}
+                href={m.link}
+                target={m.blank ? "_blank" : ""}
+              >
+                <MenuItem>{m.title}</MenuItem>
               </Link>
             ))}
           </MenuList>
@@ -66,35 +61,18 @@ const HeaderMenuList = () => {
       </Box>
       <HStack spacing={3} mr={3} display={{ base: "none", lg: "block" }}>
         {menu.map((m) => (
-          <Link key={m.title} href={m.link}>
-            {m.blank === true ? (
-              <a target="_blank">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  colorScheme="blue"
-                  fontWeight="bold"
-                >
-                  {m.title}
-                </Button>
-              </a>
-            ) : (
-              <a>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  colorScheme="blue"
-                  fontWeight="bold"
-                >
-                  {m.title}
-                </Button>
-              </a>
-            )}
+          <Link key={m.title} href={m.link} target={m.blank ? "_blank" : ""}>
+            <Button
+              size="sm"
+              variant="outline"
+              colorScheme="blue"
+              fontWeight="bold"
+            >
+              {m.title}
+            </Button>
           </Link>
         ))}
       </HStack>
     </>
   );
 };
-
-export default HeaderMenuList;

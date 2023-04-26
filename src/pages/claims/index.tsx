@@ -13,7 +13,6 @@ import {
 
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
-import { auth } from "../../../firebase";
 import { claimSelectList4 } from "../../../data";
 import {
   taskflow,
@@ -25,7 +24,6 @@ import Link from "next/link";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   amendmentState,
-  authState,
   causeDepartmentState,
   claimsState,
   counterplanState,
@@ -34,17 +32,13 @@ import {
   receptionDateEndState,
   receptionDateStartState,
   stampStaffState,
-  usersState,
 } from "../../../store";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
 import ClaimFilterArea from "../../components/claims/ClaimFilterArea";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const Claim: NextPage = () => {
-  const currentUser = useRecoilValue(authState);
-  const router = useRouter();
-  const [user] = useAuthState(auth);
-  const users = useRecoilValue(usersState); //ユーザー一覧リスト
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const users = useAuthStore((state) => state.users);
   const claims = useRecoilValue(claimsState); //クレーム一覧リスト
 
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
@@ -271,9 +265,7 @@ const Claim: NextPage = () => {
                     >
                       <Td>
                         <Link href={`/claims/${claim.id}`}>
-                          <a>
-                            <Button size="sm">詳細</Button>
-                          </a>
+                          <Button size="sm">詳細</Button>
                         </Link>
                       </Td>
                       <Td>{currentOperator(claim)}</Td>

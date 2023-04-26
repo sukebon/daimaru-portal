@@ -1,7 +1,7 @@
-import { Box, Button, Flex } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import Link from 'next/link';
-import React from 'react';
+import { Box, Button, Flex } from "@chakra-ui/react";
+import { NextPage } from "next";
+import Link from "next/link";
+import React from "react";
 
 type Props = {
   claim: {
@@ -10,7 +10,7 @@ type Props = {
     stampStaff: string;
     operator: string;
   };
-  currentUser: string;
+  currentUser: string | undefined;
   queryId: string | string[] | undefined;
   edit: boolean;
   isEdit: any;
@@ -39,22 +39,20 @@ const ClaimEditButton: NextPage<Props> = ({
 }) => {
   return (
     <>
-      <Box w={{ base: '100%', md: '750px' }} py={2} mx='auto'>
+      <Box w={{ base: "100%", md: "750px" }} py={2} mx="auto">
         {!edit && (
-          <Flex justifyContent='space-between' w='100%'>
-            <Box w='100%' mr={1}>
-              <Link href={'/claims'}>
-                <a>
-                  <Button w='100%'>一覧へ戻る</Button>
-                </a>
+          <Flex justifyContent="space-between" w="100%">
+            <Box w="100%" mr={1}>
+              <Link href={"/claims"}>
+                <Button w="100%">一覧へ戻る</Button>
               </Link>
             </Box>
             {/* 事務局のみ編集可 */}
             {(Number(claim.status) == 4 || Number(claim.status) >= 6) &&
               enabledOffice() && (
-                <Box w='100%' ml={1}>
+                <Box w="100%" ml={1}>
                   <Button
-                    w='100%'
+                    w="100%"
                     onClick={() => {
                       isEdit();
                       setEdit(true);
@@ -71,9 +69,9 @@ const ClaimEditButton: NextPage<Props> = ({
                 claim.author === currentUser ||
                 claim.operator === currentUser ||
                 enabledOffice()) && (
-                <Box w='100%' ml={1}>
+                <Box w="100%" ml={1}>
                   <Button
-                    w='100%'
+                    w="100%"
                     onClick={() => {
                       isEdit();
                       setEdit(true);
@@ -86,9 +84,9 @@ const ClaimEditButton: NextPage<Props> = ({
             {/* 上司承認中 上司と事務局のみ編集可 */}
             {Number(claim.status) === 5 &&
               (claim.operator === currentUser || enabledOffice()) && (
-                <Box w='100%' ml={1}>
+                <Box w="100%" ml={1}>
                   <Button
-                    w='100%'
+                    w="100%"
                     onClick={() => {
                       isEdit();
                       setEdit(true);
@@ -101,11 +99,11 @@ const ClaimEditButton: NextPage<Props> = ({
           </Flex>
         )}
         {edit && (
-          <Flex justifyContent='space-between' w='100%'>
+          <Flex justifyContent="space-between" w="100%">
             <Button
-              w='95%'
+              w="95%"
               mx={1}
-              colorScheme='telegram'
+              colorScheme="telegram"
               onClick={() => {
                 enabledOffice() && updateClaim(queryId); //事務局用アップデート（すべて）
 
@@ -124,9 +122,9 @@ const ClaimEditButton: NextPage<Props> = ({
               OK
             </Button>
             <Button
-              w='95%'
+              w="95%"
               mx={1}
-              colorScheme='gray'
+              colorScheme="gray"
               onClick={() => {
                 editCancel();
                 setEdit(false);

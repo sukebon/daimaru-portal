@@ -1,30 +1,18 @@
-import { Text, Flex, Box, HStack, Button } from "@chakra-ui/react";
+import { Text, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import HeaderMenuButton from "./HeaderMenuButton";
-import { authState } from "../../store";
-import { useRecoilValue } from "recoil";
-import { NextPage } from "next";
-import { db } from "../../firebase";
-import { useRouter } from "next/router";
-import HeaderMenuList from "./HeaderMenuList";
+import React, { FC } from "react";
+import { HeaderMenuButton } from "./HeaderMenuButton";
+import { HeaderMenuList } from "./HeaderMenuList";
+import { useAuthStore } from "../../store/useAuthStore";
 
-const Header: NextPage = () => {
-  const router = useRouter();
-  const currentUser = useRecoilValue(authState);
-
-  useEffect(() => {
-    if (currentUser === "") {
-      router.push("/login");
-    }
-  }, [router, currentUser]);
-
+export const Header: FC = () => {
+  const currentUser = useAuthStore((state) => state.currentUser);
   return (
     <>
       {currentUser && (
         <Flex
-          width="100%"
-          height="60px"
+          w="100%"
+          h="60px"
           px={6}
           justifyContent="space-between"
           alignItems="center"
@@ -34,13 +22,11 @@ const Header: NextPage = () => {
           top={0}
           zIndex={100}
         >
-          <Flex alignItems={"center"}>
+          <Flex alignItems="center">
             <Link href="/">
-              <a>
-                <Text fontSize={{ base: "large" }} fontWeight={"bold"}>
-                  社内用ポータルサイト
-                </Text>
-              </a>
+              <Text fontSize="large" fontWeight="bold">
+                社内用ポータルサイト
+              </Text>
             </Link>
           </Flex>
           <Flex alignItems="center">
@@ -52,5 +38,3 @@ const Header: NextPage = () => {
     </>
   );
 };
-
-export default Header;
