@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, keyframes } from "@chakra-ui/react";
 import {
   collection,
   endAt,
@@ -8,17 +8,23 @@ import {
   startAt,
 } from "firebase/firestore";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "../../../firebase";
-import { authState, claimsState, usersState } from "../../../store";
+import { claimsState } from "../../../store";
+import { useAuthStore } from "../../../store/useAuthStore";
 
-const ClaimArea = () => {
-  const router = useRouter();
+const animationKeyframes = keyframes`
+0% { background-color: red; }
+50% { background-color: white; }
+100% { background-color: red;  }
+`;
+const animation = `${animationKeyframes} 2s ease-in-out infinite`;
+
+export const ClaimArea = () => {
   const claims = useRecoilValue(claimsState);
-  const users = useRecoilValue(usersState);
-  const currentUser = useRecoilValue(authState);
+  const users = useAuthStore((state) => state.users);
+  const currentUser = useAuthStore((state) => state.currentUser);
   const [claimCount, setClaimCount] = useState(0);
   const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
   const [isoManagerUsers, setIsoManagerUsers] = useState<any>([]);
@@ -94,24 +100,12 @@ const ClaimArea = () => {
   }, [users]);
 
   //【クレーム】iso（事務局・管理者・TM）のオブジェクトからuidのみ取り出して配列にする
-  const searchUsers = (array: { uid: string }[]) => {
-    const newUsers = array.map((user: { uid: string }) => {
+  const searchUsers = (array: { uid: string | undefined }[]) => {
+    const newUsers = array.map((user: { uid: string | undefined }) => {
       return user.uid;
     });
     return newUsers;
   };
-
-  // 点滅
-  let label: any = document.getElementById("classLabel");
-  label?.animate(
-    {
-      background: ["white", "#ffce00"],
-    },
-    {
-      iterations: Infinity,
-      duration: 1000,
-    }
-  );
 
   return (
     <>
@@ -137,21 +131,16 @@ const ClaimArea = () => {
             </Box>
             <Box>
               <Link href="/claims">
-                <a>
-                  <Text
-                    as="span"
-                    p={2}
-                    fontWeight="bold"
-                    rounded="md"
-                    textDecoration="underline"
-                    id="classLabel"
-                    _hover={{
-                      textDecoration: "none",
-                    }}
-                  >
-                    クレーム報告書一覧
-                  </Text>
-                </a>
+                <Text
+                  as="span"
+                  p={2}
+                  fontWeight="bold"
+                  rounded="md"
+                  textDecoration="underline"
+                  animation={animation}
+                >
+                  クレーム報告書一覧
+                </Text>
               </Link>
               を check してください。
             </Box>
@@ -185,20 +174,16 @@ const ClaimArea = () => {
         <Flex flex="1" flexDirection={{ base: "column", sm: "row" }} gap={6}>
           <Box w={{ base: "100%" }}>
             <Link href="/claims/">
-              <a>
-                <Button colorScheme="blue" variant="outline" w="100%">
-                  クレーム報告書一覧
-                </Button>
-              </a>
+              <Button colorScheme="blue" variant="outline" w="100%">
+                クレーム報告書一覧
+              </Button>
             </Link>
           </Box>
           <Box w="100%">
             <Link href="/claims/new">
-              <a>
-                <Button colorScheme="blue" w="100%">
-                  クレーム報告書を作成
-                </Button>
-              </a>
+              <Button colorScheme="blue" w="100%">
+                クレーム報告書を作成
+              </Button>
             </Link>
           </Box>
         </Flex>
@@ -206,5 +191,3 @@ const ClaimArea = () => {
     </>
   );
 };
-
-export default ClaimArea;

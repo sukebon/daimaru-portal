@@ -10,77 +10,61 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import React, { useEffect } from "react";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../../store";
+import { MakerWeb } from "../../../types";
 
 type Props = {
-  posts: {
-    id: string;
-    name: string;
-    url: string;
-    userId: string;
-    password: string;
-    code: string;
-  }[];
+  posts: MakerWeb[];
 };
 
 const MakerWeb: NextPage<Props> = ({ posts }) => {
-  const currentUser = useRecoilValue(authState);
-
   return (
-    <>
-      {currentUser && (
-        <Container maxW="900px" p={6} rounded="md" bg="white" boxShadow="xs">
-          <TableContainer>
-            <Box as="h1" fontSize="2xl">
-              メーカーWEB発注リスト
-            </Box>
-            <Table variant="simple" mt={6}>
-              <TableCaption>メーカー名（順不同・敬称略）</TableCaption>
-              <Thead>
-                <Tr>
-                  <Th>メーカー名</Th>
-                  <Th>ID</Th>
-                  <Th>password</Th>
-                  <Th>取引コード</Th>
-                </Tr>
-              </Thead>
+    <Container maxW="900px" p={6} rounded="md" bg="white" boxShadow="xs">
+      <TableContainer>
+        <Box as="h1" fontSize="2xl">
+          メーカーWEB発注リスト
+        </Box>
+        <Table variant="simple" mt={6}>
+          <TableCaption>メーカー名（順不同・敬称略）</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>メーカー名</Th>
+              <Th>ID</Th>
+              <Th>password</Th>
+              <Th>取引コード</Th>
+            </Tr>
+          </Thead>
 
-              <Tbody>
-                {posts.map((post) => (
-                  <Tr key={post.id}>
-                    <Td>
-                      <Link href={post.url}>
-                        <a target="_blank" rel="noopener noreferrer">
-                          <Box
-                            textDecoration="underline"
-                            _hover={{ opacity: "0.8" }}
-                          >
-                            {post.name}
-                          </Box>
-                        </a>
-                      </Link>
-                    </Td>
-                    <Td>{post.userId}</Td>
-                    <Td>{post.password}</Td>
-                    <Td>{post.code}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Container>
-      )}
-    </>
+          <Tbody>
+            {posts.map((post) => (
+              <Tr key={post.id}>
+                <Td>
+                  <Link
+                    href={post.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Box textDecoration="underline" _hover={{ opacity: "0.8" }}>
+                      {post.name}
+                    </Box>
+                  </Link>
+                </Td>
+                <Td>{post.userId}</Td>
+                <Td>{post.password}</Td>
+                <Td>{post.code}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 
 export default MakerWeb;
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const params = {
     headers: {
       "X-MICROCMS-API-KEY": "5cb4353cc17045be9dc39f4dd1cac7ff7fc9",
@@ -96,4 +80,4 @@ export async function getStaticProps() {
 
   // Pass post data to the page via props
   return { props: { posts } };
-}
+};

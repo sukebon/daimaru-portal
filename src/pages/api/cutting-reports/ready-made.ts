@@ -1,15 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { CuttingReportType } from "../../../types/CuttingReportType";
+import { CuttingReport } from "../../../../types";
 type Data = {
-  contents: CuttingReportType[];
+  contents: CuttingReport[];
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const url = "https://daimaru-kijizaiko.vercel.app/api/cutting-reports/";
+  const url =
+    "https://daimaru-kijizaiko.vercel.app/api/cutting-reports/ready-made/";
   const contents = await axios
     .get(url, {
       params: { API_KEY: "daimaru-kijizaiko" },

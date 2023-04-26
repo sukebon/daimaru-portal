@@ -1,6 +1,7 @@
-import { Alert, AlertIcon, Box, Flex } from '@chakra-ui/react';
-import { NextPage } from 'next';
-import React from 'react';
+import { Alert, AlertIcon, Box, Flex } from "@chakra-ui/react";
+import { NextPage } from "next";
+import React from "react";
+import { User } from "../../../types";
 
 type Props = {
   claim: {
@@ -10,8 +11,8 @@ type Props = {
     stampStaff: string;
     amendmentContent: string;
   };
-  currentUser: string;
-  users: [];
+  currentUser: string | undefined;
+  users: User[];
   enabledOffice: any;
   enabledManager: any;
   enabledTopManegment: any;
@@ -28,21 +29,21 @@ const ClaimMessage: NextPage<Props> = ({
   return (
     <>
       <Box
-        w={{ base: '100%', md: '750px' }}
-        mx='auto'
-        justifyContent='space-between'
+        w={{ base: "100%", md: "750px" }}
+        mx="auto"
+        justifyContent="space-between"
       >
         {/* 事務局に表示するメッセージ */}
         {claim.message && Number(claim.status) <= 7 && (
-          <Alert status='error'>
+          <Alert status="error">
             <AlertIcon />
-            <Box whiteSpace='pre-wrap'>{claim.message}</Box>
+            <Box whiteSpace="pre-wrap">{claim.message}</Box>
           </Alert>
         )}
 
         {/* 事務局に表示するメッセージ　 */}
         {Number(claim.status) === 0 && enabledOffice() && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             {users.map(
               (user: { uid: string; name: string }) =>
@@ -61,7 +62,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 担当者に表示するメッセージ　 */}
         {Number(claim.status) === 1 && claim.stampStaff === currentUser && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             {users.map(
               (user: { uid: string; name: string }) =>
@@ -81,7 +82,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 事務局に表示するメッセージ　 */}
         {Number(claim.status) === 2 && enabledOffice() && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             <Box>
               <Box>
@@ -95,7 +96,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 対策者に表示するメッセージ */}
         {Number(claim.status) === 3 && claim.operator === currentUser && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             {users.map(
               (user: { uid: string; name: string }) =>
@@ -115,7 +116,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 事務局に表示するメッセージ */}
         {Number(claim.status) === 4 && enabledOffice() && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             <Box>
               発生内容・修正処置・対策が記入されているか確認してください。
@@ -127,7 +128,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 上司に表示するメッセージ */}
         {Number(claim.status) === 5 && claim.operator === currentUser && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             {users.map(
               (user: { uid: string; name: string }) =>
@@ -149,7 +150,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* 管理者に表示するメッセージ */}
         {Number(claim.status) === 6 && enabledManager() && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             <Box>
               <Box>
@@ -163,7 +164,7 @@ const ClaimMessage: NextPage<Props> = ({
 
         {/* topManagmentに表示するメッセージ */}
         {Number(claim.status) === 7 && enabledTopManegment() && (
-          <Alert status='info'>
+          <Alert status="info">
             <AlertIcon />
             <Box>
               内容を確認してから【承認する】ボタンをクリックしてください。

@@ -11,16 +11,17 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import useSWR from "swr";
-import { CuttingReportType } from "../../../types/CuttingReportType";
-import { useCuttingReport } from "../../hooks/UseCuttingReport";
+import { CuttingReport } from "../../../types";
+import { useCuttingReport } from "../../hooks/useCuttingReport";
 import CuttingReportModal from "../cutting-report/CuttingReportModal";
 
 const CuttingReportArea = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const { data: reports } = useSWR("/api/cutting-reports/", fetcher);
-  // const {
-  //   data: { contents: readyMade },
-  // } = useSWR("/api/cutting-reports-ready-made/", fetcher);
+  // const { data: readyMade } = useSWR(
+  //   "/api/cutting-reports/ready-made/",
+  //   fetcher
+  // );
   // console.log(readyMade);
   const { getSerialNumber } = useCuttingReport();
 
@@ -51,7 +52,7 @@ const CuttingReportArea = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {reports?.contents.map((report: CuttingReportType) => (
+                {reports?.contents.map((report: CuttingReport) => (
                   <Tr key={report.id}>
                     <Td>
                       <CuttingReportModal report={report} />

@@ -49,8 +49,8 @@ const QuickLink: NextPage<any> = ({ links, categories }) => {
                         <Text
                           fontWeight={link?.bold === true ? "bold" : "normal"}
                         >
-                          <Link href={link.link}>
-                            <a target="_blank">{link.title}</a>
+                          <Link href={link.link} target="_blank">
+                            {link.title}
                           </Link>
                         </Text>
                       </ListItem>

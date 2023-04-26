@@ -4,11 +4,10 @@ import React, { useEffect, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { auth, db, storage } from "../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { db, storage } from "../../../firebase";
 import { useRouter } from "next/router";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { authState, claimsState, usersState } from "../../../store";
+import { useRecoilState } from "recoil";
+import { claimsState } from "../../../store";
 import { taskflow } from "../../../data";
 import { todayDate } from "../../../functions";
 
@@ -23,15 +22,15 @@ import Link from "next/link";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import ClaimStampArea from "../../components/claims/ClaimStampArea";
 import ClaimAccept from "../../components/claims/ClaimAccept";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 //クレーム報告書作成
 
 const ClaimId = () => {
   const router = useRouter();
   const queryId = router.query.id;
-  const [user] = useAuthState(auth);
-  const currentUser = useRecoilValue(authState);
-  const users = useRecoilValue<any>(usersState); //ユーザー一覧リスト
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const users = useAuthStore((state) => state.users);
   const [claim, setClaim] = useState<any>([]); //クレームの個別記事を取得
   const [claims, setClaims] = useRecoilState<any>(claimsState); //クレーム一覧を取得
   const [selectUser, setSelectUser] = useState(""); //送信先選択
@@ -368,18 +367,16 @@ const ClaimId = () => {
 
   return (
     <>
-      {claim && currentUser && (
+      {claim && (
         <>
           <Box position="relative">
             <Flex justifyContent="space-between" color="gray.600">
               {nextPrevPage(queryId, 1) !== undefined ? (
                 <Link href={`/claims/${nextPrevPage(queryId, 1)}`}>
-                  <a>
-                    <Flex alignItems="center">
-                      <ArrowBackIcon />
-                      前のクレーム
-                    </Flex>
-                  </a>
+                  <Flex alignItems="center">
+                    <ArrowBackIcon />
+                    前のクレーム
+                  </Flex>
                 </Link>
               ) : (
                 <Box></Box>
@@ -387,12 +384,10 @@ const ClaimId = () => {
 
               {nextPrevPage(queryId, -1) !== undefined ? (
                 <Link href={`/claims/${nextPrevPage(queryId, -1)}`}>
-                  <a>
-                    <Flex alignItems="center">
-                      次のクレーム
-                      <ArrowForwardIcon />
-                    </Flex>
-                  </a>
+                  <Flex alignItems="center">
+                    次のクレーム
+                    <ArrowForwardIcon />
+                  </Flex>
                 </Link>
               ) : (
                 <Box></Box>

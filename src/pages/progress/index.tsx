@@ -20,14 +20,13 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import { Administrator } from "../../../data";
-import { ProgressType } from "../../../types/progressTypes";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../../store";
+import { ProgressType } from "../../../types";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const ProgressIndex = () => {
   const [items, setItems] = useState<any>({});
   const [progresses, setProgresses] = useState<ProgressType[]>([]);
-  const currentUser = useRecoilValue(authState);
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const handleSwitchChange = (prop: string) => {
     const value = items[prop] ? false : true;
@@ -103,9 +102,7 @@ const ProgressIndex = () => {
             進捗状況
           </Box>
           <Link href="/progress/new">
-            <a>
-              <Button size="sm">新規登録</Button>
-            </a>
+            <Button size="sm">新規登録</Button>
           </Link>
         </Flex>
       </Container>
@@ -123,12 +120,10 @@ const ProgressIndex = () => {
                   <Flex alignItems="center" justifyContent="space-between">
                     <Text fontSize="xl">{progress.title}</Text>
                     <Flex gap={3}>
-                      {Administrator.includes(currentUser) && (
+                      {Administrator.includes(currentUser || "") && (
                         <>
                           <Link href={`/progress/edit/${progress.id}`}>
-                            <a>
-                              <FaEdit color="gray" />
-                            </a>
+                            <FaEdit color="gray" />
                           </Link>
                           <FaTrashAlt
                             color="gray"
@@ -192,13 +187,6 @@ const ProgressIndex = () => {
                                   完了
                                 </Badge>
                               )}
-                              {/* <Switch
-                              id={content.result}
-                              isChecked={content.result}
-                              onChange={() =>
-                                handleSwitchChange(content.result)
-                              }
-                            /> */}
                             </FormControl>
                           </Flex>
                         )

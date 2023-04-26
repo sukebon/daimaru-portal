@@ -1,11 +1,3 @@
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { auth } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilState } from "recoil";
-import { authState } from "../../store";
-
 import {
   Flex,
   Heading,
@@ -17,57 +9,54 @@ import {
   Box,
   FormControl,
 } from "@chakra-ui/react";
+import { NextPage } from "next";
+import { auth } from "../../firebase";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+type Inputs = {
+  email: string;
+  password: string;
+};
+
 const Login: NextPage = () => {
-  const [user] = useAuthState(auth);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-  const [currentUser, setCurrentUser] = useRecoilState(authState);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  useEffect(() => {
-    if (user) {
-      setCurrentUser(user.uid);
-      router.push("/");
-    }
-  }, [router, user, setCurrentUser]);
-
-  const sighup = (event: any) => {
-    event.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential: any) => {
-        setCurrentUser(userCredential.user.uid);
-        router.push("/");
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential) => {
+        userCredential.user;
       })
       .catch((error) => {
         alert("失敗しました");
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        console.log(error.code);
+        console.log(error.message);
       });
   };
 
   return (
     <Flex
-      flexDirection="column"
-      width="100wh"
-      height="100vh"
-      backgroundColor="#f7f7f7"
+      height="calc(100vh - 60px)"
       justifyContent="center"
       alignItems="center"
+      flexDirection="column"
     >
-      <Stack
-        flexDir="column"
-        mb="2"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Stack flexDir="column" justifyContent="center" alignItems="center">
         <Heading color="teal.400">Log in</Heading>
         <Box minW={{ base: "90%", md: "350px" }}>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Stack
               spacing={5}
-              p="2rem"
+              p={6}
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
               rounded="5"
@@ -77,24 +66,32 @@ const Login: NextPage = () => {
                   <InputLeftElement pointerEvents="none" />
                   <Input
                     type="email"
-                    placeholder="email address"
                     p="3"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="email address"
+                    {...register("email", { required: true })}
                   />
                 </InputGroup>
+                {errors.email && (
+                  <Box color="red" fontSize="sm">
+                    ※emailを入力してください
+                  </Box>
+                )}
               </FormControl>
               <FormControl>
                 <InputGroup>
                   <InputLeftElement pointerEvents="none" color="gray.300" />
                   <Input
                     type={"password"}
-                    placeholder="Password"
                     p="3"
-                    value={password}
-                    onChange={(event: any) => setPassword(event.target.value)}
+                    placeholder="Password"
+                    {...register("password", { required: true })}
                   />
                 </InputGroup>
+                {errors.password && (
+                  <Box color="red" fontSize="sm">
+                    ※passwordを入力してください
+                  </Box>
+                )}
               </FormControl>
               <Button
                 borderRadius={0}
@@ -103,7 +100,6 @@ const Login: NextPage = () => {
                 colorScheme="teal"
                 width="full"
                 rounded="5"
-                onClick={sighup}
               >
                 Login
               </Button>

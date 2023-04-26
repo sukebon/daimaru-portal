@@ -1,11 +1,12 @@
-import React, { ReactNode, useEffect, useState } from "react";
-import Header from "./Header";
+import React, { ReactNode } from "react";
+import { Header } from "./Header";
 
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase";
 import { useRouter } from "next/router";
-import Footer from "./Footer";
 import { Box } from "@chakra-ui/react";
+import { useAuthStore } from "../../store/useAuthStore";
+import SpinnerLoading from "./SpinnerLoading";
+import { useRecoilValue } from "recoil";
+import { useLoadingStore } from "../../store/useLoadingStore";
 
 type Props = {
   children: ReactNode;
@@ -13,14 +14,25 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const router = useRouter();
-
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const isLoading = useLoadingStore((state) => state.isLoading);
   return (
     <>
-      {router.pathname !== "/login" && <Header />}
-      <Box bg="#f7f7f7" p={6} pb={6} minH="100vh">
-        {children}
-      </Box>
-      {router.pathname !== "/claims" && <Footer />}
+      {isLoading && <SpinnerLoading />}
+      {router.pathname === "/login" ? (
+        <Box bg="#f7f7f7" p={6} pb={6} minH="100vh">
+          {children}
+        </Box>
+      ) : (
+        currentUser && (
+          <>
+            <Header />
+            <Box bg="#f7f7f7" p={6} pb={6} minH="100vh">
+              {children}
+            </Box>
+          </>
+        )
+      )}
     </>
   );
 };
