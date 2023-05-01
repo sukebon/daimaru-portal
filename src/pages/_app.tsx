@@ -3,15 +3,14 @@ import "../styles/globals.css";
 import { useEffect } from "react";
 import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
-import { RecoilRoot } from "recoil";
 import Layout from "../components/Layout";
 import { auth, db } from "../../firebase";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useRouter } from "next/router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDataList } from "@/hooks/useDataList";
-import { useRecruitmentStore } from "../../store/useRecruitmentStore";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useClaimStore } from "../../store/useClaimStore";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -20,8 +19,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const currentUser = useAuthStore((state) => state.currentUser);
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
   const setUsers = useAuthStore((state) => state.setUsers);
-  const setRequests = useRecruitmentStore((state) => state.setRequests);
-  const { getUsers } = useDataList();
+  const setClaims = useClaimStore((state) => state.setClaims);
+  const { getUsers, getClaims } = useDataList();
 
   useEffect(() => {
     console.log("session");
@@ -80,13 +79,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     getUsers();
   }, [session, setUsers]);
 
+  useEffect(() => {
+    getClaims();
+  }, [session, setClaims]);
+
   return (
     <ChakraProvider>
-      <RecoilRoot>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </RecoilRoot>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   );
 }

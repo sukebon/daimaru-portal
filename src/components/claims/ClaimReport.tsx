@@ -1,138 +1,128 @@
 /* eslint-disable @next/next/no-img-element */
 import { Box, Flex } from "@chakra-ui/react";
-import { NextPage } from "next";
-import React from "react";
+import React, { FC } from "react";
 import {
   claimSelectList1,
   claimSelectList2,
   claimSelectList3,
   claimSelectList4,
 } from "../../../data";
-import { ClaimProps } from "../../../types/ClaimProps";
-import ClaimAttached from "./ClaimAttached";
+import { ClaimAttached } from "./image/ClaimAttached";
+import { Claim } from "../../../types";
 
-const ClaimReport: NextPage<ClaimProps> = ({ claim }) => {
+type Props = {
+  claim: Claim;
+};
+
+export const ClaimReport: FC<Props> = ({ claim }) => {
   return (
     <>
-      {/* クレーム報告書タイトル */}
+      {1 <= Number(claim.status) && (
+        <Flex alignItems="center" justifyContent="space-between">
+          <Flex gap={2} alignItems="center">
+            <Box>受付NO</Box>
+            <Box>{claim.receptionNum}</Box>
+          </Flex>
+          <Flex gap={2} alignItems="center">
+            <Box>受付日</Box>
+            <Box>{claim.receptionDate}</Box>
+          </Flex>
+        </Flex>
+      )}
       <Box
         as="h1"
-        w="100%"
         p={3}
         mt={6}
-        fontSize="28px"
+        fontSize="3xl"
         fontWeight="semibold"
         textAlign="center"
       >
         クレーム報告書
       </Box>
 
-      {/* 顧客名 */}
-      <Box>
-        <Box mt={10} fontSize="lg" fontWeight="semibold">
-          顧客名
-        </Box>
-        <Box w="100%" px={2} mt={2}>
-          <Box>{claim.customer}</Box>
-        </Box>
+      <Box mt={10} fontSize="lg" fontWeight="semibold">
+        顧客名
       </Box>
-      <Box>
-        <Box mt={9} fontSize="lg" fontWeight="semibold">
-          発生日
-        </Box>
-        <Box w="100%" px={2} mt={2}>
-          <Box>{claim.occurrenceDate}</Box>
-        </Box>
+      <Box px={2} mt={2}>
+        <Box>{claim.customer}</Box>
       </Box>
 
-      {/* 発生内容 */}
-      <Box mt={10}>
-        <Box as="h2" fontSize="lg" fontWeight="semibold">
-          発生内容
-        </Box>
-        <Box w="100%" px={2} mt={2}>
-          {claimSelectList1.map((list) => (
-            <Box key={list.id}>
-              {list.id === claim.occurrenceSelect &&
-                `${claim.occurrenceSelect && "■"}${list.headline}  ${
-                  list.title
-                }`}
-            </Box>
-          ))}
-        </Box>
-        <Box px={2} mt={2} whiteSpace="pre-wrap">
-          {claim.occurrenceContent}
-        </Box>
+      <Box mt={10} fontSize="lg" fontWeight="semibold">
+        発生日
+      </Box>
+      <Box px={2} mt={2}>
+        <Box>{claim.occurrenceDate}</Box>
       </Box>
 
-      {/*修正処置 */}
-      <Box mt={10}>
-        <Flex as="h2" fontSize="lg" fontWeight="semibold">
-          修正処置
-        </Flex>
-        <Box w="100%" px={2} mt={2}>
-          {claimSelectList2.map((list) => (
-            <Box key={list.id}>
-              {list.id === claim.amendmentSelect &&
-                `${claim.amendmentSelect && "■"}${list.title}`}
-            </Box>
-          ))}
-          <Box mt={2} whiteSpace="pre-wrap">
-            {claim.amendmentContent}
+      <Box as="h2" mt={10} fontSize="lg" fontWeight="semibold">
+        発生内容
+      </Box>
+      <Box px={2} mt={2}>
+        {claimSelectList1.map(({ id, headline, title }) => (
+          <Box key={id}>
+            {Number(id) === Number(claim.occurrenceSelect) &&
+              `${claim.occurrenceSelect && "■"}${headline}  ${title}`}
           </Box>
-        </Box>
+        ))}
+      </Box>
+      <Box px={2} mt={2} whiteSpace="pre-wrap">
+        {claim.occurrenceContent}
       </Box>
 
-      {/*起因部署 */}
-      <Box mt={10}>
-        <Flex as="h2" fontSize="lg" fontWeight="semibold">
-          起因部署
-        </Flex>
-        <Box w="100%" px={2} mt={2}>
-          {claimSelectList4.map((list) => (
-            <Box key={list.id}>
-              {list.id === claim.causeDepartmentSelect && list.title}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-
-      {/* 対策 */}
-      <Box mt={10}>
-        <Flex as="h2" fontSize="lg" fontWeight="semibold">
-          対策
-        </Flex>
-        <Box w="100%" px={2} mt={2}>
-          {claimSelectList3.map((list) => (
-            <Box key={list.id}>
-              {list.id === claim.counterplanSelect &&
-                `${claim.counterplanSelect && "■"}${list.title}`}
-            </Box>
-          ))}
-          <Box mt={2} whiteSpace="pre-wrap">
-            {claim.counterplanContent}
+      <Flex as="h2" mt={10} fontSize="lg" fontWeight="semibold">
+        修正処置
+      </Flex>
+      <Box px={2} mt={2}>
+        {claimSelectList2.map(({ id, title }) => (
+          <Box key={id}>
+            {Number(id) === Number(claim.amendmentSelect) &&
+              `${claim.amendmentSelect && "■"}${title}`}
           </Box>
+        ))}
+        <Box mt={2} whiteSpace="pre-wrap">
+          {claim.amendmentContent}
+        </Box>
+      </Box>
+
+      <Flex as="h2" mt={10} fontSize="lg" fontWeight="semibold">
+        起因部署
+      </Flex>
+      <Box px={2} mt={2}>
+        {claimSelectList4.map(({ id, title }) => (
+          <Box key={id}>
+            {Number(id) === Number(claim.causeDepartmentSelect) && title}
+          </Box>
+        ))}
+      </Box>
+
+      <Flex as="h2" mt={10} fontSize="lg" fontWeight="semibold">
+        対策
+      </Flex>
+      <Box px={2} mt={2}>
+        {claimSelectList3.map(({ id, title }) => (
+          <Box key={id}>
+            {Number(id) === Number(claim.counterplanSelect) &&
+              `${claim.counterplanSelect && "■"}${title}`}
+          </Box>
+        ))}
+        <Box mt={2} whiteSpace="pre-wrap">
+          {claim.counterplanContent}
         </Box>
       </Box>
 
       {/* 添付書類 */}
-      <Box w="100%" mt={9}>
+      <Box mt={10}>
         <ClaimAttached imageUrl={claim.imageUrl1} />
         <ClaimAttached imageUrl={claim.imageUrl2} />
         <ClaimAttached imageUrl={claim.imageUrl3} />
       </Box>
 
-      {/* 完了日 */}
-      <Box>
-        <Box mt={9} fontSize="lg" fontWeight="semibold">
-          完了日
-        </Box>
-        <Box w="100%" px={2} mt={2}>
-          <Box>{claim.completionDate}</Box>
-        </Box>
+      <Box mt={10} fontSize="lg" fontWeight="semibold">
+        完了日
+      </Box>
+      <Box px={2} mt={2}>
+        <Box>{claim.completionDate}</Box>
       </Box>
     </>
   );
 };
-
-export default ClaimReport;
