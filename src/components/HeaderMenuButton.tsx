@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { FC } from "react";
-import { useRecoilValue } from "recoil";
 import { auth } from "../../firebase";
 import { Administrator } from "../../data";
 import { HamburgerIcon } from "@chakra-ui/icons";
@@ -88,6 +87,7 @@ export const HeaderMenuButton: FC = () => {
         {Administrator.includes(currentUser || "") && (
           <>
             {MenuItemEL("管理者ページ", "/admin")}
+            {/* {MenuItemEL("profile", "/profile")} */}
             <MenuDivider />
           </>
         )}

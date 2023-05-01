@@ -1,82 +1,81 @@
-import { Box, Button, Flex, Select, Text } from "@chakra-ui/react";
-import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
-import { User } from "../../../../types";
+import { Box, Button, Flex, Select } from "@chakra-ui/react";
+import React, { FC } from "react";
+import { Claim } from "../../../../types";
+import { useAuthStore } from "../../../../store/useAuthStore";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { taskflow } from "../../../../data";
+import { db } from "../../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 type Props = {
-  queryId: string | string[] | undefined;
-  users: User[];
-  selectUser: string;
-  setSelectUser: any;
-  selectTask: number;
-  setSelectTask: any;
-  taskflow: { id: number; status: string }[];
-  switchStatus: any;
+  claim: Claim;
 };
 
-const ClaimSelectSendButton: NextPage<Props> = ({
-  queryId,
-  users,
-  selectUser,
-  setSelectUser,
-  selectTask,
-  setSelectTask,
-  taskflow,
-  switchStatus,
-}) => {
-  const [isoManagerUsers, setIsoManagereUsers] = useState<any>([]);
-  const [isoBossUsers, setIsoBossUsers] = useState<any>([]);
-  const [isoTopManegmentUsers, setIsoTopManegmentUsers] = useState<any>([]);
-  const [isoOfficeUsers, setIsoOfficeUsers] = useState<any>([]);
+type Inputs = {
+  selectTask: number;
+  selectUser: string;
+};
 
-  useEffect(() => {
-    //ISOマネージャーのリスト
-    setIsoManagereUsers(
-      users.filter((user: any) => {
-        return user.isoManager === true;
-      })
-    );
-    //ISO 上司のリスト
-    setIsoBossUsers(
-      users.filter((user: any) => {
-        return user.isoBoss === true;
-      })
-    );
-    //ISO トップマネジメントのリスト
-    setIsoTopManegmentUsers(
-      users.filter((user: any) => {
-        return user.isoTopManegment === true;
-      })
-    );
-    //ISO 事務局のリスト
-    setIsoOfficeUsers(
-      users.filter((user: any) => {
-        return user.isoOffice === true;
-      })
-    );
-  }, [users]);
+export const ClaimSelectSendButton: FC<Props> = ({ claim }) => {
+  const users = useAuthStore((state) => state.users);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    updateClaimStatus(data, claim);
+  };
+
+  //クレーム報告書のステータスを変更
+  const updateClaimStatus = async (data: Inputs, claim: Claim) => {
+    const docRef = doc(db, "claimList", claim.id);
+    await updateDoc(docRef, {
+      status: Number(data.selectTask),
+      operator: data.selectUser,
+    });
+    router.push("/claims");
+  };
+
+  const selectUsers = () =>
+    users.map((user) => (
+      <option key={user.uid} value={user.uid}>
+        {user.name}
+      </option>
+    ));
+
+  const filterSelectUsers = (prop: string) =>
+    users
+      .filter((user: any) => user[prop] === true)
+      .map((user) => (
+        <option key={user.uid} value={user.uid}>
+          {user.name}
+        </option>
+      ));
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box mt={12}>
-        <Text w="100%" mx="auto" textAlign="center">
+        <Box mx="auto" textAlign="center">
           タスクと送信先を選択して送信してください。
-        </Text>
+        </Box>
         <Flex
-          flexDirection={{ base: "column", md: "row" }}
-          justifyContent={"center"}
           mt={2}
+          gap={3}
+          flexDirection={{ base: "column", md: "row" }}
+          justifyContent="center"
         >
-          <Flex mt={2}>
+          <Box>
             <Select
-              value={selectTask}
-              onChange={(e) => setSelectTask(e.target.value)}
+              w={{ md: "48" }}
               placeholder="タスクを選択"
-              w={48}
-              mr={2}
+              {...register("selectTask", { required: true })}
             >
               {taskflow.map(
-                (task: { id: number; status: string }) =>
+                (task) =>
                   0 < task.id &&
                   task.id < 8 && (
                     <option key={task.id} value={task.id}>
@@ -85,53 +84,35 @@ const ClaimSelectSendButton: NextPage<Props> = ({
                   )
               )}
             </Select>
+            <Box color="red" fontSize="xs">
+              {errors.selectTask && "※タスクを選択してください"}
+            </Box>
+          </Box>
 
+          <Box>
             <Select
-              value={selectUser}
-              onChange={(e) => setSelectUser(e.target.value)}
+              w={{ base: "full", md: "48" }}
               placeholder="送信先を選択"
-              w={48}
-              mr={2}
+              {...register("selectUser", { required: true })}
             >
-              {Number(selectTask) <= 4 &&
-                users.map((user: { uid: string; name: string }) => (
-                  <option key={user.uid} value={user.uid}>
-                    {user.name}
-                  </option>
-                ))}
-              {selectTask == 5 &&
-                isoBossUsers.map((user: { uid: string; name: string }) => (
-                  <option key={user.uid} value={user.uid}>
-                    {user.name}
-                  </option>
-                ))}
-              {selectTask == 6 &&
-                isoManagerUsers.map((user: { uid: string; name: string }) => (
-                  <option key={user.uid} value={user.uid}>
-                    {user.name}
-                  </option>
-                ))}
-              {selectTask == 7 &&
-                isoTopManegmentUsers.map(
-                  (user: { uid: string; name: string }) => (
-                    <option key={user.uid} value={user.uid}>
-                      {user.name}
-                    </option>
-                  )
-                )}
+              {Number(watch("selectTask")) <= 4 && selectUsers()}
+              {Number(watch("selectTask")) === 5 &&
+                filterSelectUsers("isoBoss")}
+              {Number(watch("selectTask")) === 6 &&
+                filterSelectUsers("isoManager")}
+              {Number(watch("selectTask")) === 7 &&
+                filterSelectUsers("isoTopManegment")}
             </Select>
-          </Flex>
-          <Button
-            mt={2}
-            onClick={() => switchStatus(queryId)}
-            disabled={selectTask && selectUser ? false : true}
-          >
+            <Box color="red" fontSize="xs">
+              {errors.selectUser && "※送信先を選択"}
+            </Box>
+          </Box>
+
+          <Button type="submit" colorScheme="blue">
             送信する
           </Button>
         </Flex>
       </Box>
-    </>
+    </form>
   );
 };
-
-export default ClaimSelectSendButton;
