@@ -25,10 +25,10 @@ export const RecruitmentArea: FC = () => {
       setRequests(
         querySnapshot.docs.map(
           (doc) =>
-            ({
-              ...doc.data(),
-              id: doc.id,
-            } as Request)
+          ({
+            ...doc.data(),
+            id: doc.id,
+          } as Request)
         )
       );
     });
@@ -38,26 +38,26 @@ export const RecruitmentArea: FC = () => {
   return (
     <Box p={{ base: 3, md: 6 }} boxShadow="xs" rounded="md" bg="white">
       <Flex
-        mb={3}
-        justifyContent="space-between"
-        alignItems="center"
-        flexDirection={{
+        justify="space-between"
+        align="center"
+        direction={{
           base: "column",
           md: "row",
           lg: "column",
           xl: "row",
         }}
+        gap={3}
+        mb={6}
       >
         <Flex
-          flexDirection={{ base: "column", md: "row" }}
-          alignItems="center"
-          gap={3}
+          direction={{ base: "column", md: "row" }}
+          align="center"
         >
           <Text fontSize="2xl" mr="3">
             お手伝い依頼一覧
           </Text>
         </Flex>
-        <Flex gap={3} p={3}>
+        <Flex gap={3} >
           <Link href="/recruitments/stopped-list">
             <Button>掲載終了一覧</Button>
           </Link>

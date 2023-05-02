@@ -1,7 +1,7 @@
 //管理者
 export const Administrator = [
-  "EVKsigM546MbnakzkDmG0QHlfmn2", //社長
-  "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3", //向井
+  "EVKsigM546MbnakzkDmG0QHlfmn2",
+  "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3",
 ];
 
 export const taskflow = [

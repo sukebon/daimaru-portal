@@ -28,11 +28,6 @@ const ProgressIndex = () => {
   const [progresses, setProgresses] = useState<ProgressType[]>([]);
   const currentUser = useAuthStore((state) => state.currentUser);
 
-  const handleSwitchChange = (prop: string) => {
-    const value = items[prop] ? false : true;
-    setItems({ ...items, [prop]: value });
-  };
-
   useEffect(() => {
     const getProgresses = async () => {
       const progressesRef = collection(db, "progresses");
@@ -50,7 +45,7 @@ const ProgressIndex = () => {
 
   // 達成率の取得（％）
   const getAchieveRate = (array: any) => {
-    const newArray = array.map((content: { result: boolean }) => {
+    const newArray = array.map((content: { result: boolean; }) => {
       return content.result;
     });
     let total = newArray?.filter((a: any) => a == true && a);
@@ -166,7 +161,7 @@ const ProgressIndex = () => {
                     <Stack spacing={3}>
                       {progress?.contents.map(
                         (
-                          content: { title: string; result: boolean },
+                          content: { title: string; result: boolean; },
                           index: number
                         ) => (
                           <Flex key={index} justifyContent="space-between">
