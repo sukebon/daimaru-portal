@@ -23,8 +23,8 @@ export const SalesArea: FC = () => {
   useEffect(() => {
     setFilterUsers(
       users
-        .filter((user: User) => user.isoSalesStaff)
-        .map((user: User) => user.uid)
+        .filter((user) => user.isoSalesStaff)
+        .map((user) => user.uid)
     );
   }, [users]);
 
@@ -47,39 +47,39 @@ export const SalesArea: FC = () => {
 
   return (
     <>
-      {(filterUsers?.includes(currentUser || "") ||
-        Administrator.includes(currentUser || "")) && (
-        <Box
-          width="100%"
-          boxShadow="xs"
-          p={{ base: 3, md: 6 }}
-          rounded="md"
-          bg="white"
-        >
-          {saleFlag && (
-            <Box
-              id="saleLabel"
-              textAlign="center"
-              fontSize="sm"
-              p={3}
-              mb={6}
-              rounded="md"
-              animation={animation}
-            >
-              月初になりました。下記ボタンをクリックして
-              <Box as="span" fontWeight="bold">
-                目標額
+      {(filterUsers?.includes(currentUser) ||
+        Administrator.includes(currentUser)) && (
+          <Box
+            width="100%"
+            boxShadow="xs"
+            p={{ base: 3, md: 6 }}
+            rounded="md"
+            bg="white"
+          >
+            {saleFlag && (
+              <Box
+                id="saleLabel"
+                textAlign="center"
+                fontSize="sm"
+                p={3}
+                mb={6}
+                rounded="md"
+                animation={animation}
+              >
+                月初になりました。下記ボタンをクリックして
+                <Box as="span" fontWeight="bold">
+                  目標額
+                </Box>
+                を入力してください。
               </Box>
-              を入力してください。
-            </Box>
-          )}
-          <Link href="/sales">
-            <Button w="100%" colorScheme="blue">
-              売上着地金額の入力
-            </Button>
-          </Link>
-        </Box>
-      )}
+            )}
+            <Link href="/sales">
+              <Button w="100%" colorScheme="blue">
+                売上着地金額の入力
+              </Button>
+            </Link>
+          </Box>
+        )}
     </>
   );
 };

@@ -1,3 +1,4 @@
+import { CategoryData, LinkData } from "@/pages";
 import {
   Box,
   ListItem,
@@ -12,11 +13,16 @@ import {
 import { NextPage } from "next";
 import Link from "next/link";
 
-const QuickLink: NextPage<any> = ({ links, categories }) => {
+type Props = {
+  links: LinkData[];
+  categories: CategoryData[];
+};
+
+const QuickLink: NextPage<Props> = ({ links, categories }) => {
   return (
     <>
       <Box
-        width="100%"
+        width="full"
         boxShadow="xs"
         p={{ base: 3, md: 6 }}
         rounded="md"
@@ -27,24 +33,23 @@ const QuickLink: NextPage<any> = ({ links, categories }) => {
         </Text>
 
         <Tabs variant="enclosed">
-          <TabList mt={3}>
-            {categories?.map((c: any) => (
-              <Tab key={c.id} _focus={{ outline: "none", fontWeight: "bold" }}>
-                {c.name}
+          <TabList mt={3} >
+            {categories?.map((category) => (
+              <Tab key={category.id} _focus={{ outline: "none", fontWeight: "bold" }}>
+                {category.name}
               </Tab>
             ))}
           </TabList>
-
           <TabPanels>
-            {categories.map((category: any) => (
+            {categories.map((category) => (
               <TabPanel key={category.id}>
-                <UnorderedList spacing={3} mx="6" mt={3}>
+                <UnorderedList spacing={3} mx={6} mt={3}>
                   {links
                     .filter(
-                      (link: any) =>
+                      (link) =>
                         link.category?.name === category.name && true
                     )
-                    .map((link: any) => (
+                    .map((link) => (
                       <ListItem key={link.id}>
                         <Text
                           fontWeight={link?.bold === true ? "bold" : "normal"}

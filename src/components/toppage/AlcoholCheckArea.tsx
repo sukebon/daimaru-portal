@@ -44,6 +44,7 @@ export const AlcoholCheckArea: FC = () => {
     try {
       const docListRef = doc(db, "alcoholCheckList", `${todayDate()}`);
       const docSnap = await getDoc(docListRef);
+
       if (docSnap.exists()) {
         await updateDoc(docListRef, {
           member: arrayUnion(currentUser),
@@ -54,6 +55,7 @@ export const AlcoholCheckArea: FC = () => {
           member: arrayUnion(currentUser),
         });
       }
+
       await addDoc(collection(db, "alcoholCheckData"), {
         date: `${todayDate()}`,
         uid: currentUser,
@@ -77,10 +79,10 @@ export const AlcoholCheckArea: FC = () => {
     <>
       {flag && (
         <Flex
-          alignItems="center"
-          justifyContent="center"
+          align="center"
+          justify="center"
           p={6}
-          width="100%"
+          w="100%"
           rounded="md"
           bg="white"
           boxShadow="xs"

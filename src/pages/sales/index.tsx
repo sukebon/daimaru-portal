@@ -67,10 +67,10 @@ const Sales = () => {
         setSeles(
           querySnapshot.docs.map(
             (doc) =>
-              ({
-                ...doc.data(),
-                id: doc.id,
-              } as Sale)
+            ({
+              ...doc.data(),
+              id: doc.id,
+            } as Sale)
           )
         );
         setRegisteredUser(
@@ -153,7 +153,7 @@ const Sales = () => {
 
   return (
     <Container maxW="1100px">
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justify="space-between" align="center">
         <Box my={3} fontSize="xl">
           {currentMonth}月 売上一覧
         </Box>
@@ -222,10 +222,10 @@ const Sales = () => {
                   </Td>
                   <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
                   <Td>
-                    {(Administrator.includes(currentUser || "") ||
+                    {(Administrator.includes(currentUser) ||
                       sale.currentUser === currentUser) && (
-                      <SalesEditModal sale={sale} />
-                    )}
+                        <SalesEditModal sale={sale} />
+                      )}
                   </Td>
                 </Tr>
               ))}

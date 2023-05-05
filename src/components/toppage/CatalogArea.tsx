@@ -40,8 +40,8 @@ const CatalogArea = () => {
         p={{ base: 0, sm: 3 }}
         rounded="md"
         bg="white"
-        justifyContent={{ base: "center" }}
-        flexDirection={{ base: "column", md: "row", lg: "column", xl: "row" }}
+        justify={{ base: "center" }}
+        direction={{ base: "column", md: "row", lg: "column", xl: "row" }}
       >
         <Flex flex="2">
           {catalogItems.map((item) => (
@@ -56,8 +56,8 @@ const CatalogArea = () => {
           w="full"
           flex="1"
           color="white"
-          flexDirection="column"
-          justifyContent="space-between"
+          direction="column"
+          justify="space-between"
           p={3}
         >
           {linkItems.map((item) => (
@@ -66,9 +66,9 @@ const CatalogArea = () => {
                 <Flex
                   h="100%"
                   minH="50px"
-                  backgroundColor={item.color}
-                  justifyContent="center"
-                  alignItems="center"
+                  bg={item.color}
+                  justify="center"
+                  align="center"
                 >
                   <Box fontSize={{ base: "xs", md: "md" }}>{item.title}</Box>
                 </Flex>

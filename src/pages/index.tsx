@@ -47,6 +47,24 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
 
 export default Home;
 
+export type CategoryData = {
+  id: string, name: string; title: string;
+};
+
+export type NewsData = {
+  id: string, message: string;
+};
+
+export type LinkData = {
+  id: string,
+  title: string;
+  category: {
+    name: string;
+  };
+  link: string;
+  bold: boolean;
+};
+
 export const getStaticProps: GetStaticProps = async () => {
   const accessPoint = "https://portal-site.microcms.io/api/v1";
   const options = {
@@ -59,11 +77,11 @@ export const getStaticProps: GetStaticProps = async () => {
     `${accessPoint}/categories?limit=10`,
     options
   );
-  const categoryData = await categoryRes.json();
+  const categoryData: CategoryData[] = await categoryRes.json();
   const newsRes = await fetch(`${accessPoint}/news?limit=100`, options);
-  const newsData = await newsRes.json();
+  const newsData: NewsData[] = await newsRes.json();
   const linkRes = await fetch(`${accessPoint}/access-link?limit=100`, options);
-  const linkData = await linkRes.json();
+  const linkData: LinkData[] = await linkRes.json();
 
   return {
     props: {

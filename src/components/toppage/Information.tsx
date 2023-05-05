@@ -1,36 +1,39 @@
+import { NewsData } from "@/pages";
 import { Box, Flex, List, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 
-const Information: NextPage<any> = (props) => {
+type Props = {
+  news: NewsData[];
+};
+
+const Information: NextPage<Props> = ({ news }) => {
   return (
-    <>
-      <Box
-        width="100%"
-        boxShadow="xs"
-        p={{ base: 3, md: 6 }}
-        rounded="md"
-        bg="white"
-      >
-        <Text fontSize="2xl" mb="4" ml="1">
-          お知らせ
-        </Text>
-        <List spacing={3}>
-          {props.news.map((value: any) => (
-            <Box
-              key={value.id}
-              mx="3"
-              pb="2"
-              borderBottom="1px"
-              borderColor="#eeeeee"
-            >
-              <Flex alignItems={"center"}>
-                <Box dangerouslySetInnerHTML={{ __html: value.message }}></Box>
-              </Flex>
-            </Box>
-          ))}
-        </List>
-      </Box>
-    </>
+    <Box
+      w="full"
+      boxShadow="xs"
+      p={{ base: 3, md: 6 }}
+      rounded="md"
+      bg="white"
+    >
+      <Text fontSize="2xl" mb="4" ml="1">
+        お知らせ
+      </Text>
+      <List spacing={3}>
+        {news.map(({ id, message }) => (
+          <Box
+            key={id}
+            mx="3"
+            pb="2"
+            borderBottom="1px"
+            borderColor="#eeeeee"
+          >
+            <Flex align={"center"}>
+              <Box dangerouslySetInnerHTML={{ __html: message }}></Box>
+            </Flex>
+          </Box>
+        ))}
+      </List>
+    </Box>
   );
 };
 

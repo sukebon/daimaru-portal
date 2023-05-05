@@ -26,7 +26,7 @@ const Layout = ({ children }: Props) => {
         currentUser && (
           <>
             <Header />
-            <Box bg="#f7f7f7" p={6} pb={6} minH="100vh">
+            <Box bg="#f7f7f7" p={6} pb={6} minH="calc(100vh - 60px)">
               {children}
             </Box>
           </>
