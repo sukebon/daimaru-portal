@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ClaimNextPrev: FC<Props> = ({ claim }) => {
-  const claims = useClaimStore((state) => state.claims);
+  const claims = useClaimStore((state) => state.filterClaims);
 
   const nextPrevPage = (id: string, page: number) => {
     let currentIndex = 0;
@@ -30,7 +30,7 @@ export const ClaimNextPrev: FC<Props> = ({ claim }) => {
     <Flex justifyContent="space-between" color="gray.600">
       {nextPrevPage(claim.id, 1) !== undefined ? (
         <Link href={`/claims/${nextPrevPage(claim.id, 1)}`}>
-          <Flex alignItems="center">
+          <Flex align="center">
             <ArrowBackIcon />
             前のクレーム
           </Flex>
@@ -41,7 +41,7 @@ export const ClaimNextPrev: FC<Props> = ({ claim }) => {
 
       {nextPrevPage(claim.id, -1) !== undefined ? (
         <Link href={`/claims/${nextPrevPage(claim.id, -1)}`}>
-          <Flex alignItems="center">
+          <Flex align="center">
             次のクレーム
             <ArrowForwardIcon />
           </Flex>

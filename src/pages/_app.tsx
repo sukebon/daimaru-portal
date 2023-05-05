@@ -20,8 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const currentUser = useAuthStore((state) => state.currentUser);
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
   const setUsers = useAuthStore((state) => state.setUsers);
+  const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
-  const { getUsers, getClaims } = useDataList();
+  const { getUsers, getFullUsers, getClaims } = useDataList();
   const queryClient = new QueryClient();
 
   useEffect(() => {
@@ -35,7 +36,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         if (session) {
           setSession(session);
           setCurrentUser(session?.uid);
-          router.push("/");
+          if (router.pathname === "/login") {
+            router.push("/");
+          }
         } else {
           setSession(null);
           setCurrentUser(undefined);
@@ -64,22 +67,26 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [session]);
 
-  useEffect(() => {
-    console.log("authority");
-    if (currentUser) {
-      const docRef = doc(db, "authority", `${currentUser}`);
-      const updateAuthority = async () => {
-        await updateDoc(docRef, {
-          email: session?.email,
-        });
-      };
-      updateAuthority();
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   console.log("authority");
+  //   if (currentUser) {
+  //     const docRef = doc(db, "authority", `${currentUser}`);
+  //     const updateAuthority = async () => {
+  //       await updateDoc(docRef, {
+  //         email: session?.email,
+  //       });
+  //     };
+  //     updateAuthority();
+  //   }
+  // }, [session]);
 
   useEffect(() => {
     getUsers();
   }, [session, setUsers]);
+
+  useEffect(() => {
+    getFullUsers();
+  }, [session, setFullUsers]);
 
   useEffect(() => {
     getClaims();

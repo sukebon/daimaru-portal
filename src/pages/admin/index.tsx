@@ -20,7 +20,7 @@ import { User } from "../../../types";
 
 const Admin = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const users = useAuthStore((state) => state.users);
+  const fullUsers = useAuthStore((state) => state.fullUsers);
 
   //権限
   const isAuthority = async (user: any, prop: string) => {
@@ -47,7 +47,7 @@ const Admin = () => {
 
   return (
     <>
-      {Administrator.includes(currentUser || "") && (
+      {Administrator.includes(currentUser) && (
         <Box
           p={6}
           mx="auto"
@@ -79,7 +79,7 @@ const Admin = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {users.map((user) => (
+                    {fullUsers.map((user) => (
                       <Tr key={user.uid}>
                         <Td>{user?.rank}</Td>
                         <Td>{user.name}</Td>

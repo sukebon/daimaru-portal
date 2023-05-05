@@ -9,17 +9,17 @@ type Props = {
 
 export const RequestMemberList: FC<Props> = ({ request }) => {
   const [usersfilter, setUsersfilter] = useState<User[]>([]);
-  const users = useAuthStore((state) => state.users);
+  const fullUsers = useAuthStore((state) => state.fullUsers);
 
   useEffect(() => {
-    const userList = users.filter((user) => {
+    const userList = fullUsers.filter((user) => {
       if (!user.uid) return;
       if (request.member.includes(user.uid)) {
         return user.name;
       }
     });
     setUsersfilter(userList);
-  }, [request.member, users]);
+  }, [request.member, fullUsers]);
 
   return (
     <>

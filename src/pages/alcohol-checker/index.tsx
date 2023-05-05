@@ -28,6 +28,7 @@ const Alcohol = () => {
   const [flag, setFlag] = useState(false);
   const { data, isLoading } = useQueryAlcoholList(count);
   const { readAlcoholCheckListMutate } = useMutateAlcoholList();
+  const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
 
   const getList = () => {
     setFlag(true);
@@ -49,11 +50,17 @@ const Alcohol = () => {
     getCount();
   }, []);
 
+  const getDayOfWeek = (value: string) => {
+    const date = new Date(value);
+    const dayOfWeek = date.getDay();
+    return dayOfWeekStr[dayOfWeek];
+  };
+
   return (
     <>
       {isAuth(['alcoholChecker']) && (
-        <Flex flexDirection="column" alignItems="center">
-          <TableContainer backgroundColor="white" borderRadius={6} p={6}>
+        <Flex direction="column" align="center">
+          <TableContainer bg="white" rounded={6} p={6}>
             <Box as="h1" fontSize="lg">
               アルコールチェック一覧
             </Box>
@@ -68,13 +75,13 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.map((post) => (
-                  <Tr key={post.id}>
-                    <Td>{post.id}</Td>
-                    <Td>{post.member.length}名</Td>
-                    <Td>{users.length - post.member.length}名</Td>
+                {data?.map(({ id, member }) => (
+                  <Tr key={id}>
+                    <Td>{id} ({getDayOfWeek(id)})</Td>
+                    <Td>{member.length}名</Td>
+                    <Td>{users.length - member.length}名</Td>
                     <Td>
-                      <Link href={`alcohol-checker/${post.id}`}>
+                      <Link href={`alcohol-checker/${id}`}>
                         <Button size="xs">詳細</Button>
                       </Link>
                     </Td>

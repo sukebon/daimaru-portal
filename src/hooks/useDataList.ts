@@ -6,6 +6,7 @@ import { useClaimStore } from "../../store/useClaimStore";
 
 export const useDataList = () => {
   const setUsers = useAuthStore((state) => state.setUsers);
+  const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
 
   const getUsers = async () => {
@@ -14,8 +15,24 @@ export const useDataList = () => {
     onSnapshot(q, (querySnapshot) => {
       setUsers(
         querySnapshot.docs.map(
-          (doc) =>
-            ({
+          (doc) =>({
+              ...doc.data(),
+              id: doc.id,
+            } as User)
+        ).filter((doc) => (
+          doc.rank !== 1000 
+        ))
+      );
+    });
+  };
+
+  const getFullUsers = async () => {
+    const usersCollectionRef = collection(db, "authority");
+    const q = query(usersCollectionRef, orderBy("rank", "asc"));
+    onSnapshot(q, (querySnapshot) => {
+      setFullUsers(
+        querySnapshot.docs.map(
+          (doc) => ({
               ...doc.data(),
               id: doc.id,
             } as User)
@@ -40,5 +57,5 @@ export const useDataList = () => {
     });
   };
 
-  return { getUsers, getClaims };
+  return { getUsers, getFullUsers,getClaims };
 };

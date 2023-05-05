@@ -37,8 +37,7 @@ const StoppedList = () => {
 
   return (
     <Flex direction="column" align="center">
-
-      <Box w={{ base: "100%", md: "800px" }} p={6} bg="white" rounded="md">
+      <Box w={{ base: "full", md: "800px" }} p={6} bg="white" rounded="md">
         <Flex
           justify="space-between"
           align="center"

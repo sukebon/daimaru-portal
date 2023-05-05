@@ -9,6 +9,8 @@ type State = {
   setCurrentUser: (payload: string | undefined) => void;
   users: User[] | [];
   setUsers: (payload: User[] | []) => void;
+  fullUsers: User[] | [];
+  setFullUsers: (payload: User[] | []) => void;
 };
 
 export const useAuthStore = create<State>((set) => ({
@@ -18,4 +20,6 @@ export const useAuthStore = create<State>((set) => ({
   setCurrentUser: (payload) => set({ currentUser: payload }),
   users: [],
   setUsers: (payload) => set({ users: payload }),
+  fullUsers: [],
+  setFullUsers: (payload) => set({ fullUsers: payload }),
 }));
