@@ -1,4 +1,3 @@
-import { CategoryData, LinkData } from "@/pages";
 import {
   Box,
   ListItem,
@@ -12,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
+import { CategoryData, LinkData } from "../../../types";
 
 type Props = {
   links: LinkData[];

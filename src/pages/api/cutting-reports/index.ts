@@ -10,10 +10,10 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const url = "https://daimaru-kijizaiko.vercel.app/api/cutting-reports/";
-  const contents = await axios
+  const contents :CuttingReport[]  = await axios
     .get(url, {
       params: { API_KEY: "daimaru-kijizaiko" },
     })
     .then((res) => res.data);
-  res.status(200).json({ contents: contents.contents });
+  res.status(200).json({ contents });
 }

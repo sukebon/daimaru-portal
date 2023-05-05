@@ -50,7 +50,7 @@ export const SalesArea: FC = () => {
       {(filterUsers?.includes(currentUser) ||
         Administrator.includes(currentUser)) && (
           <Box
-            width="100%"
+            w="100%"
             boxShadow="xs"
             p={{ base: 3, md: 6 }}
             rounded="md"

@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   const id = req.query.id;
   const url = `https://daimaru-kijizaiko.vercel.app/api/products/${id}`;
-  const content = await axios
+  const {content} = await axios
     .get(url, {
       params: { API_KEY: "daimaru-kijizaiko" },
     })

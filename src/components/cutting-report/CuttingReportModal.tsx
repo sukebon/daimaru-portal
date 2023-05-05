@@ -13,25 +13,23 @@ import {
   Table,
   TableContainer,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NextPage } from "next";
+import { FC } from "react";
 import { CuttingReport } from "../../../types";
 import { useCuttingReport } from "../../hooks/useCuttingReport";
-import CuttingReportTr from "./CuttingReportTr";
+import { CuttingReportTr } from "./CuttingReportTr";
 
 type Props = {
   report: CuttingReport;
 };
 
-const CuttingReportModal: NextPage<Props> = ({ report }) => {
+export const CuttingReportModal: FC<Props> = ({ report }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { getSerialNumber } = useCuttingReport();
 
   return (
@@ -59,13 +57,13 @@ const CuttingReportModal: NextPage<Props> = ({ report }) => {
             <Stack spacing={6}>
               <Flex
                 gap={6}
-                flexDirection={{ base: "column", md: "row" }}
-                justifyContent={{ base: "flex-start", md: "space-between" }}
+                direction={{ base: "column", md: "row" }}
+                justify={{ base: "flex-start", md: "space-between" }}
               >
                 <Flex
                   gap={6}
                   flex="1"
-                  flexDirection={{ base: "column", md: "row" }}
+                  direction={{ base: "column", md: "row" }}
                 >
                   <Box>
                     <Text fontWeight="bold">裁断報告書</Text>
@@ -82,12 +80,12 @@ const CuttingReportModal: NextPage<Props> = ({ report }) => {
                 </Box>
               </Flex>
               <Flex
-                alignItems="stretch"
-                flexDirection={{ base: "column", md: "row" }}
+                align="stretch"
+                direction={{ base: "column", md: "row" }}
                 gap={6}
               >
                 <Stack spacing={6} w="full">
-                  <Flex gap={6} flexDirection={{ base: "column", md: "row" }}>
+                  <Flex gap={6} direction={{ base: "column", md: "row" }}>
                     <Box>
                       <Text fontWeight="bold">加工指示書</Text>
                       <Box>No.{report?.processNumber}</Box>
@@ -97,7 +95,7 @@ const CuttingReportModal: NextPage<Props> = ({ report }) => {
                       <Box>{report?.client}</Box>
                     </Box>
                   </Flex>
-                  <Flex gap={6} flexDirection={{ base: "column", md: "row" }}>
+                  <Flex gap={6} direction={{ base: "column", md: "row" }}>
                     <Box>
                       <Text fontWeight="bold">種別</Text>
                       <Box>{report?.itemType === "1" ? "既製" : "別注"}</Box>
@@ -143,10 +141,10 @@ const CuttingReportModal: NextPage<Props> = ({ report }) => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {report?.products?.map((product: any, index) => (
+                    {report?.products?.map((product, index) => (
                       <CuttingReportTr
                         key={index}
-                        product={product}
+                        cuttingProduct={product}
                         report={report}
                       />
                     ))}
@@ -171,5 +169,3 @@ const CuttingReportModal: NextPage<Props> = ({ report }) => {
     </>
   );
 };
-
-export default CuttingReportModal;

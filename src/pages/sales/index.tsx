@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Container,
@@ -22,6 +23,7 @@ import {
   setDoc,
   startAt,
 } from "firebase/firestore";
+import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
@@ -30,32 +32,43 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import { Sale } from "../../../types";
 import { useDisp } from "@/hooks/useDisp";
 
-const Sales = () => {
+const Sales: NextPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const users = useAuthStore((state) => state.users);
   const { getUserName } = useDisp();
-  const [sales, setSeles] = useState<Sale[]>([]);
-  const [registeredUser, setRegisteredUser] = useState<string[]>([]);
+  const [sales, setSales] = useState<Sale[]>([]);
   const [targetSum, setTargetSum] = useState<number>(0);
   const [AchiveSum, setAchiveSum] = useState<number>(0);
   const [ExpectSum, setExpectSum] = useState<number>(0);
   const [currentMonth, setCurrentMonth] = useState(""); //今月 2022-10
 
-  // salesデータを取得
-  useEffect(() => {
+  const getYearMonth = () => {
     const date = new Date();
     const year = date.getFullYear();
     let month = date.getMonth() + 1;
     const lastDate = new Date(year, month, 0);
     let monthStr = "0" + String(month);
-    monthStr.slice(-2);
+    monthStr = monthStr.slice(-2);
+    let day = date.getDate();
+    let dayStr = "0" + day;
+    dayStr = dayStr.slice(-2);
+    return {
+      year,
+      month,
+      lastDate,
+      monthStr,
+      dayStr
+    };
+  };
+
+  // salesデータを取得
+  useEffect(() => {
+    const { year, month, monthStr, lastDate } = getYearMonth();
     const startAtDate = `${year}-${monthStr}-01`;
     const endAtDate = `${year}-${monthStr}-${lastDate.getDate()}`;
     setCurrentMonth(`${year}-${month}`);
 
-    // 売上登録データ取得
     const collectionRef = collection(db, "sales");
-    // 今月1日から末日までのデータを取得
     const q = query(
       collectionRef,
       orderBy("datetime"),
@@ -64,37 +77,37 @@ const Sales = () => {
     );
     try {
       onSnapshot(q, (querySnapshot) => {
-        setSeles(
-          querySnapshot.docs.map(
-            (doc) =>
-            ({
-              ...doc.data(),
-              id: doc.id,
-            } as Sale)
-          )
-        );
-        setRegisteredUser(
-          querySnapshot.docs.map((doc) => doc.data().currentUser)
-        );
+        const data = querySnapshot.docs.map(
+          (doc) =>
+          ({
+            ...doc.data(),
+            id: doc.id,
+          } as Sale)
+        ).sort((a, b) => a.rank - b.rank);
+        setSales(data);
+        registeredUsers(data.map((sale) => (sale?.currentUser)));
       });
     } catch (err) {
       console.log(err);
     }
   }, []);
 
+  // フィルターを掛けたusersを一人ずつ登録していく
+  const registeredUsers = (usersArray: string[] = []) => {
+    const result = usersArray.includes(currentUser);
+    if (result) return;
+    users
+      .forEach(({ isoSalesStaff, uid, rank }) => {
+        if (isoSalesStaff) {
+          addSales(uid, rank);
+        }
+      });
+  };
+
   // 営業担当を登録する
   const addSales = async (uid: string, rank: number) => {
-    const date = new Date();
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let monthStr = "0" + month;
-    monthStr = monthStr.slice(-2);
+    const { year, month, monthStr, dayStr } = getYearMonth();
     const result = year + "-" + month;
-
-    let day = date.getDate();
-    let dayStr = "0" + day;
-    dayStr = dayStr.slice(-2);
-
     const docRef = doc(db, "sales", `${result}_${uid}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
@@ -111,21 +124,8 @@ const Sales = () => {
       } catch (err) {
         console.log(err);
       }
-    } else {
-      return;
     }
   };
-
-  // フィルターを掛けたusersを一人ずつ登録していく
-  useEffect(() => {
-    users
-      .filter(
-        (user) => user.isoSalesStaff && !registeredUser?.includes(user.uid)
-      )
-      .forEach((user) => {
-        addSales(user.uid, user.rank);
-      });
-  }, [registeredUser, users]);
 
   // 目標・着地・予定
   useEffect(() => {
@@ -143,9 +143,9 @@ const Sales = () => {
   }, [sales]);
 
   const getAchievementRate = (
-    expect: number,
+    target: number,
     achive: number,
-    target: number
+    expect: number,
   ) => {
     const result = (((expect + achive) / target) * 100).toString().slice(0, 4);
     return Number(result);
@@ -175,64 +175,62 @@ const Sales = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {sales
-              ?.sort((a, b) => a.rank - b.rank)
-              ?.map((sale) => (
-                <Tr
-                  key={sale.id}
-                  bgColor={
-                    getAchievementRate(
-                      Number(sale.currentExpect),
-                      Number(sale.currentAchieve),
-                      Number(sale.currentTarget)
-                    ) >= 100
-                      ? "#d4bf0096"
-                      : ""
-                  }
-                >
-                  <Td mr={6}>{getUserName(sale.currentUser)}</Td>
-                  <Td isNumeric>
-                    {Number(sale.currentTarget).toLocaleString()}
-                  </Td>
-                  <Td isNumeric>
-                    {Number(sale.currentAchieve).toLocaleString()}
-                  </Td>
-                  <Td isNumeric>
-                    {Number(sale.currentExpect).toLocaleString()}
-                  </Td>
-                  <Td fontWeight="bold" isNumeric>
-                    {(
-                      Number(sale.currentAchieve) + Number(sale.currentExpect)
-                    ).toLocaleString()}
-                  </Td>
-                  <Td fontWeight="bold" isNumeric>
-                    {(
-                      Number(sale.currentExpect) -
-                      Number(sale.currentTarget) +
-                      Number(sale.currentAchieve)
-                    ).toLocaleString()}
-                  </Td>
-                  <Td fontWeight="bold" isNumeric>
-                    {getAchievementRate(
-                      Number(sale.currentExpect),
-                      Number(sale.currentAchieve),
-                      Number(sale.currentTarget)
+            {sales?.map((sale) => (
+              <Tr
+                key={sale.id}
+                bgColor={
+                  getAchievementRate(
+                    Number(sale.currentTarget),
+                    Number(sale.currentAchieve),
+                    Number(sale.currentExpect),
+                  ) >= 100
+                    ? "#d4bf0096"
+                    : ""
+                }
+              >
+                <Td mr={6}>{getUserName(sale.currentUser)}</Td>
+                <Td isNumeric>
+                  {Number(sale.currentTarget).toLocaleString()}
+                </Td>
+                <Td isNumeric>
+                  {Number(sale.currentAchieve).toLocaleString()}
+                </Td>
+                <Td isNumeric>
+                  {Number(sale.currentExpect).toLocaleString()}
+                </Td>
+                <Td fontWeight="bold" isNumeric>
+                  {(
+                    Number(sale.currentAchieve) + Number(sale.currentExpect)
+                  ).toLocaleString()}
+                </Td>
+                <Td fontWeight="bold" isNumeric>
+                  {(
+                    Number(sale.currentExpect) -
+                    Number(sale.currentTarget) +
+                    Number(sale.currentAchieve)
+                  ).toLocaleString()}
+                </Td>
+                <Td fontWeight="bold" isNumeric>
+                  {getAchievementRate(
+                    Number(sale.currentTarget),
+                    Number(sale.currentAchieve),
+                    Number(sale.currentExpect),
+                  )}
+                  %
+                </Td>
+                <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
+                <Td>
+                  {(Administrator.includes(currentUser) ||
+                    sale.currentUser === currentUser) && (
+                      <SalesEditModal sale={sale} />
                     )}
-                    %
-                  </Td>
-                  <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
-                  <Td>
-                    {(Administrator.includes(currentUser) ||
-                      sale.currentUser === currentUser) && (
-                        <SalesEditModal sale={sale} />
-                      )}
-                  </Td>
-                </Tr>
-              ))}
+                </Td>
+              </Tr>
+            ))}
             <Tr
               fontWeight="bold"
               bgColor={
-                getAchievementRate(ExpectSum, AchiveSum, targetSum) >= 100
+                getAchievementRate(targetSum, AchiveSum, ExpectSum) >= 100
                   ? "#00f3a0"
                   : ""
               }
@@ -246,7 +244,7 @@ const Sales = () => {
                 {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
               </Td>
               <Td isNumeric>
-                {getAchievementRate(ExpectSum, AchiveSum, targetSum)}%
+                {getAchievementRate(targetSum, AchiveSum, ExpectSum)}%
               </Td>
               <Td></Td>
               <Td></Td>

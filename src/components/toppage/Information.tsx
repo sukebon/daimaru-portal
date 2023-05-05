@@ -1,6 +1,6 @@
-import { NewsData } from "@/pages";
 import { Box, Flex, List, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
+import { NewsData } from "../../../types";
 
 type Props = {
   news: NewsData[];

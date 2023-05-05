@@ -11,10 +11,10 @@ export default async function handler(
 ) {
   const url =
     "https://daimaru-kijizaiko.vercel.app/api/cutting-reports/ready-made/";
-  const contents = await axios
+  const { contents } = await axios
     .get(url, {
       params: { API_KEY: "daimaru-kijizaiko" },
     })
     .then((res) => res.data);
-  res.status(200).json({ contents: contents.contents });
+  res.status(200).json({ contents });
 }

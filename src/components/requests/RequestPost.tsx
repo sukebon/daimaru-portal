@@ -66,10 +66,10 @@ export const RequestPost: FC<Props> = ({ request }) => {
             </Badge>
           )}
           <Flex justify="space-between" align="center">
-            <Text fontSize="2xl">{starLevel(request.level)}</Text>
+            <Box fontSize="2xl">{starLevel(request.level)}</Box>
             {/* メニューボタン  投稿者と管理者のみ表示*/}
             {(currentUser === request.author ||
-              Administrator.includes(currentUser || "")) && (
+              Administrator.includes(currentUser)) && (
                 <RequestMenu request={request} />
               )}
           </Flex>
@@ -87,29 +87,29 @@ export const RequestPost: FC<Props> = ({ request }) => {
             fontSize="sm"
             gap={2}
           >
-            <Text>
+            <Box>
               【開始】{request.startDay}
               {request.startTime && `-${request.startTime}`}
               {dayOfWeek(request.startDay)}
-            </Text>
-            <Text>
+            </Box>
+            <Box>
               【終了】{request.endDay}
               {request.endTime && `-${request.endTime}`}
               {dayOfWeek(request.endDay)}
-            </Text>
-            <Text>
+            </Box>
+            <Box>
               【募集人数】{request.applicant}人{request.moreless}
-            </Text>
+            </Box>
           </Flex>
           <Flex direction={{ base: "column", md: "row" }} fontSize="sm">
-            <Text>【責任者】{request.person}</Text>
+            <Box>【責任者】{request.person}</Box>
             {Administrator.includes(currentUser || "") && (
-              <Text>【作成者】{getUserName(request.author)}</Text>
+              <Box>【作成者】{getUserName(request.author)}</Box>
             )}
           </Flex>
-          <Text py={3} whiteSpace="pre-wrap" fontSize="sm">
+          <Box py={3} whiteSpace="pre-wrap" fontSize="sm">
             {request.content}
-          </Text>
+          </Box>
           <Flex
             direction={{ base: "column", md: "row" }}
             justify="space-between"

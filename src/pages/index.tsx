@@ -10,6 +10,7 @@ import { ClaimArea } from "../components/toppage/ClaimArea";
 import { RequestArea } from "../components/toppage/RequestArea";
 import { SalesArea } from "../components/toppage/SalesArea";
 import CuttingReportArea from "../components/toppage/CuttingReportArea";
+import { CategoryData, LinkData, NewsData } from "../../types";
 
 const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
   return (
@@ -47,24 +48,6 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
 
 export default Home;
 
-export type CategoryData = {
-  id: string, name: string; title: string;
-};
-
-export type NewsData = {
-  id: string, message: string;
-};
-
-export type LinkData = {
-  id: string,
-  title: string;
-  category: {
-    name: string;
-  };
-  link: string;
-  bold: boolean;
-};
-
 export const getStaticProps: GetStaticProps = async () => {
   const accessPoint = "https://portal-site.microcms.io/api/v1";
   const options = {
@@ -74,7 +57,7 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 
   const categoryRes = await fetch(
-    `${accessPoint}/categories?limit=10`,
+    `${accessPoint}/categories?limit=20`,
     options
   );
   const categoryData: CategoryData[] = await categoryRes.json();

@@ -19,11 +19,11 @@ import { db } from "../../../firebase";
 type Props = {
   progress: any;
   pageTitle: string;
-  items: { title: string; startDate: string; endDate: string; contents: {}[] };
+  items: { title: string; startDate: string; endDate: string; contents: {}[]; };
   setItems: Function;
 };
 
-const ProgressInpuArea: NextPage<Props> = ({
+export const ProgressInpuArea: NextPage<Props> = ({
   progress,
   pageTitle,
   items,
@@ -161,5 +161,3 @@ const ProgressInpuArea: NextPage<Props> = ({
     </>
   );
 };
-
-export default ProgressInpuArea;

@@ -53,9 +53,9 @@ export const RequestArea: FC = () => {
           direction={{ base: "column", md: "row" }}
           align="center"
         >
-          <Text fontSize="2xl" mr="3">
+          <Box fontSize="2xl" mr="3">
             お手伝い依頼一覧
-          </Text>
+          </Box>
         </Flex>
         <Flex gap={3} >
           <Link href="/requests/stopped-list">

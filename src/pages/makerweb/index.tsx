@@ -37,22 +37,22 @@ const MakerWeb: NextPage<Props> = ({ posts }) => {
           </Thead>
 
           <Tbody>
-            {posts.map((post) => (
-              <Tr key={post.id}>
+            {posts.map(({ id, url, name, userId, password, code }) => (
+              <Tr key={id}>
                 <Td>
                   <Link
-                    href={post.url}
+                    href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Box textDecoration="underline" _hover={{ opacity: "0.8" }}>
-                      {post.name}
+                      {name}
                     </Box>
                   </Link>
                 </Td>
-                <Td>{post.userId}</Td>
-                <Td>{post.password}</Td>
-                <Td>{post.code}</Td>
+                <Td>{userId}</Td>
+                <Td>{password}</Td>
+                <Td>{code}</Td>
               </Tr>
             ))}
           </Tbody>
@@ -76,8 +76,7 @@ export const getStaticProps: GetStaticProps = async () => {
     params
   );
   const resJson = await res.json();
-  const posts = resJson.contents;
+  const posts: MakerWeb[] = resJson.contents;
 
-  // Pass post data to the page via props
   return { props: { posts } };
 };

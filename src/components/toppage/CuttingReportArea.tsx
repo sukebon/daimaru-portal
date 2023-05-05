@@ -13,23 +13,23 @@ import axios from "axios";
 import useSWR from "swr";
 import { CuttingReport } from "../../../types";
 import { useCuttingReport } from "../../hooks/useCuttingReport";
-import CuttingReportModal from "../cutting-report/CuttingReportModal";
+import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
+
+type Data = {
+  contents: CuttingReport[];
+};
 
 const CuttingReportArea = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data: reports } = useSWR("/api/cutting-reports/", fetcher);
-  // const { data: readyMade } = useSWR(
-  //   "/api/cutting-reports/ready-made/",
-  //   fetcher
-  // );
-  // console.log(readyMade);
+  const { data: reports } = useSWR<Data>("/api/cutting-reports/", fetcher);
+  // const { data: reports } = useSWR<Data>("/api/cutting-reports/ready-made/", fetcher);
   const { getSerialNumber } = useCuttingReport();
 
   return (
     <>
-      {reports?.contents.length > 0 && (
+      {reports?.contents && reports?.contents?.length > 0 && (
         <Box
-          width="100%"
+          w="100%"
           boxShadow="xs"
           p={{ base: 3, md: 6 }}
           rounded="md"
@@ -52,7 +52,7 @@ const CuttingReportArea = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {reports?.contents.map((report: CuttingReport) => (
+                {reports?.contents.map((report) => (
                   <Tr key={report.id}>
                     <Td>
                       <CuttingReportModal report={report} />

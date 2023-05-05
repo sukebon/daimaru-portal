@@ -136,3 +136,62 @@ export type Claim = {
   imagePath2: string;
   imagePath3: string;
 };
+
+export type CategoryData = {
+  id: string, name: string; title: string;
+};
+
+export type NewsData = {
+  id: string, message: string;
+};
+
+export type LinkData = {
+  id: string,
+  title: string;
+  category: {
+    name: string;
+  };
+  link: string;
+  bold: boolean;
+};
+
+export type Product = {
+  id: string;
+  productType: number;
+  staff: string;
+  supplierId: string;
+  supplierName: string;
+  grayFabricId: string;
+  productNumber: string;
+  productNum: string;
+  productName: string;
+  colorNum: string;
+  colorName: string;
+  price: number;
+  materialName: string;
+  materials: any;
+  fabricWidth: number;
+  fabricWeight: number;
+  fabricLength: number;
+  features: string[];
+  noteProduct: string;
+  noteFabric: string;
+  noteEtc: string;
+  interfacing: boolean;
+  lining: boolean;
+  wip: number;
+  externalStock: number;
+  arrivingQuantity: number;
+  tokushimaStock: number;
+  locations: string[];
+  createUser: string;
+  updateUser: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CuttingProduct = {
+  category: string;
+  productId: string;
+  quantity: number;
+};

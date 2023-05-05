@@ -3,7 +3,7 @@ import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../../firebase";
-import ProgressInpuArea from "../../../components/progress/ProgressInpuArea";
+import { ProgressInpuArea } from "../../../components/progress/ProgressInpuArea";
 
 const ProgressId = () => {
   const router = useRouter();
