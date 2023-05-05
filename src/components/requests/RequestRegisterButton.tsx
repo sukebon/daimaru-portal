@@ -9,7 +9,7 @@ type Props = {
   request: Request;
 };
 
-export const RecruitmentRegisterButton: FC<Props> = ({ request }) => {
+export const RequestRegisterButton: FC<Props> = ({ request }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
   //参加する

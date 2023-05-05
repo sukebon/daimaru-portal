@@ -36,7 +36,7 @@ type Props = {
   onClose?: () => void;
 };
 
-export const RecruitmentForm: FC<Props> = ({
+export const RequestForm: FC<Props> = ({
   requestId,
   requestInputs,
   pageType,

@@ -243,7 +243,7 @@ export const useClaims = () => {
     const docRef = doc(db, "claimList", claim.id);
     await updateDoc(docRef, {
       status: 6,
-      operator: "管理者",
+      operator: "MGR",
       stampBoss: currentUser,
       message: "",
     });

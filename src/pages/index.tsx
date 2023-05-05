@@ -7,7 +7,7 @@ import CatalogArea from "../components/toppage/CatalogArea";
 import { Box, Flex, Stack } from "@chakra-ui/react";
 import { AlcoholCheckArea } from "../components/toppage/AlcoholCheckArea";
 import { ClaimArea } from "../components/toppage/ClaimArea";
-import { RecruitmentArea } from "../components/toppage/RecruitmentArea";
+import { RequestArea } from "../components/toppage/RequestArea";
 import { SalesArea } from "../components/toppage/SalesArea";
 import CuttingReportArea from "../components/toppage/CuttingReportArea";
 
@@ -37,7 +37,7 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
             </Stack>
           </Box>
           <Box flex={1}>
-            <RecruitmentArea />
+            <RequestArea />
           </Box>
         </Flex>
       </Box>

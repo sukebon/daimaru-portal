@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { Badge, Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { Administrator } from "../../../data";
-import { RecruitmentRegisterButton } from "./RecruitmentRegisterButton";
-import { RecruitmentMemberList } from "./RecruitmentMemberList";
-import { RecruitmentMenu } from "./RecruitmentMenu";
+import { RequestRegisterButton } from "./RequestRegisterButton";
+import { RequestMemberList } from "./RequestMemberList";
+import { RequestMenu } from "./RequestMenu";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { Request } from "../../../types";
 import { useUtils } from "@/hooks/useUtils";
@@ -14,7 +14,7 @@ type Props = {
   request: Request;
 };
 
-export const RecruitmentPost: FC<Props> = ({ request }) => {
+export const RequestPost: FC<Props> = ({ request }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const { dayOfWeek } = useUtils();
   const { getUserName } = useDisp();
@@ -70,11 +70,11 @@ export const RecruitmentPost: FC<Props> = ({ request }) => {
             {/* メニューボタン  投稿者と管理者のみ表示*/}
             {(currentUser === request.author ||
               Administrator.includes(currentUser || "")) && (
-                <RecruitmentMenu request={request} />
+                <RequestMenu request={request} />
               )}
           </Flex>
           <Heading fontSize="xl" pb={6} mt={2}>
-            {!request.display && "【募集終了】"}
+            {!request.recruitment && "【募集終了】"}
             {request.title}
           </Heading>
           <Flex
@@ -118,9 +118,9 @@ export const RecruitmentPost: FC<Props> = ({ request }) => {
             py={3}
           >
             <Flex flexWrap="wrap">
-              <RecruitmentMemberList request={request} />
+              <RequestMemberList request={request} />
             </Flex>
-            <RecruitmentRegisterButton request={request} />
+            <RequestRegisterButton request={request} />
           </Flex>
         </Flex>
       </Flex>

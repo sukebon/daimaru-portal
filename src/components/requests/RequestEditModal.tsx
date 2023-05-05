@@ -11,14 +11,14 @@ import {
 } from '@chakra-ui/react';
 import React, { FC } from "react";
 import { Request } from "../../../types";
-import { RecruitmentForm } from "./RecruitmentForm";
+import { RequestForm } from "./RequestForm";
 import { useDisclosure } from "@chakra-ui/react";
 
 type Props = {
   request: Request;
 };
 
-export const RecruitmentEditModal: FC<Props> = ({ request }) => {
+export const RequestEditModal: FC<Props> = ({ request }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const requestId = request?.id;
   const requestInputs = {
@@ -43,7 +43,7 @@ export const RecruitmentEditModal: FC<Props> = ({ request }) => {
           <ModalHeader>編集</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <RecruitmentForm requestId={requestId} pageType="edit" requestInputs={requestInputs} onClose={onClose} />
+            <RequestForm requestId={requestId} pageType="edit" requestInputs={requestInputs} onClose={onClose} />
           </ModalBody>
           <ModalFooter>
             <Button variant="outline" colorScheme='blue' mr={3} onClick={onClose}>

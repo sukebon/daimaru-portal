@@ -45,9 +45,9 @@ const CatalogArea = () => {
       >
         <Flex flex="2">
           {catalogItems.map((item) => (
-            <Flex flex="1" p="3" justifyContent="center" key={item.link}>
-              <Link href={item.link} style={{ fontSize: 0 }} target="_blank">
-                <Image src={item.src} alt={item.alt} width={220} height={300} />
+            <Flex flex="1" p="3" justify="center" key={item.link} >
+              <Link href={item.link} style={{ fontSize: 0 }} target="_blank" >
+                <Image src={item.src} alt={item.alt} width="300" height="200" style={{ objectFit: "cover" }} />
               </Link>
             </Flex>
           ))}

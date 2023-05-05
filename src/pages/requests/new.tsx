@@ -8,10 +8,10 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { RecruitmentPostList } from "@/components/recruitments/RecruitmentPostList";
+import { RequestPostList } from "@/components/requests/RequestPostList";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { Request } from "../../../types";
-import { RecruitmentForm } from "@/components/recruitments/RecruitmentForm";
+import { RequestForm } from "@/components/requests/RequestForm";
 import Link from "next/link";
 
 const RecruitmentNew = () => {
@@ -42,10 +42,10 @@ const RecruitmentNew = () => {
       setRequests(
         querySnapshot.docs.map(
           (doc) =>
-            ({
-              ...doc.data(),
-              id: doc.id,
-            } as Request)
+          ({
+            ...doc.data(),
+            id: doc.id,
+          } as Request)
         )
       );
     });
@@ -63,7 +63,7 @@ const RecruitmentNew = () => {
                 <Button>トップへ戻る</Button>
               </Link>
             </Flex>
-            <RecruitmentForm pageType="new" requestInputs={requestInputs} />
+            <RequestForm pageType="new" requestInputs={requestInputs} />
           </Box>
         </Flex>
       </Box>
@@ -74,7 +74,7 @@ const RecruitmentNew = () => {
         bg="white"
         rounded="md"
       >
-        <RecruitmentPostList requests={requests} />
+        <RequestPostList requests={requests} />
       </Box>
     </Flex>
   );

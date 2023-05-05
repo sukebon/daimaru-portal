@@ -7,7 +7,7 @@ type Props = {
   request: Request;
 };
 
-export const RecruitmentMemberList: FC<Props> = ({ request }) => {
+export const RequestMemberList: FC<Props> = ({ request }) => {
   const [usersfilter, setUsersfilter] = useState<User[]>([]);
   const users = useAuthStore((state) => state.users);
 

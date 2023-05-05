@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import { RecruitmentPostList } from "../recruitments/RecruitmentPostList";
+import { RequestPostList } from "../requests/RequestPostList";
 import {
   collection,
   onSnapshot,
@@ -12,7 +12,7 @@ import {
 import { db } from "../../../firebase";
 import { Request } from "../../../types";
 
-export const RecruitmentArea: FC = () => {
+export const RequestArea: FC = () => {
   const [requests, setRequests] = useState<Request[]>([]);
   useEffect(() => {
     const requestsRef = collection(db, "requestList");
@@ -58,15 +58,15 @@ export const RecruitmentArea: FC = () => {
           </Text>
         </Flex>
         <Flex gap={3} >
-          <Link href="/recruitments/stopped-list">
+          <Link href="/requests/stopped-list">
             <Button>掲載終了一覧</Button>
           </Link>
-          <Link href="/recruitments/new">
+          <Link href="/requests/new">
             <Button colorScheme="blue">お手伝い依頼を作成</Button>
           </Link>
         </Flex>
       </Flex>
-      <RecruitmentPostList requests={requests} />
+      <RequestPostList requests={requests} />
     </Box>
   );
 };

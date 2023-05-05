@@ -11,6 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useDataList } from "@/hooks/useDataList";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useClaimStore } from "../../store/useClaimStore";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -21,6 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
   const { getUsers, getClaims } = useDataList();
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     console.log("session");
@@ -85,9 +87,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </QueryClientProvider>
     </ChakraProvider>
   );
 }

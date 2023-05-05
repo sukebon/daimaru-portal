@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -10,52 +11,47 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { collection, getCountFromServer } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { db } from "../../../firebase";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { AlcoholCheckList } from "../../../types";
+import { useUtils } from "@/hooks/useUtils";
+import { useQueryAlcoholList } from "@/hooks/Alcohols/useQueryAlcoholList";
+import { useMutateAlcoholList } from "@/hooks/Alcohols/useMutateAlcoholList";
+import { db } from "../../../firebase";
 
 const Alcohol = () => {
-  const currentUser = useAuthStore((state) => state.currentUser);
+  const { isAuth } = useUtils();
   const users = useAuthStore((state) => state.users);
-  const [posts, setPosts] = useState<AlcoholCheckList[]>([]);
+  const [count, setCount] = useState(30);
+  const [totalCount, setTotalCount] = useState(0);
+  const [flag, setFlag] = useState(false);
+  const { data, isLoading } = useQueryAlcoholList(count);
+  const { readAlcoholCheckListMutate } = useMutateAlcoholList();
 
-  //アルコールチェッカーリスト
-  useEffect(() => {
-    const collectionRef = collection(db, "alcoholCheckList");
-    const q = query(collectionRef, orderBy("id", "desc"), limit(60));
-    try {
-      getDocs(q).then((querySnapshot) => {
-        setPosts(
-          querySnapshot.docs.map(
-            (doc) =>
-              ({
-                ...doc.data(),
-                id: doc.id,
-              } as AlcoholCheckList)
-          )
-        );
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
-  //アルコールチェッカー権限者
-  const userAuthority = (userId: string) => {
-    const newUsers = users.map((user) => {
-      if (user.alcoholChecker == true) {
-        return user.uid;
-      }
-    });
-    return newUsers.includes(userId);
+  const getList = () => {
+    setFlag(true);
+    setTimeout(() => {
+      setCount(count + 30);
+      readAlcoholCheckListMutate.mutate(count + 30);
+      setTimeout(() => {
+        setFlag(false);
+      }, 500);
+    }, 500);
   };
+
+  useEffect(() => {
+    const getCount = async () => {
+      const coll = collection(db, "alcoholCheckList");
+      const snapshot = await getCountFromServer(coll);
+      setTotalCount(snapshot.data().count);
+    };
+    getCount();
+  }, []);
 
   return (
     <>
-      {userAuthority(currentUser || "") && (
+      {isAuth(['alcoholChecker']) && (
         <Flex flexDirection="column" alignItems="center">
           <TableContainer backgroundColor="white" borderRadius={6} p={6}>
             <Box as="h1" fontSize="lg">
@@ -72,7 +68,7 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {posts?.map((post) => (
+                {data?.map((post) => (
                   <Tr key={post.id}>
                     <Td>{post.id}</Td>
                     <Td>{post.member.length}名</Td>
@@ -86,6 +82,13 @@ const Alcohol = () => {
                 ))}
               </Tbody>
             </Table>
+            {totalCount >= count && (
+              <Flex mt={6} justify="center">
+                {isLoading ? <Spinner /> : (
+                  <Button isLoading={flag ? true : false} loadingText='さらに表示する' onClick={getList}>さらに表示する</Button>
+                )}
+              </Flex>
+            )}
           </TableContainer>
         </Flex>
       )}

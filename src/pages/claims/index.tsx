@@ -46,7 +46,7 @@ const Claim: NextPage = () => {
           case 4:
             return "事務局";
           case 6:
-            return "管理者";
+            return "MGR";
           case 7:
             return "TM";
           case 8:
@@ -97,10 +97,10 @@ const Claim: NextPage = () => {
                   key={claim.id}
                   bg={
                     claim.operator === currentUser ||
-                    (isAuth(["isoOffice"]) &&
-                      [0, 2, 4].includes(claim.status)) ||
-                    (isAuth(["isoManager"]) && claim.status === 6) ||
-                    (isAuth(["isoTopManegment"]) && claim.status === 7)
+                      (isAuth(["isoOffice"]) &&
+                        [0, 2, 4].includes(claim.status)) ||
+                      (isAuth(["isoManager"]) && claim.status === 6) ||
+                      (isAuth(["isoTopManegment"]) && claim.status === 7)
                       ? "yellow.100"
                       : "white"
                   }
