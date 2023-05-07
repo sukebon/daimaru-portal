@@ -95,20 +95,19 @@ const ProgressIndex = () => {
           </Link>
         </Flex>
       </Container>
-      <Container maxW="1000px" mt={3} p={0}>
-        <Flex flexWrap="wrap" w="100%" gap={6}>
+      <Container maxW="1000px" mt={6} p={0}>
+        <Flex flexWrap="wrap" w="full" gap={6}>
           {progresses?.map((progress) => (
             <>
               <Box
-                w={{ base: "100%", md: "calc(50% - 0.75rem)" }}
+                w={{ base: "full", md: "calc(50% - 0.75rem)" }}
                 bg="white"
-                mt={3}
                 p={6}
               >
                 <Box>
                   <Flex align="center" justify="space-between">
                     <Text fontSize="xl">{progress.title}</Text>
-                    <Flex gap={3}>
+                    <Flex gap={4}>
                       {Administrator.includes(currentUser) && (
                         <>
                           <ProgressEdit progress={progress} />
@@ -144,7 +143,6 @@ const ProgressIndex = () => {
                       progress.endDate
                     )}
                   />
-
                   <Flex
                     mt={6}
                     align="center"
@@ -153,25 +151,17 @@ const ProgressIndex = () => {
                     <Stack spacing={3}>
                       {progress?.contents.map(
                         ({ title, result }, index: number) => (
-                          <Flex key={index} justify="space-between">
-                            <FormControl display="flex" alignItems="center">
-                              <FormLabel
-                                htmlFor={title}
-                                minW={12}
-                                mb="0"
-                              >
-                                {title}
-                              </FormLabel>
-                              {result && (
-                                <Badge
-                                  px={2}
-                                  variant="solid"
-                                  colorScheme="blue"
-                                >
-                                  完了
-                                </Badge>
-                              )}
-                            </FormControl>
+                          <Flex key={index} gap={2} align="center" justify="flex-start">
+                            <Badge
+                              w="50px"
+                              textAlign="center"
+                              px={2}
+                              variant="solid"
+                              colorScheme={result ? "blue" : "gray"}
+                            >
+                              {result ? "完了" : "未完了"}
+                            </Badge>
+                            <Box>{title}</Box>
                           </Flex>
                         )
                       )}

@@ -11,7 +11,10 @@ const ProgressNew: NextPage = () => {
     startDate: "",
     endDate: "",
     contents: [
-      { title: "", result: false }
+      {
+        title: "",
+        result: false
+      }
     ],
   };
 
