@@ -151,6 +151,15 @@ const Sales: NextPage = () => {
     return Number(result);
   };
 
+  const getDifference = (sale: Sale) => {
+    const calc = (
+      Number(sale.currentExpect) -
+      Number(sale.currentTarget) +
+      Number(sale.currentAchieve)
+    );
+    return calc;
+  };
+
   return (
     <Container maxW="1100px">
       <Flex justify="space-between" align="center">
@@ -199,23 +208,20 @@ const Sales: NextPage = () => {
                   {Number(sale.currentExpect).toLocaleString()}
                 </Td>
                 <Td fontWeight="bold" isNumeric>
-                  {(
-                    Number(sale.currentAchieve) + Number(sale.currentExpect)
+                  {(Number(sale.currentAchieve) + Number(sale.currentExpect)
                   ).toLocaleString()}
                 </Td>
-                <Td fontWeight="bold" isNumeric>
-                  {(
-                    Number(sale.currentExpect) -
-                    Number(sale.currentTarget) +
-                    Number(sale.currentAchieve)
-                  ).toLocaleString()}
+                <Td fontWeight="bold" isNumeric color={
+                  getDifference(sale) < 0 ? "red" : ""
+                }>
+                  {getDifference(sale).toLocaleString()}
                 </Td>
                 <Td fontWeight="bold" isNumeric>
                   {getAchievementRate(
                     Number(sale.currentTarget),
                     Number(sale.currentAchieve),
                     Number(sale.currentExpect),
-                  )}
+                  ) || 0}
                   %
                 </Td>
                 <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
@@ -240,7 +246,9 @@ const Sales: NextPage = () => {
               <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
               <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
               <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
-              <Td isNumeric>
+              <Td isNumeric color={
+                (AchiveSum + ExpectSum - targetSum) < 0 ? "red" : ""
+              }>
                 {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
               </Td>
               <Td isNumeric>
