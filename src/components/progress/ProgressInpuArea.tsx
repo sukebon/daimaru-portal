@@ -9,113 +9,117 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { NextPage } from "next";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import { db } from "../../../firebase";
+import { ProgressData } from "../../../types";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 
 type Props = {
-  progress: any;
-  pageTitle: string;
-  items: { title: string; startDate: string; endDate: string; contents: {}[]; };
-  setItems: Function;
+  progress?: ProgressData;
+  type: "new" | "edit";
+  onClose?: Function;
 };
 
-export const ProgressInpuArea: NextPage<Props> = ({
+type Inputs = ProgressData;
+
+export const ProgressInpuArea: FC<Props> = ({
   progress,
-  pageTitle,
-  items,
-  setItems,
+  type,
+  onClose
 }) => {
   const router = useRouter();
+  const { register, handleSubmit, watch, control, formState: { errors } } = useForm<Inputs>({
+    defaultValues: progress
+  });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setItems({ ...items, [name]: value });
-  };
 
-  const handleInputsChange = (e: any, rowIndex: number) => {
-    const value = e.target.value;
-    const name = e.target.name;
-    setItems(() => {
-      let newArray: any = [];
-      newArray = items.contents.map((content: any, index) =>
-        index === rowIndex ? { ...content, [name]: value } : content
-      );
-      return { ...items, contents: [...newArray] };
-    });
-  };
-
-  const handleSwitchChange = (bool: boolean, rowIndex: number) => {
-    const value = bool ? false : true;
-    setItems(() => {
-      let newArray: any = [];
-      newArray = items.contents.map((content: any, index) =>
-        index === rowIndex ? { ...content, result: value } : content
-      );
-      return { ...items, contents: [...newArray] };
-    });
-  };
-
-  const deleteTitle = (rowIndex: number) => {
-    setItems(() => {
-      let newArray = [];
-      newArray = items.contents.filter((content: any, index: number) =>
-        index === rowIndex ? false : true
-      );
-      return {
-        ...items,
-        contents: [...(newArray || "")],
-      };
-    });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "contents",
+  });
+  const onSubmit: SubmitHandler<Inputs> = data => {
+    switch (type) {
+      case "new":
+        addProgress(data);
+        return;
+      case "edit":
+        updateProgress(data);
+        return;
+    }
   };
 
   const addTitle = () => {
-    setItems(() => ({
-      ...items,
-      contents: [...(items?.contents || ""), { title: "", result: false }],
-    }));
+    append({ title: "", result: false });
   };
+
+  const removeTitle = (index: number) => {
+    remove(index);
+  };
+
+  const addProgress = async (data: ProgressData) => {
+    const result = window.confirm("登録して宜しいでしょうか");
+    if (!result) return;
+    const docsRef = collection(db, "progresses");
+    try {
+      await addDoc(docsRef, {
+        title: data.title,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        contents: data?.contents || [],
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      router.push("/progress");
+    }
+  };
+
+  const updateProgress = async (data: ProgressData) => {
+    const result = window.confirm("更新して宜しいでしょうか");
+    if (!result) return;
+    const docRef = doc(db, "progresses", `${progress?.id}`);
+    try {
+      await updateDoc(docRef, {
+        title: data.title,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        contents: data?.contents || [],
+        updatedAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      onClose && onClose();
+    }
+  };
+
   return (
-    <>
-      <Flex alignItems="center" justifyContent="space-between">
-        <Box fontSize="2xl">{pageTitle}</Box>
-        <Link href="/progress">
-          <Button size="sm">戻る</Button>
-        </Link>
-      </Flex>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Stack mt={12} spacing={6}>
         <Box>
           <Text>タイトル</Text>
           <Input
-            type="text"
-            name="title"
-            value={items.title}
-            onChange={handleInputChange}
+            {...register('title', { required: true })}
           />
+          {errors.title && <Box mt={1} color="red">タイトルを入力してください</Box>}
         </Box>
         <Flex gap={6}>
           <Box w="100%">
             <Text>開始日</Text>
             <Input
               type="date"
-              name="startDate"
-              value={items.startDate}
-              onChange={handleInputChange}
+              {...register('startDate')}
             />
           </Box>
           <Box w="100%">
             <Text>終了日</Text>
             <Input
               type="date"
-              name="endDate"
-              value={items.endDate}
-              onChange={handleInputChange}
+              {...register('endDate')}
             />
           </Box>
         </Flex>
@@ -125,27 +129,21 @@ export const ProgressInpuArea: NextPage<Props> = ({
             <Text w="80px">達成</Text>
             <Text w="50px">削除</Text>
           </Flex>
-          {items?.contents?.map((content: any, index) => (
-            <Flex key={index} mt={2} gap={6} w="100%" alignItems="center">
+          {fields.map((field, index) => (
+            <Flex key={index} mt={2} gap={6} w="100%" align="center">
               <Input
                 w="100%"
-                type="text"
-                name="title"
-                value={content.title}
-                onChange={(e) => handleInputsChange(e, index)}
+                {...register(`contents.${index}.title`)}
               />
               <Box w="80px" textAlign="center">
                 <Switch
-                  id={content.title}
-                  value={content.result}
-                  isChecked={content.result}
-                  onChange={() => handleSwitchChange(content.result, index)}
+                  {...register(`contents.${index}.result`)}
                 />
               </Box>
               <Box w="50px" textAlign="center">
                 <FaTrashAlt
                   cursor="pointer"
-                  onClick={() => deleteTitle(index)}
+                  onClick={() => removeTitle(index)}
                 />
               </Box>
             </Flex>
@@ -157,7 +155,8 @@ export const ProgressInpuArea: NextPage<Props> = ({
             </Box>
           </Button>
         </Box>
+        <Button type="submit" w="full" colorScheme="blue">登録</Button>
       </Stack>
-    </>
+    </form>
   );
 };

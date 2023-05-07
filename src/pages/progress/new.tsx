@@ -1,51 +1,29 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../firebase";
-import { Box, Button, Container } from "@chakra-ui/react";
-import ProgressInpuArea from "../../components/progress/ProgressInpuArea";
+import React from "react";
+import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import { ProgressInpuArea } from "../../components/progress/ProgressInpuArea";
+import { NextPage } from "next";
+import Link from "next/link";
 
-const ProgressNew = () => {
-  const router = useRouter();
-  const [items, setItems] = useState({
+const ProgressNew: NextPage = () => {
+  const progress = {
+    id: "",
     title: "",
     startDate: "",
     endDate: "",
-    contents: [{ title: "", result: false }],
-  });
-
-  const addProgress = async () => {
-    const result = window.confirm("登録して宜しいでしょうか");
-    if (!result) return;
-    const docsRef = collection(db, "progresses");
-    try {
-      await addDoc(docsRef, {
-        title: items.title,
-        startDate: items.startDate,
-        endDate: items.endDate,
-        contents: items?.contents || [],
-        createdAt: serverTimestamp(),
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      router.push("/progress");
-    }
+    contents: [
+      { title: "", result: false }
+    ],
   };
 
   return (
     <Container bg="white" p={6} rounded="md">
-      <ProgressInpuArea
-        progress={{}}
-        pageTitle={"新規登録"}
-        items={items}
-        setItems={setItems}
-      />
-      <Box mt={12}>
-        <Button w="100%" colorScheme="blue" onClick={addProgress}>
-          登録
-        </Button>
-      </Box>
+      <Flex align="center" justify="space-between">
+        <Box fontSize="2xl">新規登録</Box>
+        <Link href="/progress">
+          <Button size="sm">戻る</Button>
+        </Link>
+      </Flex>
+      <ProgressInpuArea progress={progress} type="new" />
     </Container>
   );
 };

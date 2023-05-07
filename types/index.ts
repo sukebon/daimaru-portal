@@ -79,13 +79,18 @@ export type AlcoholCheckData = {
   createdAt: any;
 };
 
-export type ProgressType = {
+export type ProgressData = {
   id: string;
   title: string;
   startDate: string;
   endDate: string;
-  contents: { title: string; result: boolean }[];
+  contents: ProgressContent[];
 };
+
+export type ProgressContent = {
+  title: string; result: boolean;
+}
+
 
 export type CuttingReport = {
   id: string;

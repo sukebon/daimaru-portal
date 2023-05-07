@@ -8,35 +8,33 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Input,
   Progress,
   Stack,
-  Switch,
   Text,
 } from "@chakra-ui/react";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { FaTrashAlt } from "react-icons/fa";
+import { collection, deleteDoc, doc, onSnapshot, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import { Administrator } from "../../../data";
-import { ProgressType } from "../../../types";
+import { ProgressContent, ProgressData } from "../../../types";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { ProgressEdit } from "@/components/progress/ProgressEdit";
 
 const ProgressIndex = () => {
-  const [items, setItems] = useState<any>({});
-  const [progresses, setProgresses] = useState<ProgressType[]>([]);
+  const [progresses, setProgresses] = useState<ProgressData[]>([]);
   const currentUser = useAuthStore((state) => state.currentUser);
 
   useEffect(() => {
     const getProgresses = async () => {
-      const progressesRef = collection(db, "progresses");
-      onSnapshot(progressesRef, (querySnapshot) => {
+      const q = query(collection(db, "progresses"), orderBy('createdAt', "desc"));
+      onSnapshot(q, (querySnapshot) => {
         setProgresses(
           querySnapshot.docs.map((doc) => ({
             ...doc.data(),
             id: doc.id,
-          })) as ProgressType[]
+          } as ProgressData))
         );
       });
     };
@@ -44,23 +42,19 @@ const ProgressIndex = () => {
   }, []);
 
   // 達成率の取得（％）
-  const getAchieveRate = (array: any) => {
-    const newArray = array.map((content: { result: boolean; }) => {
-      return content.result;
-    });
-    let total = newArray?.filter((a: any) => a == true && a);
-    const MAX = 100 / array?.length;
-    return Math.round(total?.length * MAX);
+  const getAchieveRate = (array: ProgressContent[]) => {
+    const newArray = array.filter(({ result }) => result === true);
+    const MAX = 100 / array.length || 0;
+    return Math.round(newArray?.length * MAX);
   };
 
   // 残日数
-  const getRemainingDays = (startDate: string, endDate: string) => {
-    const start = new Date(startDate).getTime();
+  const getRemainingDays = (endDate: string) => {
     const end = new Date(endDate).getTime();
     const now = new Date().getTime();
-    const nowTime = now - start;
-    const sumTime = end - start;
-    const result = Math.floor((sumTime - nowTime) / (1000 * 60 * 60 * 24));
+    const gap = end - now;
+    if (gap < 0) return 0;
+    const result = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
     return result;
   };
 
@@ -92,12 +86,12 @@ const ProgressIndex = () => {
   return (
     <>
       <Container maxW="1000px" bg="white" p={6}>
-        <Flex justifyContent="space-between">
+        <Flex justify="space-between">
           <Box as="h1" fontSize="2xl">
             進捗状況
           </Box>
           <Link href="/progress/new">
-            <Button size="sm">新規登録</Button>
+            <Button size="sm" colorScheme="blue">新規登録</Button>
           </Link>
         </Flex>
       </Container>
@@ -112,14 +106,12 @@ const ProgressIndex = () => {
                 p={6}
               >
                 <Box>
-                  <Flex alignItems="center" justifyContent="space-between">
+                  <Flex align="center" justify="space-between">
                     <Text fontSize="xl">{progress.title}</Text>
                     <Flex gap={3}>
-                      {Administrator.includes(currentUser || "") && (
+                      {Administrator.includes(currentUser) && (
                         <>
-                          <Link href={`/progress/edit/${progress.id}`}>
-                            <FaEdit color="gray" />
-                          </Link>
+                          <ProgressEdit progress={progress} />
                           <FaTrashAlt
                             color="gray"
                             cursor="pointer"
@@ -131,8 +123,8 @@ const ProgressIndex = () => {
                   </Flex>
                   <Flex
                     mt={6}
-                    flexDirection={{ base: "column", md: "row" }}
-                    justifyContent="space-between"
+                    direction={{ base: "column", md: "row" }}
+                    justify="space-between"
                   >
                     <Flex gap={6}>
                       <Text>開始：{progress.startDate}</Text>
@@ -140,7 +132,7 @@ const ProgressIndex = () => {
                     </Flex>
                     <Text>
                       残日数
-                      {getRemainingDays(progress.startDate, progress.endDate)}日
+                      {getRemainingDays(progress.endDate)}日
                     </Text>
                   </Flex>
                   <Progress
@@ -155,25 +147,22 @@ const ProgressIndex = () => {
 
                   <Flex
                     mt={6}
-                    alignItems="center"
-                    justifyContent="space-between"
+                    align="center"
+                    justify="space-between"
                   >
                     <Stack spacing={3}>
                       {progress?.contents.map(
-                        (
-                          content: { title: string; result: boolean; },
-                          index: number
-                        ) => (
-                          <Flex key={index} justifyContent="space-between">
+                        ({ title, result }, index: number) => (
+                          <Flex key={index} justify="space-between">
                             <FormControl display="flex" alignItems="center">
                               <FormLabel
-                                htmlFor={content.title}
+                                htmlFor={title}
                                 minW={12}
                                 mb="0"
                               >
-                                {content.title}
+                                {title}
                               </FormLabel>
-                              {content.result && (
+                              {result && (
                                 <Badge
                                   px={2}
                                   variant="solid"
@@ -187,7 +176,7 @@ const ProgressIndex = () => {
                         )
                       )}
                     </Stack>
-                    <Flex flexDirection="column" justifyContent="center">
+                    <Flex direction="column" justify="center">
                       <Box textAlign="center">進捗率</Box>
                       <Box>
                         <CircularProgress
