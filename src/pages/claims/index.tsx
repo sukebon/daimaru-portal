@@ -36,15 +36,10 @@ const Claims: NextPage = () => {
 
   //作業者を表示する関数
   const currentOperator = (claim: Claim) => {
-    if (claim.operator === currentUser) {
-      return getUserName(currentUser);
-    } else if (claim.operator === "MGR") {
-      return "管理者";
-    } else if (claim.operator === "TM") {
-      return "TM";
-    } else if ([0, 2, 4].includes(claim.status)) {
-      return "事務局";
-    }
+    if (claim.operator === currentUser) return getUserName(currentUser);
+    if (claim.operator === "MGR") return "管理者";
+    if (claim.operator === "TM") return "TM";
+    if ([0, 2, 4].includes(claim.status)) return "事務局";
   };
 
   return (
@@ -109,7 +104,9 @@ const Claims: NextPage = () => {
                   >
                     <Td>
                       <Link href={`/claims/${claim.id}`}>
-                        <Button size="sm">詳細</Button>
+                        <Button size="xs" colorScheme="blue">
+                          詳細
+                        </Button>
                       </Link>
                     </Td>
                     <Td>{currentOperator(claim)}</Td>
