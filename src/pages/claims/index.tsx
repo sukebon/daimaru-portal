@@ -24,6 +24,7 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import { useClaimStore } from "../../../store/useClaimStore";
 import { useUtils } from "@/hooks/useUtils";
 import { Claim } from "../../../types";
+import { useDisp } from "@/hooks/useDisp";
 
 const Claims: NextPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -31,38 +32,32 @@ const Claims: NextPage = () => {
   const claims = useClaimStore((state) => state.claims);
   const filterClaims = useClaimStore((state) => state.filterClaims);
   const { isAuth } = useUtils();
+  const { getUserName } = useDisp();
 
   //作業者を表示する関数
   const currentOperator = (claim: Claim) => {
-    switch (claim.operator) {
-      case claim.operator:
-        switch (claim.status) {
-          case 0:
-            return "事務局";
-          case 2:
-            return "事務局";
-          case 4:
-            return "事務局";
-          case 6:
-            return "MGR";
-          case 7:
-            return "TM";
-          case 8:
-            return "";
-          default:
-            return users.map((user) => {
-              if (user.uid == claim.operator) return user.name;
-            });
-        }
-      default:
-        return "事務局";
+    if (claim.operator === currentUser) {
+      return getUserName(currentUser);
+    } else if (claim.operator === "MGR") {
+      return "管理者";
+    } else if (claim.operator === "TM") {
+      return "TM";
+    } else if ([0, 2, 4].includes(claim.status)) {
+      return "事務局";
     }
   };
 
   return (
     <>
       <Flex direction="column" align="center">
-        <TableContainer w="100%" bg="white" rounded={6} p={4} overflowX="unset" overflowY="unset">
+        <TableContainer
+          w="100%"
+          bg="white"
+          rounded={6}
+          p={4}
+          overflowX="unset"
+          overflowY="unset"
+        >
           <Flex justifyContent="space-between">
             <Box fontSize="lg">
               {filterClaims.length}件/全{claims.length}件
@@ -104,10 +99,10 @@ const Claims: NextPage = () => {
                     key={claim.id}
                     bg={
                       claim.operator === currentUser ||
-                        (isAuth(["isoOffice"]) &&
-                          [0, 2, 4].includes(claim.status)) ||
-                        (isAuth(["isoManager"]) && claim.status === 6) ||
-                        (isAuth(["isoTopManegment"]) && claim.status === 7)
+                      (isAuth(["isoOffice"]) &&
+                        [0, 2, 4].includes(claim.status)) ||
+                      (isAuth(["isoManager"]) && claim.status === 6) ||
+                      (isAuth(["isoTopManegment"]) && claim.status === 7)
                         ? "yellow.100"
                         : "white"
                     }
@@ -156,8 +151,8 @@ const Claims: NextPage = () => {
                     <Td>
                       {claimSelectList4.map(
                         (c) =>
-                          Number(c.id) === Number(claim.causeDepartmentSelect) &&
-                          c.title
+                          Number(c.id) ===
+                            Number(claim.causeDepartmentSelect) && c.title
                       )}
                     </Td>
                     <Td>{claim.completionDate}</Td>
