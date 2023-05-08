@@ -18,7 +18,7 @@ export const ClaimReport: FC<Props> = ({ claim }) => {
   return (
     <>
       {1 <= Number(claim.status) && (
-        <Flex alignItems="center" justifyContent="space-between">
+        <Flex align="center" justify="space-between">
           <Flex gap={2} alignItems="center">
             <Box>受付NO</Box>
             <Box>{claim.receptionNum}</Box>
