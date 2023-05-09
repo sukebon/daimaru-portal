@@ -12,7 +12,13 @@ import { SalesArea } from "../components/toppage/SalesArea";
 import CuttingReportArea from "../components/toppage/CuttingReportArea";
 import { CategoryData, LinkData, NewsData } from "../../types";
 
-const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
+type Props = {
+  categoryData: CategoryData[];
+  newsData: NewsData[];
+  linkData: LinkData[];
+};
+
+const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
   return (
     <>
       <Head>
@@ -29,10 +35,10 @@ const Home: NextPage<any> = ({ categoryData, newsData, linkData }) => {
               <ClaimArea />
               <SalesArea />
               <Slogan />
-              <Information news={newsData.contents} />
+              <Information news={newsData} />
               <QuickLink
-                links={linkData.contents}
-                categories={categoryData.contents}
+                links={linkData}
+                categories={categoryData}
               />
               <CatalogArea />
             </Stack>
@@ -60,17 +66,17 @@ export const getStaticProps: GetStaticProps = async () => {
     `${accessPoint}/categories?limit=20`,
     options
   );
-  const categoryData: CategoryData[] = await categoryRes.json();
+  const categoryData = await categoryRes.json();
   const newsRes = await fetch(`${accessPoint}/news?limit=100`, options);
-  const newsData: NewsData[] = await newsRes.json();
+  const newsData = await newsRes.json();
   const linkRes = await fetch(`${accessPoint}/access-link?limit=100`, options);
-  const linkData: LinkData[] = await linkRes.json();
+  const linkData = await linkRes.json();
 
   return {
     props: {
-      categoryData,
-      newsData,
-      linkData,
+      categoryData:categoryData.contents,
+      newsData:newsData.contents,
+      linkData:linkData.contents
     },
   };
 };
