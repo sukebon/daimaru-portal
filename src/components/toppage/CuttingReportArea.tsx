@@ -16,7 +16,7 @@ import { useCuttingReport } from "../../hooks/useCuttingReport";
 import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
 
 type Data = {
-  contents: CuttingReport[];
+  contents: CuttingReport[] | undefined;
 };
 
 const CuttingReportArea = () => {
@@ -24,10 +24,10 @@ const CuttingReportArea = () => {
   const { data: reports } = useSWR<Data>("/api/cutting-reports/", fetcher);
   // const { data: reports } = useSWR<Data>("/api/cutting-reports/ready-made/", fetcher);
   const { getSerialNumber } = useCuttingReport();
-
+  console.log(reports);
   return (
     <>
-      {reports?.contents && reports?.contents?.length > 0 && (
+      {reports?.contents && reports?.contents?.length >= 0 && (
         <Box
           w="100%"
           boxShadow="xs"
