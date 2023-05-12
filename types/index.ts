@@ -147,7 +147,8 @@ export type CategoryData = {
 };
 
 export type NewsData = {
-  id: string, message: string;
+    id: string, 
+    message: string;
 };
 
 export type LinkData = {
