@@ -1,16 +1,16 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Information from "../components/toppage/Information";
-import QuickLink from "../components/toppage/QuickLink";
-import Slogan from "../components/toppage/Slogan";
-import CatalogArea from "../components/toppage/CatalogArea";
+import Information from "@/components/toppage/Information";
+import QuickLink from "@/components/toppage/QuickLink";
+import Slogan from "@/components/toppage/Slogan";
+import CatalogArea from "@/components/toppage/CatalogArea";
 import { Box, Flex, Stack } from "@chakra-ui/react";
-import { AlcoholCheckArea } from "../components/toppage/AlcoholCheckArea";
-import { ClaimArea } from "../components/toppage/ClaimArea";
-import { RequestArea } from "../components/toppage/RequestArea";
-import { SalesArea } from "../components/toppage/SalesArea";
-import CuttingReportArea from "../components/toppage/CuttingReportArea";
+import { AlcoholCheckArea } from "@/components/toppage/AlcoholCheckArea";
+import { ClaimArea } from "@/components/toppage/ClaimArea";
+import { RequestArea } from "@/components/toppage/RequestArea";
+import { SalesArea } from "@/components/toppage/SalesArea";
 import { CategoryData, LinkData, NewsData } from "../../types";
+import { CuttingReportArea } from "@/components/toppage/CuttingReportArea";
 
 type Props = {
   categoryData: CategoryData[];
@@ -74,9 +74,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      categoryData:categoryData.contents,
-      newsData:newsData.contents,
-      linkData:linkData.contents
+      categoryData: categoryData.contents,
+      newsData: newsData.contents,
+      linkData: linkData.contents
     },
   };
 };

@@ -14,12 +14,13 @@ import useSWR from "swr";
 import { CuttingReport } from "../../../types";
 import { useCuttingReport } from "../../hooks/useCuttingReport";
 import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
+import { FC } from "react";
 
 type Data = {
   contents: CuttingReport[] | undefined;
 };
 
-const CuttingReportArea = () => {
+export const CuttingReportArea: FC = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const { data: reports } = useSWR<Data>("/api/cutting-reports/", fetcher);
   // const { data: reports } = useSWR<Data>("/api/cutting-reports/ready-made/", fetcher);
@@ -27,9 +28,9 @@ const CuttingReportArea = () => {
   console.log(reports);
   return (
     <>
-      {reports?.contents && reports?.contents?.length >= 0 && (
+      {reports?.contents && reports?.contents?.length > 0 && (
         <Box
-          w="100%"
+          w="full"
           boxShadow="xs"
           p={{ base: 3, md: 6 }}
           rounded="md"
@@ -77,5 +78,3 @@ const CuttingReportArea = () => {
     </>
   );
 };
-
-export default CuttingReportArea;
