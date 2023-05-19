@@ -96,7 +96,6 @@ export const ClaimConfirmSendButton: FC<Props> = ({ claim }) => {
       {Number(claim.status) === 7 && isAuth(["isoTopManegment"]) && (
         <Flex justifyContent="center">
           <Button
-            mt={12}
             mr={3}
             colorScheme="blue"
             onClick={() => {
