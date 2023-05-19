@@ -9,11 +9,17 @@ export const useCuttingReport = () => {
     const str = "0000000000" + String(serialNumber);
     return str.slice(-10);
   };
+
+  const withInChar = (text: string) => {
+    const point = text.length >= 10 ? "..." : "";
+    const str = text.slice(0, 10) + point;
+    return str;
+  };
   //   const getProductNumber = (productId: string) => {
   //     const result = products.find(
   //       (product: ProductType) => product.id === productId
   //     );
   //     return result?.productNumber || productId;
   //   };
-  return { getSerialNumber, scaleCalc };
+  return { getSerialNumber, scaleCalc, withInChar };
 };
