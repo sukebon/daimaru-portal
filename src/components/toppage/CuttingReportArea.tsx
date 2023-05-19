@@ -24,8 +24,8 @@ export const CuttingReportArea: FC = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const { data: reports } = useSWR<Data>("/api/cutting-reports/", fetcher);
   // const { data: reports } = useSWR<Data>("/api/cutting-reports/ready-made/", fetcher);
-  const { getSerialNumber } = useCuttingReport();
-  console.log(reports);
+  const { getSerialNumber, withInChar } = useCuttingReport();
+
   return (
     <>
       {reports?.contents && reports?.contents?.length > 0 && (
@@ -62,8 +62,8 @@ export const CuttingReportArea: FC = () => {
                       {getSerialNumber(report?.serialNumber)}
                     </Td>
                     <Td fontSize="xs">{report?.processNumber}</Td>
-                    <Td fontSize="xs">{report?.client}</Td>
-                    <Td fontSize="xs">{report?.itemName}</Td>
+                    <Td fontSize="xs">{withInChar(report?.client)}</Td>
+                    <Td fontSize="xs">{withInChar(report?.itemName)}</Td>
                     <Td fontSize="xs" isNumeric>
                       {report?.totalQuantity}
                     </Td>

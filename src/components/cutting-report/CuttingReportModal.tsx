@@ -97,7 +97,9 @@ export const CuttingReportModal: FC<Props> = ({ report }) => {
                   </Flex>
                   <Flex gap={6} direction={{ base: "column", md: "row" }}>
                     <Box>
-                      <Text fontWeight="bold">種別</Text>
+                      <Text w="8" fontWeight="bold">
+                        種別
+                      </Text>
                       <Box>{report?.itemType === "1" ? "既製" : "別注"}</Box>
                     </Box>
                     <Box>
@@ -119,6 +121,7 @@ export const CuttingReportModal: FC<Props> = ({ report }) => {
                       h="full"
                       p={3}
                       mt={2}
+                      whiteSpace="pre-wrap"
                       border="1px"
                       borderColor="gray.100"
                     >
