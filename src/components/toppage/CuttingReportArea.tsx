@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Table,
   TableContainer,
   Tbody,
@@ -13,8 +14,9 @@ import axios from "axios";
 import useSWR from "swr";
 import { CuttingReport } from "../../../types";
 import { useCuttingReport } from "../../hooks/useCuttingReport";
-import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
+// import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
 import { FC } from "react";
+import Link from "next/link";
 
 type Data = {
   contents: CuttingReport[] | undefined;
@@ -43,7 +45,7 @@ export const CuttingReportArea: FC = () => {
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
-                  <Th>詳細</Th>
+                  {/* <Th>詳細</Th> */}
                   <Th>裁断報告書NO.</Th>
                   <Th>加工指示書NO.</Th>
                   <Th>受注先名</Th>
@@ -55,9 +57,9 @@ export const CuttingReportArea: FC = () => {
               <Tbody>
                 {reports?.contents.map((report) => (
                   <Tr key={report.id}>
-                    <Td>
+                    {/* <Td>
                       <CuttingReportModal report={report} />
-                    </Td>
+                    </Td> */}
                     <Td fontSize="xs">
                       {getSerialNumber(report?.serialNumber)}
                     </Td>
@@ -73,6 +75,15 @@ export const CuttingReportArea: FC = () => {
               </Tbody>
             </Table>
           </TableContainer>
+          <Link
+            href="https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Button mt={6} w="full" colorScheme="blue">
+              裁断報告書一覧
+            </Button>
+          </Link>
         </Box>
       )}
     </>
