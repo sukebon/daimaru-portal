@@ -33,6 +33,11 @@ export const HeaderMenuList: FC = () => {
       blank: true,
     },
     {
+      title: "裁断報告書",
+      link: "https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports",
+      blank: true,
+    },
+    {
       title: "会社カレンダー",
       link: "/calendar",
     },
@@ -52,6 +57,7 @@ export const HeaderMenuList: FC = () => {
                 key={m.title}
                 href={m.link}
                 target={m.blank ? "_blank" : ""}
+                rel="noreferrer"
               >
                 <MenuItem>{m.title}</MenuItem>
               </Link>
