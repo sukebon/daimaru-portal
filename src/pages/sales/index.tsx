@@ -161,7 +161,7 @@ const Sales: NextPage = () => {
   };
 
   return (
-    <Container maxW="1100px">
+    <Container maxW="1200px">
       <Flex justify="space-between" align="center">
         <Box my={3} fontSize="xl">
           {currentMonth}月 売上一覧
