@@ -29,7 +29,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
       </Head>
       <Box as="main">
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
-          <Box flex={1} maxW={{ base: "full", lg: "750px" }}>
+          <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
               <ReceivablesArea />
               <CuttingReportArea />
@@ -44,7 +44,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
               <CatalogArea />
             </Stack>
           </Box>
-          <Box >
+          <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
               <ClaimArea />
               <RequestArea />
