@@ -28,6 +28,10 @@ export const HeaderMenuList: FC = () => {
       blank: true,
     },
     {
+      title: "売掛金情報",
+      link: "./receivables",
+    },
+    {
       title: "生地在庫",
       link: "https://daimaru-kijizaiko.vercel.app/dashboard",
       blank: true,
