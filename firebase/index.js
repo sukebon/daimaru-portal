@@ -17,3 +17,6 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+export const spreadsheetAPI = process.env.NEXT_PUBLIC_SPEARSHEET_API
+export const spreadsheetID = process.env.NEXT_PUBLIC_SPEARSHEET_ID

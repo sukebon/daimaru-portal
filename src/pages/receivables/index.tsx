@@ -11,22 +11,24 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { spreadsheetAPI, spreadsheetID } from "../../../firebase";
 
 const Receivables = () => {
   const [contents, setContents] = useState<any>(null);
   const [headers, setHeaders] = useState<string[]>([]);
   useEffect(() => {
     const getSpreadSheet = async () => {
-      const id = "1NWgIDuNcg2cSBCSlIS2sdfGye8gNPZx-uVeC0ENFm9U";
+      const id = spreadsheetID;
       const sheetName = "keiri";
-      const apikey = "AIzaSyC48j9avM2wlmbB98icVQttTDG48H9NR_E";
+      const apikey = spreadsheetAPI;
       const res = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${sheetName}?key=${apikey}`
       );
       const data = await res.json();
-      const headers = data.values.shift();
+      console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+      const headers = data.values?.shift();
       setHeaders(headers);
-      const array = data.values.map((lists: any) => {
+      const array = data.values?.map((lists: any) => {
         let obj: any = {};
         headers.forEach((header: string, index: number) => {
           obj[header] = lists[index];
@@ -40,23 +42,34 @@ const Receivables = () => {
   }, []);
 
   if (contents === null)
-  return (
-    <Flex w="full" h={"calc(100vh - 200px)"} justify="center" align="center">
-      <Spinner />
-    </Flex>
-  );
+    return (
+      <Flex w="full" h={"calc(100vh - 200px)"} justify="center" align="center">
+        <Spinner />
+      </Flex>
+    );
 
   return (
     <Flex direction="column" align="center">
-      <TableContainer bg="white" rounded={6} p={6} overflowX="unset" overflowY="unset">
+      <TableContainer
+        bg="white"
+        rounded={6}
+        p={6}
+        overflowX="unset"
+        overflowY="unset"
+      >
         <Box as="h1" fontSize="lg">
           売掛金回収一覧
         </Box>
-        <Box mt={3} overflowX="auto" position="relative" h={"calc(100vh - 200px)"}>
+        <Box
+          mt={3}
+          overflowX="auto"
+          position="relative"
+          h={"calc(100vh - 200px)"}
+        >
           <Table size="sm">
             <Thead position="sticky" top={0} zIndex="docked" bg="white">
               <Tr>
-                {headers.map((header) => (
+                {headers?.map((header) => (
                   <Th key={header} minW="130x">
                     {header}
                   </Th>
@@ -64,7 +77,7 @@ const Receivables = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {contents.map((content: any) => (
+              {contents?.map((content: any) => (
                 <Tr key={content}>
                   <Td>{content.コード}</Td>
                   <Td>{content.得意先名}</Td>
