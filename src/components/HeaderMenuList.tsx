@@ -50,7 +50,7 @@ export const HeaderMenuList: FC = () => {
 
   return (
     <>
-      <Box display={{ base: "block", lg: "none" }}>
+      <Box display={{ base: "block", "2xl": "none" }}>
         <Menu>
           <MenuButton as={Button} colorScheme="blue" variant="outline" mr={3}>
             Menu
@@ -69,7 +69,7 @@ export const HeaderMenuList: FC = () => {
           </MenuList>
         </Menu>
       </Box>
-      <HStack spacing={3} mr={3} display={{ base: "none", lg: "block" }}>
+      <HStack spacing={3} mr={3} display={{ base: "none", "2xl": "block" }}>
         {menu.map((m) => (
           <Link key={m.title} href={m.link} target={m.blank ? "_blank" : ""}>
             <Button

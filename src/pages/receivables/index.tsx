@@ -10,43 +10,36 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { spreadsheetAPI, spreadsheetID } from "../../../firebase";
+import React, { useState } from "react";
+import useSWR from 'swr';
+// import axios from "axios";
+
+
+
+type Data = {
+  contents: any;
+  headers: string[];
+};
 
 const Receivables = () => {
-  const [contents, setContents] = useState<any>(null);
-  const [headers, setHeaders] = useState<string[]>([]);
-  useEffect(() => {
-    const getSpreadSheet = async () => {
-      const id = spreadsheetID;
-      const sheetName = "keiri";
-      const apikey = spreadsheetAPI;
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${sheetName}?key=${apikey}`
-      );
-      const data = await res.json();
-      console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
-      const headers = data.values?.shift();
-      setHeaders(headers);
-      const array = data.values?.map((lists: any) => {
-        let obj: any = {};
-        headers.forEach((header: string, index: number) => {
-          obj[header] = lists[index];
-        });
-        return obj;
-      });
+  const fetcher = async (url: string) => await fetch(url, {
+    headers: {
+      apikey: process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
+    }
+  }).then(res => {
+    if (!res.ok) {
+      const error = new Error('error fetching the data.');
+      throw error;
+    }
+    return res.json();
+  });
+  const { data, error, isLoading } = useSWR<Data>('/api/receivables', fetcher);
 
-      setContents(array);
-    };
-    getSpreadSheet();
-  }, []);
-
-  if (contents === null)
-    return (
-      <Flex w="full" h={"calc(100vh - 200px)"} justify="center" align="center">
-        <Spinner />
-      </Flex>
-    );
+  if (isLoading) return (
+    <Flex w="full" justifyContent="center">
+      <Spinner />
+    </Flex>
+  );
 
   return (
     <Flex direction="column" align="center">
@@ -69,7 +62,7 @@ const Receivables = () => {
           <Table size="sm">
             <Thead position="sticky" top={0} zIndex="docked" bg="white">
               <Tr>
-                {headers?.map((header) => (
+                {data?.headers?.map((header) => (
                   <Th key={header} minW="130x">
                     {header}
                   </Th>
@@ -77,8 +70,8 @@ const Receivables = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {contents?.map((content: any) => (
-                <Tr key={content}>
+              {data?.contents?.map((content: any, index: number) => (
+                <Tr key={index}>
                   <Td>{content.コード}</Td>
                   <Td>{content.得意先名}</Td>
                   <Td>{content.担当}</Td>

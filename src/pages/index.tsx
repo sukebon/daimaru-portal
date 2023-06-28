@@ -11,6 +11,7 @@ import { RequestArea } from "@/components/toppage/RequestArea";
 import { SalesArea } from "@/components/toppage/SalesArea";
 import { CategoryData, LinkData, NewsData } from "../../types";
 import { CuttingReportArea } from "@/components/toppage/CuttingReportArea";
+import { ReceivablesArea } from "@/components/toppage/ReceivablesArea";
 
 type Props = {
   categoryData: CategoryData[];
@@ -28,11 +29,11 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
       </Head>
       <Box as="main">
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
-          <Box flex={1}>
+          <Box flex={1} maxW={{ base: "full", lg: "750px" }}>
             <Stack spacing={6}>
+              <ReceivablesArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
-              <ClaimArea />
               <SalesArea />
               <Slogan />
               <Information news={newsData} />
@@ -43,8 +44,11 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
               <CatalogArea />
             </Stack>
           </Box>
-          <Box flex={1}>
-            <RequestArea />
+          <Box >
+            <Stack spacing={6}>
+              <ClaimArea />
+              <RequestArea />
+            </Stack>
           </Box>
         </Flex>
       </Box>

@@ -142,7 +142,7 @@ export const ClaimArea = () => {
           md: "row",
           lg: "column",
           xl: "column",
-          "2xl": "row",
+          "2xl": "column",
         }}
         gap={6}
         boxShadow="xs"
