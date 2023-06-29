@@ -6,6 +6,19 @@ type Data = {
   contents: any;
   headers: string[];
 };
+(async () => {
+  const spreadData = new GoogleSpreadsheet('1NWgIDuNcg2cSBCSlIS2sdfGye8gNPZx-uVeC0ENFm9U');
+  await spreadData.useServiceAccountAuth({
+    client_email:process.env.CLIENT_EMAIL as string,
+    private_key:process.env.PRIVATE_KEY as string,
+  })
+
+  await spreadData.loadInfo()
+//シフト情報を取得
+const shiftSheet = spreadData.sheetsById[0];
+const shiftRows = await shiftSheet.getRows();
+  console.log(shiftRows)
+})()
 
 export default async function handler(
   req: NextApiRequest,
