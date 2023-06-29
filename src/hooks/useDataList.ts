@@ -57,5 +57,7 @@ export const useDataList = () => {
     });
   };
 
+  
+
   return { getUsers, getFullUsers,getClaims };
 };

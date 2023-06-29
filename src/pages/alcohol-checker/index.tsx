@@ -81,7 +81,7 @@ const Alcohol = () => {
                     <Td>{member.length}名</Td>
                     <Td>{users.length - member.length}名</Td>
                     <Td>
-                      <Link href={`alcohol-checker/${id}`}>
+                      <Link href={`alcohol-checker/${id}`} passHref>
                         <Button size="xs">詳細</Button>
                       </Link>
                     </Td>

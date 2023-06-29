@@ -62,6 +62,7 @@ export const HeaderMenuList: FC = () => {
                 href={m.link}
                 target={m.blank ? "_blank" : ""}
                 rel="noreferrer"
+                passHref
               >
                 <MenuItem>{m.title}</MenuItem>
               </Link>
@@ -71,7 +72,7 @@ export const HeaderMenuList: FC = () => {
       </Box>
       <HStack spacing={3} mr={3} display={{ base: "none", "2xl": "block" }}>
         {menu.map((m) => (
-          <Link key={m.title} href={m.link} target={m.blank ? "_blank" : ""}>
+          <Link key={m.title} href={m.link} target={m.blank ? "_blank" : ""} passHref>
             <Button
               size="sm"
               variant="outline"

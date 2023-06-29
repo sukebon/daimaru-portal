@@ -10,11 +10,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import useSWR from 'swr';
-// import axios from "axios";
-
-
+import React, { useState ,useEffect} from "react";
+import useSWR from "swr";
 
 type Data = {
   contents: any;
@@ -22,24 +19,54 @@ type Data = {
 };
 
 const Receivables = () => {
-  const fetcher = async (url: string) => await fetch(url, {
-    headers: {
-      apikey: process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
-    }
-  }).then(res => {
-    if (!res.ok) {
-      const error = new Error('error fetching the data.');
-      throw error;
-    }
-    return res.json();
-  });
-  const { data, error, isLoading } = useSWR<Data>('/api/receivables', fetcher);
+  const [headers, setHeaders] = useState<string[]>([]);
+  const [contents, setContents] = useState<any>([]);
 
-  if (isLoading) return (
-    <Flex w="full" justifyContent="center">
-      <Spinner />
-    </Flex>
-  );
+  const fetcher = async (url: string) =>
+    await fetch(url, {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        const error = new Error("error fetching the data.");
+        throw error;
+      }
+      return res.json();
+    });
+  const { data, error, isLoading } = useSWR<Data>("/api/receivables", fetcher);
+
+  useEffect(() => {
+    const getSpreadSheet = async () => {
+      const id = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
+      const sheetName = "keiri";
+      const apikey = process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY;
+      const res = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${sheetName}?key=${apikey}`
+      );
+      const data = await res.json();
+      console.log(res)
+      const headers = data.values?.shift();
+      setHeaders(headers);
+      const array = data.values?.map((lists: any) => {
+        let obj: any = {};
+        headers.forEach((header: string, index: number) => {
+          obj[header] = lists[index];
+        });
+        return obj;
+      });
+
+      setContents(array);
+    };
+    getSpreadSheet();
+  }, []);
+
+  if (isLoading)
+    return (
+      <Flex w="full" justifyContent="center">
+        <Spinner />
+      </Flex>
+    );
 
   return (
     <Flex direction="column" align="center">

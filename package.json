@@ -24,15 +24,19 @@
     "firebase": "^9.20.0",
     "firebase-admin": "^11.7.0",
     "framer-motion": "^10.12.4",
+    "google-spreadsheet": "^4.0.2",
     "next": "13.3.1",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.43.9",
-    "react-icons": "^4.8.0",
+    "react-icons": "^4.10.1",
     "swr": "^2.1.4",
     "typescript": "5.0.4",
     "zustand": "^4.3.7"
+  },
+  "devDependencies": {
+    "@types/google-spreadsheet": "^3.3.2"
   }
 }
