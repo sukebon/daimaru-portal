@@ -42,7 +42,7 @@ export const HeaderMenuButton: FC = () => {
   };
 
   const MenuItemEL = (title: string, href: string) => (
-    <Link href={href}>
+    <Link href={href} passHref>
       <MenuItem pl={6}>{title}</MenuItem>
     </Link>
   );
