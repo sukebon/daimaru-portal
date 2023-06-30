@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
-  const { getUsers, getFullUsers, getClaims } = useDataList();
+  const { getUsers, getFullUsers, getClaims,createPaymentConfirm } = useDataList();
   const queryClient = new QueryClient();
 
   useEffect(() => {
@@ -91,6 +91,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     getClaims();
   }, [session, setClaims]);
+
+  useEffect(()=>{
+    createPaymentConfirm()
+  },[])
 
   return (
     <ChakraProvider>

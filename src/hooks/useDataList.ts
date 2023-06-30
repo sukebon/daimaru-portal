@@ -1,13 +1,15 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { arrayUnion, collection, doc, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Claim, User } from "../../types";
 import { useClaimStore } from "../../store/useClaimStore";
+import { useUtils } from "./useUtils";
 
 export const useDataList = () => {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
+  const {getYearMonth} = useUtils()
 
   const getUsers = async () => {
     const usersCollectionRef = collection(db, "authority");
@@ -57,7 +59,17 @@ export const useDataList = () => {
     });
   };
 
-  
+  const createPaymentConfirm = async () => {
+    const { year, monthStr } = getYearMonth();
+    try {
+      await setDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
+        checkList: arrayUnion(),
+        checkListRef: arrayUnion(),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };  
 
-  return { getUsers, getFullUsers,getClaims };
+  return { getUsers, getFullUsers,getClaims ,createPaymentConfirm};
 };
