@@ -57,6 +57,25 @@ export const useUtils = () => {
     }
   };
 
+  const getYearMonth = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    const lastDate = new Date(year, month, 0);
+    let monthStr = "0" + String(month);
+    monthStr = monthStr.slice(-2);
+    let day = date.getDate();
+    let dayStr = "0" + day;
+    dayStr = dayStr.slice(-2);
+    return {
+      year,
+      month,
+      lastDate,
+      monthStr,
+      dayStr,
+    };
+  };
+
   //時間の select value を作成
   let date = [];
   for (let i = 6; i <= 24; i++) {
@@ -95,6 +114,7 @@ export const useUtils = () => {
     starLevel,
     dayOfWeek,
     todayDate,
+    getYearMonth,
     datetime,
     beginningDate,
     dateTime,
