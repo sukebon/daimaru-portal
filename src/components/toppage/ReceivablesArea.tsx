@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import useSWR from "swr";
-import { FC, useState, useEffect} from "react";
+import { FC} from "react";
 import Link from "next/link";
 
 type Data = {
@@ -26,21 +26,15 @@ export const ReceivablesArea: FC = () => {
     axios
       .get(url, {
         headers: {
-          apikey: process.env.NEXT_PUBLIC_SPREADSHEET_ID as string,
+          apikey: process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY as string,
         },
       })
       .then((res) => res.data);
-  const { data, error, isLoading } = useSWR<Data>("/api/receivables", fetcher);
-  const [filterData, setFilterData] = useState([]);
-  useEffect(() => {
-    setFilterData(
-      data?.contents.filter((content: any) => content.入金遅延 === "未回収")
-    );
-  }, [data?.contents]);
+  const { data, error, isLoading } = useSWR<Data>("/api/receivables/uncollected/", fetcher);
 
   return (
     <>
-      {filterData && filterData?.length > 0 && (
+      {data?.contents && data?.contents?.length > 0 && (
         <Box
           m="full"
           boxShadow="xs"
@@ -55,16 +49,16 @@ export const ReceivablesArea: FC = () => {
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
-                  <Th>コード</Th>
+                  {/* <Th>コード</Th> */}
                   <Th>得意先名</Th>
                   <Th>担当</Th>
                   <Th>入金遅延</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {filterData?.map((content: any, index: number) => (
+                {data?.contents?.map((content: any, index: number) => (
                   <Tr key={index}>
-                    <Td>{content.コード}</Td>
+                    {/* <Td>{content.コード}</Td> */}
                     <Td>{content.得意先名}</Td>
                     <Td>{content.担当}</Td>
                     <Td>{content.入金遅延}</Td>
@@ -73,7 +67,7 @@ export const ReceivablesArea: FC = () => {
               </Tbody>
             </Table>
           </TableContainer>
-          <Link href="./receivables" passHref>
+          <Link href="/receivables" passHref>
             <Button mt={6} w="full" colorScheme="blue" >
               売掛金情報一覧
             </Button>

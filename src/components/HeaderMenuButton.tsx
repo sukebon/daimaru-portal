@@ -71,19 +71,22 @@ export const HeaderMenuButton: FC = () => {
             <MenuDivider />
           </>
         )}
+        <MenuGroup title="売掛金額チェック" fontSize="xs">
+          {MenuItemEL("一覧", "/payment-confirms")}
+        </MenuGroup>
+        <MenuDivider />
+        
         <MenuGroup title="クレーム報告書" fontSize="xs">
           {MenuItemEL("作成", "/claims/new")}
           {MenuItemEL("一覧", "/claims")}
           {MenuItemEL("集計（グラフ）", "/claims/graph")}
         </MenuGroup>
         <MenuDivider />
-
         <MenuGroup title="売上表(今月）" fontSize="xs">
           {MenuItemEL("一覧・登録", "/sales")}
         </MenuGroup>
         <MenuDivider />
         {MenuItemEL("デジタルマーケティング進捗", "/progress")}
-
         {Administrator.includes(currentUser || "") && (
           <>
             {MenuItemEL("管理者ページ", "/admin")}

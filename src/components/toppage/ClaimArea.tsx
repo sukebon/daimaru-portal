@@ -105,7 +105,7 @@ export const ClaimArea = () => {
           件
         </Box>
         <Box>
-          <Link href="/claims">
+          <Link href="/claims" passHref>
             <Box
               as="span"
               p={2}
@@ -142,7 +142,7 @@ export const ClaimArea = () => {
           md: "row",
           lg: "column",
           xl: "column",
-          "2xl": "column",
+          "2xl": "row",
         }}
         gap={6}
         boxShadow="xs"
@@ -158,14 +158,14 @@ export const ClaimArea = () => {
         </Flex>
         <Flex flex="1" direction={{ base: "column", sm: "row" }} gap={6}>
           <Box w="full">
-            <Link href="/claims/">
+            <Link href="/claims/" passHref>
               <Button colorScheme="blue" variant="outline" w="100%">
                 クレーム報告書一覧
               </Button>
             </Link>
           </Box>
           <Box w="full">
-            <Link href="/claims/new">
+            <Link href="/claims/new" passHref>
               <Button colorScheme="blue" w="100%">
                 クレーム報告書を作成
               </Button>

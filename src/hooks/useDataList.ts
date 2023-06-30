@@ -1,4 +1,13 @@
-import { arrayUnion, collection, doc, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Claim, User } from "../../types";
@@ -9,21 +18,22 @@ export const useDataList = () => {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
-  const {getYearMonth} = useUtils()
+  const { getYearMonth } = useUtils();
 
   const getUsers = async () => {
     const usersCollectionRef = collection(db, "authority");
     const q = query(usersCollectionRef, orderBy("rank", "asc"));
     onSnapshot(q, (querySnapshot) => {
       setUsers(
-        querySnapshot.docs.map(
-          (doc) =>({
-              ...doc.data(),
-              id: doc.id,
-            } as User)
-        ).filter((doc) => (
-          doc.rank !== 1000 
-        ))
+        querySnapshot.docs
+          .map(
+            (doc) =>
+              ({
+                ...doc.data(),
+                id: doc.id,
+              } as User)
+          )
+          .filter((doc) => doc.rank !== 1000)
       );
     });
   };
@@ -34,7 +44,8 @@ export const useDataList = () => {
     onSnapshot(q, (querySnapshot) => {
       setFullUsers(
         querySnapshot.docs.map(
-          (doc) => ({
+          (doc) =>
+            ({
               ...doc.data(),
               id: doc.id,
             } as User)
@@ -61,15 +72,20 @@ export const useDataList = () => {
 
   const createPaymentConfirm = async () => {
     const { year, monthStr } = getYearMonth();
-    try {
-      await setDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
-        checkList: arrayUnion(),
-        checkListRef: arrayUnion(),
-      });
-    } catch (error) {
-      console.log(error);
+    const docSnap = await getDoc(
+      doc(db, "paymentConfirms", `${year}_${monthStr}`)
+    );
+    if (!docSnap.exists()) {
+      try {
+        await setDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
+          checkList: arrayUnion(),
+          checkListRef: arrayUnion(),
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  };  
+  };
 
-  return { getUsers, getFullUsers,getClaims ,createPaymentConfirm};
+  return { getUsers, getFullUsers, getClaims, createPaymentConfirm };
 };

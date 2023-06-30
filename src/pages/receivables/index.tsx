@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Button,
@@ -13,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
 import useSWR from "swr";
-import { arrayUnion, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, onSnapshot,  updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useUtils } from "@/hooks/useUtils";
@@ -28,11 +29,11 @@ const Receivables: FC = () => {
   const [isCheck, setIsCheck] = useState<boolean>(false);
   const {getYearMonth} = useUtils()
 
-  const addPaymentConfirm = async () => {
+  const updatePaymentConfirm = async () => {
     const { year, monthStr } = getYearMonth();
     const userRef = doc(db, "authority", currentUser);
     try {
-      await setDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
+      await updateDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
         checkList: arrayUnion(currentUser),
         checkListRef: arrayUnion(userRef),
       });
@@ -52,8 +53,6 @@ const Receivables: FC = () => {
     };
     getPaymentConfirm();
   }, [currentUser]);
-
-  console.log(isCheck)
 
 
   const fetcher = async (url: string) =>
@@ -91,7 +90,7 @@ const Receivables: FC = () => {
             売掛金回収一覧
           </Box>
           {!isCheck ? (
-            <Button size="sm" colorScheme="blue" onClick={addPaymentConfirm}>
+            <Button size="sm" colorScheme="blue" onClick={updatePaymentConfirm}>
               既読にする
             </Button>
           ) : (
