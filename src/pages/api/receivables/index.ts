@@ -9,9 +9,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.headers.apikey !== "AIzaSyC48j9avM2wlmbB98icVQttTDG48H9NR_E" ) {
-    res.status(403).end()
-  }
+  // if (req.headers.apikey !== "AIzaSyC48j9avM2wlmbB98icVQttTDG48H9NR_E" ) {
+  //   res.status(403).end()
+  // }
 
   const wb = new GoogleSpreadsheet(
     process.env.GOOGLE_SPREADSHEET_ID
