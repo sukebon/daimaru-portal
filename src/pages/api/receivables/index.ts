@@ -9,8 +9,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.headers.apikey !== process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY) {
-    return res.status(403);
+  if (req.headers.apikey !== process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY ) {
+    res.status(403).end()
   }
 
   const wb = new GoogleSpreadsheet(
@@ -38,5 +38,6 @@ export default async function handler(
     入金遅延: data.入金遅延,
   }));
 
-  return res.status(200).json({ contents });
+  res.status(200).json({ contents });
+  return 
 }
