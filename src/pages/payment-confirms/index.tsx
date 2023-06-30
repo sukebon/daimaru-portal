@@ -52,8 +52,8 @@ const ReceivablesCheckList = () => {
           <Thead>
             <Tr>
               <Th minW="130x">日付</Th>
-              <Th minW="50px">提出者</Th>
-              <Th minW="50px">未提出者</Th>
+              <Th minW="50px">既読</Th>
+              <Th minW="50px">未読</Th>
               <Th></Th>
             </Tr>
           </Thead>
