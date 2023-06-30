@@ -31,16 +31,15 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
           <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
-              <ReceivablesArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
               <SalesArea />
-              <Slogan />
+              <Flex direction={{base:"column","2xl":"row-reverse"}}  gap={6}>
+                <ReceivablesArea />
+                <Slogan />
+              </Flex>
               <Information news={newsData} />
-              <QuickLink
-                links={linkData}
-                categories={categoryData}
-              />
+              <QuickLink links={linkData} categories={categoryData} />
               <CatalogArea />
             </Stack>
           </Box>
@@ -80,7 +79,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       categoryData: categoryData.contents,
       newsData: newsData.contents,
-      linkData: linkData.contents
+      linkData: linkData.contents,
     },
   };
 };

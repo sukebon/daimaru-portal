@@ -60,12 +60,12 @@ const AlcoholId = () => {
   }, [users, posts]);
 
   return (
-    <Flex flexDirection={"column"} alignItems={"center"}>
+    <Flex direction="column" align="center">
       <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
-        <Link href="/alcohol-checker">
+        <Link href="/alcohol-checker" passHref>
           <Button w="100%">一覧へ戻る</Button>
         </Link>
-        <Flex justifyContent="space-between" mt={6}>
+        <Flex justify="space-between" mt={6}>
           <Box fontSize="lg">{queryId}</Box>
         </Flex>
         <Table size="sm" mt={6}>

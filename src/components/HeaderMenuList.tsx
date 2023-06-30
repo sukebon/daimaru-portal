@@ -29,7 +29,7 @@ export const HeaderMenuList: FC = () => {
     },
     {
       title: "売掛金情報",
-      link: "./receivables",
+      link: "/receivables",
     },
     {
       title: "生地在庫",
