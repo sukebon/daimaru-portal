@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.headers.apikey !== process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY ) {
+  if (req.headers.apikey !== "AIzaSyC48j9avM2wlmbB98icVQttTDG48H9NR_E" ) {
     res.status(403).end()
   }
 
