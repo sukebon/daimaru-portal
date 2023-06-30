@@ -18,14 +18,33 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import { useRouter } from "next/router";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { User } from "../../../types";
 
 type Data = {
   id: string;
   checkList: string[];
 };
 
+type Read = {
+  id: string;
+  uid: string;
+  name: string;
+  rank: number;
+  email: string;
+  isoSalesStaff: boolean;
+  isoBoss: boolean;
+  isoManager: boolean;
+  isoOffice: boolean;
+  isoTopManegment: boolean;
+  alcoholChecker: boolean;
+  read: boolean;
+};
+
 const paymentConfirmId: NextPage = () => {
   const [data, setData] = useState<Data>({ id: "", checkList: [] });
+  const users = useAuthStore((state) => state.users);
+  const [read, setRread] = useState<Read[]>();
   const router = useRouter();
   const pathname = router.asPath.split("/").pop();
   const { getUserName } = useDisp();
@@ -38,6 +57,21 @@ const paymentConfirmId: NextPage = () => {
     };
     getPaymentConfirm();
   }, [pathname]);
+
+  useEffect(() => {
+    setRread(
+      users.map((user) => {
+        if (data?.checkList?.includes(user.uid)) {
+          return {
+            ...user,
+            read: true,
+          };
+        } else {
+          return { ...user, read: false };
+        }
+      })
+    );
+  }, [users, data]);
 
   return (
     <Flex direction="column" align="center">
@@ -54,12 +88,14 @@ const paymentConfirmId: NextPage = () => {
           <Thead>
             <Tr>
               <Th minW="160px">名前</Th>
+              <Th minW="160px">既読</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {data?.checkList?.map((userId, index) => (
-              <Tr key={index}>
-                <Td>{getUserName(userId)}</Td>
+            {read?.map(({ uid, read }) => (
+              <Tr key={uid}>
+                <Td>{getUserName(uid)}</Td>
+                <Td>{read ? "〇" : ""}</Td>
               </Tr>
             ))}
           </Tbody>
