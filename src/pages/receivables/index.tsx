@@ -3,31 +3,61 @@ import {
   Box,
   Button,
   Flex,
+  Input,
+  Select,
   Spinner,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import React, { FC, useEffect, useState } from "react";
 import useSWR from "swr";
-import { arrayUnion, doc, onSnapshot,  updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useUtils } from "@/hooks/useUtils";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type Data = {
   contents: any;
-  headers: string[];
+  members: number[];
+  deadlines: string[];
+};
+
+type Inputs = {
+  code: string;
+  customer: string;
+  staff: string;
+  deadline: string;
 };
 
 const Receivables: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
+  const [filterData, setFilterData] = useState([]);
+  const [code, setCode] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [staff, setStaff] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [isCheck, setIsCheck] = useState<boolean>(false);
-  const {getYearMonth} = useUtils()
+  const { getYearMonth } = useUtils();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    setCode(data.code);
+    setCustomer(data.customer);
+    setStaff(data.staff);
+    setDeadline(data.deadline);
+  };
 
   const updatePaymentConfirm = async () => {
     const { year, monthStr } = getYearMonth();
@@ -43,17 +73,27 @@ const Receivables: FC = () => {
   };
 
   useEffect(() => {
+    setFilterData(
+      data?.contents.filter(
+        (content: any) =>
+          content.コード.includes(code) &&
+          content.得意先名.includes(customer) &&
+          content.担当.includes(staff) &&
+          content.締日付.includes(deadline)
+      )
+    );
+  }, [code, customer, staff, deadline]);
+
+  useEffect(() => {
     const getPaymentConfirm = async () => {
       const { year, monthStr } = getYearMonth();
       const docRef = doc(db, "paymentConfirms", `${year}_${monthStr}`);
-     
-      onSnapshot(docRef,(doc:any)=>(
+      onSnapshot(docRef, (doc: any) =>
         setIsCheck(doc?.data()?.checkList?.includes(currentUser))
-      ))
+      );
     };
     getPaymentConfirm();
   }, [currentUser]);
-
 
   const fetcher = async (url: string) =>
     await fetch(url, {
@@ -99,11 +139,69 @@ const Receivables: FC = () => {
             </Button>
           )}
         </Flex>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Flex
+            mt={6}
+            gap={3}
+            direction={{ base: "column", md: "row" }}
+            align={{ base: "center", md: "flex-end" }}
+          >
+            <Box w={{ base: "full", md: "auto" }}>
+              <Text fontSize="xs">コード</Text>
+              <Input placeholder="コード" {...register("code")} />
+            </Box>
+            <Box w={{ base: "full", md: "auto" }}>
+              <Text fontSize="xs">得意先名</Text>
+              <Input placeholder="得意先名" {...register("customer")} />
+            </Box>
+            <Box w={{ base: "full", md: "auto" }}>
+              <Text fontSize="xs">担当</Text>
+              <Select placeholder="担当者" {...register("staff")}>
+                {data?.members?.map((member) => (
+                  <option key={member}>{member}</option>
+                ))}
+              </Select>
+            </Box>
+            <Box w={{ base: "full", md: "auto" }}>
+              <Text fontSize="xs">締め日</Text>
+              <Select placeholder="締め日" {...register("deadline")}>
+                {data?.deadlines?.map((deadline) => (
+                  <option key={deadline}>{deadline}</option>
+                ))}
+              </Select>
+            </Box>
+            <Box w={{ base: "full", md: "auto" }}>
+              <Flex gap={3}>
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  w={{ base: "full", md: "auto" }}
+                >
+                  検索
+                </Button>
+                <Button
+                  w={{ base: "full", md: "auto" }}
+                  onClick={() => {
+                    reset();
+                    setCode("");
+                    setCustomer("");
+                    setStaff("");
+                    setDeadline("");
+                  }}
+                >
+                  解除
+                </Button>
+              </Flex>
+            </Box>
+          </Flex>
+        </form>
+
         <Box
-          mt={3}
+          mt={6}
           overflowX="auto"
           position="relative"
-          h={"calc(100vh - 200px)"}
+          h={{ base: "full", md: "calc(100vh - 300px)" }}
         >
           <Table size="sm">
             <Thead position="sticky" top={0} zIndex="docked" bg="white">
@@ -123,7 +221,7 @@ const Receivables: FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data?.contents?.map((content: any, index: number) => (
+              {filterData?.map((content: any, index: number) => (
                 <Tr key={index}>
                   <Td>{content.コード}</Td>
                   <Td>{content.得意先名}</Td>

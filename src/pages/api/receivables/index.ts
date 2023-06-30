@@ -3,6 +3,8 @@ import { GoogleSpreadsheet } from "google-spreadsheet";
 
 type Data = {
   contents: any;
+  members: number[];
+  deadlines: string[];
 };
 
 export default async function handler(
@@ -33,6 +35,10 @@ export default async function handler(
       入金遅延: data.入金遅延,
     }));
 
-    res.status(200).json({ contents });
+    const memberList = wsData.map((data) => Number(data.担当));
+    const members = Array.from(new Set(memberList.sort()));
+    const deadlineList = wsData.map((data) => data.締日付);
+    const deadlines = Array.from(new Set(deadlineList.sort()));
+    res.status(200).json({ contents, members, deadlines });
   }
 }
