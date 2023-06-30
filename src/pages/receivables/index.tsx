@@ -73,18 +73,6 @@ const Receivables: FC = () => {
   };
 
   useEffect(() => {
-    setFilterData(
-      data?.contents.filter(
-        (content: any) =>
-          content.コード.includes(code) &&
-          content.得意先名.includes(customer) &&
-          content.担当.includes(staff) &&
-          content.締日付.includes(deadline)
-      )
-    );
-  }, [code, customer, staff, deadline]);
-
-  useEffect(() => {
     const getPaymentConfirm = async () => {
       const { year, monthStr } = getYearMonth();
       const docRef = doc(db, "paymentConfirms", `${year}_${monthStr}`);
@@ -108,6 +96,18 @@ const Receivables: FC = () => {
       return res.json();
     });
   const { data, error, isLoading } = useSWR<Data>("/api/receivables", fetcher);
+
+  useEffect(() => {
+    setFilterData(
+      data?.contents.filter(
+        (content: any) =>
+          content.コード.includes(code) &&
+          content.得意先名.includes(customer) &&
+          content.担当.includes(staff) &&
+          content.締日付.includes(deadline)
+      )
+    );
+  }, [data, code, customer, staff, deadline]);
 
   if (isLoading)
     return (
