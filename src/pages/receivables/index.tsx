@@ -15,7 +15,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect,useState } from "react";
 import useSWR from "swr";
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -39,11 +39,16 @@ type Inputs = {
 const Receivables: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const [filterData, setFilterData] = useState([]);
+  const [sliceData, setSliceData] = useState([]);
   const [code, setCode] = useState("");
   const [customer, setCustomer] = useState("");
   const [staff, setStaff] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [isCheck, setIsCheck] = useState<boolean>(false);
+  const [isReadCheck, setIsReadCheck] = useState<boolean>(false);
+  const LIMIT_INIT= 100
+  const LIMIT_STEP = 200
+  const [limit, setLimit] = useState(LIMIT_INIT);
+  const [isloadingButton,setIsLoadingButton] = useState(false)
   const { getYearMonth } = useUtils();
   const {
     register,
@@ -52,36 +57,12 @@ const Receivables: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
     setCode(data.code);
     setCustomer(data.customer);
     setStaff(data.staff);
     setDeadline(data.deadline);
+    setLimit(LIMIT_INIT)
   };
-
-  const updatePaymentConfirm = async () => {
-    const { year, monthStr } = getYearMonth();
-    const userRef = doc(db, "authority", currentUser);
-    try {
-      await updateDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
-        checkList: arrayUnion(currentUser),
-        checkListRef: arrayUnion(userRef),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const getPaymentConfirm = async () => {
-      const { year, monthStr } = getYearMonth();
-      const docRef = doc(db, "paymentConfirms", `${year}_${monthStr}`);
-      onSnapshot(docRef, (doc: any) =>
-        setIsCheck(doc?.data()?.checkList?.includes(currentUser))
-      );
-    };
-    getPaymentConfirm();
-  }, [currentUser]);
 
   const fetcher = async (url: string) =>
     await fetch(url, {
@@ -90,8 +71,7 @@ const Receivables: FC = () => {
       },
     }).then((res) => {
       if (!res.ok) {
-        const error = new Error("error fetching the data.");
-        throw error;
+        throw new Error("error fetching the data.");
       }
       return res.json();
     });
@@ -108,6 +88,54 @@ const Receivables: FC = () => {
       )
     );
   }, [data, code, customer, staff, deadline]);
+
+  useEffect(() => {
+    setSliceData(filterData?.slice(0, limit));
+  }, [data,filterData]);
+
+  const addLimit = () => {
+    setIsLoadingButton(true)
+    setTimeout(()=>{
+      const newArray = [...sliceData, ...filterData.slice(limit, limit + LIMIT_STEP)];
+      setSliceData(newArray);
+      setLimit((prev) => prev + LIMIT_STEP);
+      setIsLoadingButton(false)
+    },500)
+  };
+
+  const filterReset = () => {
+    reset();
+    setCode("");
+    setCustomer("");
+    setStaff("");
+    setDeadline("");
+    setLimit(LIMIT_INIT);
+    setFilterData(data?.contents)
+  }
+
+  useEffect(() => {
+    const getPaymentConfirm = async () => {
+      const { year, monthStr } = getYearMonth();
+      const docRef = doc(db, "paymentConfirms", `${year}_${monthStr}`);
+      onSnapshot(docRef, (doc: any) =>
+        setIsReadCheck(doc?.data()?.checkList?.includes(currentUser))
+      );
+    };
+    getPaymentConfirm();
+  }, [currentUser]);
+
+  const updatePaymentConfirm = async () => {
+    const { year, monthStr } = getYearMonth();
+    const userRef = doc(db, "authority", currentUser);
+    try {
+      await updateDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
+        checkList: arrayUnion(currentUser),
+        checkListRef: arrayUnion(userRef),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isLoading)
     return (
@@ -129,7 +157,7 @@ const Receivables: FC = () => {
           <Box as="h1" fontSize="lg">
             売掛金回収一覧
           </Box>
-          {!isCheck ? (
+          {!isReadCheck ? (
             <Button size="sm" colorScheme="blue" onClick={updatePaymentConfirm}>
               既読にする
             </Button>
@@ -182,13 +210,7 @@ const Receivables: FC = () => {
                 </Button>
                 <Button
                   w={{ base: "full", md: "auto" }}
-                  onClick={() => {
-                    reset();
-                    setCode("");
-                    setCustomer("");
-                    setStaff("");
-                    setDeadline("");
-                  }}
+                  onClick={filterReset}
                 >
                   解除
                 </Button>
@@ -206,6 +228,7 @@ const Receivables: FC = () => {
           <Table size="sm">
             <Thead position="sticky" top={0} zIndex="docked" bg="white">
               <Tr>
+                <Th>行</Th>
                 <Th>コード</Th>
                 <Th>得意先名</Th>
                 <Th>担当</Th>
@@ -221,8 +244,9 @@ const Receivables: FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {filterData?.map((content: any, index: number) => (
+              {sliceData?.map((content: any, index: number) => (
                 <Tr key={index}>
+                  <Td>{index + 1}</Td>
                   <Td>{content.コード}</Td>
                   <Td>{content.得意先名}</Td>
                   <Td>{content.担当}</Td>
@@ -239,6 +263,13 @@ const Receivables: FC = () => {
               ))}
             </Tbody>
           </Table>
+          <Flex justify="center">
+            {sliceData?.length >= limit && (
+              <Button isLoading={isloadingButton}  mt={6} colorScheme="blue" onClick={addLimit}>
+                さらに読み込む
+              </Button>
+            )}
+          </Flex>
         </Box>
       </TableContainer>
     </Flex>
