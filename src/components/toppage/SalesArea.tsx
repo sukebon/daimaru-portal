@@ -73,7 +73,7 @@ export const SalesArea: FC = () => {
                 を入力してください。
               </Box>
             )}
-            <Link href="/sales">
+            <Link href="/sales" passHref>
               <Button w="100%" colorScheme="blue">
                 売上着地金額の入力
               </Button>

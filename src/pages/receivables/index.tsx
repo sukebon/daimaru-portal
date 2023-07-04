@@ -15,7 +15,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { FC, useEffect,useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -38,6 +38,7 @@ type Inputs = {
 
 const Receivables: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
+  const targetRef = useRef<any>(null);
   const [filterData, setFilterData] = useState([]);
   const [sliceData, setSliceData] = useState([]);
   const [code, setCode] = useState("");
@@ -45,10 +46,10 @@ const Receivables: FC = () => {
   const [staff, setStaff] = useState("");
   const [deadline, setDeadline] = useState("");
   const [isReadCheck, setIsReadCheck] = useState<boolean>(false);
-  const LIMIT_INIT= 100
-  const LIMIT_STEP = 200
+  const [isloadingButton, setIsLoadingButton] = useState(false);
+  const LIMIT_INIT = 100;
+  const LIMIT_STEP = 200;
   const [limit, setLimit] = useState(LIMIT_INIT);
-  const [isloadingButton,setIsLoadingButton] = useState(false)
   const { getYearMonth } = useUtils();
   const {
     register,
@@ -61,7 +62,7 @@ const Receivables: FC = () => {
     setCustomer(data.customer);
     setStaff(data.staff);
     setDeadline(data.deadline);
-    setLimit(LIMIT_INIT)
+    setLimit(LIMIT_INIT);
   };
 
   const fetcher = async (url: string) =>
@@ -91,16 +92,19 @@ const Receivables: FC = () => {
 
   useEffect(() => {
     setSliceData(filterData?.slice(0, limit));
-  }, [data,filterData]);
+  }, [data, filterData]);
 
   const addLimit = () => {
-    setIsLoadingButton(true)
-    setTimeout(()=>{
-      const newArray = [...sliceData, ...filterData.slice(limit, limit + LIMIT_STEP)];
+    setIsLoadingButton(true);
+    setTimeout(() => {
+      const newArray = [
+        ...sliceData,
+        ...filterData.slice(limit, limit + LIMIT_STEP),
+      ];
       setSliceData(newArray);
       setLimit((prev) => prev + LIMIT_STEP);
-      setIsLoadingButton(false)
-    },500)
+      setIsLoadingButton(false);
+    }, 500);
   };
 
   const filterReset = () => {
@@ -110,8 +114,8 @@ const Receivables: FC = () => {
     setStaff("");
     setDeadline("");
     setLimit(LIMIT_INIT);
-    setFilterData(data?.contents)
-  }
+    setFilterData(data?.contents);
+  };
 
   useEffect(() => {
     const getPaymentConfirm = async () => {
@@ -136,6 +140,21 @@ const Receivables: FC = () => {
       console.log(error);
     }
   };
+
+  // useEffect(() => {
+  //   targetRef.current?.addEventListener("scroll", () => {
+  //     console.log(targetRef?.current?.clientHeight);
+  //     console.log(targetRef?.current?.scrollHeight);
+  //     console.log(targetRef?.current?.scrollTop);
+  //     let clientH = targetRef?.current?.clientHeight;
+  //     let scrollH = targetRef.current.scrollHeight;
+  //     let scrollT = targetRef.current.scrollTop;
+  //     if (scrollH - scrollT <=  clientH) {
+  //       addLimit();
+  //       console.log(true)
+  //     }
+  //   });
+  // },[]);
 
   if (isLoading)
     return (
@@ -208,10 +227,7 @@ const Receivables: FC = () => {
                 >
                   検索
                 </Button>
-                <Button
-                  w={{ base: "full", md: "auto" }}
-                  onClick={filterReset}
-                >
+                <Button w={{ base: "full", md: "auto" }} onClick={filterReset}>
                   解除
                 </Button>
               </Flex>
@@ -220,6 +236,7 @@ const Receivables: FC = () => {
         </form>
 
         <Box
+          ref={targetRef}
           mt={6}
           overflowX="auto"
           position="relative"
@@ -265,7 +282,12 @@ const Receivables: FC = () => {
           </Table>
           <Flex justify="center">
             {sliceData?.length >= limit && (
-              <Button isLoading={isloadingButton}  mt={6} colorScheme="blue" onClick={addLimit}>
+              <Button
+                isLoading={isloadingButton}
+                mt={6}
+                colorScheme="blue"
+                onClick={addLimit}
+              >
                 さらに読み込む
               </Button>
             )}
