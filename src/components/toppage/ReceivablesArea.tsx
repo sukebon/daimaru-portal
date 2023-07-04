@@ -43,7 +43,7 @@ export const ReceivablesArea: FC = () => {
           bg="white"
         >
           <Text fontSize="2xl" mb="4" ml="1">
-            売掛未回収一覧（テスト）
+            売掛未回収一覧
           </Text>
           <TableContainer>
             <Table variant="simple" size="sm">

@@ -90,7 +90,7 @@ const ProgressIndex = () => {
           <Box as="h1" fontSize="2xl">
             進捗状況
           </Box>
-          <Link href="/progress/new">
+          <Link href="/progress/new" passHref>
             <Button size="sm" colorScheme="blue">新規登録</Button>
           </Link>
         </Flex>

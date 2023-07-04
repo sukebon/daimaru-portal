@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Request = {
   id: string;
   title: string;
@@ -88,9 +90,9 @@ export type ProgressData = {
 };
 
 export type ProgressContent = {
-  title: string; result: boolean;
-}
-
+  title: string;
+  result: boolean;
+};
 
 export type CuttingReport = {
   id: string;
@@ -143,16 +145,18 @@ export type Claim = {
 };
 
 export type CategoryData = {
-  id: string, name: string; title: string;
+  id: string;
+  name: string;
+  title: string;
 };
 
 export type NewsData = {
-    id: string, 
-    message: string;
+  id: string;
+  message: string;
 };
 
 export type LinkData = {
-  id: string,
+  id: string;
   title: string;
   category: {
     name: string;
@@ -200,4 +204,16 @@ export type CuttingProduct = {
   category: string;
   productId: string;
   quantity: number;
+};
+
+export type CustomerInformation = {
+  id: string;
+  customer: string;
+  title: string;
+  emotion: "good" | "normal" | "bad";
+  content: string;
+  link: string;
+  author:string;
+  authorRef:string;
+  createdAt: Date;
 };

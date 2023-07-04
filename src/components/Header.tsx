@@ -23,7 +23,7 @@ export const Header: FC = () => {
           zIndex={100}
         >
           <Flex alignItems="center">
-            <Link href="/">
+            <Link href="/" passHref>
               <Text fontSize="large" fontWeight="bold">
                 社内用ポータルサイト
               </Text>

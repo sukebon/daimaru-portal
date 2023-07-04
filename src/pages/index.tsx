@@ -12,6 +12,9 @@ import { SalesArea } from "@/components/toppage/SalesArea";
 import { CategoryData, LinkData, NewsData } from "../../types";
 import { CuttingReportArea } from "@/components/toppage/CuttingReportArea";
 import { ReceivablesArea } from "@/components/toppage/ReceivablesArea";
+import { CustomerInfoArea } from "@/components/toppage/CustomerInfoArea";
+import { Administrator } from "../../data";
+import { useAuthStore } from "../../store/useAuthStore";
 
 type Props = {
   categoryData: CategoryData[];
@@ -20,6 +23,7 @@ type Props = {
 };
 
 const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
+  const currentUser = useAuthStore((state) => state.currentUser);
   return (
     <>
       <Head>
@@ -34,7 +38,10 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
               <CuttingReportArea />
               <AlcoholCheckArea />
               <SalesArea />
-              <Flex direction={{base:"column","2xl":"row-reverse"}}  gap={6}>
+              <Flex
+                direction={{ base: "column", "2xl": "row-reverse" }}
+                gap={6}
+              >
                 <ReceivablesArea />
                 <Slogan />
               </Flex>
@@ -46,6 +53,9 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
           <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
               <ClaimArea />
+              {Administrator.includes(currentUser || "") && (
+                <CustomerInfoArea />
+              )}
               <RequestArea />
             </Stack>
           </Box>

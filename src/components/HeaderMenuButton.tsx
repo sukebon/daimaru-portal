@@ -74,8 +74,7 @@ export const HeaderMenuButton: FC = () => {
         <MenuGroup title="売掛金額チェック" fontSize="xs">
           {MenuItemEL("一覧", "/payment-confirms")}
         </MenuGroup>
-        <MenuDivider />
-        
+        <MenuDivider />        
         <MenuGroup title="クレーム報告書" fontSize="xs">
           {MenuItemEL("作成", "/claims/new")}
           {MenuItemEL("一覧", "/claims")}
