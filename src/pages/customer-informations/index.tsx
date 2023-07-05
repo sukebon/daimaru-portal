@@ -19,6 +19,7 @@ import { NextPage } from "next";
 import { CustomerInformation } from "../../../types";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
+import { format } from "date-fns";
 
 const CustomerInformations: NextPage = () => {
   const [data, setData] = useState<CustomerInformation[]>([]);
@@ -49,18 +50,18 @@ const CustomerInformations: NextPage = () => {
   const getEmotion = (str: string) => {
     switch (str) {
       case "good":
-        return <BsEmojiLaughing />;
+        return <BsEmojiLaughing color="orange" />;
       case "normal":
-        return <BsEmojiNeutral />;
+        return <BsEmojiNeutral color="blue" />;
       case "bad":
-        return <FaRegFaceTired />;
+        return <FaRegFaceTired color="red" />;
       default:
         return "no image";
     }
   };
 
   return (
-    <Container maxW="800px" bg="white" p={6} boxShadow="md" rounded="md">
+    <Container maxW="900px" bg="white" p={6} boxShadow="md" rounded="md">
       <TableContainer>
         <Flex justify="space-between" align="center">
           <Box as="h1" fontSize="lg">
@@ -73,29 +74,39 @@ const CustomerInformations: NextPage = () => {
         <Table size="sm" mt={6}>
           <Thead>
             <Tr>
+              <Th>登録日</Th>
               <Th>顧客名</Th>
               <Th>タイトル</Th>
-              <Th>感情</Th>
+              <Th>受けた印象</Th>
               <Th>内容</Th>
               <Th>詳細</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {data.map(({id ,customer,title,emotion,content}) => (
-              <Tr key={id}>
-                <Td>{excerpt(customer, 12)}</Td>
-                <Td>{title}</Td>
-                <Td><Box fontSize="xl">{getEmotion(emotion)}</Box></Td>
-                <Td>{excerpt(content, 12)}</Td>
-                <Td>
-                  <Link href={`/customer-informations/${id}`} passHref>
-                  <Button size="xs" colorScheme="blue">
-                    詳細
-                  </Button>
-                  </Link>
-                </Td>
-              </Tr>
-            ))}
+            {data.map(
+              ({ createdAt, id, customer, title, emotion, content }) => (
+                <Tr key={id}>
+                  <Td>
+                    {format(new Date(createdAt.toDate()), "yyyy年MM月dd日")}
+                  </Td>
+                  <Td>{excerpt(customer, 12)}</Td>
+                  <Td>{title}</Td>
+                  <Td>
+                    <Flex fontSize="xl" justify="center">
+                      {getEmotion(emotion)}
+                    </Flex>
+                  </Td>
+                  <Td>{excerpt(content, 12)}</Td>
+                  <Td>
+                    <Link href={`/customer-informations/${id}`} passHref>
+                      <Button size="xs" colorScheme="blue">
+                        詳細
+                      </Button>
+                    </Link>
+                  </Td>
+                </Tr>
+              )
+            )}
           </Tbody>
         </Table>
       </TableContainer>

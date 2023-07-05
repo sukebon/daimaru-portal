@@ -209,11 +209,12 @@ export type CuttingProduct = {
 export type CustomerInformation = {
   id: string;
   customer: string;
+  prefecture:string;
   title: string;
   emotion: "good" | "normal" | "bad";
   content: string;
   link: string;
   author:string;
   authorRef:string;
-  createdAt: Date;
+  createdAt: any;
 };

@@ -2,6 +2,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   Input,
   Select,
@@ -34,6 +35,7 @@ type Inputs = {
   customer: string;
   staff: string;
   deadline: string;
+  isUncollected: boolean;
 };
 
 const Receivables: FC = () => {
@@ -45,23 +47,20 @@ const Receivables: FC = () => {
   const [customer, setCustomer] = useState("");
   const [staff, setStaff] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [isUncollected, setIsUncollected] = useState(false);
   const [isReadCheck, setIsReadCheck] = useState<boolean>(false);
   const [isloadingButton, setIsLoadingButton] = useState(false);
-  const LIMIT_INIT = 100;
+  const LIMIT_INIT = 200;
   const LIMIT_STEP = 200;
   const [limit, setLimit] = useState(LIMIT_INIT);
   const { getYearMonth } = useUtils();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit, reset } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     setCode(data.code);
     setCustomer(data.customer);
     setStaff(data.staff);
     setDeadline(data.deadline);
+    setIsUncollected(data.isUncollected);
     setLimit(LIMIT_INIT);
   };
 
@@ -76,19 +75,27 @@ const Receivables: FC = () => {
       }
       return res.json();
     });
-  const { data, error, isLoading } = useSWR<Data>("/api/receivables", fetcher);
+  const { data, isLoading } = useSWR<Data>("/api/receivables", fetcher);
 
   useEffect(() => {
     setFilterData(
-      data?.contents.filter(
-        (content: any) =>
-          content.コード.includes(code) &&
-          content.得意先名.includes(customer) &&
-          content.担当.includes(staff) &&
-          content.締日付.includes(deadline)
-      )
+      data?.contents
+        .filter(
+          (content: any) =>
+            content.コード.includes(code) &&
+            content.得意先名.includes(customer) &&
+            content.担当.includes(staff) &&
+            content.締日付.includes(deadline)
+        )
+        .filter((content: any) => {
+          if (isUncollected) {
+            return content.入金遅延 === "未回収";
+          } else {
+            return content;
+          }
+        })
     );
-  }, [data, code, customer, staff, deadline]);
+  }, [data, code, customer, staff, deadline, isUncollected]);
 
   useEffect(() => {
     setSliceData(filterData?.slice(0, limit));
@@ -113,6 +120,7 @@ const Receivables: FC = () => {
     setCustomer("");
     setStaff("");
     setDeadline("");
+    setIsUncollected(false)
     setLimit(LIMIT_INIT);
     setFilterData(data?.contents);
   };
@@ -140,21 +148,6 @@ const Receivables: FC = () => {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   targetRef.current?.addEventListener("scroll", () => {
-  //     console.log(targetRef?.current?.clientHeight);
-  //     console.log(targetRef?.current?.scrollHeight);
-  //     console.log(targetRef?.current?.scrollTop);
-  //     let clientH = targetRef?.current?.clientHeight;
-  //     let scrollH = targetRef.current.scrollHeight;
-  //     let scrollT = targetRef.current.scrollTop;
-  //     if (scrollH - scrollT <=  clientH) {
-  //       addLimit();
-  //       console.log(true)
-  //     }
-  //   });
-  // },[]);
 
   if (isLoading)
     return (
@@ -217,6 +210,11 @@ const Receivables: FC = () => {
                   <option key={deadline}>{deadline}</option>
                 ))}
               </Select>
+            </Box>
+            <Box mb={2} w={{ base: "full", md: "auto" }}>
+              <Checkbox checked={isUncollected} {...register("isUncollected")}>
+                未回収
+              </Checkbox>
             </Box>
             <Box w={{ base: "full", md: "auto" }}>
               <Flex gap={3}>
