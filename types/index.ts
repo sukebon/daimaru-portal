@@ -215,6 +215,10 @@ export type CustomerInformation = {
   content: string;
   link: string;
   author:string;
-  authorRef:string;
+  authorRef: string;
+  images: {
+    imageUrl: string;
+    imagePath: string;
+  }[]
   createdAt: any;
 };

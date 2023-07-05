@@ -29,7 +29,6 @@ import { NextPage } from "next";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useRouter } from "next/router";
-import useSWRMutation from "swr/mutation";
 import useSWR from "swr";
 
 type Inputs = {
@@ -42,17 +41,18 @@ type Inputs = {
 };
 
 type Customers = {
-  contents: { name: string }[];
+  contents: { name: string; }[];
 };
 
 type Prefecture = {
-  contents: { prefecture: string }[];
+  contents: { prefecture: string; }[];
 };
 
 const CustomerInfoNew: NextPage = () => {
   const [fileUpload, setFileUpload] = useState<any>("");
   const currentUser = useAuthStore((state) => state.currentUser);
   const router = useRouter();
+
   const fetcher = async (url: string) =>
     await fetch(url, {
       headers: {
@@ -78,6 +78,7 @@ const CustomerInfoNew: NextPage = () => {
     if (!e.target.files) return;
     setFileUpload(e.target.files);
   };
+
   const {
     register,
     handleSubmit,
@@ -119,6 +120,7 @@ const CustomerInfoNew: NextPage = () => {
           ref(storage, `images/customer-informations/${id}/${file.name}`)
         ).then((url) => {
           const docRef = doc(db, "customerInformations", id);
+          console.log(storageRef.fullPath);
           updateDoc(docRef, {
             images: arrayUnion({
               imageUrl: url,
@@ -134,15 +136,14 @@ const CustomerInfoNew: NextPage = () => {
     await addInformation(data);
     reset();
   };
-  console.log(prefectures?.contents);
   return (
     <Container maxW="500px" bg="white" p={6} boxShadow="md" rounded="md">
       <Flex w="full" justifyContent="space-between" align="center">
         <Box as="h1" fontSize="lg" fontWeight="bold">
           お客様情報入力
         </Box>
-        <Link href="/" passHref>
-          <Button size="sm">戻る</Button>
+        <Link href="/customer-informations" passHref>
+          <Button size="sm">一覧へ戻る</Button>
         </Link>
       </Flex>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -179,7 +180,7 @@ const CustomerInfoNew: NextPage = () => {
             placeholder="タイトル"
             {...register("title", { required: true })}
           />
-           {errors.title && <Box color="red">タイトルを入力してください。</Box>}
+          {errors.title && <Box color="red">タイトルを入力してください。</Box>}
         </Box>
         <Box mt={6}>
           <Text>受けた印象</Text>
@@ -198,12 +199,12 @@ const CustomerInfoNew: NextPage = () => {
                 {...register("emotion", { required: true })}
               >
                 <Flex align="center" gap={1}>
-                  <BsEmojiNeutral color="blue"/> Normal
+                  <BsEmojiNeutral color="blue" /> Normal
                 </Flex>
               </Radio>
               <Radio value="bad" {...register("emotion", { required: true })}>
                 <Flex align="center" gap={1}>
-                  <FaRegFaceTired color="red"/> Bad
+                  <FaRegFaceTired color="red" /> Bad
                 </Flex>
               </Radio>
             </Stack>
