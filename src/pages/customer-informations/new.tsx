@@ -6,6 +6,7 @@ import {
   Input,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -28,26 +29,53 @@ import { NextPage } from "next";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useRouter } from "next/router";
+import useSWRMutation from "swr/mutation";
+import useSWR from "swr";
 
 type Inputs = {
   customer: string;
   title: string;
+  prefecture: string;
   emotion: string;
   content: string;
   link: string;
 };
 
+type Customers = {
+  contents: { name: string }[];
+};
+
+type Prefecture = {
+  contents: { prefecture: string }[];
+};
+
 const CustomerInfoNew: NextPage = () => {
   const [fileUpload, setFileUpload] = useState<any>("");
   const currentUser = useAuthStore((state) => state.currentUser);
-  const router = useRouter()
+  const router = useRouter();
+  const fetcher = async (url: string) =>
+    await fetch(url, {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY as string,
+      },
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error("error fetching the data.");
+      }
+      return res.json();
+    });
+  const { data: customers } = useSWR<Customers>(
+    "/api/customer-informations/customers",
+    fetcher
+  );
+
+  const { data: prefectures } = useSWR<Prefecture>(
+    "/api/customer-informations/prefectures",
+    fetcher
+  );
 
   const handleFile = (e: any) => {
     if (!e.target.files) return;
-    console.log(e.target.files);
-    Array.from(e.target.files).forEach((file: any, index) => {
-      console.log(index, file?.name);
-    });
     setFileUpload(e.target.files);
   };
   const {
@@ -63,6 +91,7 @@ const CustomerInfoNew: NextPage = () => {
       const userRef = doc(db, "authority", currentUser);
       const docRef = await addDoc(collectionRef, {
         customer: data.customer,
+        prefecture: data.prefecture,
         title: data.title,
         emotion: data.emotion,
         content: data.content,
@@ -72,7 +101,7 @@ const CustomerInfoNew: NextPage = () => {
         createdAt: serverTimestamp(),
       });
       addImageFile(docRef.id, fileUpload);
-      router.push('/customer-informations')
+      router.push("/customer-informations");
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +134,7 @@ const CustomerInfoNew: NextPage = () => {
     await addInformation(data);
     reset();
   };
-
+  console.log(prefectures?.contents);
   return (
     <Container maxW="500px" bg="white" p={6} boxShadow="md" rounded="md">
       <Flex w="full" justifyContent="space-between" align="center">
@@ -120,27 +149,48 @@ const CustomerInfoNew: NextPage = () => {
         <Box mt={6}>
           <Text>顧客名</Text>
           <Input
+            autoComplete="off"
+            list="customer"
             placeholder="顧客名"
+            isInvalid={errors.customer ? true : false}
+            errorBorderColor="red.300"
             {...register("customer", { required: true })}
           />
+          <datalist id="customer">
+            {customers?.contents.map(({ name }, index: number) => (
+              <option key={index}>{name}</option>
+            ))}
+          </datalist>
+          {errors.customer && <Box color="red">顧客名を入力してください。</Box>}
+        </Box>
+        <Box mt={6}>
+          <Text>地域</Text>
+          <Select placeholder="地域名" {...register("prefecture")}>
+            {prefectures?.contents.map(({ prefecture }, index: number) => (
+              <option key={index}>{prefecture}</option>
+            ))}
+          </Select>
         </Box>
         <Box mt={6}>
           <Text>タイトル</Text>
           <Input
+            isInvalid={errors.title ? true : false}
+            errorBorderColor="red.300"
             placeholder="タイトル"
             {...register("title", { required: true })}
           />
+           {errors.title && <Box color="red">タイトルを入力してください。</Box>}
         </Box>
         <Box mt={6}>
-          <Text>感情</Text>
+          <Text>受けた印象</Text>
           <RadioGroup defaultValue="good">
             <Stack
               direction={{ base: "column", sm: "row" }}
               spacing={{ base: 2, sm: 5 }}
             >
-              <Radio value="good" {...register("emotion", { required: true })}>
+              <Radio value="good" {...register("emotion")}>
                 <Flex align="center" gap={1}>
-                  <BsEmojiLaughing /> Good
+                  <BsEmojiLaughing color="orange" /> Good
                 </Flex>
               </Radio>
               <Radio
@@ -148,12 +198,12 @@ const CustomerInfoNew: NextPage = () => {
                 {...register("emotion", { required: true })}
               >
                 <Flex align="center" gap={1}>
-                  <BsEmojiNeutral /> Normal
+                  <BsEmojiNeutral color="blue"/> Normal
                 </Flex>
               </Radio>
               <Radio value="bad" {...register("emotion", { required: true })}>
                 <Flex align="center" gap={1}>
-                  <FaRegFaceTired /> Bad
+                  <FaRegFaceTired color="red"/> Bad
                 </Flex>
               </Radio>
             </Stack>
@@ -167,8 +217,11 @@ const CustomerInfoNew: NextPage = () => {
             placeholder="内容"
             resize="vertical"
             whiteSpace="pre-wrap"
+            isInvalid={errors.content ? true : false}
+            errorBorderColor="red.300"
             {...register("content", { required: true })}
           ></Textarea>
+          {errors.content && <Box color="red">内容を入力してください。</Box>}
         </Box>
         <Box mt={6}>
           <Text>リンク先</Text>

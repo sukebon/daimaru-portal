@@ -8,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import { db } from "../../../firebase";
+import { format } from "date-fns";
 
 const CustomerInfoById: NextPage = () => {
   const router = useRouter();
@@ -33,11 +34,11 @@ const CustomerInfoById: NextPage = () => {
   const getEmotion = (str: string = "") => {
     switch (str) {
       case "good":
-        return <BsEmojiLaughing />;
+        return <BsEmojiLaughing color="orange" />;
       case "normal":
-        return <BsEmojiNeutral />;
+        return <BsEmojiNeutral color="blue" />;
       case "bad":
-        return <FaRegFaceTired />;
+        return <FaRegFaceTired color="red" />;
       default:
         return "no image";
     }
@@ -55,21 +56,29 @@ const CustomerInfoById: NextPage = () => {
       </Flex>
 
       <Box mt={6}>
-        <Text>顧客名</Text>
-        <Box>{data?.customer}</Box>
+        <Text fontWeight="bold">顧客名</Text>
+        <Box ml={2}>{data?.customer}</Box>
       </Box>
       <Box mt={6}>
-        <Text>タイトル</Text>
-        <Box>{data?.title}</Box>
+        <Text fontWeight="bold">地域</Text>
+        <Box ml={2}>{data?.prefecture ? data?.prefecture : "未登録"}</Box>
       </Box>
       <Box mt={6}>
-        <Text>感情</Text>
-        <Box>{getEmotion(data?.emotion)}</Box>
+        <Text fontWeight="bold">タイトル</Text>
+        <Box ml={2}>{data?.title}</Box>
+      </Box>
+      <Box mt={6}>
+        <Text fontWeight="bold">受けた印象</Text>
+        <Box mt={3} ml={2} fontSize="2xl">
+          {getEmotion(data?.emotion)}
+        </Box>
       </Box>
 
       <Box mt={6}>
-        <Text>内容</Text>
-        <Box>{data?.content}</Box>
+        <Text fontWeight="bold">内容</Text>
+        <Box ml={2} whiteSpace="pre-wrap">
+          {data?.content}
+        </Box>
       </Box>
       {data?.link && (
         <Box mt={6}>
@@ -78,7 +87,17 @@ const CustomerInfoById: NextPage = () => {
         </Box>
       )}
       <Box mt={6}>
-        <Box></Box>
+        {data?.createdAt && (
+          <Flex fontSize="sm" gap={3}>
+            <Box>登録日 </Box>
+            <Box>
+              {format(
+                new Date(data?.createdAt?.toDate()),
+                "yyyy-MM-dd HH:mm:ss"
+              )}
+            </Box>
+          </Flex>
+        )}
       </Box>
     </Container>
   );
