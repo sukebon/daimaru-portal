@@ -1,22 +1,11 @@
 import { Box, Button, Flex, Input, Radio, RadioGroup, Select, Stack, Text, Textarea } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
-
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import useSWR from "swr";
 import { useAuthStore } from '../../../store/useAuthStore';
 import { useRouter } from 'next/router';
-import { CustomerInformation } from '../../../types';
-import { UseFormReturn, FieldValues, FieldPathValues } from 'react-hook-form';
-
-type Inputs = {
-  customer: string;
-  title: string;
-  prefecture: string;
-  emotion: string;
-  content: string;
-  link: string;
-};
+import { useFormContext } from 'react-hook-form';
 
 type Customers = {
   contents: { name: string; }[];
@@ -26,16 +15,12 @@ type Prefecture = {
   contents: { prefecture: string; }[];
 };
 
-type Props = {
-  data?: CustomerInformation;
-  methods: UseFormReturn<any>;
-};
 
-export const CustomerInfoForm: FC<Props> = ({ data, methods }) => {
+export const CustomerInfoForm: FC = () => {
   const [fileUpload, setFileUpload] = useState<any>("");
-  const { register, formState: { errors } } = methods;
   const currentUser = useAuthStore((state) => state.currentUser);
   const router = useRouter();
+  const { register, formState: { errors } } = useFormContext();
 
   const handleFile = (e: any) => {
     if (!e.target.files) return;
@@ -72,7 +57,6 @@ export const CustomerInfoForm: FC<Props> = ({ data, methods }) => {
           autoComplete="off"
           list="customer"
           placeholder="顧客名"
-          isInvalid={errors.customer ? true : false}
           errorBorderColor="red.300"
           {...register("customer", { required: true })}
         />
@@ -145,7 +129,7 @@ export const CustomerInfoForm: FC<Props> = ({ data, methods }) => {
       </Box>
       <Box mt={6}>
         <Text>リンク先</Text>
-        <Input w="full" {...methods.register("link")} />
+        <Input w="full" {...register("link")} />
       </Box>
       <Box mt={6}>
         <Input
