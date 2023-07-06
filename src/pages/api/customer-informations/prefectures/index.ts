@@ -18,7 +18,6 @@ export default async function handler(
     const contents = wsData.map((data) => ({
       prefecture: data.prefecture,
     }));
-    console.log(contents)
     res.status(200).json({ contents });
   }
 }

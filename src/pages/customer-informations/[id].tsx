@@ -1,21 +1,24 @@
-import { Box, Button, Container, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { CustomerInformation } from "../../../types";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
-import { db, storage } from "../../../firebase";
+import { db } from "../../../firebase";
 import { format } from "date-fns";
 import { CustomerInfoModal } from "@/components/customer-infomations/CustomerInfoModal";
-import { ref } from "firebase/storage";
+import { useDisp } from "@/hooks/useDisp";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const CustomerInfoById: NextPage = () => {
   const router = useRouter();
   const pathname = router.asPath.split("/").pop();
   const [data, setData] = useState<CustomerInformation>();
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const { getUserName } = useDisp();
 
   useEffect(() => {
     const getCustomerInformation = async (pathname: string) => {
@@ -47,16 +50,17 @@ const CustomerInfoById: NextPage = () => {
 
   return (
     <Container maxW="500px" bg="white" p={6} boxShadow="md" rounded="md">
-
       <Flex w="full" justifyContent="space-between" align="center">
         <Box as="h1" fontSize="lg" fontWeight="bold">
           お客様情報
         </Box>
         <Flex gap={3}>
           <Link href="/customer-informations" passHref>
-            <Button colorScheme="blue" size="sm" variant='outline'>一覧へ戻る</Button>
+            <Button colorScheme="blue" size="sm" variant="outline">
+              一覧へ戻る
+            </Button>
           </Link>
-          <CustomerInfoModal data={data} />
+          {data?.author === currentUser && <CustomerInfoModal data={data} />}
         </Flex>
       </Flex>
       <Box mt={2}>
@@ -64,10 +68,7 @@ const CustomerInfoById: NextPage = () => {
           <Flex justify="right" fontSize="sm" gap={3}>
             <Box>登録日</Box>
             <Box>
-              {format(
-                new Date(data?.createdAt?.toDate()),
-                "yyyy-MM-dd"
-              )}
+              {format(new Date(data?.createdAt?.toDate()), "yyyy-MM-dd")}
             </Box>
           </Flex>
         )}
@@ -99,22 +100,29 @@ const CustomerInfoById: NextPage = () => {
       {data?.link && (
         <Box mt={6}>
           <Text fontWeight="bold">リンク先</Text>
-          <Box color='blue'>
-            <Link href={data?.link} target="_blank" rel='noopener noreferrer'>{data?.link}</Link>
+          <Box color="blue">
+            <Link href={data?.link} target="_blank" rel="noopener noreferrer">
+              {data?.link}
+            </Link>
           </Box>
         </Box>
       )}
-      <Box mt={6}>
-        <Text fontWeight="bold">画像</Text>
-        <Flex gap={3} flexDir='column'>
-          {data?.images && data.images.length > 0 && (
-            data.images.map((image, index) => (
-              <img key={index} src={image.imageUrl} alt='' />
-            ))
-          )}
-        </Flex>
-      </Box>
-
+      {data?.images && data.images.length > 0 && (
+        <>
+          <Box mt={6}>
+            <Text fontWeight="bold">画像</Text>
+            <Flex gap={3} flexDir="column">
+              {data.images.map((image, index) => (
+                <img key={index} src={image.imageUrl} alt="" />
+              ))}
+            </Flex>
+          </Box>
+        </>
+      )}
+      <Flex mt={12} align="center" justify="end">
+        <Text fontSize="xs">作成者</Text>
+        <Box ml={2}>{getUserName(data?.author)}</Box>
+      </Flex>
     </Container>
   );
 };
