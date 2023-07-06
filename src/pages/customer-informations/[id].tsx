@@ -16,35 +16,27 @@ import { useAuthStore } from "../../../store/useAuthStore";
 const CustomerInfoById: NextPage = () => {
   const router = useRouter();
   const pathname = router.asPath.split("/").pop();
-  const [data, setData] = useState<CustomerInformation>({
-    id: '',
-    customer: "",
-    title: "",
-    prefecture: "",
-    emotion: "good",
-    content: "",
-    link: "",
-    author: "",
-    authorRef: "",
-    images: [],
-    createdAt: ""
-  });
+  const [data, setData] = useState<CustomerInformation>();
   const currentUser = useAuthStore((state) => state.currentUser);
   const { getUserName } = useDisp();
 
   useEffect(() => {
-    const getCustomerInformation = async () => {
-      const docRef = doc(db, "customerInformations", `${pathname}`);
-      const docSnap = await getDoc(docRef);
-      if (!docSnap.exists()) {
-        throw new Error("記事がありません。");
-      }
-      setData({
-        ...docSnap.data(),
-        id: docSnap.id,
-      } as CustomerInformation);
-    };
-    getCustomerInformation();
+    try {
+      const getCustomerInformation = async () => {
+        const docRef = doc(db, "customerInformations", `${pathname}`);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          throw new Error("記事がありません。");
+        }
+        setData({
+          ...docSnap.data(),
+          id: docSnap.id,
+        } as CustomerInformation);
+      };
+      getCustomerInformation();
+    } catch (error) {
+      console.log(error);
+    }
   }, [pathname, currentUser]);
 
   const getEmotion = (str: string = "") => {
@@ -72,8 +64,7 @@ const CustomerInfoById: NextPage = () => {
               一覧へ戻る
             </Button>
           </Link>
-          {/* {(data?.author === currentUser) && <CustomerInfoModal data={data} />} */}
-          <CustomerInfoModal data={data} />
+          {(data?.author === currentUser) && <CustomerInfoModal data={data} />}
         </Flex>
       </Flex>
       <Box mt={2}>
