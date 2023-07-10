@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { CustomerInformation } from "../../../types";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import { db } from "../../../firebase";
@@ -28,10 +28,12 @@ const CustomerInfoById: NextPage = () => {
         if (!docSnap.exists()) {
           throw new Error("記事がありません。");
         }
-        setData({
-          ...docSnap.data(),
-          id: docSnap.id,
-        } as CustomerInformation);
+        onSnapshot(docRef, (snapShot) => {
+          setData({
+            ...snapShot.data(),
+            id: snapShot.id,
+          } as CustomerInformation);
+        });
       };
       getCustomerInformation();
     } catch (error) {
@@ -64,7 +66,7 @@ const CustomerInfoById: NextPage = () => {
               一覧へ戻る
             </Button>
           </Link>
-          {(data?.author === currentUser) && <CustomerInfoModal data={data} />}
+          {data?.author === currentUser && <CustomerInfoModal data={data} />}
         </Flex>
       </Flex>
       <Box mt={2}>
@@ -115,7 +117,7 @@ const CustomerInfoById: NextPage = () => {
         <>
           <Box mt={6}>
             <Text fontWeight="bold">画像</Text>
-            <Flex gap={3} flexDir="column">
+            <Flex mt={2} gap={3} flexDir="column">
               {data.images.map((image, index) => (
                 <img key={index} src={image.imageUrl} alt="" />
               ))}

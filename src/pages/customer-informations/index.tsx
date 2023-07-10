@@ -31,6 +31,7 @@ import { format } from "date-fns";
 import { deleteObject, ref } from "firebase/storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useDisp } from "@/hooks/useDisp";
+import { FaTrashCan } from "react-icons/fa6";
 
 const CustomerInformations: NextPage = () => {
   const [data, setData] = useState<CustomerInformation[]>([]);
@@ -52,7 +53,7 @@ const CustomerInformations: NextPage = () => {
     getCustomerInfomations();
   }, []);
 
-  const deleteCustomerInformation = async (id: string) => {
+  const deleteInformation = async (id: string) => {
     const result = confirm("削除して宜しいでしょうか");
     if (!result) return;
     try {
@@ -120,9 +121,11 @@ const CustomerInformations: NextPage = () => {
               <Th>タイトル</Th>
               <Th textAlign="center">受けた印象</Th>
               <Th>内容</Th>
-              <Th maxW="50px">投稿者</Th>
-              <Th maxW="50px">詳細</Th>
-              <Th maxW="50px">削除</Th>
+              <Th>投稿者</Th>
+              <Th w="50px" textAlign="center">
+                詳細
+              </Th>
+              <Th w="50px">削除</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -149,23 +152,24 @@ const CustomerInformations: NextPage = () => {
                   </Td>
                   <Td>{excerpt(content, 20)}</Td>
                   <Td>{getUserName(author)}</Td>
-                  <Td maxW="50px">
-                    <Link href={`/customer-informations/${id}`} passHref>
-                      <Button size="xs" variant="outline">
-                        詳細
-                      </Button>
-                    </Link>
+                  <Td w="50px">
+                    <Flex fontSize="xl" justify="center">
+                      <Link href={`/customer-informations/${id}`} passHref>
+                        <Button size="xs" variant="outline">
+                          詳細
+                        </Button>
+                      </Link>
+                    </Flex>
                   </Td>
-                  <Td maxW="50px">
-                    {author === currentUser && (
-                      <Button
-                        colorScheme="red"
-                        size="xs"
-                        onClick={() => deleteCustomerInformation(id)}
-                      >
-                        削除
-                      </Button>
-                    )}
+                  <Td w="50px">
+                    <Flex justify="center">
+                      {author === currentUser && (
+                        <FaTrashCan
+                          cursor="pointer"
+                          onClick={() => deleteInformation(id)}
+                        />
+                      )}
+                    </Flex>
                   </Td>
                 </Tr>
               )

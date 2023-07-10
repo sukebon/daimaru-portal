@@ -1,19 +1,21 @@
-import { Box, Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, Text, Textarea, useDisclosure } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
-import { CustomerInfoForm } from './CustomerInfoForm';
-import { CustomerInformation } from '../../../types';
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
+import React, { FC, useState } from "react";
+import { CustomerInfoForm } from "./CustomerInfoForm";
+import { CustomerInformation } from "../../../types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
-import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
-import { FaRegFaceTired } from "react-icons/fa6";
-import useSWR from "swr";
-
-type Customers = {
-  contents: { name: string; }[];
-};
-
-type Prefecture = {
-  contents: { prefecture: string; }[];
-};
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db, storage } from "../../../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 type Props = {
   data?: CustomerInformation;
@@ -22,55 +24,75 @@ type Props = {
 export const CustomerInfoModal: FC<Props> = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileUpload, setFileUpload] = useState<any>("");
-  const methods = useForm<CustomerInformation>(
-    {
-      defaultValues: {
-        customer: data?.customer,
-        title: data?.title,
-        prefecture: data?.prefecture,
-        emotion: data?.emotion,
-        content: data?.content,
-        link: data?.link
-      }
-    }
-  );
+  const methods = useForm<CustomerInformation>({
+    defaultValues: {
+      id: data?.id,
+      customer: data?.customer,
+      title: data?.title,
+      prefecture: data?.prefecture,
+      emotion: data?.emotion,
+      content: data?.content,
+      link: data?.link,
+    },
+  });
 
   const onSubmit: SubmitHandler<CustomerInformation> = async (data) => {
-
+    updateInformation(data);
   };
 
-  const handleFile = (e: any) => {
-    if (!e.target.files) return;
-    setFileUpload(e.target.files);
-  };
-
-  const fetcher = async (url: string) =>
-    await fetch(url, {
-      headers: {
-        apikey: process.env.NEXT_PUBLIC_SPREADSHEET_APIKEY as string,
-      },
-    }).then((res) => {
-      if (!res.ok) {
-        throw new Error("error fetching the data.");
-      }
-      return res.json();
+  const updateInformation = async (data: CustomerInformation) => {
+    const result = confirm("更新して宜しいでしょうか");
+    if (!result) return;
+    const docRef = doc(db, "customerInformations", data.id);
+    await updateDoc(docRef, {
+      customer: data?.customer,
+      title: data?.title,
+      prefecture: data?.prefecture,
+      emotion: data?.emotion,
+      content: data?.content,
+      link: data?.link,
     });
-  const { data: customers } = useSWR<Customers>(
-    "/api/customer-informations/customers",
-    fetcher
-  );
+    addImageFile(data.id, fileUpload);
+    setFileUpload('')
+    onClose();
+  };
 
-  const { data: prefectures } = useSWR<Prefecture>(
-    "/api/customer-informations/prefectures",
-    fetcher
-  );
-
+  const addImageFile = (id: string, fileUpload: any) => {
+    if (fileUpload.length === 0) return;
+    Array.from(fileUpload)?.forEach((file: any) => {
+      const storageRef = ref(
+        storage,
+        `images/customer-informations/${id}/${file.name}`
+      );
+      uploadBytes(storageRef, file).then(() => {
+        getDownloadURL(
+          ref(storage, `images/customer-informations/${id}/${file.name}`)
+        ).then((url) => {
+          const docRef = doc(db, "customerInformations", id);
+          console.log(storageRef.fullPath);
+          updateDoc(docRef, {
+            images: arrayUnion({
+              imageUrl: url,
+              imagePath: storageRef.fullPath,
+            }),
+          });
+        });
+      });
+    });
+  };
 
   return (
     <>
-      <Button colorScheme='blue' size="sm" onClick={onOpen}>編集</Button>
+      <Button colorScheme="blue" size="sm" onClick={onOpen}>
+        編集
+      </Button>
 
-      <Modal isOpen={isOpen} onClose={() => { onClose(); }}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+        }}
+      >
         <ModalOverlay />
         <ModalContent>
           <FormProvider {...methods}>
@@ -78,13 +100,25 @@ export const CustomerInfoModal: FC<Props> = ({ data }) => {
               <ModalHeader>編集</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <CustomerInfoForm />
+                <CustomerInfoForm
+                  data={data}
+                  fileUpload={fileUpload}
+                  setFileUpload={setFileUpload}
+                />
               </ModalBody>
               <ModalFooter>
-                <Button mr={3} variant='outline' onClick={() => { onClose(); }}>
+                <Button
+                  mr={3}
+                  variant="outline"
+                  onClick={() => {
+                    onClose();
+                  }}
+                >
                   閉じる
                 </Button>
-                <Button type="submit" colorScheme='blue'>更新</Button>
+                <Button type="submit" colorScheme="blue">
+                  更新
+                </Button>
               </ModalFooter>
             </form>
           </FormProvider>

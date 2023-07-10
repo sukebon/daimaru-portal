@@ -16,7 +16,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC,  useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -50,8 +50,8 @@ const Receivables: FC = () => {
   const [isUncollected, setIsUncollected] = useState(false);
   const [isReadCheck, setIsReadCheck] = useState<boolean>(false);
   const [isloadingButton, setIsLoadingButton] = useState(false);
-  const LIMIT_INIT = 200;
-  const LIMIT_STEP = 200;
+  const LIMIT_INIT = 500;
+  const LIMIT_STEP = 500;
   const [limit, setLimit] = useState(LIMIT_INIT);
   const { getYearMonth } = useUtils();
   const { register, handleSubmit, reset } = useForm<Inputs>();
@@ -161,6 +161,7 @@ const Receivables: FC = () => {
       <TableContainer
         bg="white"
         rounded={6}
+        boxShadow="md"
         p={6}
         overflowX="unset"
         overflowY="unset"

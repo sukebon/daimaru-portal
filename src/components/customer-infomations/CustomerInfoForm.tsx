@@ -1,30 +1,78 @@
-import { Box, Button, Flex, Input, Radio, RadioGroup, Select, Stack, Text, Textarea } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  Radio,
+  RadioGroup,
+  Select,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
+import React, { FC, useState } from "react";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import useSWR from "swr";
-import { useAuthStore } from '../../../store/useAuthStore';
-import { useRouter } from 'next/router';
-import { useFormContext } from 'react-hook-form';
+import { useAuthStore } from "../../../store/useAuthStore";
+import { useFormContext } from "react-hook-form";
+import { CustomerInformation } from "../../../types";
+import { FaCircleXmark } from "react-icons/fa6";
+import { deleteObject, ref } from "firebase/storage";
+import { db, storage } from "../../../firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 type Customers = {
-  contents: { name: string; }[];
+  contents: { name: string }[];
 };
 
 type Prefecture = {
-  contents: { prefecture: string; }[];
+  contents: { prefecture: string }[];
 };
 
+type Props = {
+  data?: CustomerInformation;
+  fileUpload: any;
+  setFileUpload: (payload: any) => void;
+};
 
-export const CustomerInfoForm: FC = () => {
-  const [fileUpload, setFileUpload] = useState<any>("");
+export const CustomerInfoForm: FC<Props> = ({
+  data,
+  fileUpload,
+  setFileUpload,
+}) => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const router = useRouter();
-  const { register, formState: { errors } } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   const handleFile = (e: any) => {
     if (!e.target.files) return;
     setFileUpload(e.target.files);
+  };
+
+  const deleteImage = async (
+    data: CustomerInformation,
+    path: string,
+    index: number
+  ) => {
+    const result = confirm("削除して宜しいでしょうか");
+    if (!result) return;
+    const desertRef = ref(storage, path);
+    deleteObject(desertRef);
+    const docRef = doc(db, "customerInformations", data.id);
+    const newArray = data.images
+      ?.filter((_, i) => (index !== i ? true : false))
+      .map((image) => ({
+        imageUrl: image.imageUrl,
+        imagePath: image.imagePath,
+      }));
+
+    await updateDoc(docRef, {
+      images: newArray,
+    });
+    setFileUpload("");
   };
 
   const fetcher = async (url: string) =>
@@ -47,7 +95,6 @@ export const CustomerInfoForm: FC = () => {
     "/api/customer-informations/prefectures",
     fetcher
   );
-
 
   return (
     <>
@@ -87,7 +134,7 @@ export const CustomerInfoForm: FC = () => {
       </Box>
       <Box mt={6}>
         <Text>受けた印象</Text>
-        <RadioGroup defaultValue="good">
+        <RadioGroup defaultValue={data?.emotion}>
           <Stack
             direction={{ base: "column", sm: "row" }}
             spacing={{ base: 2, sm: 5 }}
@@ -97,10 +144,7 @@ export const CustomerInfoForm: FC = () => {
                 <BsEmojiLaughing color="orange" /> Good
               </Flex>
             </Radio>
-            <Radio
-              value="normal"
-              {...register("emotion", { required: true })}
-            >
+            <Radio value="normal" {...register("emotion", { required: true })}>
               <Flex align="center" gap={1}>
                 <BsEmojiNeutral color="blue" /> Normal
               </Flex>
@@ -113,7 +157,6 @@ export const CustomerInfoForm: FC = () => {
           </Stack>
         </RadioGroup>
       </Box>
-
       <Box mt={6}>
         <Text>内容</Text>
         <Textarea
@@ -131,6 +174,27 @@ export const CustomerInfoForm: FC = () => {
         <Text>リンク先</Text>
         <Input w="full" {...register("link")} />
       </Box>
+      <Flex mt={6} direction="column" gap={6}>
+        {data?.images.map((image, index) => (
+          <Box key={index} position="relative">
+            <img src={image.imageUrl} alt="" width="100%" height="auto" />
+            <Box
+              position="absolute"
+              top="-12px"
+              right="-12px"
+              bgColor="white"
+              rounded="full"
+              boxShadow="md"
+              cursor="pointer"
+            >
+              <FaCircleXmark
+                fontSize="26px"
+                onClick={() => deleteImage(data, image.imagePath, index)}
+              />
+            </Box>
+          </Box>
+        ))}
+      </Flex>
       <Box mt={6}>
         <Input
           type="file"
