@@ -143,7 +143,7 @@ const CustomerInfoNew: NextPage = () => {
           お客様情報入力
         </Box>
         <Link href="/customer-informations" passHref>
-          <Button size="sm">一覧へ戻る</Button>
+          <Button colorScheme="blue" variant="outline" size="sm">一覧へ戻る</Button>
         </Link>
       </Flex>
       <form onSubmit={handleSubmit(onSubmit)}>
