@@ -35,6 +35,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
           <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
+              <ClaimArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
               <SalesArea />
@@ -52,10 +53,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
           </Box>
           <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
             <Stack spacing={6}>
-              <ClaimArea />
-              {Administrator.includes(currentUser || "") && (
-                <CustomerInfoArea />
-              )}
+              <CustomerInfoArea />
               <RequestArea />
             </Stack>
           </Box>

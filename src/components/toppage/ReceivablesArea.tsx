@@ -43,7 +43,7 @@ export const ReceivablesArea: FC = () => {
           bg="white"
         >
           <Text fontSize="2xl" mb="4" ml="1">
-            売掛未回収一覧
+            売掛未回収
           </Text>
           <TableContainer>
             <Table variant="simple" size="sm">
@@ -59,9 +59,9 @@ export const ReceivablesArea: FC = () => {
                 {data?.contents?.map((content: any, index: number) => (
                   <Tr key={index}>
                     {/* <Td>{content.コード}</Td> */}
-                    <Td>{content.得意先名}</Td>
-                    <Td>{content.担当}</Td>
-                    <Td>{content.入金遅延}</Td>
+                    <Td fontSize="xs">{content.得意先名}</Td>
+                    <Td fontSize="xs">{content.担当}</Td>
+                    <Td fontSize="xs">{content.入金遅延}</Td>
                   </Tr>
                 ))}
               </Tbody>

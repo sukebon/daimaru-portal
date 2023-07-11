@@ -1,24 +1,113 @@
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import {
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { db } from "../../../firebase";
+import { CustomerInformation } from "../../../types";
+import { format } from "date-fns";
+import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
+import { FaRegFaceTired } from "react-icons/fa6";
+import { useUtils } from "@/hooks/useUtils";
 
 export const CustomerInfoArea = () => {
+  const { excerpt } = useUtils();
+  const [customerInfoData, setCustomerInfoData] = useState<
+    CustomerInformation[]
+  >([]);
+
+  useEffect(() => {
+    const getCustomerInfomations = async () => {
+      const collectionRef = collection(db, "customerInformations");
+      const q = query(collectionRef, orderBy("createdAt", "desc"), limit(5));
+      onSnapshot(q, (querySnapshot) => {
+        setCustomerInfoData(
+          querySnapshot.docs.map(
+            (doc) => ({ ...doc.data(), id: doc.id } as CustomerInformation)
+          )
+        );
+      });
+    };
+    getCustomerInfomations();
+  }, []);
+
+  const getEmotion = (str: string) => {
+    switch (str) {
+      case "good":
+        return <BsEmojiLaughing color="orange" />;
+      case "normal":
+        return <BsEmojiNeutral color="blue" />;
+      case "bad":
+        return <FaRegFaceTired color="red" />;
+      default:
+        return "no image";
+    }
+  };
+
   return (
     <Box w="100%" boxShadow="xs" p={{ base: 6, md: 6 }} rounded="md" bg="white">
-      <Box>テスト</Box>
+      <Box as="h3" fontSize="2xl" mb="4" ml="1">
+        お客様情報
+      </Box>
+      <TableContainer>
+        <Table size="sm">
+          <Thead>
+            <Th>日付</Th>
+            <Th>顧客名</Th>
+            <Th>タイトル</Th>
+            <Th textAlign="center">受けた印象</Th>
+            <Th textAlign="center">詳細</Th>
+          </Thead>
+          <Tbody fontSize="xs">
+            {customerInfoData.map(
+              ({ id, createdAt, customer, title, emotion }) => (
+                <Tr key={id} >
+                  <Td fontSize="xs">
+                    {format(new Date(createdAt.toDate()), "yyyy年MM月dd日")}
+                  </Td>
+                  <Td fontSize="xs">{excerpt(customer, 10)}</Td>
+                  <Td fontSize="xs">{excerpt(title, 15)}</Td>
+                  <Td w="100px">
+                    <Flex justify="center">{getEmotion(emotion)}</Flex>
+                  </Td>
+                  <Td>
+                    <Flex justify="center" w="full">
+                      <Link href={`/customer-informations/${id}`} passHref>
+                        <Button variant="outline" size="xs">
+                          詳細
+                        </Button>
+                      </Link>
+                    </Flex>
+                  </Td>
+                </Tr>
+              )
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
       <Flex
-        gap={6}
+        mt={6}
         align="center"
         flexDirection={{ base: "column", "2xl": "row" }}
       >
-        <Flex fontSize="lg" align="center" justify="center">
-          <Text>今月のお客様情報件数:</Text>
-          <Text fontSize="3xl" fontWeight="bold" mx={2} color="red">
-            0
-          </Text>
-          <Text>件</Text>
-        </Flex>
-        <Flex flex="1" direction={{ base: "column", sm: "row" }} gap={6}>
+        <Flex w="full" direction={{ base: "column", sm: "row" }} gap={3}>
           <Box w="full">
             <Link href="/customer-informations/" passHref>
               <Button colorScheme="blue" variant="outline" w="100%">

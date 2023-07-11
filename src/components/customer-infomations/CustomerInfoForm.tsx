@@ -10,11 +10,10 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import useSWR from "swr";
-import { useAuthStore } from "../../../store/useAuthStore";
 import { useFormContext } from "react-hook-form";
 import { CustomerInformation } from "../../../types";
 import { FaCircleXmark } from "react-icons/fa6";
@@ -41,7 +40,8 @@ export const CustomerInfoForm: FC<Props> = ({
   fileUpload,
   setFileUpload,
 }) => {
-  const currentUser = useAuthStore((state) => state.currentUser);
+
+
   const {
     register,
     formState: { errors },
