@@ -28,22 +28,53 @@ import { CustomerInformation } from "../../../types";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import { format } from "date-fns";
-import { deleteObject, ref } from "firebase/storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useDisp } from "@/hooks/useDisp";
 import { FaTrashCan } from "react-icons/fa6";
+import { deleteObject, ref } from "firebase/storage";
+import { useUtils } from "@/hooks/useUtils";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+import { CustomerInfoSearch } from "@/components/customer-infomations/CustomerInfoSearch";
+import { useRouter } from "next/router";
+
+type Inputs = {
+  customer: string;
+  title: string;
+  prefecture: string;
+  emotion: string;
+};
 
 const CustomerInformations: NextPage = () => {
-  const [data, setData] = useState<CustomerInformation[]>([]);
+  const [customerInfoData, setCustomerInfoData] = useState<
+    CustomerInformation[]
+  >([]);
+  const [filterData, setFilterData] = useState<CustomerInformation[]>([]);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { getUserName } = useDisp();
+  const { excerpt } = useUtils();
+  const methods = useForm<Inputs>({
+    defaultValues: {
+      customer: "",
+      title: "",
+      emotion: "",
+    },
+  });
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const newArray = customerInfoData.filter(
+      ({ customer, title, emotion }) =>
+        customer.includes(data.customer) &&
+        title.includes(data.title) &&
+        emotion.includes(data.emotion)
+    );
+    setFilterData(newArray);
+  };
 
   useEffect(() => {
     const getCustomerInfomations = async () => {
       const collectionRef = collection(db, "customerInformations");
       const q = query(collectionRef, orderBy("createdAt", "desc"));
       onSnapshot(q, (querySnapshot) => {
-        setData(
+        setCustomerInfoData(
           querySnapshot.docs.map(
             (doc) => ({ ...doc.data(), id: doc.id } as CustomerInformation)
           )
@@ -52,6 +83,10 @@ const CustomerInformations: NextPage = () => {
     };
     getCustomerInfomations();
   }, []);
+
+  useEffect(()=>{
+    setFilterData(customerInfoData);
+  },[customerInfoData])
 
   const deleteInformation = async (id: string) => {
     const result = confirm("削除して宜しいでしょうか");
@@ -72,14 +107,6 @@ const CustomerInformations: NextPage = () => {
     }
   };
 
-  const excerpt = (str: string, num: number) => {
-    let result = str;
-    if (str.length > num) {
-      result = str.slice(0, num) + "...";
-    }
-    return result;
-  };
-
   const getEmotion = (str: string) => {
     switch (str) {
       case "good":
@@ -95,24 +122,29 @@ const CustomerInformations: NextPage = () => {
 
   return (
     <Container maxW="1200px" bg="white" p={6} boxShadow="md" rounded="md">
-      <TableContainer>
-        <Flex justify="space-between" align="center">
-          <Box as="h1" fontSize="lg" fontWeight="bold">
-            お客様情報一覧
-          </Box>
-          <Flex gap={3}>
-            <Link href="/" passHref>
-              <Button colorScheme="blue" size="sm" variant="outline">
-                トップへ戻る
-              </Button>
-            </Link>
-            <Link href="/customer-informations/new" passHref>
-              <Button colorScheme="blue" size="sm">
-                作成
-              </Button>
-            </Link>
-          </Flex>
+      <Flex justify="space-between" align="center">
+        <Box as="h1" fontSize="lg" fontWeight="bold">
+          お客様情報一覧
+        </Box>
+        <Flex gap={3}>
+          <Link href="/" passHref>
+            <Button colorScheme="blue" size="sm" variant="outline">
+              トップへ戻る
+            </Button>
+          </Link>
+          <Link href="/customer-informations/new" passHref>
+            <Button colorScheme="blue" size="sm">
+              作成
+            </Button>
+          </Link>
         </Flex>
+      </Flex>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <CustomerInfoSearch customerInfoData={customerInfoData} setFilterData={setFilterData} />
+        </form>
+      </FormProvider>
+      <TableContainer>
         <Table size="sm" mt={6}>
           <Thead>
             <Tr>
@@ -129,7 +161,7 @@ const CustomerInformations: NextPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map(
+            {filterData.map(
               ({
                 createdAt,
                 id,

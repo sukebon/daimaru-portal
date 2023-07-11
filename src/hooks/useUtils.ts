@@ -12,6 +12,15 @@ export const useUtils = () => {
     if (level) return level;
   };
 
+  
+  const excerpt = (str: string, num: number) => {
+    let result = str;
+    if (str.length > num) {
+      result = str.slice(0, num) + "...";
+    }
+    return result;
+  };
+
   //日付から曜日を取得
   const dayOfWeek = (d: string) => {
     if (d == "未定") return "";
@@ -112,6 +121,7 @@ export const useUtils = () => {
   return {
     isAuth,
     starLevel,
+    excerpt,
     dayOfWeek,
     todayDate,
     getYearMonth,
