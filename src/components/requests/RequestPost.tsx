@@ -57,18 +57,18 @@ export const RequestPost: FC<Props> = ({ request }) => {
   );
 
   return (
-    <Box p={3}>
+    <>
       <Flex justify="space-between">
-        <Flex direction="column" width="100%">
+        <Flex direction="column" w="full">
           {newLabel(request?.sendAt?.toDate()) && (
-            <Badge colorScheme="red" w="100px" textAlign="center" p={1}>
+            <Badge colorScheme="red" w="full" textAlign="center" p={1}>
               New
             </Badge>
           )}
           <Flex justify="space-between" align="center">
-            <Flex gap={2}>
-              <Box fontSize="2xl">{starLevel(request.level)}</Box>
-              {!request.recruitment && "【募集終了】"}
+            <Flex gap={2} align="center">
+              <Box fontSize="xl">{starLevel(request.level)}</Box>
+              <Box>{!request.recruitment && "【募集終了】"}</Box>
             </Flex>
             {/* メニューボタン  投稿者と管理者のみ表示*/}
             {(currentUser === request.author ||
@@ -76,7 +76,7 @@ export const RequestPost: FC<Props> = ({ request }) => {
               <RequestMenu request={request} />
             )}
           </Flex>
-          <Heading fontSize="md" pb={6} mt={2}>
+          <Heading fontSize="md" pb={3} mt={3}>
             {request.title}
           </Heading>
           <Flex
@@ -127,6 +127,6 @@ export const RequestPost: FC<Props> = ({ request }) => {
         </Flex>
       </Flex>
       <Divider />
-    </Box>
+    </>
   );
 };

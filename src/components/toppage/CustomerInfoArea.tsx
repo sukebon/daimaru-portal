@@ -62,30 +62,36 @@ export const CustomerInfoArea = () => {
   };
 
   return (
-    <Box w="100%" boxShadow="xs" p={{ base: 6, md: 6 }} rounded="md" bg="white">
-      <Flex w="full" gap={3} justifyContent="space-between">
-        <Box as="h3" fontSize="lg" fontWeight="bold" mb="4" ml="1">
+    <Box
+    w={{base:"full",lg:"70%"}}
+      boxShadow="xs"
+      p={{ base: 6, md: 6 }}
+      rounded="md"
+      bg="white"
+    >
+      <Flex gap={3} justify="space-between">
+        <Box as="h3" fontSize="lg" fontWeight="bold">
           お客様情報
         </Box>
         <Flex gap={2}>
           <Box w={{ base: "full", md: "auto" }}>
             <Link href="/customer-informations/" passHref>
-              <Button w="full" colorScheme="blue" size="xs" variant="outline">
+              <Button w="full" colorScheme="blue" size="sm" variant="outline">
                 一覧
               </Button>
             </Link>
           </Box>
           <Box w={{ base: "full", md: "auto" }}>
             <Link href="/customer-informations/new" passHref>
-              <Button w="full" colorScheme="blue" size="xs">
+              <Button w="full" colorScheme="blue" size="sm">
                 作成
               </Button>
             </Link>
           </Box>
         </Flex>
       </Flex>
-      <TableContainer>
-        <Table variant="simple" size="sm">
+      <TableContainer mt={3} w="full">
+        <Table size="sm" >
           <Thead>
             <Th>日付</Th>
             <Th>顧客名</Th>
@@ -102,11 +108,11 @@ export const CustomerInfoArea = () => {
                   </Td>
                   <Td fontSize="xs">{excerpt(customer, 10)}</Td>
                   <Td fontSize="xs">{excerpt(title, 15)}</Td>
-                  <Td w="100px">
+                  <Td>
                     <Flex justify="center">{getEmotion(emotion)}</Flex>
                   </Td>
                   <Td>
-                    <Flex justify="center" w="full">
+                    <Flex justify="center">
                       <Link href={`/customer-informations/${id}`} passHref>
                         <Button variant="outline" size="xs">
                           詳細

@@ -39,6 +39,7 @@ export const RequestMenu: FC<Props> = ({ request }) => {
     <Menu>
       <MenuButton
         as={IconButton}
+        size="sm"
         aria-label="MenuButton"
         icon={<BsThreeDotsVertical />}
         variant="outline"

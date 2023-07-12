@@ -12,7 +12,7 @@ export const RequestPostList: FC<Props> = ({ requests }) => {
   return (
     <>
       {requests.map((request) => (
-        <Box key={request.id} w="100%">
+        <Box key={request.id} w="full" mt={3}>
           <RequestPost request={request} />
         </Box>
       ))}
