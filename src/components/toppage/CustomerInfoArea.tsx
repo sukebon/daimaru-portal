@@ -63,25 +63,26 @@ export const CustomerInfoArea = () => {
 
   return (
     <Box
-    w={{base:"full",lg:"70%"}}
+      flex={{ base: "1", md: "1", lg: "1" }}
+      w="full"
       boxShadow="xs"
       p={{ base: 6, md: 6 }}
       rounded="md"
       bg="white"
     >
-      <Flex gap={3} justify="space-between">
+      <Flex w="full" gap={3} justify="space-between">
         <Box as="h3" fontSize="lg" fontWeight="bold">
           お客様情報
         </Box>
         <Flex gap={2}>
-          <Box w={{ base: "full", md: "auto" }}>
+          <Box>
             <Link href="/customer-informations/" passHref>
               <Button w="full" colorScheme="blue" size="sm" variant="outline">
                 一覧
               </Button>
             </Link>
           </Box>
-          <Box w={{ base: "full", md: "auto" }}>
+          <Box>
             <Link href="/customer-informations/new" passHref>
               <Button w="full" colorScheme="blue" size="sm">
                 作成
@@ -90,28 +91,44 @@ export const CustomerInfoArea = () => {
           </Box>
         </Flex>
       </Flex>
-      <TableContainer mt={3} w="full">
-        <Table size="sm" >
-          <Thead>
-            <Th>日付</Th>
-            <Th>顧客名</Th>
-            <Th>タイトル</Th>
-            <Th textAlign="center">受けた印象</Th>
-            <Th textAlign="center">詳細</Th>
+      <TableContainer mt={3}>
+        <Table size="" w="full">
+          <Thead fontSize="xs">
+            <Th px={1}>日付</Th>
+            <Th px={1}>顧客名</Th>
+            <Th px={1}>タイトル</Th>
+            <Th px={1} textAlign="center">
+              受けた印象
+            </Th>
+            {/* <Th textAlign="center">詳細</Th> */}
           </Thead>
           <Tbody fontSize="xs">
             {customerInfoData.map(
               ({ id, createdAt, customer, title, emotion }) => (
-                <Tr key={id}>
-                  <Td fontSize="xs">
-                    {format(new Date(createdAt.toDate()), "yyyy年MM月dd日")}
+                <Tr key={id} p={2}>
+                  <Td fontSize="xs" px={1} py={2}>
+                    {format(new Date(createdAt.toDate()), "MM月dd日")}
                   </Td>
-                  <Td fontSize="xs">{excerpt(customer, 10)}</Td>
-                  <Td fontSize="xs">{excerpt(title, 15)}</Td>
-                  <Td>
-                    <Flex justify="center">{getEmotion(emotion)}</Flex>
+                  <Td fontSize="xs" px={1}>
+                    {excerpt(customer, 10)}
+                  </Td>
+                  <Td fontSize="xs" px={1}>
+                    <Link href={`/customer-informations/${id}`} passHref>
+                      <Box
+                        as="span"
+                        textDecoration="underline"
+                        _hover={{ textDecoration: "none" }}
+                      >
+                        {excerpt(title, 15)}
+                      </Box>
+                    </Link>
                   </Td>
                   <Td>
+                    <Flex justify="center" fontSize="lg">
+                      {getEmotion(emotion)}
+                    </Flex>
+                  </Td>
+                  {/* <Td>
                     <Flex justify="center">
                       <Link href={`/customer-informations/${id}`} passHref>
                         <Button variant="outline" size="xs">
@@ -119,7 +136,7 @@ export const CustomerInfoArea = () => {
                         </Button>
                       </Link>
                     </Flex>
-                  </Td>
+                  </Td> */}
                 </Tr>
               )
             )}

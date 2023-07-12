@@ -75,7 +75,6 @@ export const ClaimArea = () => {
     <>
       <Flex
         flex="1"
-        w={{ base: "full", "2xl": "50%" }}
         p="6"
         align="center"
         justify="center"

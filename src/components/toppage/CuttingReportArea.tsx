@@ -18,6 +18,7 @@ import { useCuttingReport } from "../../hooks/useCuttingReport";
 // import { CuttingReportModal } from "../cutting-report/CuttingReportModal";
 import { FC } from "react";
 import Link from "next/link";
+import { useUtils } from "@/hooks/useUtils";
 
 type Data = {
   contents: CuttingReport[] | undefined;
@@ -28,6 +29,7 @@ export const CuttingReportArea: FC = () => {
   const { data: reports } = useSWR<Data>("/api/cutting-reports/", fetcher);
   // const { data: reports } = useSWR<Data>("/api/cutting-reports/ready-made/", fetcher);
   const { getSerialNumber, withInChar } = useCuttingReport();
+  const {excerpt} = useUtils()
 
   return (
     <>
@@ -63,8 +65,8 @@ export const CuttingReportArea: FC = () => {
                   <Th>加工指示書NO.</Th>
                   <Th>受注先名</Th>
                   <Th>品名</Th>
-                  <Th>数量</Th>
-                  <Th>担当者</Th>
+                  <Th w="60px">数量</Th>
+                  <Th >担当者</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -78,11 +80,13 @@ export const CuttingReportArea: FC = () => {
                     </Td>
                     <Td fontSize="xs">{report?.processNumber}</Td>
                     <Td fontSize="xs">{withInChar(report?.client)}</Td>
-                    <Td fontSize="xs">{withInChar(report?.itemName)}</Td>
+                    <Td fontSize="xs">{excerpt(report?.itemName,16)}</Td>
                     <Td fontSize="xs" isNumeric>
                       {report?.totalQuantity}
                     </Td>
-                    <Td fontSize="xs">{report?.username}</Td>
+                    <Td fontSize="xs">
+                      {report?.username}
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>

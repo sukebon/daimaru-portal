@@ -40,21 +40,31 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
               <CuttingReportArea />
               <AlcoholCheckArea />
               <Flex
+                direction={{
+                  base: "column",
+                  sm:"column",
+                  md: "row",
+                  lg: "row",
+                  xl: "row",
+                }}
+                gap={6}
+              >
+                <Slogan />
+                <ClaimArea />
+              </Flex>
+              <Flex
                 w="full"
                 direction={{
                   base: "column",
-                  md: "row",
-                  lg: "row",
+                  md: "column",
+                  lg: "column",
+                  xl: "column",
                   "2xl": "row",
                 }}
                 gap={6}
               >
-                <CustomerInfoArea />
-                <ClaimArea />
-              </Flex>
-              <Flex w="full" direction={{ base: "column", md: "row" }} gap={6}>
-                <Slogan />
                 <Information news={newsData} />
+                <CustomerInfoArea />
               </Flex>
               <Flex
                 direction={{
