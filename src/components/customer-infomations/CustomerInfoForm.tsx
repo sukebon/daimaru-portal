@@ -175,7 +175,7 @@ export const CustomerInfoForm: FC<Props> = ({
         <Input w="full" {...register("link")} />
       </Box>
       <Flex mt={6} direction="column" gap={6}>
-        {data?.images.map((image, index) => (
+        {data?.images?.map((image, index) => (
           <Box key={index} position="relative">
             <img src={image.imageUrl} alt="" width="100%" height="auto" />
             <Box

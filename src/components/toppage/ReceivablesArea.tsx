@@ -62,7 +62,7 @@ export const ReceivablesArea: FC = () => {
                   {/* <Th>コード</Th> */}
                   <Th>得意先名</Th>
                   <Th>担当</Th>
-                  <Th>入金遅延</Th>
+                  <Th>回収予定日</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -71,7 +71,7 @@ export const ReceivablesArea: FC = () => {
                     {/* <Td>{content.コード}</Td> */}
                     <Td fontSize="xs">{content.得意先名}</Td>
                     <Td fontSize="xs">{content.担当}</Td>
-                    <Td fontSize="xs">{content.入金遅延}</Td>
+                    <Td fontSize="xs">{content.回収予定日}</Td>
                   </Tr>
                 ))}
               </Tbody>

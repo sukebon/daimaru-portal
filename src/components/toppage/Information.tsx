@@ -8,11 +8,17 @@ type Props = {
 
 const Information: NextPage<Props> = ({ news }) => {
   return (
-    <Box flex="1" w="full" boxShadow="xs" p={{ base: 6, md: 6 }} rounded="md" bg="white">
-      <Text fontSize="lg" fontWeight="bold">
+    <Box
+      flex="1"
+      boxShadow="xs"
+      p={{ base: 6, md: 6 }}
+      rounded="md"
+      bg="white"
+    >
+      <Box fontSize="lg" fontWeight="bold">
         お知らせ
-      </Text>
-      <List spacing={3}>
+      </Box>
+      <List spacing={3} w="full">
         {news.map(({ id, message }) => (
           <Box key={id} pb="2" borderBottom="1px" borderColor="#eeeeee">
             <Flex align={"center"}>

@@ -4,8 +4,7 @@ import type { NextPage } from "next";
 const Slogan: NextPage = () => {
   return (
     <Box
-      flex="1"
-      w="full"
+      flex={{base:"1",md:"2",xl:"3"}}
       boxShadow="xs"
       p={{ base: 6, md: 6 }}
       rounded="md"
