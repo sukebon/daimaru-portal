@@ -28,14 +28,18 @@ const QuickLink: NextPage<Props> = ({ links, categories }) => {
         rounded="md"
         bg="white"
       >
-        <Text fontSize="2xl" my="1" ml="1">
+        <Text fontSize="lg" fontWeight="bold" my="1" ml="1">
           クイックアクセスリンク
         </Text>
 
         <Tabs variant="enclosed">
-          <TabList mt={3} >
+          <TabList mt={3}>
             {categories?.map((category) => (
-              <Tab key={category.id} _focus={{ outline: "none", fontWeight: "bold" }}>
+              <Tab
+              fontSize="xs"
+                key={category.id}
+                _focus={{ outline: "none", fontWeight: "bold" }}
+              >
                 {category.name}
               </Tab>
             ))}
@@ -43,15 +47,15 @@ const QuickLink: NextPage<Props> = ({ links, categories }) => {
           <TabPanels>
             {categories.map((category) => (
               <TabPanel key={category.id}>
-                <UnorderedList spacing={3} mx={6} mt={3}>
+                <UnorderedList spacing={2} mx={6} mt={3}>
                   {links
                     .filter(
-                      (link) =>
-                        link.category?.name === category.name && true
+                      (link) => link.category?.name === category.name && true
                     )
                     .map((link) => (
                       <ListItem key={link.id}>
                         <Text
+                          fontSize="sm"
                           fontWeight={link?.bold === true ? "bold" : "normal"}
                         >
                           <Link href={link.link} target="_blank">

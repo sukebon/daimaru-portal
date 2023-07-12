@@ -66,15 +66,17 @@ export const RequestPost: FC<Props> = ({ request }) => {
             </Badge>
           )}
           <Flex justify="space-between" align="center">
-            <Box fontSize="2xl">{starLevel(request.level)}</Box>
+            <Flex gap={2}>
+              <Box fontSize="2xl">{starLevel(request.level)}</Box>
+              {!request.recruitment && "【募集終了】"}
+            </Flex>
             {/* メニューボタン  投稿者と管理者のみ表示*/}
             {(currentUser === request.author ||
               Administrator.includes(currentUser)) && (
-                <RequestMenu request={request} />
-              )}
+              <RequestMenu request={request} />
+            )}
           </Flex>
-          <Heading fontSize="xl" pb={6} mt={2}>
-            {!request.recruitment && "【募集終了】"}
+          <Heading fontSize="md" pb={6} mt={2}>
             {request.title}
           </Heading>
           <Flex

@@ -15,6 +15,7 @@ import { ReceivablesArea } from "@/components/toppage/ReceivablesArea";
 import { CustomerInfoArea } from "@/components/toppage/CustomerInfoArea";
 import { Administrator } from "../../data";
 import { useAuthStore } from "../../store/useAuthStore";
+import { ClaimAlertArea } from "@/components/toppage/ClaimAlertArea";
 
 type Props = {
   categoryData: CategoryData[];
@@ -33,25 +34,33 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
       </Head>
       <Box as="main">
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
-          <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
+          <Box flex={1} maxW={{ base: "full", lg: "60%" }}>
             <Stack spacing={6}>
-              <ClaimArea />
+              <ClaimAlertArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
               <SalesArea />
+              <Flex direction={{ base: "column", md: "row" }} gap={6}>
+                <Slogan />
+                <ClaimArea />
+              </Flex>
               <Flex
-                direction={{ base: "column", "2xl": "row-reverse" }}
+                direction={{
+                  base: "column",
+                  md: "row-reverse",
+                  lg: "column",
+                  xl: "row-reverse",
+                }}
                 gap={6}
               >
                 <ReceivablesArea />
-                <Slogan />
+                <QuickLink links={linkData} categories={categoryData} />
               </Flex>
               <Information news={newsData} />
-              <QuickLink links={linkData} categories={categoryData} />
               <CatalogArea />
             </Stack>
           </Box>
-          <Box flex={1} maxW={{ base: "full", lg: "50%" }}>
+          <Box flex={1} maxW={{ base: "full", lg: "40%" }}>
             <Stack spacing={6}>
               <CustomerInfoArea />
               <RequestArea />

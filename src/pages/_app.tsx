@@ -11,7 +11,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useDataList } from "@/hooks/useDataList";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useClaimStore } from "../../store/useClaimStore";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useRequestStore } from "../../store/useRequestStore";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -22,7 +23,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
-  const { getUsers, getFullUsers, getClaims,createPaymentConfirm } = useDataList();
+  const setRequests = useRequestStore((state) => state.setRequests);
+  const {
+    getUsers,
+    getFullUsers,
+    getClaims,
+    getRequests,
+    createPaymentConfirm,
+  } = useDataList();
   const queryClient = new QueryClient();
 
   useEffect(() => {
@@ -92,9 +100,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     getClaims();
   }, [session, setClaims]);
 
-  useEffect(()=>{
-    createPaymentConfirm()
-  },[])
+  useEffect(() => {
+    getRequests();
+  }, [session, setRequests]);
+
+  useEffect(() => {
+    createPaymentConfirm();
+  }, []);
 
   return (
     <ChakraProvider>

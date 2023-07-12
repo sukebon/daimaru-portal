@@ -63,11 +63,29 @@ export const CustomerInfoArea = () => {
 
   return (
     <Box w="100%" boxShadow="xs" p={{ base: 6, md: 6 }} rounded="md" bg="white">
-      <Box as="h3" fontSize="2xl" mb="4" ml="1">
-        お客様情報
-      </Box>
+      <Flex w="full" gap={3} justifyContent="space-between">
+        <Box as="h3" fontSize="lg" fontWeight="bold" mb="4" ml="1">
+          お客様情報
+        </Box>
+        <Flex gap={2}>
+          <Box w={{ base: "full", md: "auto" }}>
+            <Link href="/customer-informations/" passHref>
+              <Button w="full" colorScheme="blue" size="xs" variant="outline">
+                一覧
+              </Button>
+            </Link>
+          </Box>
+          <Box w={{ base: "full", md: "auto" }}>
+            <Link href="/customer-informations/new" passHref>
+              <Button w="full" colorScheme="blue" size="xs">
+                作成
+              </Button>
+            </Link>
+          </Box>
+        </Flex>
+      </Flex>
       <TableContainer>
-        <Table size="sm">
+        <Table variant="simple" size="sm">
           <Thead>
             <Th>日付</Th>
             <Th>顧客名</Th>
@@ -78,7 +96,7 @@ export const CustomerInfoArea = () => {
           <Tbody fontSize="xs">
             {customerInfoData.map(
               ({ id, createdAt, customer, title, emotion }) => (
-                <Tr key={id} >
+                <Tr key={id}>
                   <Td fontSize="xs">
                     {format(new Date(createdAt.toDate()), "yyyy年MM月dd日")}
                   </Td>
@@ -102,28 +120,6 @@ export const CustomerInfoArea = () => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Flex
-        mt={6}
-        align="center"
-        flexDirection={{ base: "column", "2xl": "row" }}
-      >
-        <Flex w="full" direction={{ base: "column", sm: "row" }} gap={3}>
-          <Box w="full">
-            <Link href="/customer-informations/" passHref>
-              <Button colorScheme="blue" variant="outline" w="100%">
-                お客様情報一覧
-              </Button>
-            </Link>
-          </Box>
-          <Box w="full">
-            <Link href="/customer-informations/new" passHref>
-              <Button colorScheme="blue" w="100%">
-                お客様情報を作成
-              </Button>
-            </Link>
-          </Box>
-        </Flex>
-      </Flex>
     </Box>
   );
 };

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -12,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import useSWR from "swr";
-import { FC} from "react";
+import { FC } from "react";
 import Link from "next/link";
 
 type Data = {
@@ -21,7 +22,6 @@ type Data = {
 };
 
 export const ReceivablesArea: FC = () => {
-
   const fetcher = (url: string) =>
     axios
       .get(url, {
@@ -30,21 +30,31 @@ export const ReceivablesArea: FC = () => {
         },
       })
       .then((res) => res.data);
-  const { data, error, isLoading } = useSWR<Data>("/api/receivables/uncollected/", fetcher);
+  const { data, error, isLoading } = useSWR<Data>(
+    "/api/receivables/uncollected/",
+    fetcher
+  );
 
   return (
     <>
       {data?.contents && data?.contents?.length > 0 && (
         <Box
-          m="full"
+          w="full"
           boxShadow="xs"
           p={{ base: 3, md: 6 }}
           rounded="md"
           bg="white"
         >
-          <Text fontSize="2xl" mb="4" ml="1">
-            売掛未回収
-          </Text>
+          <Flex justify="space-between">
+            <Text fontSize="lg" fontWeight="bold" mb="4" ml="1">
+              売掛未回収
+            </Text>
+            <Link href="/receivables" passHref>
+              <Button variant="outline" colorScheme="blue" size="xs">
+                一覧
+              </Button>
+            </Link>
+          </Flex>
           <TableContainer>
             <Table variant="simple" size="sm">
               <Thead>
@@ -67,11 +77,6 @@ export const ReceivablesArea: FC = () => {
               </Tbody>
             </Table>
           </TableContainer>
-          <Link href="/receivables" passHref>
-            <Button mt={6} w="full" colorScheme="blue" >
-              売掛金情報一覧
-            </Button>
-          </Link>
         </Box>
       )}
     </>
