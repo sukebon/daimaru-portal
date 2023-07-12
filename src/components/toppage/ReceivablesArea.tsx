@@ -41,21 +41,21 @@ export const ReceivablesArea: FC = () => {
         <Box
           w="full"
           boxShadow="xs"
-          p={{ base: 3, md: 6 }}
+          p={{ base: 6, md: 6 }}
           rounded="md"
           bg="white"
         >
-          <Flex justify="space-between">
-            <Text fontSize="lg" fontWeight="bold" mb="4" ml="1">
+          <Flex justify="space-between" align="center">
+            <Text fontSize="lg" fontWeight="bold">
               売掛未回収
             </Text>
             <Link href="/receivables" passHref>
-              <Button variant="outline" colorScheme="blue" size="xs">
+              <Button variant="outline" colorScheme="blue" size="sm">
                 一覧
               </Button>
             </Link>
           </Flex>
-          <TableContainer>
+          <TableContainer mt={3}>
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>

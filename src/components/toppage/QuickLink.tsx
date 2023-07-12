@@ -22,13 +22,13 @@ const QuickLink: NextPage<Props> = ({ links, categories }) => {
   return (
     <>
       <Box
-        width="full"
+        w="full"
         boxShadow="xs"
-        p={{ base: 3, md: 6 }}
+        p={{ base: 6, md: 6 }}
         rounded="md"
         bg="white"
       >
-        <Text fontSize="lg" fontWeight="bold" my="1" ml="1">
+        <Text fontSize="lg" fontWeight="bold">
           クイックアクセスリンク
         </Text>
 

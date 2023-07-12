@@ -66,7 +66,7 @@ export const SalesArea: FC = () => {
                 rounded="md"
                 animation={animation}
               >
-                月初になりました。下記ボタンをクリックして
+                月初になりました。<br/>下記ボタンをクリックして
                 <Box as="span" fontWeight="bold">
                   目標額
                 </Box>

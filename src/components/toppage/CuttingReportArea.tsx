@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -34,14 +35,26 @@ export const CuttingReportArea: FC = () => {
         <Box
           w="full"
           boxShadow="xs"
-          p={{ base: 3, md: 6 }}
+          p={{ base: 6, md: 6 }}
           rounded="md"
           bg="white"
         >
-          <Text fontSize="lg" fontWeight="bold" mb="4" ml="1">
-            本日登録の裁断報告書
-          </Text>
-          <TableContainer>
+          <Flex justify="space-between" align="center">
+            <Text fontSize="lg" fontWeight="bold">
+              本日登録の裁断報告書
+            </Text>
+            <Link
+              href="https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports"
+              target="_blank"
+              rel="noreferrer"
+              passHref
+            >
+              <Button variant="outline" colorScheme="blue" size="sm">
+                一覧
+              </Button>
+            </Link>
+          </Flex>
+          <TableContainer mt={3}>
             <Table variant="simple" size="sm">
               <Thead>
                 <Tr>
@@ -75,15 +88,6 @@ export const CuttingReportArea: FC = () => {
               </Tbody>
             </Table>
           </TableContainer>
-          <Link
-            href="https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Button mt={6} w="full" colorScheme="blue">
-              裁断報告書一覧
-            </Button>
-          </Link>
         </Box>
       )}
     </>

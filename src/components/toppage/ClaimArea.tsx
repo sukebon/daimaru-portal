@@ -75,7 +75,7 @@ export const ClaimArea = () => {
     <>
       <Flex
         flex="1"
-        w="full"
+        w={{ base: "full", "2xl": "50%" }}
         p="6"
         align="center"
         justify="center"
@@ -86,9 +86,9 @@ export const ClaimArea = () => {
         <Flex direction="column">
           <Stat textAlign="center">
             <StatLabel>今月のクレーム件数</StatLabel>
-            <StatNumber>
+            <StatNumber fontSize="3xl">
               {claimThisMonthCount}
-              <Box as="span" fontSize="xs">
+              <Box as="span" fontSize="lg">
                 件
               </Box>
             </StatNumber>
@@ -103,14 +103,14 @@ export const ClaimArea = () => {
               {(1 - claimThisMonthCount / claimLastMonthCount) * 100}% (前月比)
             </StatHelpText>
           </Stat>
-          <Flex justify="center" gap={2}>
+          <Flex justify="center" gap={2} mt={3}>
             <Link href="/claims/" passHref>
-              <Button colorScheme="blue" variant="outline" size="xs">
+              <Button colorScheme="blue" variant="outline" size="sm">
                 一覧
               </Button>
             </Link>
             <Link href="/claims/new" passHref>
-              <Button colorScheme="blue" size="xs">
+              <Button colorScheme="blue" size="sm">
                 作成
               </Button>
             </Link>

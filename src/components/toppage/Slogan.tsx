@@ -4,18 +4,18 @@ import type { NextPage } from "next";
 const Slogan: NextPage = () => {
   return (
     <Box
-      flex="3"
+      flex="1"
       w="full"
       boxShadow="xs"
-      p={{ base: 3, md: 6 }}
+      p={{ base: 6, md: 6 }}
       rounded="md"
       bg="white"
     >
-      <Text fontSize="lg" fontWeight="bold" mt="1" ml="1">
+      <Text fontSize="lg" fontWeight="bold">
         スローガン
       </Text>
 
-      <Box my="3" fontSize={{base:"sm", "2xl":"lg"}} lineHeight={6}>
+      <Box mt={3} fontSize={{base:"sm", "2xl":"md"}} lineHeight={6}>
         <Text>
           ①
           <Box as="span" color="red">
