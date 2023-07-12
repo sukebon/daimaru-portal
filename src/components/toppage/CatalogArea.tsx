@@ -46,7 +46,7 @@ const CatalogArea = () => {
         <Flex flex="2">
           {catalogItems.map((item) => (
             <Flex flex="1" p="3" justify="center" key={item.link} >
-              <Link href={item.link} style={{ fontSize: 0 }} target="_blank" >
+              <Link href={item.link} style={{ fontSize: 0 }} target="_blank" passHref>
                 <Image src={item.src} alt={item.alt} width="300" height="200" style={{ objectFit: "cover" }} />
               </Link>
             </Flex>
@@ -62,7 +62,7 @@ const CatalogArea = () => {
         >
           {linkItems.map((item) => (
             <Box h="30%" key={item.title}>
-              <Link href={item.link} target={"_blank"}>
+              <Link href={item.link} target={"_blank"}passHref>
                 <Flex
                   h="100%"
                   minH="50px"

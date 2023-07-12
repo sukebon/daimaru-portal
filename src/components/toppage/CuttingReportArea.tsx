@@ -38,7 +38,7 @@ export const CuttingReportArea: FC = () => {
           rounded="md"
           bg="white"
         >
-          <Text fontSize="2xl" mb="4" ml="1">
+          <Text fontSize="lg" fontWeight="bold" mb="4" ml="1">
             本日登録の裁断報告書
           </Text>
           <TableContainer>

@@ -7,17 +7,20 @@ import {
   orderBy,
   query,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Claim, User } from "../../types";
+import { Claim, Request, User } from "../../types";
 import { useClaimStore } from "../../store/useClaimStore";
 import { useUtils } from "./useUtils";
+import { useRequestStore } from "../../store/useRequestStore";
 
 export const useDataList = () => {
   const setUsers = useAuthStore((state) => state.setUsers);
   const setFullUsers = useAuthStore((state) => state.setFullUsers);
   const setClaims = useClaimStore((state) => state.setClaims);
+  const setRequests = useRequestStore((state) => state.setRequests);
   const { getYearMonth } = useUtils();
 
   const getUsers = async () => {
@@ -70,6 +73,26 @@ export const useDataList = () => {
     });
   };
 
+  const getRequests = async () => {
+    const requestsRef = collection(db, "requestList");
+    const q = query(
+      requestsRef,
+      orderBy("createdAt", "desc"),
+      where("display", "==", true)
+    );
+    onSnapshot(q, (querySnapshot) => {
+      setRequests(
+        querySnapshot.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              id: doc.id,
+            } as Request)
+        )
+      );
+    });
+  };
+
   const createPaymentConfirm = async () => {
     const { year, monthStr } = getYearMonth();
     const docSnap = await getDoc(
@@ -87,5 +110,11 @@ export const useDataList = () => {
     }
   };
 
-  return { getUsers, getFullUsers, getClaims, createPaymentConfirm };
+  return {
+    getUsers,
+    getFullUsers,
+    getClaims,
+    getRequests,
+    createPaymentConfirm,
+  };
 };

@@ -15,7 +15,7 @@ const Information: NextPage<Props> = ({ news }) => {
       rounded="md"
       bg="white"
     >
-      <Text fontSize="2xl" mb="4" ml="1">
+      <Text fontSize="lg" fontWeight="bold" mb="2" ml="1">
         お知らせ
       </Text>
       <List spacing={3}>
@@ -28,7 +28,7 @@ const Information: NextPage<Props> = ({ news }) => {
             borderColor="#eeeeee"
           >
             <Flex align={"center"}>
-              <Box dangerouslySetInnerHTML={{ __html: message }}></Box>
+              <Box fontSize="sm" lineHeight="6" dangerouslySetInnerHTML={{ __html: message }}></Box>
             </Flex>
           </Box>
         ))}
