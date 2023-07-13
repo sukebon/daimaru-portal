@@ -30,7 +30,10 @@ const Requests = () => {
               お手伝い依頼一覧
             </Text>
           </Flex>
-          <Flex gap={3} p={3}>
+          <Flex gap={3}>
+            <Link href="/requests/stopped-list" passHref>
+              <Button>掲載終了一覧</Button>
+            </Link>
             <Link href="/" passHref>
               <Button>トップページへ</Button>
             </Link>

@@ -16,6 +16,7 @@ import { CustomerInfoArea } from "@/components/toppage/CustomerInfoArea";
 import { Administrator } from "../../data";
 import { useAuthStore } from "../../store/useAuthStore";
 import { ClaimAlertArea } from "@/components/toppage/ClaimAlertArea";
+import { PaymentConfAlert } from "@/components/toppage/PaymentConfAlert";
 
 type Props = {
   categoryData: CategoryData[];
@@ -36,6 +37,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
           <Box flex={1} maxW={{ base: "full", lg: "60%" }}>
             <Stack spacing={6}>
+              <PaymentConfAlert/>
               <ClaimAlertArea />
               <CuttingReportArea />
               <AlcoholCheckArea />

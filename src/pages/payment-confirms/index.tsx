@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
@@ -28,7 +28,8 @@ const ReceivablesCheckList = () => {
   useEffect(() => {
     const getPaymentConfirms = async () => {
       const collectionRef = collection(db, "paymentConfirms");
-      const snapShot = await getDocs(collectionRef);
+      const q = query(collectionRef, orderBy("createdAt", "desc"));
+      const snapShot = await getDocs(q);
       setData(
         snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Data))
       );
@@ -38,7 +39,7 @@ const ReceivablesCheckList = () => {
 
   return (
     <Flex direction="column" align="center">
-      <TableContainer bg="white" rounded={6} p={6}>
+      <TableContainer bg="white" rounded={6} p={6} boxShadow="md">
         <Flex justify="space-between" align="center">
           <Box as="h1" fontSize="lg">
             売掛金額チェック一覧
@@ -65,7 +66,9 @@ const ReceivablesCheckList = () => {
                 <Td>{users.length - checkList.length}名</Td>
                 <Td>
                   <Link href={`payment-confirms/${id}`} passHref>
-                    <Button size="xs" colorScheme="blue">詳細</Button>
+                    <Button size="xs" colorScheme="blue">
+                      詳細
+                    </Button>
                   </Link>
                 </Td>
               </Tr>
