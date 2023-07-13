@@ -20,9 +20,9 @@ export const RequestArea: FC = () => {
           </Box>
         </Flex>
         <Flex gap={2}>
-          <Link href="/requests" passHref>
+          <Link href="/requests/stopped-list" passHref>
             <Button variant="outline" size="sm" colorScheme="blue">
-              一覧
+              掲載終了一覧
             </Button>
           </Link>
           {/* <Link href="/requests/stopped-list" passHref>

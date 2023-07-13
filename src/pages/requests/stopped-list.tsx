@@ -60,7 +60,7 @@ const StoppedList = () => {
           </Flex>
           <Flex gap={3} p={3}>
             <Link href="/" passHref>
-              <Button>トップページへ</Button>
+              <Button size="sm">トップページへ</Button>
             </Link>
           </Flex>
         </Flex>

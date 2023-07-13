@@ -6,6 +6,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
@@ -103,6 +104,7 @@ export const useDataList = () => {
         await setDoc(doc(db, "paymentConfirms", `${year}_${monthStr}`), {
           checkList: arrayUnion(),
           checkListRef: arrayUnion(),
+          createdAt: serverTimestamp(),
         });
       } catch (error) {
         console.log(error);

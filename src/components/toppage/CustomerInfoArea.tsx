@@ -94,13 +94,15 @@ export const CustomerInfoArea = () => {
       <TableContainer mt={3}>
         <Table size="" w="full">
           <Thead fontSize="xs">
-            <Th px={1}>日付</Th>
-            <Th px={1}>顧客名</Th>
-            <Th px={1}>タイトル</Th>
-            <Th px={1} textAlign="center">
-              受けた印象
-            </Th>
-            {/* <Th textAlign="center">詳細</Th> */}
+            <Tr>
+              <Th px={1}>日付</Th>
+              <Th px={1}>顧客名</Th>
+              <Th px={1}>タイトル</Th>
+              <Th px={1} textAlign="center">
+                受けた印象
+              </Th>
+              {/* <Th textAlign="center">詳細</Th> */}
+            </Tr>
           </Thead>
           <Tbody fontSize="xs">
             {customerInfoData.map(
