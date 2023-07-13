@@ -34,7 +34,7 @@ export const PaymentConfAlert: FC = () => {
 
   return (
     <>
-      {isFlag && isAuth("isoSalesStaff") && isAdminAuth() && (
+      {((isFlag && isAuth("isoSalesStaff")) || isAdminAuth()) && (
         <Box
           w="100%"
           boxShadow="xs"
