@@ -1,5 +1,14 @@
 import React, { FC } from "react";
-import { Badge, Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Collapse,
+  Divider,
+  Flex,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { Administrator } from "../../../data";
 import { RequestRegisterButton } from "./RequestRegisterButton";
 import { RequestMemberList } from "./RequestMemberList";
@@ -15,6 +24,8 @@ type Props = {
 };
 
 export const RequestPost: FC<Props> = ({ request }) => {
+  const [show, setShow] = React.useState(false);
+  const handleToggle = () => setShow(!show);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { dayOfWeek } = useUtils();
   const { getUserName } = useDisp();
@@ -109,24 +120,29 @@ export const RequestPost: FC<Props> = ({ request }) => {
               <Box>【作成者】{getUserName(request.author)}</Box>
             )}
           </Flex>
-          <Box py={3} whiteSpace="pre-wrap" fontSize="sm">
-            {request.content}
-          </Box>
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            justify="space-between"
-            align="center"
-            gap={3}
-            py={3}
-          >
-            <Flex flexWrap="wrap">
-              <RequestMemberList request={request} />
+          <Collapse startingHeight={1} in={show}>
+            <Box py={3} whiteSpace="pre-wrap" fontSize="sm">
+              {request.content}
+            </Box>
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              justify="space-between"
+              align="center"
+              gap={3}
+              py={3}
+            >
+              <Flex flexWrap="wrap">
+                <RequestMemberList request={request} />
+              </Flex>
+              <RequestRegisterButton request={request} />
             </Flex>
-            <RequestRegisterButton request={request} />
-          </Flex>
+          </Collapse>
+          <Button w="auto" size="xs" onClick={handleToggle} mt="1rem">
+           {show ? "閉じる" : "詳細を見る"}
+          </Button>
         </Flex>
       </Flex>
-      <Divider />
+      <Divider mt={3} />
     </>
   );
 };
