@@ -8,7 +8,7 @@ import { Box, Flex, Stack } from "@chakra-ui/react";
 import { AlcoholCheckArea } from "@/components/toppage/AlcoholCheckArea";
 import { ClaimArea } from "@/components/toppage/ClaimArea";
 import { RequestArea } from "@/components/toppage/RequestArea";
-import { SalesArea } from "@/components/toppage/SalesArea";
+import { SalesALert } from "@/components/toppage/SalesAlert";
 import { CategoryData, LinkData, NewsData } from "../../types";
 import { CuttingReportArea } from "@/components/toppage/CuttingReportArea";
 import { ReceivablesArea } from "@/components/toppage/ReceivablesArea";
@@ -17,6 +17,7 @@ import { Administrator } from "../../data";
 import { useAuthStore } from "../../store/useAuthStore";
 import { ClaimAlertArea } from "@/components/toppage/ClaimAlertArea";
 import { PaymentConfAlert } from "@/components/toppage/PaymentConfAlert";
+import { SalesArea } from "@/components/toppage/SalesArea";
 
 type Props = {
   categoryData: CategoryData[];
@@ -33,18 +34,20 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
         <meta name="description" content="大丸白衣ポータル" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <SalesArea />
       <Box as="main">
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
           <Box flex={1} maxW={{ base: "full", lg: "60%" }}>
             <Stack spacing={6}>
-              <PaymentConfAlert/>
+              <SalesALert />
+              <PaymentConfAlert />
               <ClaimAlertArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
               <Flex
                 direction={{
                   base: "column",
-                  sm:"column",
+                  sm: "column",
                   md: "row",
                   lg: "row",
                   xl: "row",
@@ -85,7 +88,6 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
           </Box>
           <Box flex={1} maxW={{ base: "full", lg: "40%" }}>
             <Stack spacing={6}>
-              <SalesArea />
               <RequestArea />
             </Stack>
           </Box>
