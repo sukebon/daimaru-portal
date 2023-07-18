@@ -2,6 +2,7 @@ import { Box, Button, Flex, Input, Select, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { CustomerInformation } from "../../../types";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 type Props = {
   customerInfoData: CustomerInformation[];
@@ -13,6 +14,7 @@ export const CustomerInfoSearch: FC<Props> = ({
   setFilterData,
 }) => {
   const { register, reset } = useFormContext();
+  const users = useAuthStore((state) => state.users);
 
   return (
     <Flex
@@ -24,6 +26,18 @@ export const CustomerInfoSearch: FC<Props> = ({
       <Box w={{ base: "full", md: "md" }}>
         <Text>顧客名</Text>
         <Input placeholder="顧客名" {...register("customer")} />
+      </Box>
+      <Box w={{ base: "full", md: "md" }}>
+        <Text>担当者</Text>
+        <Select placeholder="担当者" {...register("staff")}>
+          {users
+            .filter((user) => user.isoSalesStaff)
+            .map((user) => (
+              <option key={user.id} value={user.uid}>
+                {user.name}
+              </option>
+            ))}
+        </Select>
       </Box>
       <Box w={{ base: "full", md: "md" }}>
         <Text>タイトル</Text>

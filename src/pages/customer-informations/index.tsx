@@ -35,10 +35,10 @@ import { deleteObject, ref } from "firebase/storage";
 import { useUtils } from "@/hooks/useUtils";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { CustomerInfoSearch } from "@/components/customer-infomations/CustomerInfoSearch";
-import { useRouter } from "next/router";
 
 type Inputs = {
   customer: string;
+  staff:string;
   title: string;
   prefecture: string;
   emotion: string;
@@ -61,10 +61,11 @@ const CustomerInformations: NextPage = () => {
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const newArray = customerInfoData.filter(
-      ({ customer, title, emotion }) =>
-        customer.includes(data.customer) &&
-        title.includes(data.title) &&
-        emotion.includes(data.emotion)
+      ({ customer,staff, title, emotion }) =>
+        customer?.includes(data.customer) &&
+        staff?.includes(data.staff) &&
+        title?.includes(data.title) &&
+        emotion?.includes(data.emotion)
     );
     setFilterData(newArray);
   };
