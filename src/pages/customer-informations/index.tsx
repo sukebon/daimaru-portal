@@ -150,6 +150,7 @@ const CustomerInformations: NextPage = () => {
             <Tr>
               <Th>登録日</Th>
               <Th>顧客名</Th>
+              <Th>担当者</Th>
               <Th>タイトル</Th>
               <Th textAlign="center">受けた印象</Th>
               <Th>内容</Th>
@@ -163,19 +164,21 @@ const CustomerInformations: NextPage = () => {
           <Tbody>
             {filterData.map(
               ({
-                createdAt,
                 id,
-                customer,
                 title,
+                customer,
+                staff,
                 emotion,
                 content,
                 author,
+                createdAt,
               }) => (
                 <Tr key={id}>
                   <Td>
                     {format(new Date(createdAt?.toDate()), "yyyy年MM月dd日")}
                   </Td>
                   <Td>{excerpt(customer, 12)}</Td>
+                  <Td>{getUserName(staff)}</Td>
                   <Td>{excerpt(title, 12)}</Td>
                   <Td>
                     <Flex fontSize="xl" justify="center">

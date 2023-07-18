@@ -35,22 +35,24 @@ type Inputs = {
   customer: string;
   title: string;
   prefecture: string;
+  staff: string;
   emotion: string;
   content: string;
   link: string;
 };
 
 type Customers = {
-  contents: { name: string; }[];
+  contents: { name: string }[];
 };
 
 type Prefecture = {
-  contents: { prefecture: string; }[];
+  contents: { prefecture: string }[];
 };
 
 const CustomerInfoNew: NextPage = () => {
   const [fileUpload, setFileUpload] = useState<any>("");
   const currentUser = useAuthStore((state) => state.currentUser);
+  const users = useAuthStore((state) => state.users);
   const router = useRouter();
 
   const fetcher = async (url: string) =>
@@ -92,8 +94,9 @@ const CustomerInfoNew: NextPage = () => {
       const userRef = doc(db, "authority", currentUser);
       const docRef = await addDoc(collectionRef, {
         customer: data.customer,
-        prefecture: data.prefecture,
         title: data.title,
+        staff: data.staff || "",
+        prefecture: data.prefecture,
         emotion: data.emotion,
         content: data.content,
         link: data.link,
@@ -143,7 +146,9 @@ const CustomerInfoNew: NextPage = () => {
           お客様情報入力
         </Box>
         <Link href="/customer-informations" passHref>
-          <Button colorScheme="blue" variant="outline" size="sm">一覧へ戻る</Button>
+          <Button colorScheme="blue" variant="outline" size="sm">
+            一覧へ戻る
+          </Button>
         </Link>
       </Flex>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -164,14 +169,28 @@ const CustomerInfoNew: NextPage = () => {
           </datalist>
           {errors.customer && <Box color="red">顧客名を入力してください。</Box>}
         </Box>
-        <Box mt={6}>
-          <Text>地域</Text>
-          <Select placeholder="地域名" {...register("prefecture")}>
-            {prefectures?.contents.map(({ prefecture }, index: number) => (
-              <option key={index}>{prefecture}</option>
-            ))}
-          </Select>
-        </Box>
+        <Flex mt={6} gap={6} direction={{ base: "column", md: "row" }}>
+          <Box w="full">
+            <Text>担当者</Text>
+            <Select placeholder="担当者" {...register("staff")}>
+              {users
+                ?.filter((user) => user.isoSalesStaff)
+                .map(({ uid, name }) => (
+                  <option key={uid} value={uid}>
+                    {name}
+                  </option>
+                ))}
+            </Select>
+          </Box>
+          <Box w="full">
+            <Text>地域</Text>
+            <Select placeholder="地域名" {...register("prefecture")}>
+              {prefectures?.contents.map(({ prefecture }, index: number) => (
+                <option key={index}>{prefecture}</option>
+              ))}
+            </Select>
+          </Box>
+        </Flex>
         <Box mt={6}>
           <Text>タイトル</Text>
           <Input

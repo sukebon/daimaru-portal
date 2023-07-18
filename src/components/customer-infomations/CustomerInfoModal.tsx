@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
-import { CustomerInfoForm } from "./CustomerInfoForm";
+import { CustomerInfoForm } from "./CustomerInfoInput";
 import { CustomerInformation } from "../../../types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
@@ -28,6 +28,7 @@ export const CustomerInfoModal: FC<Props> = ({ data }) => {
     defaultValues: {
       id: data?.id,
       customer: data?.customer,
+      staff:data?.staff,
       title: data?.title,
       prefecture: data?.prefecture,
       emotion: data?.emotion,
@@ -46,6 +47,7 @@ export const CustomerInfoModal: FC<Props> = ({ data }) => {
     const docRef = doc(db, "customerInformations", data.id);
     await updateDoc(docRef, {
       customer: data?.customer,
+      staff:data?.staff,
       title: data?.title,
       prefecture: data?.prefecture,
       emotion: data?.emotion,
