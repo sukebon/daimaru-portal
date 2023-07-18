@@ -209,6 +209,7 @@ export type CuttingProduct = {
 export type CustomerInformation = {
   id: string;
   customer: string;
+  staff:string;
   prefecture:string;
   title: string;
   emotion: "good" | "normal" | "bad";

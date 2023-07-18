@@ -20,6 +20,8 @@ import { FaCircleXmark } from "react-icons/fa6";
 import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { useDisp } from "@/hooks/useDisp";
 
 type Customers = {
   contents: { name: string }[];
@@ -40,7 +42,8 @@ export const CustomerInfoForm: FC<Props> = ({
   fileUpload,
   setFileUpload,
 }) => {
-
+  const users = useAuthStore((state) => state.users);
+  const { getUserName } = useDisp();
 
   const {
     register,
@@ -113,14 +116,24 @@ export const CustomerInfoForm: FC<Props> = ({
           ))}
         </datalist>
         {errors.customer && <Box color="red">顧客名を入力してください。</Box>}
-      </Box>
-      <Box mt={6}>
-        <Text>地域</Text>
-        <Select placeholder="地域名" {...register("prefecture")}>
-          {prefectures?.contents.map(({ prefecture }, index: number) => (
-            <option key={index}>{prefecture}</option>
-          ))}
-        </Select>
+        <Box mt={6}>
+          <Text>担当者</Text>
+          <Select placeholder="担当者" {...register("staff")}>
+            {users
+              ?.filter((user) => user.isoSalesStaff)
+              .map(({ uid, name }) => (
+                <option key={uid} value={uid}>{name}</option>
+              ))}
+          </Select>
+        </Box>
+        <Box mt={6}>
+          <Text>地域名</Text>
+          <Select placeholder="地域名" {...register("prefecture")}>
+            {prefectures?.contents.map(({ prefecture }, index: number) => (
+              <option key={index}>{prefecture}</option>
+            ))}
+          </Select>
+        </Box>
       </Box>
       <Box mt={6}>
         <Text>タイトル</Text>
