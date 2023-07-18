@@ -35,10 +35,11 @@ import { deleteObject, ref } from "firebase/storage";
 import { useUtils } from "@/hooks/useUtils";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { CustomerInfoSearch } from "@/components/customer-infomations/CustomerInfoSearch";
+import { CustomerCoimmentCount } from "@/components/customer-infomations/CustomerCoimmentCount";
 
 type Inputs = {
   customer: string;
-  staff:string;
+  staff: string;
   title: string;
   prefecture: string;
   emotion: string;
@@ -60,13 +61,20 @@ const CustomerInformations: NextPage = () => {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const newArray = customerInfoData.filter(
-      ({ customer,staff, title, emotion }) =>
-        customer?.includes(data.customer) &&
-        staff?.includes(data.staff) &&
-        title?.includes(data.title) &&
-        emotion?.includes(data.emotion)
-    );
+    const newArray = customerInfoData
+      .filter(
+        ({ customer, staff, title, emotion }) =>
+          customer?.includes(data.customer) &&
+          title?.includes(data.title) &&
+          emotion?.includes(data.emotion)
+      )
+      .filter(({ staff }) => {
+        if (data.staff === "") {
+          return true;
+        } else if (staff === data.staff) {
+          return true;
+        }
+      });
     setFilterData(newArray);
   };
 
@@ -85,9 +93,9 @@ const CustomerInformations: NextPage = () => {
     getCustomerInfomations();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilterData(customerInfoData);
-  },[customerInfoData])
+  }, [customerInfoData]);
 
   const deleteInformation = async (id: string) => {
     const result = confirm("削除して宜しいでしょうか");
@@ -142,7 +150,10 @@ const CustomerInformations: NextPage = () => {
       </Flex>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <CustomerInfoSearch customerInfoData={customerInfoData} setFilterData={setFilterData} />
+          <CustomerInfoSearch
+            customerInfoData={customerInfoData}
+            setFilterData={setFilterData}
+          />
         </form>
       </FormProvider>
       <TableContainer>
@@ -155,6 +166,7 @@ const CustomerInformations: NextPage = () => {
               <Th>タイトル</Th>
               <Th textAlign="center">受けた印象</Th>
               <Th>内容</Th>
+              <Th>コメント</Th>
               <Th>投稿者</Th>
               <Th w="50px" textAlign="center">
                 詳細
@@ -180,13 +192,25 @@ const CustomerInformations: NextPage = () => {
                   </Td>
                   <Td>{excerpt(customer, 12)}</Td>
                   <Td>{getUserName(staff)}</Td>
-                  <Td>{excerpt(title, 12)}</Td>
+                  <Td
+                    textDecoration="underline"
+                    _hover={{ textDecoration: "none" }}
+                  >
+                    <Link href={`/customer-informations/${id}`}>
+                      {excerpt(title, 12)}
+                    </Link>
+                  </Td>
                   <Td>
                     <Flex fontSize="xl" justify="center">
                       {getEmotion(emotion)}
                     </Flex>
                   </Td>
                   <Td>{excerpt(content, 20)}</Td>
+                  <Td>
+                    <Flex justify="center">
+                      <CustomerCoimmentCount id={id} />
+                    </Flex>
+                  </Td>
                   <Td>{getUserName(author)}</Td>
                   <Td w="50px">
                     <Flex fontSize="xl" justify="center">

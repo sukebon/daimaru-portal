@@ -137,10 +137,10 @@ const CustomerInfoById: NextPage = () => {
           <Box ml={2}>{getUserName(data?.author)}</Box>
         </Flex>
         <Flex justify="center" mt={6}>
-          <CustomerCommentForm id={pathname} />
+          <CustomerCommentForm pathname={pathname} />
         </Flex>
       </Container>
-      <CustomerCommentArea id={pathname}/>
+      <CustomerCommentArea pathname={pathname}/>
     </>
   );
 };
