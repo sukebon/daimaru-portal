@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Input,
   Radio,
@@ -21,7 +20,6 @@ import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../../../firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { useDisp } from "@/hooks/useDisp";
 
 type Customers = {
   contents: { name: string }[];
@@ -43,7 +41,6 @@ export const CustomerInfoForm: FC<Props> = ({
   setFileUpload,
 }) => {
   const users = useAuthStore((state) => state.users);
-  const { getUserName } = useDisp();
 
   const {
     register,

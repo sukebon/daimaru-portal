@@ -21,34 +21,44 @@ type Inputs = {
 };
 
 type Props = {
-  id?: string;
+  pathname?: string;
 };
 
-export const CustomerCommentForm: FC<Props> = ({ id }) => {
+export const CustomerCommentForm: FC<Props> = ({ pathname }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { handleSubmit, register } = useForm<Inputs>({
+  const { handleSubmit, register, reset } = useForm<Inputs>({
     defaultValues: {
       comment: "",
     },
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    addComment(data, id);
+    addComment(data, pathname);
   };
 
-  const addComment = async (data: Inputs, id: string | undefined) => {
-    if (!id) return;
+  const addComment = async (data: Inputs, pathname: string | undefined) => {
+    if (!pathname) return;
     const result = confirm("登録して宜しいでしょうか");
     if (!result) return;
-    const docRef = collection(db, "customerInformations", id, "comments");
-    const userRef = doc(db, "authority", currentUser);
-    await addDoc(docRef, {
-      comment: data?.comment,
-      author: currentUser,
-      authorRef: userRef,
-      createdAt: serverTimestamp(),
-    });
+    try {
+      const docRef = collection(
+        db,
+        "customerInformations",
+        pathname,
+        "comments"
+      );
+      const userRef = doc(db, "authority", currentUser);
+      await addDoc(docRef, {
+        comment: data?.comment,
+        author: currentUser,
+        authorRef: userRef,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    reset();
     onClose();
   };
 

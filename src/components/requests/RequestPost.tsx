@@ -1,13 +1,12 @@
 import React, { FC } from "react";
 import {
-  Badge,
   Box,
   Button,
   Collapse,
   Divider,
   Flex,
   Heading,
-  Text,
+  keyframes,
 } from "@chakra-ui/react";
 import { Administrator } from "../../../data";
 import { RequestRegisterButton } from "./RequestRegisterButton";
@@ -18,6 +17,15 @@ import { Request } from "../../../types";
 import { useUtils } from "@/hooks/useUtils";
 import { useDisp } from "@/hooks/useDisp";
 import { FaStar, FaRegStar } from "react-icons/fa";
+
+const animationKeyframes = keyframes`
+0% { background-color: #6527BE;}
+30% { background-color: #9681EB;}
+50% { background-color: #45CFDD;}
+80% { background-color: #A7EDE7;}
+100% { background-color: #6527BE;}
+`;
+const animation = `${animationKeyframes} 10s ease-in-out infinite`;
 
 type Props = {
   request: Request;
@@ -72,9 +80,15 @@ export const RequestPost: FC<Props> = ({ request }) => {
       <Flex justify="space-between">
         <Flex direction="column" w="full">
           {newLabel(request?.sendAt?.toDate()) && (
-            <Badge colorScheme="red" w="full" textAlign="center" p={1}>
+            <Box
+              px={1}
+              w="14"
+              color="white"
+              textAlign="center"
+              animation={animation}
+            >
               New
-            </Badge>
+            </Box>
           )}
           <Flex justify="space-between" align="center">
             <Flex gap={2} align="center">
@@ -138,7 +152,7 @@ export const RequestPost: FC<Props> = ({ request }) => {
             </Flex>
           </Collapse>
           <Button w="auto" size="xs" onClick={handleToggle} mt="1rem">
-           {show ? "閉じる" : "詳細を見る"}
+            {show ? "閉じる" : "詳細を見る"}
           </Button>
         </Flex>
       </Flex>
