@@ -11,27 +11,20 @@ import {
 import Link from "next/link";
 import React, { FC } from "react";
 import { auth } from "../../firebase";
-import { Administrator } from "../../data";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useAuthStore } from "../../store/useAuthStore";
 import { User } from "../../types";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 export const HeaderMenuButton: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const users = useAuthStore((state) => state.users);
+  const { isAdminAuth } = useAuthManagement();
 
   //アルコールチェック権限
   const userAlcoholAuthority = (userId: string) => {
     const newUsers = users.map((user: User) => {
       if (user.alcoholChecker === true) return user.uid;
-    });
-    return newUsers.includes(userId);
-  };
-
-  //営業マン権限
-  const userSalesAuthority = (userId: string) => {
-    const newUsers = users.map((user: User) => {
-      if (user.isoSalesStaff === true) return user.uid;
     });
     return newUsers.includes(userId);
   };
@@ -74,7 +67,7 @@ export const HeaderMenuButton: FC = () => {
         <MenuGroup title="売掛金額チェック" fontSize="xs">
           {MenuItemEL("一覧", "/payment-confirms")}
         </MenuGroup>
-        <MenuDivider />        
+        <MenuDivider />
         <MenuGroup title="クレーム報告書" fontSize="xs">
           {MenuItemEL("作成", "/claims/new")}
           {MenuItemEL("一覧", "/claims")}
@@ -86,7 +79,7 @@ export const HeaderMenuButton: FC = () => {
         </MenuGroup>
         <MenuDivider />
         {MenuItemEL("デジタルマーケティング進捗", "/progress")}
-        {Administrator.includes(currentUser || "") && (
+        {isAdminAuth() && (
           <>
             {MenuItemEL("管理者ページ", "/admin")}
             {/* {MenuItemEL("profile", "/profile")} */}

@@ -15,7 +15,7 @@ export const ClaimInputAttached: FC<Props> = ({
       <Box mt={3}>
         {fileUpload && fileUpload.length === 1 && (
           <Box mt={6}>
-            <img src={window.URL.createObjectURL(fileUpload[0])} width="100%" />
+            <img src={window.URL.createObjectURL(fileUpload[0])} width="100%" alt="" />
           </Box>
         )}
       </Box>

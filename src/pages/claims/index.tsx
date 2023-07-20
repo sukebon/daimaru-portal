@@ -103,7 +103,7 @@ const Claims: NextPage = () => {
                     }
                   >
                     <Td>
-                      <Link href={`/claims/${claim.id}`}>
+                      <Link href={`/claims/${claim.id}`} passHref>
                         <Button size="xs" colorScheme="blue">
                           詳細
                         </Button>

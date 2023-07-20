@@ -8,7 +8,6 @@ import {
   Heading,
   keyframes,
 } from "@chakra-ui/react";
-import { Administrator } from "../../../data";
 import { RequestRegisterButton } from "./RequestRegisterButton";
 import { RequestMemberList } from "./RequestMemberList";
 import { RequestMenu } from "./RequestMenu";
@@ -17,6 +16,7 @@ import { Request } from "../../../types";
 import { useUtils } from "@/hooks/useUtils";
 import { useDisp } from "@/hooks/useDisp";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 const animationKeyframes = keyframes`
 0% { background-color: #6527BE;}
@@ -37,6 +37,7 @@ export const RequestPost: FC<Props> = ({ request }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const { dayOfWeek } = useUtils();
   const { getUserName } = useDisp();
+  const { isAdminAuth } = useAuthManagement();
 
   // newラベルを表示(期限三日)
   const newLabel = (time: any) => {
@@ -96,8 +97,7 @@ export const RequestPost: FC<Props> = ({ request }) => {
               <Box>{!request.recruitment && "【募集終了】"}</Box>
             </Flex>
             {/* メニューボタン  投稿者と管理者のみ表示*/}
-            {(currentUser === request.author ||
-              Administrator.includes(currentUser)) && (
+            {(currentUser === request.author || isAdminAuth()) && (
               <RequestMenu request={request} />
             )}
           </Flex>
@@ -130,7 +130,7 @@ export const RequestPost: FC<Props> = ({ request }) => {
           </Flex>
           <Flex direction={{ base: "column", md: "row" }} fontSize="sm">
             <Box>【責任者】{request.person}</Box>
-            {Administrator.includes(currentUser || "") && (
+            {isAdminAuth() && (
               <Box>【作成者】{getUserName(request.author)}</Box>
             )}
           </Flex>

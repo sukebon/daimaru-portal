@@ -1,8 +1,8 @@
 //管理者
-export const Administrator = [
-  "EVKsigM546MbnakzkDmG0QHlfmn2",
-  "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3",
-];
+// export const Administrator = [
+//   "EVKsigM546MbnakzkDmG0QHlfmn2",
+//   "MBTOK9Jr0eRWVuoT2YXgZNMoBQH3",
+// ];
 
 export const taskflow = [
   { id: 0, status: "未処理" },

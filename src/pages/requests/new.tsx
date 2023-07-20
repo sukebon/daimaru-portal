@@ -59,7 +59,7 @@ const RecruitmentNew = () => {
           <Box minW="100%" my={6}>
             <Flex alignItems="center" justifyContent="space-between" mb={6}>
               <Heading>お手伝い依頼</Heading>
-              <Link href="/">
+              <Link href="/" passHref>
                 <Button>トップへ戻る</Button>
               </Link>
             </Flex>

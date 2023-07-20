@@ -18,7 +18,7 @@ export const ClaimEditButton: FC<Props> = ({ claim }) => {
     <Box w={{ md: "750px" }} py={2} mx="auto">
       <Flex gap={3} justifyContent="space-between" w="full">
         <Box w="full">
-          <Link href="/claims">
+          <Link href="/claims" passHref>
             <Button w="full">一覧へ戻る</Button>
           </Link>
         </Box>
