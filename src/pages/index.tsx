@@ -17,6 +17,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { ClaimAlertArea } from "@/components/toppage/ClaimAlertArea";
 import { PaymentConfAlert } from "@/components/toppage/PaymentConfAlert";
 import { SalesArea } from "@/components/toppage/SalesArea";
+import { NewsArea } from "@/components/toppage/NewsArea";
 
 type Props = {
   categoryData: CategoryData[];
@@ -40,6 +41,7 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
             <Stack spacing={6}>
               <SalesALert />
               <PaymentConfAlert />
+              <NewsArea />
               <ClaimAlertArea />
               <CuttingReportArea />
               <AlcoholCheckArea />
