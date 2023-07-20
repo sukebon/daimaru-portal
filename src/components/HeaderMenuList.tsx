@@ -18,6 +18,11 @@ export const HeaderMenuList: FC = () => {
       blank: true,
     },
     {
+      title: "WEB在庫",
+      link: "https://daimaru-maker-zaiko.vercel.app/daimaru/",
+      blank: true,
+    },
+    {
       title: "ホームページ",
       link: "https://www.daimaru-hakui.co.jp/",
       blank: true,
