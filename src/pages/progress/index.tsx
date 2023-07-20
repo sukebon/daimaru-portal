@@ -17,14 +17,15 @@ import { collection, deleteDoc, doc, onSnapshot, orderBy, query } from "firebase
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
-import { Administrator } from "../../../data";
 import { ProgressContent, ProgressData } from "../../../types";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { ProgressEdit } from "@/components/progress/ProgressEdit";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 const ProgressIndex = () => {
   const [progresses, setProgresses] = useState<ProgressData[]>([]);
   const currentUser = useAuthStore((state) => state.currentUser);
+  const {isAdminAuth} = useAuthManagement()
 
   useEffect(() => {
     const getProgresses = async () => {
@@ -108,7 +109,7 @@ const ProgressIndex = () => {
                   <Flex align="center" justify="space-between">
                     <Text fontSize="xl">{progress.title}</Text>
                     <Flex gap={4}>
-                      {Administrator.includes(currentUser) && (
+                      {isAdminAuth() && (
                         <>
                           <ProgressEdit progress={progress} />
                           <FaTrashAlt

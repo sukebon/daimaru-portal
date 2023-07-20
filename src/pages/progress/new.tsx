@@ -22,7 +22,7 @@ const ProgressNew: NextPage = () => {
     <Container bg="white" p={6} rounded="md">
       <Flex align="center" justify="space-between">
         <Box fontSize="2xl">新規登録</Box>
-        <Link href="/progress">
+        <Link href="/progress" passHref>
           <Button size="sm">戻る</Button>
         </Link>
       </Flex>

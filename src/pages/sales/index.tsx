@@ -25,16 +25,17 @@ import {
 } from "firebase/firestore";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
-import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { SalesEditModal } from "../../components/sales/SalesEditModal";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { Sale } from "../../../types";
 import { useDisp } from "@/hooks/useDisp";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 const Sales: NextPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const users = useAuthStore((state) => state.users);
+  const { isAdminAuth } = useAuthManagement();
   const { getUserName } = useDisp();
   const [sales, setSales] = useState<Sale[]>([]);
   const [targetSum, setTargetSum] = useState<number>(0);
@@ -57,7 +58,7 @@ const Sales: NextPage = () => {
       month,
       lastDate,
       monthStr,
-      dayStr
+      dayStr,
     };
   };
 
@@ -77,15 +78,17 @@ const Sales: NextPage = () => {
     );
     try {
       onSnapshot(q, (querySnapshot) => {
-        const data = querySnapshot.docs.map(
-          (doc) =>
-          ({
-            ...doc.data(),
-            id: doc.id,
-          } as Sale)
-        ).sort((a, b) => a.rank - b.rank);
+        const data = querySnapshot.docs
+          .map(
+            (doc) =>
+              ({
+                ...doc.data(),
+                id: doc.id,
+              } as Sale)
+          )
+          .sort((a, b) => a.rank - b.rank);
         setSales(data);
-        registeredUsers(data.map((sale) => (sale?.currentUser)));
+        registeredUsers(data.map((sale) => sale?.currentUser));
       });
     } catch (err) {
       console.log(err);
@@ -96,12 +99,11 @@ const Sales: NextPage = () => {
   const registeredUsers = (usersArray: string[] = []) => {
     const result = usersArray.includes(currentUser);
     if (result) return;
-    users
-      .forEach(({ isoSalesStaff, uid, rank }) => {
-        if (isoSalesStaff) {
-          addSales(uid, rank);
-        }
-      });
+    users.forEach(({ isoSalesStaff, uid, rank }) => {
+      if (isoSalesStaff) {
+        addSales(uid, rank);
+      }
+    });
   };
 
   // 営業担当を登録する
@@ -145,18 +147,17 @@ const Sales: NextPage = () => {
   const getAchievementRate = (
     target: number,
     achive: number,
-    expect: number,
+    expect: number
   ) => {
     const result = (((expect + achive) / target) * 100).toString().slice(0, 4);
     return Number(result);
   };
 
   const getDifference = (sale: Sale) => {
-    const calc = (
+    const calc =
       Number(sale.currentExpect) -
       Number(sale.currentTarget) +
-      Number(sale.currentAchieve)
-    );
+      Number(sale.currentAchieve);
     return calc;
   };
 
@@ -191,45 +192,43 @@ const Sales: NextPage = () => {
                   getAchievementRate(
                     Number(sale.currentTarget),
                     Number(sale.currentAchieve),
-                    Number(sale.currentExpect),
+                    Number(sale.currentExpect)
                   ) >= 100
                     ? "#d4bf0096"
                     : ""
                 }
               >
                 <Td mr={6}>{getUserName(sale.currentUser)}</Td>
-                <Td isNumeric>
-                  {Number(sale.currentTarget).toLocaleString()}
-                </Td>
+                <Td isNumeric>{Number(sale.currentTarget).toLocaleString()}</Td>
                 <Td isNumeric>
                   {Number(sale.currentAchieve).toLocaleString()}
                 </Td>
-                <Td isNumeric>
-                  {Number(sale.currentExpect).toLocaleString()}
-                </Td>
+                <Td isNumeric>{Number(sale.currentExpect).toLocaleString()}</Td>
                 <Td fontWeight="bold" isNumeric>
-                  {(Number(sale.currentAchieve) + Number(sale.currentExpect)
+                  {(
+                    Number(sale.currentAchieve) + Number(sale.currentExpect)
                   ).toLocaleString()}
                 </Td>
-                <Td fontWeight="bold" isNumeric color={
-                  getDifference(sale) < 0 ? "red" : ""
-                }>
+                <Td
+                  fontWeight="bold"
+                  isNumeric
+                  color={getDifference(sale) < 0 ? "red" : ""}
+                >
                   {getDifference(sale).toLocaleString()}
                 </Td>
                 <Td fontWeight="bold" isNumeric>
                   {getAchievementRate(
                     Number(sale.currentTarget),
                     Number(sale.currentAchieve),
-                    Number(sale.currentExpect),
+                    Number(sale.currentExpect)
                   ) || 0}
                   %
                 </Td>
                 <Td>{sale?.updatedAt?.toDate().toLocaleString()}</Td>
                 <Td>
-                  {(Administrator.includes(currentUser) ||
-                    sale.currentUser === currentUser) && (
-                      <SalesEditModal sale={sale} />
-                    )}
+                  {(isAdminAuth() || sale.currentUser === currentUser) && (
+                    <SalesEditModal sale={sale} />
+                  )}
                 </Td>
               </Tr>
             ))}
@@ -246,9 +245,10 @@ const Sales: NextPage = () => {
               <Td isNumeric>{AchiveSum?.toLocaleString()}</Td>
               <Td isNumeric>{ExpectSum?.toLocaleString()}</Td>
               <Td isNumeric>{(AchiveSum + ExpectSum).toLocaleString()}</Td>
-              <Td isNumeric color={
-                (AchiveSum + ExpectSum - targetSum) < 0 ? "red" : ""
-              }>
+              <Td
+                isNumeric
+                color={AchiveSum + ExpectSum - targetSum < 0 ? "red" : ""}
+              >
                 {(AchiveSum + ExpectSum - targetSum).toLocaleString()}
               </Td>
               <Td isNumeric>

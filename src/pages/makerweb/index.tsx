@@ -44,6 +44,7 @@ const MakerWeb: NextPage<Props> = ({ posts }) => {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    passHref
                   >
                     <Box textDecoration="underline" _hover={{ opacity: "0.8" }}>
                       {name}

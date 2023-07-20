@@ -13,7 +13,6 @@ import { CategoryData, LinkData, NewsData } from "../../types";
 import { CuttingReportArea } from "@/components/toppage/CuttingReportArea";
 import { ReceivablesArea } from "@/components/toppage/ReceivablesArea";
 import { CustomerInfoArea } from "@/components/toppage/CustomerInfoArea";
-import { Administrator } from "../../data";
 import { useAuthStore } from "../../store/useAuthStore";
 import { ClaimAlertArea } from "@/components/toppage/ClaimAlertArea";
 import { PaymentConfAlert } from "@/components/toppage/PaymentConfAlert";

@@ -29,7 +29,7 @@ export const ClaimNextPrev: FC<Props> = ({ claim }) => {
   return (
     <Flex justifyContent="space-between" color="gray.600">
       {nextPrevPage(claim.id, 1) !== undefined ? (
-        <Link href={`/claims/${nextPrevPage(claim.id, 1)}`}>
+        <Link href={`/claims/${nextPrevPage(claim.id, 1)}`} passHref>
           <Flex align="center">
             <ArrowBackIcon />
             前のクレーム
@@ -40,7 +40,7 @@ export const ClaimNextPrev: FC<Props> = ({ claim }) => {
       )}
 
       {nextPrevPage(claim.id, -1) !== undefined ? (
-        <Link href={`/claims/${nextPrevPage(claim.id, -1)}`}>
+        <Link href={`/claims/${nextPrevPage(claim.id, -1)}`} passHref>
           <Flex align="center">
             次のクレーム
             <ArrowForwardIcon />

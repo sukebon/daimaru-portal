@@ -12,14 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { doc, updateDoc } from "firebase/firestore";
 import React from "react";
-import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { AdminEditModal } from "../../components/admin/AdminEditModal";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { User } from "../../../types";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 const Admin = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
+  const {isAdminAuth} = useAuthManagement()
   const fullUsers = useAuthStore((state) => state.fullUsers);
 
   //権限
@@ -47,7 +48,7 @@ const Admin = () => {
 
   return (
     <>
-      {Administrator.includes(currentUser) && (
+      {isAdminAuth() && (
         <Box
           p={6}
           mx="auto"

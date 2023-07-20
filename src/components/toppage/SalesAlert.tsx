@@ -2,10 +2,9 @@ import { Box, Button, keyframes } from "@chakra-ui/react";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { Administrator } from "../../../data";
 import { db } from "../../../firebase";
 import { useAuthStore } from "../../../store/useAuthStore";
-import Draggable from "react-draggable";
+import { useAuthManagement } from "@/hooks/useAuthManegement";
 
 const animationKeyframes = keyframes`
 0% { background-color: red; }
@@ -17,6 +16,7 @@ const animation = `${animationKeyframes} 2s ease-in-out infinite`;
 export const SalesALert: FC = () => {
   const users = useAuthStore((state) => state.users);
   const currentUser = useAuthStore((state) => state.currentUser);
+  const {isAdminAuth} = useAuthManagement()
   const [filterUsers, setFilterUsers] = useState<string[]>([]);
   const [saleFlag, setSaleFlag] = useState<boolean>(false);
 
@@ -46,7 +46,7 @@ export const SalesALert: FC = () => {
   return (
     <>
       {(filterUsers?.includes(currentUser) ||
-        Administrator.includes(currentUser)) &&
+        isAdminAuth()) &&
         saleFlag && (
           <>
             <Box
