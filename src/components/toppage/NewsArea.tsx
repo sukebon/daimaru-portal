@@ -1,4 +1,4 @@
-import { Box, Flex, keyframes } from "@chakra-ui/react";
+import { Box, keyframes } from "@chakra-ui/react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
@@ -21,9 +21,8 @@ const animationkeyframes = keyframes`
 
 export const NewsArea: NextPage = () => {
   const [news, setNews] = useState<News[]>([]);
-  const animation = `${animationkeyframes} ${
-    news.length * window.innerWidth /50
-  }s linear infinite`;
+  const animation = `${animationkeyframes} ${news.length * window.innerWidth / 40
+    }s linear infinite`;
   useEffect(() => {
     const getNews = async () => {
       const collectionRef = collection(db, "news");
@@ -42,28 +41,29 @@ export const NewsArea: NextPage = () => {
   return (
     <>
       {news?.length > 0 && (
-        <Flex
-          w="100%"
-          p={3}
+        <Box
+          py={3}
+          w='full'
           boxShadow="xs"
           rounded="md"
           bg="white"
           overflow="hidden"
+          whiteSpace='nowrap'
         >
-          <Flex
-            w="full"
-            gap={12}
+          <Box
+            as='ul'
+            minW="full"
             fontSize="sm"
-            whiteSpace="nowrap"
             animation={animation}
+            display="inline-flex"
           >
             {news.map(({ id, calendar, content }) => (
-              <Box as="span" key={id}>
-                  {calendar && format(new Date(calendar), "yyyy年MM月dd日")}　{content}
+              <Box as="li" key={id} pr='12' listStyleType='none'>
+                {calendar && format(new Date(calendar), "yyyy年MM月dd日")} {content}
               </Box>
             ))}
-          </Flex>
-        </Flex>
+          </Box>
+        </Box >
       )}
     </>
   );
