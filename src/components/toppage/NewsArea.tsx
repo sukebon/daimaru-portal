@@ -22,9 +22,8 @@ const animationkeyframes = keyframes`
 export const NewsArea: NextPage = () => {
   const [news, setNews] = useState<News[]>([]);
   const animation = `${animationkeyframes} ${
-    news.length * 14
+    news.length * window.innerWidth /50
   }s linear infinite`;
-
   useEffect(() => {
     const getNews = async () => {
       const collectionRef = collection(db, "news");
