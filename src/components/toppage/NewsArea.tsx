@@ -22,7 +22,7 @@ const animationkeyframes = keyframes`
 export const NewsArea: NextPage = () => {
   const [news, setNews] = useState<News[]>([]);
   const animation = `${animationkeyframes} ${
-    news.length * window.innerWidth /50
+    (news.length * window.innerWidth) / 50
   }s linear infinite`;
   useEffect(() => {
     const getNews = async () => {
@@ -43,7 +43,7 @@ export const NewsArea: NextPage = () => {
     <>
       {news?.length > 0 && (
         <Flex
-          w="100%"
+          w="full"
           p={3}
           boxShadow="xs"
           rounded="md"
@@ -58,9 +58,16 @@ export const NewsArea: NextPage = () => {
             animation={animation}
           >
             {news.map(({ id, calendar, content }) => (
-              <Box as="span" key={id}>
-                  {calendar && format(new Date(calendar), "yyyy年MM月dd日")}　{content}
-              </Box>
+              <Flex
+                w="full"
+                gap={12}
+                key={id}
+              >
+                <Box as="span" w="full">
+                  {calendar && format(new Date(calendar), "yyyy年MM月dd日")}
+                {content}
+                </Box>
+              </Flex>
             ))}
           </Flex>
         </Flex>
