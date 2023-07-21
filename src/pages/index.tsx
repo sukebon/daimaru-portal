@@ -39,9 +39,9 @@ const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
         <Flex w="full" gap={6} flexDirection={{ base: "column", lg: "row" }}>
           <Box flex={1} maxW={{ base: "full", lg: "60%" }}>
             <Stack spacing={6}>
+              <NewsArea />
               <SalesALert />
               <PaymentConfAlert />
-              <NewsArea />
               <ClaimAlertArea />
               <CuttingReportArea />
               <AlcoholCheckArea />

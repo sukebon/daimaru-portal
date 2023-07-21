@@ -21,7 +21,7 @@ const animationkeyframes = keyframes`
 
 export const NewsArea: NextPage = () => {
   const [news, setNews] = useState<News[]>([]);
-  const animation = `${animationkeyframes} ${news.length * window.innerWidth / 40
+  const animation = `${animationkeyframes} ${window.innerWidth / 50
     }s linear infinite`;
   useEffect(() => {
     const getNews = async () => {
@@ -52,6 +52,7 @@ export const NewsArea: NextPage = () => {
         >
           <Box
             as='ul'
+            w="auto"
             minW="full"
             fontSize="sm"
             animation={animation}
