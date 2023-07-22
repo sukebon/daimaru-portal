@@ -13,16 +13,17 @@ type News = {
 
 const animationkeyframes = keyframes`
 0% {
-    transform:translateX(100%)
+    transform:translateX(0)
 }
 100% {
-    transform:translateX(-100%)
+    transform:translateX(-200%)
 }`;
 
 export const NewsArea: NextPage = () => {
+  const [total, setTotal] = useState(0);
+  const [animation, setAnimation] = useState("");
   const [news, setNews] = useState<News[]>([]);
-  const animation = `${animationkeyframes} ${window.innerWidth / 50
-    }s linear infinite`;
+
   useEffect(() => {
     const getNews = async () => {
       const collectionRef = collection(db, "news");
@@ -36,7 +37,32 @@ export const NewsArea: NextPage = () => {
       });
     };
     getNews();
+  }, [total]);
+
+  useEffect(() => {
+    setAnimation(`${animationkeyframes} ${news.length * window.innerWidth / 50
+      }s linear infinite`);
+    getUlWidth();
+  }, [news]);
+
+
+  useEffect(() => {
+    window.addEventListener("resize", getUlWidth);
+    return window.addEventListener("resize", getUlWidth);
   }, []);
+
+  const getUlWidth = () => {
+    let sum = 0;
+    const ul = document.querySelector("#ul");
+    const ulwidth = ul?.clientWidth || 0;
+    const lists = document.querySelectorAll("#list");
+    lists.forEach((list: any) => {
+      sum += list.clientWidth;
+    });
+    setTotal(sum > ulwidth ? sum : ulwidth);
+  };
+
+
 
   return (
     <>
@@ -49,17 +75,34 @@ export const NewsArea: NextPage = () => {
           bg="white"
           overflow="hidden"
           whiteSpace='nowrap'
+          display="flex"
         >
           <Box
-            as='ul'
-            w="auto"
-            minW="full"
+            as="ul"
+            id="ul"
+            pl="100%"
+            w={total > 0 ? total + "px" : "100%"}
             fontSize="sm"
             animation={animation}
-            display="inline-flex"
           >
             {news.map(({ id, calendar, content }) => (
-              <Box as="li" key={id} pr='12' listStyleType='none'>
+              <Box as="li" pr="12" id="list"
+                key={id} listStyleType='none' display="inline-block">
+                {calendar && format(new Date(calendar), "yyyy年MM月dd日")} {content}
+              </Box>
+            ))}
+          </Box>
+          <Box
+            as="ul"
+            id="ul"
+            pl="100%"
+            w={total > 0 ? total + "px" : "100%"}
+            fontSize="sm"
+            animation={animation}
+          >
+            {news.map(({ id, calendar, content }) => (
+              <Box as="li" pr="12" id="list"
+                key={id} listStyleType='none' display="inline-block">
                 {calendar && format(new Date(calendar), "yyyy年MM月dd日")} {content}
               </Box>
             ))}
@@ -68,4 +111,4 @@ export const NewsArea: NextPage = () => {
       )}
     </>
   );
-};
+};;
