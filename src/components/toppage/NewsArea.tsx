@@ -46,11 +46,6 @@ export const NewsArea: NextPage = () => {
   }, [news]);
 
 
-  useEffect(() => {
-    window.addEventListener("resize", getUlWidth);
-    return window.addEventListener("resize", getUlWidth);
-  }, []);
-
   const getUlWidth = () => {
     let sum = 0;
     const ul = document.querySelector("#ul");
@@ -61,8 +56,6 @@ export const NewsArea: NextPage = () => {
     });
     setTotal(sum > ulwidth ? sum : ulwidth);
   };
-
-
 
   return (
     <>
@@ -81,7 +74,7 @@ export const NewsArea: NextPage = () => {
             as="ul"
             id="ul"
             pl="100%"
-            w={total > 0 ? total + "px" : "100%"}
+            // w={total > 0 ? total + "px" : "100%"}
             fontSize="sm"
             animation={animation}
           >
