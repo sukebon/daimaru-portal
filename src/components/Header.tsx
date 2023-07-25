@@ -4,6 +4,7 @@ import React, { FC } from "react";
 import { HeaderMenuButton } from "./HeaderMenuButton";
 import { HeaderMenuList } from "./HeaderMenuList";
 import { useAuthStore } from "../../store/useAuthStore";
+import { HeaderDrawer } from "./HeaderDrawer";
 
 export const Header: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -31,7 +32,8 @@ export const Header: FC = () => {
           </Flex>
           <Flex alignItems="center">
             <HeaderMenuList />
-            <HeaderMenuButton />
+            {/* <HeaderMenuButton /> */}
+            <HeaderDrawer />
           </Flex>
         </Flex>
       )}

@@ -60,7 +60,7 @@ const NewsNew: NextPage = () => {
         <Box as="h1" fontSize="lg" fontWeight="bold">
           News
         </Box>
-        <Link href="/customer-informations" passHref>
+        <Link href="/news" passHref>
           <Button colorScheme="blue" variant="outline" size="sm">
             一覧へ戻る
           </Button>

@@ -1,4 +1,4 @@
-import { Box, Flex, keyframes } from "@chakra-ui/react";
+import { Box, keyframes } from "@chakra-ui/react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
@@ -13,17 +13,18 @@ type News = {
 
 const animationkeyframes = keyframes`
 0% {
-    transform:translateX(100%)
+    transform:translateX(0)
 }
 100% {
-    transform:translateX(-100%)
+    transform:translateX(-200%)
 }`;
 
 export const NewsArea: NextPage = () => {
+  const [total, setTotal] = useState(0);
+  const [animation, setAnimation] = useState("");
   const [news, setNews] = useState<News[]>([]);
-  const animation = `${animationkeyframes} ${
-    (news.length * window.innerWidth) / 50
-  }s linear infinite`;
+
+
   useEffect(() => {
     const getNews = async () => {
       const collectionRef = collection(db, "news");
@@ -37,41 +38,72 @@ export const NewsArea: NextPage = () => {
       });
     };
     getNews();
-  }, []);
+  }, [total]);
+
+  useEffect(() => {
+    setAnimation(`${animationkeyframes} ${news.length * window.innerWidth / 50
+      }s linear infinite`);
+    getUlWidth();
+  }, [news]);
+
+
+  const getUlWidth = () => {
+    let sum = 0;
+    const ul = document.querySelector("#ul");
+    const ulwidth = ul?.clientWidth || 0;
+    const lists = document.querySelectorAll("#list");
+    lists.forEach((list: any) => {
+      sum += list.clientWidth;
+    });
+    setTotal(sum > ulwidth ? sum : ulwidth);
+  };
 
   return (
     <>
       {news?.length > 0 && (
-        <Flex
-          w="full"
-          p={3}
+
+        <Box
+          py={3}
+          w='full'
           boxShadow="xs"
           rounded="md"
           bg="white"
           overflow="hidden"
+          whiteSpace='nowrap'
+          display="flex"
         >
-          <Flex
-            w="full"
-            gap={12}
+          <Box
+            as="ul"
+            id="ul"
+            pl="100%"
+            // w={total > 0 ? total + "px" : "100%"}
             fontSize="sm"
-            whiteSpace="nowrap"
             animation={animation}
           >
             {news.map(({ id, calendar, content }) => (
-              <Flex
-                w="full"
-                gap={12}
-                key={id}
-              >
-                <Box as="span" w="full">
-                  {calendar && format(new Date(calendar), "yyyy年MM月dd日")}
-                {content}
-                </Box>
-              </Flex>
+              <Box as="li" pr="12" id="list"
+                key={id} listStyleType='none' display="inline-block">
+                {calendar && format(new Date(calendar), "yyyy年MM月dd日")} {content}
+              </Box>
             ))}
-          </Flex>
-        </Flex>
+          </Box>
+          <Box
+            as="ul"
+            id="ul"
+            pl="100%"
+            w={total > 0 ? total + "px" : "100%"}
+            fontSize="sm"
+            animation={animation}
+          >
+            {news.map(({ id, calendar, content }) => (
+              <Box as="li" pr="12" id="list"
+                key={id} listStyleType='none' display="inline-block">
+                {calendar && format(new Date(calendar), "yyyy年MM月dd日")} {content}
+              </Box>
+            ))}
+          </Box>
+        </Box >
       )}
     </>
   );
-};
+};;
