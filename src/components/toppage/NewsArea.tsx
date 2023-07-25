@@ -24,6 +24,7 @@ export const NewsArea: NextPage = () => {
   const [animation, setAnimation] = useState("");
   const [news, setNews] = useState<News[]>([]);
 
+
   useEffect(() => {
     const getNews = async () => {
       const collectionRef = collection(db, "news");
@@ -60,6 +61,7 @@ export const NewsArea: NextPage = () => {
   return (
     <>
       {news?.length > 0 && (
+
         <Box
           py={3}
           w='full'
