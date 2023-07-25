@@ -60,12 +60,12 @@ export const NewsEditModal: FC<Props> = ({ id, calendar, content }) => {
 
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button size="xs" variant="outline" onClick={onOpen}>編集</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>編集</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -99,15 +99,15 @@ export const NewsEditModal: FC<Props> = ({ id, calendar, content }) => {
               </Box>
 
               <Box mt={6} textAlign="right">
-                <Button type="submit" colorScheme="blue">
-                  登録
+                <Button type="submit" w="full" colorScheme="blue">
+                  更新
                 </Button>
               </Box>
             </form>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button variant="outline" onClick={onClose}>
               閉じる
             </Button>
           </ModalFooter>
