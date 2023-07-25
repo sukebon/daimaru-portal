@@ -41,7 +41,7 @@ export const NewsArea: NextPage = () => {
   }, [total]);
 
   useEffect(() => {
-    setAnimation(`${animationkeyframes} ${news.length * window.innerWidth / 50
+    setAnimation(`${animationkeyframes} ${news.length * window.innerWidth / 30
       }s linear infinite`);
     getUlWidth();
   }, [news]);
