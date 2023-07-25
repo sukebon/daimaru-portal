@@ -53,6 +53,7 @@ const NewsNew: NextPage = () => {
     await addINews(data);
     reset();
   };
+  
   return (
     <Container maxW="500px" bg="white" p={6} boxShadow="md" rounded="md">
       <Flex w="full" justifyContent="space-between" align="center">

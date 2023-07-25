@@ -17,20 +17,18 @@ import {
     collection,
     deleteDoc,
     doc,
-    getDoc,
     onSnapshot,
     orderBy,
     query,
   } from "firebase/firestore";
-  import { db, storage } from "../../../firebase";
+  import { db} from "../../../firebase";
   import { NextPage } from "next";
-  import { CustomerInformation } from "../../../types";
   import { format } from "date-fns";
   import { useAuthStore } from "../../../store/useAuthStore";
   import { useDisp } from "@/hooks/useDisp";
   import { FaTrashCan } from "react-icons/fa6";
-  import { deleteObject, ref } from "firebase/storage";
   import { useUtils } from "@/hooks/useUtils";
+import { NewsEditModal } from "@/components/news/NewsEditModal";
   
   type News = {
     id:string;
@@ -113,22 +111,17 @@ import {
                   calendar,
                   content,
                   author,
-                  createdAt,
                 }) => (
                   <Tr key={id}>
                     <Td>
-                      {createdAt && format(new Date(createdAt?.toDate()), "yyyy年MM月dd日")}
+                      {calendar && format(new Date(calendar), "yyyy年MM月dd日")}
                     </Td>
                     <Td>{excerpt(content, 30)}</Td>
                     <Td>{getUserName(author)}</Td>
                     <Td w="50px">
-                      {/* <Flex fontSize="xl" justify="center">
-                        <Link href={`/customer-informations/${id}`} passHref>
-                          <Button size="xs" variant="outline">
-                            詳細
-                          </Button>
-                        </Link>
-                      </Flex> */}
+                      <Flex fontSize="xl" justify="center">
+                        <NewsEditModal id={id} calendar={calendar} content={content} />
+                      </Flex>
                     </Td>
                     <Td w="50px">
                       <Flex justify="center">
