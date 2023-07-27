@@ -77,7 +77,15 @@ export const getStaticProps: GetStaticProps = async () => {
     params
   );
   const resJson = await res.json();
-  const posts: MakerWeb[] = resJson.contents;
+  let posts: MakerWeb[] = resJson.contents;
+  posts.sort((a,b)=>{
+    if(a.kana < b.kana) {
+      return -1
+    } else {
+      return 1
+    }
+  })
+
 
   return { props: { posts } };
 };
