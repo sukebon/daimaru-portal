@@ -33,10 +33,6 @@ export const HeaderMenuList: FC = () => {
       blank: true,
     },
     {
-      title: "売掛金情報",
-      link: "/receivables",
-    },
-    {
       title: "生地在庫",
       link: "https://daimaru-kijizaiko.vercel.app/dashboard",
       blank: true,
@@ -45,6 +41,10 @@ export const HeaderMenuList: FC = () => {
       title: "裁断報告書",
       link: "https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports",
       blank: true,
+    },
+    {
+      title: "売掛金情報",
+      link: "/receivables",
     },
     {
       title: "会社カレンダー",

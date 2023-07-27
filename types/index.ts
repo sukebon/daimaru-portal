@@ -65,6 +65,7 @@ export type MakerWeb = {
   userId: string;
   password: string;
   code: string;
+  kana:string;
 };
 
 export type AlcoholCheckList = {
