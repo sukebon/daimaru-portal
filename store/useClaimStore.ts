@@ -29,7 +29,7 @@ export const useClaimStore = create<State>((set) => ({
   setClaims: (payload) => set({ claims: payload }),
   filterClaims: [],
   setFilterClaims: (payload) => set({ filterClaims: payload }),
-  receptionDateStart: "2022-03-01",
+  receptionDateStart: "",
   setReceptionDateStart: (payload) => set({ receptionDateStart: payload }),
   receptionDateEnd: "",
   setReceptionDateEnd: (payload) => set({ receptionDateEnd: payload }),

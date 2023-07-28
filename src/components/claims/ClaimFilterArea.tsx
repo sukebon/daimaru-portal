@@ -156,7 +156,7 @@ export const ClaimFilterArea: FC = () => {
               w="100%"
               p={2}
               mt={3}
-              value={receptionDateStart ? receptionDateStart : "2022-03-01"}
+              value={receptionDateStart}
               onChange={(e) => setReceptionDateStart(e.target.value)}
             />
             <Input
@@ -164,7 +164,7 @@ export const ClaimFilterArea: FC = () => {
               w="100%"
               p={2}
               mt={3}
-              value={receptionDateEnd ? receptionDateEnd : todayDate()}
+              value={receptionDateEnd}
               onChange={(e) => setReceptionDateEnd(e.target.value)}
             />
 

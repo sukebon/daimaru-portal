@@ -99,7 +99,10 @@ export const ClaimArea = () => {
                     : "decrease"
                 }
               />
-              {(1 - claimThisMonthCount / claimLastMonthCount) * 100}% (前月比)
+              {Math.round(
+                (1 - claimThisMonthCount / claimLastMonthCount) * 1000
+              ) / 10}
+              % (前月比)
             </StatHelpText>
           </Stat>
           <Flex justify="center" gap={2} mt={3}>
