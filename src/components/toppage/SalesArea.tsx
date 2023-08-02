@@ -13,10 +13,10 @@ const animationKeyframes = keyframes`
 const animation = `${animationKeyframes} 30s ease-in-out infinite`;
 
 export const SalesArea = () => {
-  const { isAuth } = useAuthManagement();
+  const { isAuth,isAdminAuth } = useAuthManagement();
   return (
     <>
-      {isAuth("isoSalesStaff") && (
+      {(isAuth("isoSalesStaff") || isAdminAuth()) && (
         <Draggable defaultPosition={{ x: 0, y: window.innerHeight - 150 }}>
           <Box
             bg="white"
