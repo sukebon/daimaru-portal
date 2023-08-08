@@ -130,7 +130,7 @@ const CustomerInformations: NextPage = () => {
   };
 
   return (
-    <Container maxW="1300px" bg="white" p={6} boxShadow="md" rounded="md">
+    <Container w="full" maxW="1500px" bg="white" p={6} boxShadow="md" rounded="md">
       <Flex justify="space-between" align="center">
         <Box as="h1" fontSize="lg" fontWeight="bold">
           お客様情報一覧
