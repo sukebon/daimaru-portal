@@ -1,4 +1,3 @@
-import axios from 'axios';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
@@ -13,35 +12,16 @@ export const useChat = () => {
       const completion = await openai.chat.completions.create({
         messages: [...conversation, { role: 'user', content: message }],
         model: 'gpt-3.5-turbo',
+        max_tokens : 2000,
       });
-
       return completion.choices[0].message.content;
     } catch (error) {
       console.error(error);
+      alert(`制限に到達した可能性があります。\n内容をリセットして5分以上時間を置いてからお試しください。
+      \n\n ${error}`);
       return null;
     }
   };
-  //   const getChatgpt2 = async () => {
-  //     const API_URL = 'https://api.openai.com/v1/';
-  // const MODEL = 'gpt-3.5-turbo';
-  //     const API_KEY = process.env.NEXT_PUBLIC_CHAT_GPT_API_KEY
-  //     const response = await axios.post( `${ API_URL }chat/completions`, {
-  //       model: MODEL,
-  //       messages: [
-  //           ...coversation,
-  //         {
-  //           'role': 'user',
-  //           'content': message,
-  //         }
-  //       ],
-  //     }, {
-  //       // HTTPヘッダー(認証)
-  //       headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${ API_KEY }`
-  //       }
-  //     });
-  // }
 
   return { getChatgpt };
 };
