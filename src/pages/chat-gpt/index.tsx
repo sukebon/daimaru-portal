@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import { chat } from './chat';
+import { useChat } from '../../hooks/useChat';
 import {
   Button,
   Box,
@@ -14,6 +14,7 @@ import Link from 'next/link';
 const ChatGpt = () => {
   const [message, setMessage] = useState('');
   const [answer, setAnswer] = useState('');
+  const { getChatgpt } = useChat();
   const setIsLoading = useLoadingStore((state) => state.setIsLoading);
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +25,7 @@ const ChatGpt = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    const responseText = await chat(message);
+    const responseText = await getChatgpt(message);
     if (!responseText) return;
     setAnswer((prev) => prev + responseText + '\n');
     setMessage('');
