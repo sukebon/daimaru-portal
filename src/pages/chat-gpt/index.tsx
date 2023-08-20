@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import { useChat } from '../../hooks/useChat';
 import {
   Button,
@@ -14,6 +14,8 @@ import Link from 'next/link';
 const ChatGpt = () => {
   const [message, setMessage] = useState('');
   const [answer, setAnswer] = useState('');
+  const [conversation, setConversation] = useState<any>([]);
+
   const { getChatgpt } = useChat();
   const setIsLoading = useLoadingStore((state) => state.setIsLoading);
 
@@ -25,12 +27,27 @@ const ChatGpt = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    const responseText = await getChatgpt(message);
+    const responseText = await getChatgpt(message, conversation);
     if (!responseText) return;
     setAnswer((prev) => prev + responseText + '\n');
     setMessage('');
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const newConversation = [
+      {
+        'role': 'user',
+        'content': message,
+      },
+      {
+        'role': 'assistant',
+        'content': answer,
+      },
+    ];
+    setConversation([...conversation, ...newConversation]);
+    setMessage('');
+  }, [answer]);
 
   return (
     <Container maxW="900px" p={6} rounded="md" bg="white" boxShadow="xs">
