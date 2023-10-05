@@ -42,14 +42,15 @@ export const ClaimAccept: FC<Props> = ({ claim }) => {
       receptionNum: data.receptionNum,
       receptionDate: data.receptionDate,
       stampOffice: currentUser,
-      operator: claim.stampStaff, //作業者
+      operator: "事務局", //作業者
     });
-    router.push(`/claims`);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {Number(claim.status) === 0 && isAuth(["isoOffice"]) && (
+      {Number(claim.status) === 0 && 
+      isAuth(["isoOffice"]) && 
+      !claim.receptionDate &&  (
         <>
           <Flex
             justifyContent="center"
