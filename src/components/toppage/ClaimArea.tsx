@@ -99,9 +99,9 @@ export const ClaimArea = () => {
                     : "decrease"
                 }
               />
-              {Math.round(
+              {Math.abs(Math.round(
                 (1 - claimThisMonthCount / claimLastMonthCount) * 1000
-              ) / 10}
+              ) / 10)}
               % (前月比)
             </StatHelpText>
           </Stat>
