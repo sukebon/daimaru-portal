@@ -34,9 +34,9 @@ export const ClaimArea = () => {
     const month = date.getMonth() + 1;
     const lastDate = new Date(year, month, 0);
     let monthStr = "0" + month;
-    monthStr.slice(-2);
-    const startDate = `${year}-${monthStr}-01`;
-    const endDate = `${year}-${monthStr}-${lastDate.getDate()}`;
+    const sliceMonth = monthStr.slice(-2);
+    const startDate = `${year}-${sliceMonth}-01`;
+    const endDate = `${year}-${sliceMonth}-${lastDate.getDate()}`;
     const q = query(
       collection(db, "claimList"),
       orderBy("receptionDate"),
