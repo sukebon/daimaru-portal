@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC,useEffect } from "react";
 import {
   Box,
   Button,
@@ -29,9 +29,10 @@ const animation = `${animationKeyframes} 10s ease-in-out infinite`;
 
 type Props = {
   request: Request;
+  idx:number;
 };
 
-export const RequestPost: FC<Props> = ({ request }) => {
+export const RequestPost: FC<Props> = ({ request,idx }) => {
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -75,6 +76,12 @@ export const RequestPost: FC<Props> = ({ request }) => {
       )}
     </Flex>
   );
+  
+  useEffect(()=>{
+    if(idx === 0) {
+      setShow(true)
+    }
+  },[idx])
 
   return (
     <>

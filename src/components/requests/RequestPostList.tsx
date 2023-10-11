@@ -11,9 +11,9 @@ type Props = {
 export const RequestPostList: FC<Props> = ({ requests }) => {
   return (
     <>
-      {requests.map((request) => (
+      {requests.map((request,idx) => (
         <Box key={request.id} w="full" mt={3}>
-          <RequestPost request={request} />
+          <RequestPost request={request} idx={idx}/>
         </Box>
       ))}
     </>
