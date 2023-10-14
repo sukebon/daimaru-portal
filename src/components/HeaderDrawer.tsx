@@ -82,7 +82,7 @@ export const HeaderDrawer: FC = () => {
                 </>
               )}
               <Box fontSize="xs" fontWeight="bold">デジタルマーケティング</Box>
-              {MenuItemEL('Chat GPT', '/chat-gpt')}
+              {/* {MenuItemEL('Chat GPT', '/chat-gpt')} */}
               {MenuItemEL("進捗", "/progress")}
               {isAdminAuth() && (
                 <>
