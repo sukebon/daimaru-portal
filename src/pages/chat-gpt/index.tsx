@@ -22,7 +22,7 @@ type Item = {
 
 const ChatGpt = () => {
   const setIsLoading = useLoadingStore((state) => state.setIsLoading);
-  const { getChatgpt } = useChat();
+  // const { getChatgpt } = useChat();
   const currentUser = useAuthStore((state) => state.currentUser);
   const [items, setItems] = useState<Item[]>([]);
   const [message, setMessage] = useState('');
@@ -46,10 +46,10 @@ const ChatGpt = () => {
     }
     setIsLoading(true);
     try {
-      const responseText = await getChatgpt(message, conversation);
-      if (!responseText) return;
-      setAnswer(responseText);
-      setItems((prev) => [...prev, { message, answer: responseText }]);
+      // const responseText = await getChatgpt(message, conversation);
+      // if (!responseText) return;
+      // setAnswer(responseText);
+      // setItems((prev) => [...prev, { message, answer: responseText }]);
     } catch (error) {
       console.log(error);
       alert("制限に到達した可能性があります。5分以上時間を置いてからお試しください");
