@@ -1,7 +1,6 @@
 import { Text, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { FC } from "react";
-import { HeaderMenuButton } from "./HeaderMenuButton";
 import { HeaderMenuList } from "./HeaderMenuList";
 import { useAuthStore } from "../../store/useAuthStore";
 import { HeaderDrawer } from "./HeaderDrawer";
