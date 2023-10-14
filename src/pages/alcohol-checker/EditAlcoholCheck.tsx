@@ -30,7 +30,7 @@ export const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>編集</ModalHeader>
           <ModalCloseButton />
           <AlcoholCheckForm
             onClose={onClose}
