@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Flex,
+  Container,
   Table,
   TableContainer,
   Tbody,
@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -18,20 +18,21 @@ import { db } from "../../../firebase";
 import { AlcoholCheckData } from "../../../types";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useDisp } from "@/hooks/useDisp";
+import { AlcoholCheckTableRow } from "@/components/alcohol-checker/AlcoholCheckTableRow";
 
 const AlcoholId = () => {
   const users = useAuthStore((state) => state.users);
   const [notUsers, setNotUsers] = useState<string[]>([]);
   const [posts, setPosts] = useState<AlcoholCheckData[]>([]);
   const router = useRouter();
-  const queryId = router.query.id;
+  const queryId = router.query.id as string;
   const { getUserName } = useDisp();
 
   //アルコールチェックデータを取得
   useEffect(() => {
     const collectionRef = collection(db, "alcoholCheckData");
     const q = query(collectionRef, where("date", "==", `${queryId}`));
-    getDocs(q).then((querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       setPosts(
         querySnapshot.docs.map(
           (doc) =>
@@ -53,42 +54,39 @@ const AlcoholId = () => {
       .map((user) => {
         return user.uid;
       })
-      .filter((user) => {
-        if (!newPosts?.includes(user)) return user;
-      });
+      .filter((user) => !newPosts?.includes(user));
     setNotUsers(newUsers);
   }, [users, posts]);
 
+  if (!queryId) return;
+
   return (
-    <Flex direction="column" align="center">
-      <TableContainer bg="white" borderRadius={6} p={6} mt={2}>
-        <Link href="/alcohol-checker" passHref>
-          <Button w="100%">一覧へ戻る</Button>
-        </Link>
-        <Flex justify="space-between" mt={6}>
-          <Box fontSize="lg">{queryId}</Box>
-        </Flex>
+    <Container minW={900} bg="white" borderRadius={6} p={6}>
+      <Link href="/alcohol-checker" passHref>
+        <Button w="100%">一覧へ戻る</Button>
+      </Link>
+      <Box mt={6} fontSize="lg">{queryId}</Box>
+      <TableContainer mt={2}>
         <Table size="sm" mt={6}>
           <Thead>
             <Tr>
               <Th minW="160px">名前</Th>
-              <Th minW="50px">アルコールの検査</Th>
-              <Th minW="50px">酒気帯び</Th>
-              <Th minW="150px">提出時刻</Th>
+              <Th>アルコールの検査</Th>
+              <Th>酒気帯び</Th>
+              <Th minW="50px">数値</Th>
+              <Th minW="100px">提出時刻</Th>
+              <Th minW="100px">更新時刻</Th>
+              <Th>編集</Th>
             </Tr>
           </Thead>
           <Tbody>
             {posts?.map((post) => (
-              <Tr key={post.id}>
-                <Td>{getUserName(post.uid)}</Td>
-                <Td>{Number(post.alcoholCheck1) === 1 ? "済み" : "未"}</Td>
-                <Td>{Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}</Td>
-                <Td>{post?.createdAt?.toDate().toLocaleTimeString("en-US")}</Td>
-              </Tr>
+              <AlcoholCheckTableRow key={post.id} post={post} />
             ))}
             {notUsers.map((notUser) => (
               <Tr key={notUser}>
                 <Td>{getUserName(notUser)}</Td>
+                <Td textAlign="center"></Td>
                 <Td textAlign="center"></Td>
                 <Td textAlign="center"></Td>
                 <Td textAlign="center"></Td>
@@ -97,7 +95,7 @@ const AlcoholId = () => {
           </Tbody>
         </Table>
       </TableContainer>
-    </Flex>
+    </Container>
   );
 };
 

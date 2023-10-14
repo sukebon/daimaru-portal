@@ -76,10 +76,12 @@ export type AlcoholCheckList = {
 export type AlcoholCheckData = {
   id: string;
   uid: string;
-  alcoholCheck1: number;
-  alcoholCheck2: number;
+  alcoholCheck1: string;
+  alcoholCheck2: string;
+  alcoholCheckValue:number;
   date: string;
   createdAt: any;
+  updatedAt:any;
 };
 
 export type ProgressData = {
