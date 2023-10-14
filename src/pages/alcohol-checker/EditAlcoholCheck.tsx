@@ -22,7 +22,7 @@ type Props = {
   defaultValues: Inputs;
 };
 
-export const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
+const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -43,3 +43,5 @@ export const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
     </>
   );
 };
+
+export default  EditAlcoholCheck

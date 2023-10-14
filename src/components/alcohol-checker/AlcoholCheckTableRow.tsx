@@ -1,4 +1,4 @@
-import { EditAlcoholCheck } from "@/pages/alcohol-checker/EditAlcoholCheck";
+import  EditAlcoholCheck from "@/pages/alcohol-checker/EditAlcoholCheck";
 import { Td, Tr } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { AlcoholCheckData } from "../../../types";
