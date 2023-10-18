@@ -1,5 +1,6 @@
 import {
   Container,
+  Flex,
   Tab,
   TabList,
   TabPanel,
@@ -12,6 +13,8 @@ type Props = {
   calendarData: {
     imageHonsha: { url: string };
     imageTokushima: { url: string };
+    imageHonshaNext: { url: string };
+    imageTokushimaNext: { url: string };
   };
 };
 
@@ -26,18 +29,32 @@ const Calendar: NextPage<Props> = ({ calendarData }) => {
 
         <TabPanels mt={1}>
           <TabPanel p={0}>
-            <img
-              src={calendarData.imageHonsha.url}
-              alt="本社・神戸カレンダー"
-              width="100%"
-            />
+            <Flex flexDir="column">
+              <img
+                src={calendarData.imageHonsha.url}
+                alt="本社・神戸カレンダー"
+                width="100%"
+              />
+              <img
+                src={calendarData.imageHonshaNext.url}
+                alt="本社・神戸カレンダー"
+                width="100%"
+              />
+            </Flex>
           </TabPanel>
           <TabPanel p={0}>
-            <img
-              src={calendarData.imageTokushima.url}
-              alt="徳島工場カレンダー"
-              width="100%"
-            />
+            <Flex flexDir="column">
+              <img
+                src={calendarData.imageTokushima.url}
+                alt="徳島工場カレンダー"
+                width="100%"
+              />
+              <img
+                src={calendarData.imageTokushimaNext.url}
+                alt="徳島工場カレンダー"
+                width="100%"
+              />
+            </Flex>
           </TabPanel>
         </TabPanels>
       </Tabs>
