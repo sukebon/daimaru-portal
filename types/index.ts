@@ -46,6 +46,8 @@ export type User = {
   isoOffice: boolean;
   isoTopManegment: boolean;
   alcoholChecker: boolean;
+  daimaru:boolean;
+  willfit:boolean;
 };
 
 export type Sale = {
