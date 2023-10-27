@@ -69,6 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           uid: currentUser,
           name: session?.email,
           rank: 1000,
+          email:session?.email
         });
       };
       addAuthority();

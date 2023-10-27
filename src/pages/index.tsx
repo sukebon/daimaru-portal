@@ -27,6 +27,7 @@ type Props = {
 
 const Home: NextPage<Props> = ({ categoryData, newsData, linkData }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
+ 
   return (
     <>
       <Head>

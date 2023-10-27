@@ -52,7 +52,7 @@ const Admin = () => {
         <Box
           p={6}
           mx="auto"
-          w={{ base: "100%", md: "1000px" }}
+          w={{ base: "100%", md: "1200px" }}
           bg="white"
           rounded="md"
         >
@@ -76,6 +76,8 @@ const Admin = () => {
                       <Th>ISO 事務局</Th>
                       <Th>営業・販売</Th>
                       <Th>ALチェック管理</Th>
+                      <Th>大丸白衣</Th>
+                      <Th>ウィルフィット</Th>
                       <Th>編集</Th>
                     </Tr>
                   </Thead>
@@ -90,6 +92,8 @@ const Admin = () => {
                         <Td>{buttonEL(user, "isoOffice")}</Td>
                         <Td>{buttonEL(user, "isoSalesStaff")}</Td>
                         <Td>{buttonEL(user, "alcoholChecker")}</Td>
+                        <Td>{buttonEL(user, "daimaru")}</Td>
+                        <Td>{buttonEL(user, "willfit")}</Td>
                         <Td>
                           <AdminEditModal user={user} />
                         </Td>
