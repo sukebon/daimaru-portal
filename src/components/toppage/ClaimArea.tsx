@@ -53,10 +53,10 @@ export const ClaimArea = () => {
   useEffect(() => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = date.getMonth();
+    let month = date.getMonth();
     const lastDate = new Date(year, month, 0);
     let monthStr = "0" + month;
-    monthStr.slice(-2);
+    monthStr = monthStr.slice(-2);
     const startDate = `${year}-${monthStr}-01`;
     const endDate = `${year}-${monthStr}-${lastDate.getDate()}`;
     const q = query(
@@ -119,47 +119,6 @@ export const ClaimArea = () => {
           </Flex>
         </Flex>
       </Flex>
-      {/* <Flex
-        w="full"
-        p="6"
-        align="center"
-        justify={{ base: "flex-start", md: "space-between" }}
-        direction={{
-          base: "column",
-          md: "row",
-          lg: "column",
-          xl: "column",
-          "2xl": "row",
-        }}
-        gap={6}
-        boxShadow="xs"
-        rounded="md"
-        bg="white"
-      >
-        <Flex fontSize="lg" fontWeight="bold" align="center">
-          <Text>今月のクレーム報告件数:</Text>
-          <Text fontSize="2xl" fontWeight="bold" mx={2} color="red">
-            {claimThisMonthCount}
-          </Text>
-          <Text>件</Text>
-        </Flex>
-        <Flex flex="1" direction={{ base: "column", sm: "row" }} gap={6}>
-          <Box w="full">
-            <Link href="/claims/" passHref>
-              <Button colorScheme="blue" variant="outline" w="100%">
-                クレーム報告書一覧
-              </Button>
-            </Link>
-          </Box>
-          <Box w="full">
-            <Link href="/claims/new" passHref>
-              <Button colorScheme="blue" w="100%">
-                クレーム報告書を作成
-              </Button>
-            </Link>
-          </Box>
-        </Flex>
-      </Flex> */}
     </>
   );
 };
