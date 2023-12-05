@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   HStack,
@@ -9,49 +9,25 @@ import {
   MenuItem,
   Box,
 } from "@chakra-ui/react";
+import { db } from "../../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useAuthStore } from "../../store/useAuthStore";
+import { menu } from "@/utils/header-menu";
 
 export const HeaderMenuList: FC = () => {
-  const menu = [
-    {
-      title: "マイユニポータル",
-      link: "https://myuni.vercel.app/catalog",
-      blank: true,
-    },
-    {
-      title: "WEB在庫",
-      link: "https://daimaru-maker-zaiko.vercel.app/daimaru/",
-      blank: true,
-    },
-    {
-      title: "ホームページ",
-      link: "https://www.daimaru-hakui.co.jp/",
-      blank: true,
-    },
-    {
-      title: "組織カレンダー",
-      link: "https://calendar.nextset.jp/daimaruhakui/gp/calendar.html",
-      blank: true,
-    },
-    {
-      title: "生地在庫",
-      link: "https://daimaru-kijizaiko.vercel.app/dashboard",
-      blank: true,
-    },
-    {
-      title: "裁断報告書",
-      link: "https://daimaru-kijizaiko.vercel.app/tokushima/cutting-reports",
-      blank: true,
-    },
-    {
-      title: "売掛金情報",
-      link: "/receivables",
-    },
-    {
-      title: "会社カレンダー",
-      link: "/calendar",
-    },
-    { title: "メーカーWEB", link: "/makerweb" },
-  ];
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const [isWillfit, setIsWillfit] = useState(false);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    const getWillfituUser = async () => {
+      const docRef = doc(db, "authority", `${currentUser}`);
+      const snapShot = await getDoc(docRef);
+      const bool = snapShot.data()?.willfit;
+      setIsWillfit(bool);
+    };
+    getWillfituUser();
+  }, [currentUser]);
 
   return (
     <>
@@ -61,6 +37,15 @@ export const HeaderMenuList: FC = () => {
             Menu
           </MenuButton>
           <MenuList>
+            {isWillfit && (
+              <Link
+                href="https://willfit-portal.vercel.app/dashboard"
+                rel="noreferrer"
+                passHref
+              >
+                <MenuItem>ウィルフィット</MenuItem>
+              </Link>
+            )}
             {menu.map((m) => (
               <Link
                 key={m.title}
@@ -76,8 +61,24 @@ export const HeaderMenuList: FC = () => {
         </Menu>
       </Box>
       <HStack spacing={3} mr={3} display={{ base: "none", "2xl": "block" }}>
+        {isWillfit && (
+          <Link
+            href="https://willfit-portal.vercel.app/dashboard"
+            rel="noreferrer"
+            passHref
+          >
+            <Button size="sm" colorScheme="blue" fontWeight="bold">
+              ウィルフィット
+            </Button>
+          </Link>
+        )}
         {menu.map((m) => (
-          <Link key={m.title} href={m.link} target={m.blank ? "_blank" : ""} passHref>
+          <Link
+            key={m.title}
+            href={m.link}
+            target={m.blank ? "_blank" : ""}
+            passHref
+          >
             <Button
               size="sm"
               variant="outline"
