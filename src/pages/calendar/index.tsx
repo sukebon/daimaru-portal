@@ -35,11 +35,13 @@ const Calendar: NextPage<Props> = ({ calendarData }) => {
                 alt="本社・神戸カレンダー"
                 width="100%"
               />
-              <img
-                src={calendarData.imageHonshaNext.url}
-                alt="本社・神戸カレンダー"
-                width="100%"
-              />
+              {calendarData.imageHonshaNext && (
+                <img
+                  src={calendarData.imageHonshaNext.url}
+                  alt="本社・神戸カレンダー"
+                  width="100%"
+                />
+              )}
             </Flex>
           </TabPanel>
           <TabPanel p={0}>
@@ -49,11 +51,13 @@ const Calendar: NextPage<Props> = ({ calendarData }) => {
                 alt="徳島工場カレンダー"
                 width="100%"
               />
-              <img
-                src={calendarData.imageTokushimaNext.url}
-                alt="徳島工場カレンダー"
-                width="100%"
-              />
+              {calendarData.imageTokushimaNext && (
+                <img
+                  src={calendarData.imageTokushimaNext.url}
+                  alt="徳島工場カレンダー"
+                  width="100%"
+                />
+              )}
             </Flex>
           </TabPanel>
         </TabPanels>
