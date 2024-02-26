@@ -76,6 +76,23 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [session]);
 
+    useEffect(() => {
+    console.log("users");
+    if (currentUser) {
+      const docRef = doc(db, "authority", `${currentUser}`);
+      const userRef = doc(db, "users", `${currentUser}`);
+      const addAuthority = async () => {
+        const docSnap = await getDoc(docRef);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) return;
+        await setDoc(userRef, {
+          ...docSnap.data()
+        });
+      };
+      addAuthority();
+    }
+  }, [session]);
+
   // useEffect(() => {
   //   console.log("authority");
   //   if (currentUser) {
