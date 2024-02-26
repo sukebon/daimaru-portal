@@ -95,14 +95,19 @@ export const AlcoholCheckForm: FC<Props> = ({
         alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
       });
       // 2024年3月以降
-      await setDoc(doc(db, 'alcoholCheckList', todayDate, 'alcoholCheckData', currentUser), {
-        date: todayDate,
-        uid: currentUser,
-        createdAt: serverTimestamp(),
-        alcoholCheck1: data.alcoholCheck1,
-        alcoholCheck2: data.alcoholCheck2,
-        alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
-      });
+      const userRef = doc(db, "users", currentUser);
+      await setDoc(
+        doc(db, "alcoholCheckList", todayDate, "alcoholCheckData", currentUser),
+        {
+          date: todayDate,
+          uid: currentUser,
+          createdAt: serverTimestamp(),
+          alcoholCheck1: data.alcoholCheck1,
+          alcoholCheck2: data.alcoholCheck2,
+          alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
+          userRef: userRef,
+        }
+      );
     } catch (e) {
       console.error(e);
     }
