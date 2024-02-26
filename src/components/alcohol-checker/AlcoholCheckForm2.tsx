@@ -27,7 +27,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { db } from "../../../firebase";
 import { format } from "date-fns";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { useParams } from "next/navigation";
 
 type Inputs = {
   alcoholCheck1: string;
@@ -38,32 +37,25 @@ type Inputs = {
 type Props = {
   onClose: () => void;
   pageType: "NEW" | "EDIT";
+  postId?: string;
   defaultValues: Inputs;
-  // dateId?: string;
-  userId?: string;
 };
 
-export const AlcoholCheckForm: FC<Props> = ({
+export const AlcoholCheckForm2: FC<Props> = ({
   onClose,
   pageType,
+  postId,
   defaultValues,
-  // dateId,
-  userId,
 }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const todayDate = format(new Date(), "yyyy-MM-dd");
-  const { dateId }: { dateId: string } = useParams();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    defaultValues: {
-      ...defaultValues,
-      alcoholCheck1: String(defaultValues.alcoholCheck1),
-      alcoholCheck2: String(defaultValues.alcoholCheck2),
-    },
+    defaultValues: defaultValues,
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     switch (pageType) {
@@ -71,7 +63,7 @@ export const AlcoholCheckForm: FC<Props> = ({
         await setAlcoholCheckList(data);
         break;
       case "EDIT":
-        updateAlcoholChecker(data);
+        await updateAlcoholChecker(data);
     }
     onClose();
   };
@@ -110,8 +102,8 @@ export const AlcoholCheckForm: FC<Props> = ({
           date: todayDate,
           uid: currentUser,
           createdAt: serverTimestamp(),
-          alcoholCheck1: Number(data.alcoholCheck1),
-          alcoholCheck2: Number(data.alcoholCheck2),
+          alcoholCheck1: data.alcoholCheck1,
+          alcoholCheck2: data.alcoholCheck2,
           alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
           userRef: userRef,
         }
@@ -122,18 +114,11 @@ export const AlcoholCheckForm: FC<Props> = ({
   };
 
   const updateAlcoholChecker = (data: Inputs) => {
-    console.log(dateId, userId);
-    if (!dateId) return;
-    const documentRef = doc(
-      db,
-      "alcoholCheckList",
-      `${dateId}`,
-      "alcoholCheckData",
-      `${userId}`
-    );
-    updateDoc(documentRef, {
-      alcoholCheck1: Number(data.alcoholCheck1),
-      alcoholCheck2: Number(data.alcoholCheck2),
+    if (!postId) return;
+    const docRef = doc(db, "alcoholCheckData", postId);
+    updateDoc(docRef, {
+      alcoholCheck1: data.alcoholCheck1,
+      alcoholCheck2: data.alcoholCheck2,
       alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
       updatedAt: serverTimestamp(),
     });

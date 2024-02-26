@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { AlcoholCheckForm } from "@/components/alcohol-checker/AlcoholCheckForm";
-import {BiSolidEditAlt} from "react-icons/bi"
+import { AlcoholCheckForm2 } from "@/components/alcohol-checker/AlcoholCheckForm2";
+import { BiSolidEditAlt } from "react-icons/bi";
 import {
   Modal,
   ModalOverlay,
@@ -10,6 +10,7 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
+import { AlcoholCheckForm } from "@/components/alcohol-checker/AlcoholCheckForm";
 
 type Inputs = {
   alcoholCheck1: string;
@@ -18,11 +19,11 @@ type Inputs = {
 };
 
 type Props = {
-    postId: string;
+  postId: string;
   defaultValues: Inputs;
 };
 
-const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
+const EditAlcoholCheckModal: FC<Props> = ({ postId, defaultValues }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -35,7 +36,7 @@ const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
           <AlcoholCheckForm
             onClose={onClose}
             pageType="EDIT"
-            postId={postId}
+            userId={postId}
             defaultValues={defaultValues}
           />
         </ModalContent>
@@ -44,4 +45,4 @@ const EditAlcoholCheck: FC<Props> = ({ postId, defaultValues }) => {
   );
 };
 
-export default  EditAlcoholCheck
+export default EditAlcoholCheckModal;

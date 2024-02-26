@@ -70,7 +70,7 @@ const Alcohol = () => {
                 <Tr>
                   <Th minW="130x">日付</Th>
                   <Th minW="50px">提出者</Th>
-                  <Th minW="50px">未提出者</Th>
+                  {/* <Th minW="50px">未提出者</Th> */}
                   <Th></Th>
                 </Tr>
               </Thead>
@@ -79,7 +79,7 @@ const Alcohol = () => {
                   <Tr key={id}>
                     <Td>{id} ({getDayOfWeek(id)})</Td>
                     <Td>{member.length}名</Td>
-                    <Td>{users.length - member.length}名</Td>
+                    {/* <Td>{users.length - member.length}名</Td> */}
                     <Td>
                       <Link href={`alcohol-checker/${id}`} passHref>
                         <Button size="xs">詳細</Button>
