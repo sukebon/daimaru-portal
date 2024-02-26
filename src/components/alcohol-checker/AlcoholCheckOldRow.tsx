@@ -9,7 +9,7 @@ type Props = {
   post: AlcoholCheckData;
 };
 
-export const AlcoholCheckTableRow: FC<Props> = ({ post }) => {
+export const AlcoholCheckOldRow: FC<Props> = ({ post }) => {
   const { getUserName } = useDisp();
   return (
     <Tr key={post.id}>
@@ -30,7 +30,7 @@ export const AlcoholCheckTableRow: FC<Props> = ({ post }) => {
         {post?.updatedAt &&
           format(new Date(post?.updatedAt.toDate()), "HH時mm分ss秒")}
       </Td>
-      <Td textAlign="center">
+      {/* <Td textAlign="center">
         <EditAlcoholCheck
           postId={post.id}
           defaultValues={{
@@ -39,7 +39,7 @@ export const AlcoholCheckTableRow: FC<Props> = ({ post }) => {
             alcoholCheckValue: post.alcoholCheckValue,
           }}
         />
-      </Td>
+      </Td> */}
     </Tr>
   );
 };
