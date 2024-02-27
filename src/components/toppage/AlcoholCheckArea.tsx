@@ -15,7 +15,8 @@ import React, { FC, useEffect, useState } from "react";
 import { db } from "../../../firebase";
 import { useUtils } from "../../hooks/useUtils";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { AlcoholCheckForm2 } from "../alcohol-checker/AlcoholCheckForm2";
+import { AlcoholCheckForm } from "../alcohol-checker/AlcoholCheckForm";
+// import { AlcoholCheckForm2 } from "../alcohol-checker/AlcoholCheckForm2";
 
 export const AlcoholCheckArea: FC = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -61,7 +62,7 @@ export const AlcoholCheckArea: FC = () => {
         <ModalContent>
           <ModalHeader>アルコールチェック</ModalHeader>
           <ModalCloseButton />
-          <AlcoholCheckForm2
+          <AlcoholCheckForm
             onClose={onClose}
             pageType="NEW"
             defaultValues={defaultValues}
