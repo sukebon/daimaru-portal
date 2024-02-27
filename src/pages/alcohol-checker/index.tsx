@@ -19,22 +19,30 @@ import { useUtils } from "@/hooks/useUtils";
 import { useQueryAlcoholList } from "@/hooks/Alcohols/useQueryAlcoholList";
 import { useMutateAlcoholList } from "@/hooks/Alcohols/useMutateAlcoholList";
 import { db } from "../../../firebase";
+import { AlcoholCheckList } from "../../../types";
 
 const Alcohol = () => {
   const { isAuth } = useUtils();
   const users = useAuthStore((state) => state.users);
-  const [count, setCount] = useState(30);
+  // const [count, setCount] = useState(30);
   const [totalCount, setTotalCount] = useState(0);
   const [flag, setFlag] = useState(false);
-  const { data, isLoading } = useQueryAlcoholList(count);
+  const { data, isLoading } = useQueryAlcoholList(30);
+  const [alcoholList, setAlcoholList] = useState<
+    AlcoholCheckList[]
+  >([]);
+  const [dataEndAt, setDataEndAt] = useState<string>("");
   const { readAlcoholCheckListMutate } = useMutateAlcoholList();
   const dayOfWeekStr = ["日", "月", "火", "水", "木", "金", "土"];
 
   const getList = () => {
     setFlag(true);
     setTimeout(() => {
-      setCount(count + 30);
-      readAlcoholCheckListMutate.mutate(count + 30);
+      readAlcoholCheckListMutate.mutate({
+        count: 30,
+        dataEndAt,
+        oldData: data || [],
+      });
       setTimeout(() => {
         setFlag(false);
       }, 500);
@@ -50,6 +58,11 @@ const Alcohol = () => {
     getCount();
   }, []);
 
+  useEffect(() => {
+    setAlcoholList(data || []);
+    setDataEndAt(data?.at(-1)?.id || "");
+  }, [data]);
+
   const getDayOfWeek = (value: string) => {
     const date = new Date(value);
     const dayOfWeek = date.getDay();
@@ -58,7 +71,7 @@ const Alcohol = () => {
 
   return (
     <>
-      {isAuth(['alcoholChecker']) && (
+      {isAuth(["alcoholChecker"]) && (
         <Flex direction="column" align="center">
           <TableContainer bg="white" rounded={6} p={6}>
             <Box as="h1" fontSize="lg">
@@ -75,9 +88,11 @@ const Alcohol = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.map(({ id, member }) => (
+                {alcoholList?.map(({ id, member }) => (
                   <Tr key={id}>
-                    <Td>{id} ({getDayOfWeek(id)})</Td>
+                    <Td>
+                      {id} ({getDayOfWeek(id)})
+                    </Td>
                     <Td>{member.length}名</Td>
                     {/* <Td>{users.length - member.length}名</Td> */}
                     <Td>
@@ -89,10 +104,18 @@ const Alcohol = () => {
                 ))}
               </Tbody>
             </Table>
-            {totalCount >= count && (
+            {totalCount >= alcoholList?.length && (
               <Flex mt={6} justify="center">
-                {isLoading ? <Spinner /> : (
-                  <Button isLoading={flag ? true : false} loadingText='さらに表示する' onClick={getList}>さらに表示する</Button>
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <Button
+                    isLoading={flag ? true : false}
+                    loadingText="さらに表示する"
+                    onClick={getList}
+                  >
+                    さらに表示する
+                  </Button>
                 )}
               </Flex>
             )}

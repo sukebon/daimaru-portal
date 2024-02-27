@@ -1,6 +1,4 @@
 import { FC } from "react";
-import { AlcoholCheckForm2 } from "@/components/alcohol-checker/AlcoholCheckForm2";
-import { BiSolidEditAlt } from "react-icons/bi";
 import {
   Modal,
   ModalOverlay,
@@ -8,8 +6,8 @@ import {
   ModalHeader,
   ModalCloseButton,
   useDisclosure,
-  Button,
 } from "@chakra-ui/react";
+import { BiSolidEditAlt } from "react-icons/bi";
 import { AlcoholCheckForm } from "@/components/alcohol-checker/AlcoholCheckForm";
 
 type Inputs = {
