@@ -14,7 +14,7 @@ import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import useSWR from "swr";
 import { useFormContext } from "react-hook-form";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { FaCircleXmark } from "react-icons/fa6";
 import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../../../firebase";
@@ -30,7 +30,7 @@ type Prefecture = {
 };
 
 type Props = {
-  data?: CustomerInformation;
+  data?: CustomerInfoData;
   fileUpload: any;
   setFileUpload: (payload: any) => void;
 };
@@ -53,7 +53,7 @@ export const CustomerInfoForm: FC<Props> = ({
   };
 
   const deleteImage = async (
-    data: CustomerInformation,
+    data: CustomerInfoData,
     path: string,
     index: number
   ) => {

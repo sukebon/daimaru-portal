@@ -11,20 +11,20 @@ import {
 } from "@chakra-ui/react";
 import React, { FC, useState } from "react";
 import { CustomerInfoForm } from "./CustomerInfoInput";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 type Props = {
-  data?: CustomerInformation;
+  data?: CustomerInfoData;
 };
 
 export const CustomerInfoModal: FC<Props> = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileUpload, setFileUpload] = useState<any>("");
-  const methods = useForm<CustomerInformation>({
+  const methods = useForm<CustomerInfoData>({
     defaultValues: {
       id: data?.id,
       customer: data?.customer,
@@ -37,11 +37,11 @@ export const CustomerInfoModal: FC<Props> = ({ data }) => {
     },
   });
 
-  const onSubmit: SubmitHandler<CustomerInformation> = async (data) => {
+  const onSubmit: SubmitHandler<CustomerInfoData> = async (data) => {
     updateInformation(data);
   };
 
-  const updateInformation = async (data: CustomerInformation) => {
+  const updateInformation = async (data: CustomerInfoData) => {
     const result = confirm("更新して宜しいでしょうか");
     if (!result) return;
     const docRef = doc(db, "customerInformations", data.id);

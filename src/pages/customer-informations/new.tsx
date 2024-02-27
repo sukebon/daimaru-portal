@@ -91,7 +91,7 @@ const CustomerInfoNew: NextPage = () => {
   const addInformation = async (data: Inputs) => {
     try {
       const collectionRef = collection(db, "customerInformations");
-      const userRef = doc(db, "authority", currentUser);
+      const userRef = doc(db, "users", currentUser);
       const docRef = await addDoc(collectionRef, {
         customer: data.customer,
         title: data.title,

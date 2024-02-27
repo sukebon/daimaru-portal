@@ -21,7 +21,7 @@ import {
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { format } from "date-fns";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
@@ -30,7 +30,7 @@ import { useUtils } from "@/hooks/useUtils";
 export const CustomerInfoArea = () => {
   const { excerpt } = useUtils();
   const [customerInfoData, setCustomerInfoData] = useState<
-    CustomerInformation[]
+    CustomerInfoData[]
   >([]);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export const CustomerInfoArea = () => {
       onSnapshot(q, (querySnapshot) => {
         setCustomerInfoData(
           querySnapshot.docs.map(
-            (doc) => ({ ...doc.data(), id: doc.id } as CustomerInformation)
+            (doc) => ({ ...doc.data(), id: doc.id } as CustomerInfoData)
           )
         );
       });
