@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
@@ -18,13 +18,13 @@ import { CustomerCommentArea } from "@/components/customer-infomations/CustomerC
 const CustomerInfoById: NextPage = () => {
   const router = useRouter();
   const pathname = router.asPath.split("/").pop();
-  const [data, setData] = useState<CustomerInformation>();
+  const [data, setData] = useState<CustomerInfoData>();
   const currentUser = useAuthStore((state) => state.currentUser);
   const { getUserName } = useDisp();
 
   useEffect(() => {
     try {
-      const getCustomerInformation = async () => {
+      const getCustomerInfoData = async () => {
         const docRef = doc(db, "customerInformations", `${pathname}`);
         const docSnap = await getDoc(docRef);
         if (!docSnap.exists()) {
@@ -34,10 +34,10 @@ const CustomerInfoById: NextPage = () => {
           setData({
             ...snapShot.data(),
             id: snapShot.id,
-          } as CustomerInformation);
+          } as CustomerInfoData);
         });
       };
-      getCustomerInformation();
+      getCustomerInfoData();
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +64,13 @@ const CustomerInfoById: NextPage = () => {
             お客様情報
           </Box>
           <Flex gap={3}>
-            <Link href="/customer-informations" passHref>
+            <Link
+              href={{
+                pathname: "/customer-informations",
+                query: { already: true },
+              }}
+              passHref
+            >
               <Button colorScheme="blue" size="sm" variant="outline">
                 一覧へ戻る
               </Button>
@@ -140,7 +146,7 @@ const CustomerInfoById: NextPage = () => {
           <CustomerCommentForm pathname={pathname} />
         </Flex>
       </Container>
-      <CustomerCommentArea pathname={pathname}/>
+      <CustomerCommentArea pathname={pathname} />
     </>
   );
 };

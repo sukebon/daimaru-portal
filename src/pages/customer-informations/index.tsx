@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
 import { NextPage } from "next";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { BsEmojiLaughing, BsEmojiNeutral } from "react-icons/bs";
 import { FaRegFaceTired } from "react-icons/fa6";
 import { format } from "date-fns";
@@ -39,6 +39,8 @@ import { useUtils } from "@/hooks/useUtils";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { CustomerInfoSearch } from "@/components/customer-infomations/CustomerInfoSearch";
 import { CustomerCoimmentCount } from "@/components/customer-infomations/CustomerCoimmentCount";
+import { useSearchParams } from "next/navigation";
+import { useCustomerStore } from "../../../store/useCustomerInfoStore";
 
 type Inputs = {
   customer: string;
@@ -48,13 +50,21 @@ type Inputs = {
   emotion: string;
 };
 
-const CustomerInformations: NextPage = () => {
-  const [customerInfoData, setCustomerInfoData] = useState<
-    CustomerInformation[]
-  >([]);
-  const [filterData, setFilterData] = useState<CustomerInformation[]>([]);
+const CustomerInfoDatas: NextPage = () => {
+  const filterCustomerInfoData = useCustomerStore(
+    (state) => state.filterCustomerInfoData
+  );
+  const setFilterCustomerInfoData = useCustomerStore(
+    (state) => state.setFilterCustomerInfoData
+  );
+  const customerInfoData = useCustomerStore((state) => state.customerInfoData);
+  const setCustomerInfoData = useCustomerStore(
+    (state) => state.setCustomerInfoData
+  );
   const [createdAtEnd, setCreatedAtEnd] = useState();
   const [totalCount, setTotalCount] = useState(0);
+  const serchParams = useSearchParams();
+  const already = serchParams.get("already");
   const currentUser = useAuthStore((state) => state.currentUser);
   const { getUserName } = useDisp();
   const { excerpt } = useUtils();
@@ -78,16 +88,17 @@ const CustomerInformations: NextPage = () => {
           return true;
         }
       });
-    setFilterData(newArray);
+    setFilterCustomerInfoData(newArray);
   };
 
   useEffect(() => {
+    if (already) return;
     const getCustomerInfomations = async () => {
       const collectionRef = collection(db, "customerInformations");
       const q = query(collectionRef, orderBy("createdAt", "desc"), limit(10));
       onSnapshot(q, (querySnapshot) => {
         const data = querySnapshot.docs.map(
-          (doc) => ({ ...doc.data(), id: doc.id } as CustomerInformation)
+          (doc) => ({ ...doc.data(), id: doc.id } as CustomerInfoData)
         );
         setCustomerInfoData(data);
         setCreatedAtEnd(data?.at(-1)?.createdAt);
@@ -107,7 +118,7 @@ const CustomerInformations: NextPage = () => {
 
   useEffect(() => {
     const watch = methods.watch;
-    setFilterData(
+    setFilterCustomerInfoData(
       customerInfoData
         .filter(
           ({ customer, title, emotion }) =>
@@ -121,7 +132,7 @@ const CustomerInformations: NextPage = () => {
           }
         })
     );
-  }, [customerInfoData, methods]);
+  }, [customerInfoData, setFilterCustomerInfoData, methods]);
 
   const deleteInformation = async (id: string) => {
     const result = confirm("削除して宜しいでしょうか");
@@ -165,7 +176,7 @@ const CustomerInformations: NextPage = () => {
     );
     onSnapshot(q, (snapshot) => {
       const newData = snapshot.docs.map(
-        (doc) => ({ ...doc.data(), id: doc.id } as CustomerInformation)
+        (doc) => ({ ...doc.data(), id: doc.id } as CustomerInfoData)
       );
       const concatData = [...customerInfoData, ...newData];
       setCustomerInfoData(concatData);
@@ -202,7 +213,7 @@ const CustomerInformations: NextPage = () => {
           </Flex>
           <CustomerInfoSearch
             customerInfoData={customerInfoData}
-            setFilterData={setFilterData}
+            setFilterData={setFilterCustomerInfoData}
           />
           <TableContainer>
             <Table size="sm" mt={6}>
@@ -223,7 +234,7 @@ const CustomerInformations: NextPage = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {filterData.map(
+                {filterCustomerInfoData.map(
                   ({
                     id,
                     title,
@@ -299,4 +310,4 @@ const CustomerInformations: NextPage = () => {
   );
 };
 
-export default CustomerInformations;
+export default CustomerInfoDatas;
