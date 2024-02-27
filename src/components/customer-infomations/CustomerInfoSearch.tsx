@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Input, Select, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 import { useFormContext } from "react-hook-form";
-import { CustomerInformation } from "../../../types";
+import { CustomerInfoData } from "../../../types";
 import { useAuthStore } from "../../../store/useAuthStore";
 
 type Props = {
-  customerInfoData: CustomerInformation[];
+  customerInfoData: CustomerInfoData[];
   setFilterData: Function;
 };
 

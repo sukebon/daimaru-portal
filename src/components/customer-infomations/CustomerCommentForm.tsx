@@ -48,7 +48,7 @@ export const CustomerCommentForm: FC<Props> = ({ pathname }) => {
         pathname,
         "comments"
       );
-      const userRef = doc(db, "authority", currentUser);
+      const userRef = doc(db, "users", currentUser);
       await addDoc(docRef, {
         comment: data?.comment,
         author: currentUser,
