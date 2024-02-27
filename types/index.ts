@@ -211,7 +211,7 @@ export type CuttingProduct = {
   quantity: number;
 };
 
-export type CustomerInformation = {
+export type CustomerInfoData = {
   id: string;
   customer: string;
   staff:string;
