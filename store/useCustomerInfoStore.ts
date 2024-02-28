@@ -6,6 +6,20 @@ type State = {
   setCustomerInfoData: (customerInfoData: CustomerInfoData[]) => void;
   filterCustomerInfoData: CustomerInfoData[];
   setFilterCustomerInfoData: (customerInfoData: CustomerInfoData[]) => void;
+  filterKeyWord: {
+    customer: string;
+    staff: string;
+    title: string;
+    prefecture: string;
+    emotion: string;
+  };
+  setFilterKeyWord: (filterKeyWord: {
+    customer: string;
+    staff: string;
+    title: string;
+    prefecture: string;
+    emotion: string;
+  }) => void;
 };
 
 export const useCustomerStore = create<State>((set) => ({
@@ -14,4 +28,12 @@ export const useCustomerStore = create<State>((set) => ({
   filterCustomerInfoData: [],
   setFilterCustomerInfoData: (filterCustomerInfoData) =>
     set({ filterCustomerInfoData }),
+  filterKeyWord: {
+    customer: "",
+    staff: "",
+    title: "",
+    prefecture: "",
+    emotion: "",
+  },
+  setFilterKeyWord: (filterKeyWord) => set({ filterKeyWord }),
 }));

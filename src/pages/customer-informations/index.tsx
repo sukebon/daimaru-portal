@@ -39,7 +39,6 @@ import { useUtils } from "@/hooks/useUtils";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { CustomerInfoSearch } from "@/components/customer-infomations/CustomerInfoSearch";
 import { CustomerCoimmentCount } from "@/components/customer-infomations/CustomerCoimmentCount";
-import { useSearchParams } from "next/navigation";
 import { useCustomerStore } from "../../../store/useCustomerInfoStore";
 
 type Inputs = {
@@ -61,21 +60,31 @@ const CustomerInfoDatas: NextPage = () => {
   const setCustomerInfoData = useCustomerStore(
     (state) => state.setCustomerInfoData
   );
-  const [createdAtEnd, setCreatedAtEnd] = useState();
+  const filterKeyWord = useCustomerStore((state) => state.filterKeyWord);
+  const setFilterKeyWord = useCustomerStore((state) => state.setFilterKeyWord);
+  const [createdAtEnd, setCreatedAtEnd] = useState(
+    customerInfoData.at(-1)?.createdAt || format(new Date(), "yyyy-MM-dd")
+  );
   const [totalCount, setTotalCount] = useState(0);
-  const serchParams = useSearchParams();
-  const already = serchParams.get("already");
   const currentUser = useAuthStore((state) => state.currentUser);
   const { getUserName } = useDisp();
   const { excerpt } = useUtils();
   const methods = useForm<Inputs>({
     defaultValues: {
-      customer: "",
-      title: "",
-      emotion: "",
+      customer: filterKeyWord.customer,
+      title: filterKeyWord.title,
+      emotion: filterKeyWord.emotion,
     },
   });
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setFilterKeyWord({
+      customer: data.customer,
+      staff: data.staff,
+      title: data.title,
+      emotion: data.emotion,
+      prefecture: data.prefecture,
+    });
     const newArray = customerInfoData
       .filter(
         ({ customer, title, emotion }) =>
@@ -92,7 +101,7 @@ const CustomerInfoDatas: NextPage = () => {
   };
 
   useEffect(() => {
-    if (already) return;
+    if (customerInfoData.length !== 0) return;
     const getCustomerInfomations = async () => {
       const collectionRef = collection(db, "customerInformations");
       const q = query(collectionRef, orderBy("createdAt", "desc"), limit(10));
@@ -100,6 +109,7 @@ const CustomerInfoDatas: NextPage = () => {
         const data = querySnapshot.docs.map(
           (doc) => ({ ...doc.data(), id: doc.id } as CustomerInfoData)
         );
+
         setCustomerInfoData(data);
         setCreatedAtEnd(data?.at(-1)?.createdAt);
       });
@@ -117,22 +127,21 @@ const CustomerInfoDatas: NextPage = () => {
   }, [customerInfoData]);
 
   useEffect(() => {
-    const watch = methods.watch;
     setFilterCustomerInfoData(
       customerInfoData
         .filter(
           ({ customer, title, emotion }) =>
-            customer?.includes(watch("customer")) &&
-            title?.includes(watch("title")) &&
-            emotion?.includes(watch("emotion"))
+            customer?.includes(filterKeyWord.customer) &&
+            title?.includes(filterKeyWord.title) &&
+            emotion?.includes(filterKeyWord.emotion)
         )
         .filter(({ staff }) => {
-          if (watch("staff") === "" || staff === watch("staff")) {
+          if (filterKeyWord.staff === "" || staff === filterKeyWord.staff) {
             return true;
           }
         })
     );
-  }, [customerInfoData, setFilterCustomerInfoData, methods]);
+  }, [customerInfoData, setFilterCustomerInfoData, filterKeyWord]);
 
   const deleteInformation = async (id: string) => {
     const result = confirm("削除して宜しいでしょうか");
