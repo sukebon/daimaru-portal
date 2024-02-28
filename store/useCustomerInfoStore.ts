@@ -20,6 +20,8 @@ type State = {
     prefecture: string;
     emotion: string;
   }) => void;
+  limitCount: number;
+  setLimitCount: (limitCount: number) => void;
 };
 
 export const useCustomerStore = create<State>((set) => ({
@@ -36,4 +38,6 @@ export const useCustomerStore = create<State>((set) => ({
     emotion: "",
   },
   setFilterKeyWord: (filterKeyWord) => set({ filterKeyWord }),
+  limitCount: 10,
+  setLimitCount: (limitCount) => set({ limitCount })
 }));

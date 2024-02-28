@@ -1,20 +1,34 @@
 import { Box, Button, Flex, Input, Select, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { useFormContext } from "react-hook-form";
-import { CustomerInfoData } from "../../../types";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useCustomerStore } from "../../../store/useCustomerInfoStore";
 
-type Props = {
-  customerInfoData: CustomerInfoData[];
-  setFilterData: Function;
-};
-
-export const CustomerInfoSearch: FC<Props> = ({
-  customerInfoData,
-  setFilterData,
+export const CustomerInfoSearch: FC = ({
 }) => {
-  const { register, reset } = useFormContext();
   const users = useAuthStore((state) => state.users);
+  const customerInfoData = useCustomerStore((state) => state.customerInfoData);
+  const filterKeyWord = useCustomerStore((state) => state.filterKeyWord);
+  const setFilterCustomerInfoData = useCustomerStore(
+    (state) => state.setFilterCustomerInfoData
+  );
+  const setFilterKeyWord = useCustomerStore((state) => state.setFilterKeyWord);
+
+  const searchReset = () => {
+    setFilterCustomerInfoData(customerInfoData);
+    setFilterKeyWord({
+      customer: "",
+      staff: "",
+      title: "",
+      prefecture: "",
+      emotion: "",
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFilterKeyWord({ ...filterKeyWord, [name]: value });
+  };
 
   return (
     <Flex
@@ -25,11 +39,20 @@ export const CustomerInfoSearch: FC<Props> = ({
     >
       <Box w={{ base: "full", md: "md" }}>
         <Text>顧客名</Text>
-        <Input placeholder="顧客名" {...register("customer")} />
+        <Input
+          placeholder="顧客名"
+          name="customer"
+          value={filterKeyWord.customer}
+          onChange={handleChange}
+        />
       </Box>
       <Box w={{ base: "full", md: "md" }}>
         <Text>担当者</Text>
-        <Select placeholder="担当者" {...register("staff")}>
+        <Select
+          placeholder="担当者"
+          name="staff"
+          value={filterKeyWord.staff}
+          onChange={handleChange}>
           {users
             .filter((user) => user.isoSalesStaff)
             .map((user) => (
@@ -41,11 +64,19 @@ export const CustomerInfoSearch: FC<Props> = ({
       </Box>
       <Box w={{ base: "full", md: "md" }}>
         <Text>タイトル</Text>
-        <Input placeholder="タイトル" {...register("title")} />
+        <Input
+          placeholder="タイトル"
+          value={filterKeyWord.title}
+          onChange={handleChange}
+        />
       </Box>
       <Box w={{ base: "full", md: "xs" }}>
         <Text>受けた印象</Text>
-        <Select placeholder="受けた印象" {...register("emotion")}>
+        <Select
+          placeholder="受けた印象"
+          name="emotion"
+          onChange={handleChange}
+        >
           <option value="good">Good</option>
           <option value="normal">Normal</option>
           <option value="bad">Bad</option>
@@ -53,22 +84,12 @@ export const CustomerInfoSearch: FC<Props> = ({
       </Box>
       <Flex gap={3} w="full">
         <Button
-          type="submit"
           w={{ base: "full", md: "auto" }}
-          colorScheme="blue"
-        >
-          検索
-        </Button>
-        <Button
-          w={{ base: "full", md: "auto" }}
-          onClick={() => {
-            reset();
-            setFilterData(customerInfoData);
-          }}
+          onClick={searchReset}
         >
           リセット
         </Button>
       </Flex>
-    </Flex>
+    </Flex >
   );
 };
