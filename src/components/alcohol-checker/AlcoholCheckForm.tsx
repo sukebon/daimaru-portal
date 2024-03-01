@@ -104,6 +104,7 @@ export const AlcoholCheckForm: FC<Props> = ({
       // });
       // 2024年3月以降
       const userRef = doc(db, "users", currentUser);
+      const user = await getDoc(userRef);
       await setDoc(
         doc(db, "alcoholCheckList", todayDate, "alcoholCheckData", currentUser),
         {
@@ -114,6 +115,7 @@ export const AlcoholCheckForm: FC<Props> = ({
           alcoholCheck2: Number(data.alcoholCheck2),
           alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
           userRef: userRef,
+          username: user.data()?.name,
         }
       );
     } catch (e) {
