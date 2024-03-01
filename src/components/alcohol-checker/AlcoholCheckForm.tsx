@@ -93,15 +93,15 @@ export const AlcoholCheckForm: FC<Props> = ({
         });
       }
       if (docSnap.data()?.member.includes(currentUser)) return;
-      // 2024年3月まで
-      await addDoc(collection(db, "alcoholCheckData"), {
-        date: todayDate,
-        uid: currentUser,
-        createdAt: serverTimestamp(),
-        alcoholCheck1: data.alcoholCheck1,
-        alcoholCheck2: data.alcoholCheck2,
-        alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
-      });
+      // // 2024年3月まで
+      // await addDoc(collection(db, "alcoholCheckData"), {
+      //   date: todayDate,
+      //   uid: currentUser,
+      //   createdAt: serverTimestamp(),
+      //   alcoholCheck1: data.alcoholCheck1,
+      //   alcoholCheck2: data.alcoholCheck2,
+      //   alcoholCheckValue: Number(data.alcoholCheckValue) || 0,
+      // });
       // 2024年3月以降
       const userRef = doc(db, "users", currentUser);
       await setDoc(
