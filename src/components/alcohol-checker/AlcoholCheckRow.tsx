@@ -1,20 +1,23 @@
 import EditAlcoholCheck from "@/pages/alcohol-checker/EditAlcoholCheck";
 import { Td, Tr } from "@chakra-ui/react";
 import React, { FC } from "react";
-import { AlcoholCheckData, User } from "../../../types";
+import { AlcoholCheckData } from "../../../types";
 import { format } from "date-fns";
 
 type Props = {
-  post: AlcoholCheckData & {user:User};
+  post: AlcoholCheckData;
 };
 
 export const AlcoholCheckRow: FC<Props> = ({ post }) => {
- 
   return (
     <Tr key={post.id}>
-      <Td>{post.user.name}</Td>
-      <Td textAlign="center">{Number(post.alcoholCheck1) === 1 ? "済み" : "未"}</Td>
-      <Td textAlign="center">{Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}</Td>
+      <Td>{post.username}</Td>
+      <Td textAlign="center">
+        {Number(post.alcoholCheck1) === 1 ? "済み" : "未"}
+      </Td>
+      <Td textAlign="center">
+        {Number(post.alcoholCheck2) === 1 ? "なし" : "あり"}
+      </Td>
       <Td
         textAlign="center"
         color={post?.alcoholCheckValue >= 0.15 ? "red.500" : ""}

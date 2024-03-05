@@ -78,6 +78,7 @@ export type AlcoholCheckList = {
 export type AlcoholCheckData = {
   id: string;
   uid: string;
+  username:string;
   alcoholCheck1: string;
   alcoholCheck2: string;
   alcoholCheckValue:number;
