@@ -29,7 +29,7 @@ import { AlcoholCheckOldRow } from "@/components/alcohol-checker/AlcoholCheckOld
 const AlcoholId = () => {
   const users = useAuthStore((state) => state.users);
   const [notUsers, setNotUsers] = useState<string[]>([]);
-  const [posts, setPosts] = useState<(AlcoholCheckData & { user: User })[]>([]);
+  const [posts, setPosts] = useState<(AlcoholCheckData )[]>([]);
   const [oldPosts, setOldPosts] = useState<AlcoholCheckData[]>([]);
   const { dateId }: { dateId: string } = useParams();
 
@@ -43,13 +43,11 @@ const AlcoholId = () => {
     );
     const q = query(collectionRef, orderBy("createdAt", "desc"));
     onSnapshot(q, async (snapshot) => {
-      let data: (AlcoholCheckData & { user: User })[] = [];
+      let data: (AlcoholCheckData)[] = [];
       for await (let doc of snapshot.docs) {
-        const user = await getDoc(await doc.data().userRef);
         data.push({
           ...doc.data(),
           id: doc.id,
-          user: user.data(),
         } as AlcoholCheckData & { user: User });
       }
       setPosts(data);
